@@ -3,12 +3,14 @@ import { notFound } from "next/navigation";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
 import { listOrderItems } from "@/lib/admin/operations";
-import { orderStatusLabel, PAYMENT_GATEWAY_LABELS } from "@/lib/admin/order-constants";
+import {
+  orderStatusLabel,
+  PAYMENT_GATEWAY_LABELS,
+} from "@/lib/admin/order-constants";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
-import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { refundOrderAction, deleteOrderAction } from "../actions";
 import adminStyles from "../../admin.module.css";
 import styles from "../orders.module.css";
@@ -79,7 +81,11 @@ function ItemsList({ items }: { items: unknown }) {
   );
 }
 
-function PackContentsCard({ order }: { order: NonNullable<Awaited<ReturnType<typeof getOrder>>> }) {
+function PackContentsCard({
+  order,
+}: {
+  order: NonNullable<Awaited<ReturnType<typeof getOrder>>>;
+}) {
   const items = Array.isArray(order.items) ? (order.items as PackEntry[]) : [];
   if (items.length === 0) return null;
 
@@ -94,10 +100,14 @@ function PackContentsCard({ order }: { order: NonNullable<Awaited<ReturnType<typ
                 <strong className={styles.packName}>
                   {entry.pack_name ?? `Pack ${idx + 1}`}
                 </strong>
-                {entry.grade ? <span className={styles.packGrade}>{entry.grade}</span> : null}
+                {entry.grade ? (
+                  <span className={styles.packGrade}>{entry.grade}</span>
+                ) : null}
               </div>
               {entry.total_price != null ? (
-                <span className={styles.packPrice}>{money(entry.total_price)}</span>
+                <span className={styles.packPrice}>
+                  {money(entry.total_price)}
+                </span>
               ) : null}
             </div>
             {entry.learner_name ? (
@@ -106,7 +116,9 @@ function PackContentsCard({ order }: { order: NonNullable<Awaited<ReturnType<typ
               </div>
             ) : null}
             {entry.wants_pexcover ? (
-              <div className={styles.pexcoverTag}>+ Pexcover protection requested</div>
+              <div className={styles.pexcoverTag}>
+                + Pexcover protection requested
+              </div>
             ) : null}
             <ItemsList items={entry.items} />
           </div>
@@ -129,7 +141,9 @@ function KVRows({ rows }: { rows: { label: string; value: ReactNode }[] }) {
   );
 }
 
-export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
+export default async function OrderDetailPage({
+  params,
+}: OrderDetailPageProps) {
   const [session, { id }] = await Promise.all([
     requireAdmin({ permission: "orders.view" }),
     params,
@@ -144,16 +158,28 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     notFound();
   }
 
-  const order = fetchedOrder as NonNullable<Awaited<ReturnType<typeof getOrder>>>;
+  const order = fetchedOrder as NonNullable<
+    Awaited<ReturnType<typeof getOrder>>
+  >;
 
   const metadata = (order.metadata ?? {}) as Record<string, unknown>;
-  const refund = (metadata.refund ?? null) as
-    | { refunded_at?: string | null; refunded_by?: string | null; reason?: string | null }
-    | null;
-  const deliveryAddress = (order.delivery_address ?? null) as Record<string, string> | null;
-  const canRefund = hasPermission(session, "orders.refund") && !["refunded", "cancelled"].includes(order.status);
+  const refund = (metadata.refund ?? null) as {
+    refunded_at?: string | null;
+    refunded_by?: string | null;
+    reason?: string | null;
+  } | null;
+  const deliveryAddress = (order.delivery_address ?? null) as Record<
+    string,
+    string
+  > | null;
+  const canRefund =
+    hasPermission(session, "orders.refund") &&
+    !["refunded", "cancelled"].includes(order.status);
   const canEdit = hasPermission(session, "orders.edit") || session.isSuperAdmin;
-  const canDelete = hasPermission(session, "orders.delete") || hasPermission(session, "orders.edit") || session.isSuperAdmin;
+  const canDelete =
+    hasPermission(session, "orders.delete") ||
+    hasPermission(session, "orders.edit") ||
+    session.isSuperAdmin;
 
   return (
     <div className={styles.container}>
@@ -185,10 +211,17 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
 
       {canRefund ? (
         <div className={`${styles.detailCard} ${adminStyles.mb20}`}>
-          <form action={refundOrderAction.bind(null, order.id)} className={styles.refundForm}>
-            <FloatingTextarea
+          <form
+            action={refundOrderAction.bind(null, order.id)}
+            className={styles.refundForm}
+          >
+            <label className={adminStyles.formLabel} htmlFor="refund_reason">
+              Refund Reason (optional)
+            </label>
+            <textarea
+              id="refund_reason"
               name="reason"
-              label="Refund Reason (optional)"
+              className={adminStyles.textareaField}
               aria-label="Refund reason"
             />
             <ConfirmButton
@@ -218,12 +251,17 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
               {
                 label: "Email",
                 value: order.buyer_email ? (
-                  <a href={`mailto:${order.buyer_email}`}>{order.buyer_email}</a>
+                  <a href={`mailto:${order.buyer_email}`}>
+                    {order.buyer_email}
+                  </a>
                 ) : (
                   "—"
                 ),
               },
-              { label: "Contact method", value: order.preferred_contact_method ?? "—" },
+              {
+                label: "Contact method",
+                value: order.preferred_contact_method ?? "—",
+              },
               { label: "Learner", value: order.learner_name ?? "—" },
             ]}
           />
@@ -234,7 +272,10 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           <KVRows
             rows={[
               { label: "School", value: order.school_name },
-              { label: "School slug", value: order.school_slug ? `/${order.school_slug}` : "—" },
+              {
+                label: "School slug",
+                value: order.school_slug ? `/${order.school_slug}` : "—",
+              },
               { label: "Grade", value: order.grade },
               { label: "Pack type", value: order.pack_type ?? "—" },
               {
@@ -249,19 +290,27 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           <h2 className={styles.cardTitle}>Delivery</h2>
           <KVRows
             rows={[
-              { label: "Method", value: order.fulfilment_option ?? order.delivery_type ?? "—" },
+              {
+                label: "Method",
+                value: order.fulfilment_option ?? order.delivery_type ?? "—",
+              },
               {
                 label: "Address",
-                value: deliveryAddress && Object.keys(deliveryAddress).length > 0 ? (
-                  Object.entries(deliveryAddress)
-                    .map(([, v]) => v)
-                    .filter(Boolean)
-                    .join(", ")
-                ) : (
-                  [order.street_address, order.suburb, order.city, order.province, order.postal_code]
-                    .filter(Boolean)
-                    .join(", ") || "—"
-                ),
+                value:
+                  deliveryAddress && Object.keys(deliveryAddress).length > 0
+                    ? Object.entries(deliveryAddress)
+                        .map(([, v]) => v)
+                        .filter(Boolean)
+                        .join(", ")
+                    : [
+                        order.street_address,
+                        order.suburb,
+                        order.city,
+                        order.province,
+                        order.postal_code,
+                      ]
+                        .filter(Boolean)
+                        .join(", ") || "—",
               },
             ]}
           />
@@ -286,7 +335,10 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           />
           {refund ? (
             <div className={styles.refundInfo}>
-              Refunded{refund.refunded_at ? ` ${formatDateTime(refund.refunded_at)}` : ""}
+              Refunded
+              {refund.refunded_at
+                ? ` ${formatDateTime(refund.refunded_at)}`
+                : ""}
               {refund.refunded_by ? ` by ${refund.refunded_by}` : ""}
               {refund.reason ? ` — ${refund.reason}` : ""}
             </div>
@@ -350,7 +402,9 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
       {metadata ? (
         <div className={`${styles.detailCard} ${adminStyles.mt20}`}>
           <h2 className={styles.cardTitle}>Full metadata</h2>
-          <pre className={styles.metaBlock}>{JSON.stringify(metadata, null, 2)}</pre>
+          <pre className={styles.metaBlock}>
+            {JSON.stringify(metadata, null, 2)}
+          </pre>
         </div>
       ) : null}
     </div>

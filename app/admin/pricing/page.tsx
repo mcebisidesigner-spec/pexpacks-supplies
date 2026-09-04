@@ -1,6 +1,10 @@
 import { CheckCircle2, Settings2, Tags } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
-import { listPricingReview, listPricingRules, listPriceHistory } from "@/lib/admin/operations";
+import {
+  listPricingReview,
+  listPricingRules,
+  listPriceHistory,
+} from "@/lib/admin/operations";
 import { money, formatDate } from "@/lib/admin/ui-utils";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
@@ -13,7 +17,6 @@ import {
   createPricingRuleAction,
 } from "../operations-actions";
 import admin from "../admin.module.css";
-import styles from "../operations.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -28,12 +31,19 @@ export default async function PricingPage() {
     (p) => p.pricing_status !== "approved",
   ).length;
   return (
-    <div className={styles.page}>
+    <div className={admin.page}>
       <AdminPageHeader
         title="Price Review & Rules"
         subtitle="Approve selling prices from verified cost and preserve commercial markup integrity."
       />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "14px",
+          marginBottom: "20px",
+        }}
+      >
         <MetricCard
           label="Products Reviewed"
           value={products.length}
@@ -61,28 +71,32 @@ export default async function PricingPage() {
         />
       </div>
       {hasPermission(session, "pricing.manage") ? (
-        <section className={styles.formPanel}>
+        <section className={admin.sidebarCard}>
           <h2>Add pricing rule</h2>
-          <form action={createPricingRuleAction} className={styles.formGrid}>
+          <form action={createPricingRuleAction} className={admin.formGrid2}>
             <input
-              className={styles.field}
+              className={admin.inputField}
               name="name"
               placeholder="Rule name"
               required
             />
-            <select className={styles.field} name="scope" defaultValue="global">
+            <select
+              className={admin.inputField}
+              name="scope"
+              defaultValue="global"
+            >
               <option value="global">Global</option>
               <option value="category">Category</option>
               <option value="brand">Brand</option>
               <option value="product">Product ID</option>
             </select>
             <input
-              className={styles.field}
+              className={admin.inputField}
               name="scopeValue"
               placeholder="Scope value (blank for global)"
             />
             <select
-              className={styles.field}
+              className={admin.inputField}
               name="method"
               defaultValue="markup"
             >
@@ -90,7 +104,7 @@ export default async function PricingPage() {
               <option value="margin">Gross margin</option>
             </select>
             <input
-              className={styles.field}
+              className={admin.inputField}
               name="ratePercent"
               type="number"
               min="0"
@@ -100,7 +114,7 @@ export default async function PricingPage() {
               required
             />
             <input
-              className={styles.field}
+              className={admin.inputField}
               name="roundingIncrement"
               type="number"
               min="0.01"
@@ -109,7 +123,7 @@ export default async function PricingPage() {
               aria-label="Rounding increment"
             />
             <input
-              className={styles.field}
+              className={admin.inputField}
               name="priority"
               type="number"
               defaultValue="100"
@@ -138,21 +152,21 @@ export default async function PricingPage() {
                 {products.map((product) => (
                   <tr key={product.id}>
                     <td>
-                      <div className={styles.name}>{product.name}</div>
-                      <div className={styles.mono}>{product.sku}</div>
+                      <div className={admin.textWhiteBold}>{product.name}</div>
+                      <div className={admin.mono}>{product.sku}</div>
                     </td>
                     <td>
                       {product.preferred_supplier || "No preferred supplier"}
-                      <div className={styles.money}>
+                      <div className={admin.textWhiteBold}>
                         {product.latest_verified_cost == null
                           ? "No verified cost"
                           : money(product.latest_verified_cost)}
                       </div>
-                      <div className={styles.muted}>
+                      <div className={admin.cMuted}>
                         {product.pricing_rule || "No matching pricing rule"}
                       </div>
                     </td>
-                    <td className={styles.money}>
+                    <td className={admin.textWhiteBold}>
                       {money(product.current_selling_price)}
                     </td>
                     <td>
@@ -160,14 +174,18 @@ export default async function PricingPage() {
                         ? "-"
                         : `${(product.current_margin * 100).toFixed(1)}%`}
                     </td>
-                    <td className={styles.money}>
+                    <td className={admin.textWhiteBold}>
                       {money(product.suggested_price)}
                     </td>
                     <td>
-                        <StatusBadge
-                          status={product.pricing_status}
-                          tone={product.pricing_status === "approved" ? "emerald" : "amber"}
-                        />
+                      <StatusBadge
+                        status={product.pricing_status}
+                        tone={
+                          product.pricing_status === "approved"
+                            ? "emerald"
+                            : "amber"
+                        }
+                      />
                     </td>
                     <td>
                       {hasPermission(session, "pricing.manage") ? (
@@ -176,10 +194,11 @@ export default async function PricingPage() {
                             null,
                             product.id,
                           )}
-                          className={styles.inlineForm}
+                          className={admin.inlineForm}
                         >
                           <input
-                            className={`${styles.field} ${styles.compact}`}
+                            className={admin.inputField}
+                            style={{ width: "88px", flexShrink: 0 }}
                             name="sellingPrice"
                             type="number"
                             min="0.01"
@@ -208,7 +227,7 @@ export default async function PricingPage() {
       </div>
 
       {priceHistory.length > 0 ? (
-        <div className={styles.historyCard}>
+        <div className={admin.sidebarCard}>
           <h2>Recent price changes ({priceHistory.length})</h2>
           <div className={admin.tableWrapper}>
             <table className={admin.table}>
@@ -226,23 +245,19 @@ export default async function PricingPage() {
               <tbody>
                 {priceHistory.map((entry) => (
                   <tr key={entry.id}>
-                    <td>
-                      {formatDate(entry.created_at)}
-                    </td>
-                    <td className={styles.mono}>
+                    <td>{formatDate(entry.created_at)}</td>
+                    <td className={admin.mono}>
                       {entry.product_id.slice(0, 8)}…
                     </td>
                     <td>
-                      {entry.new_cost != null
-                        ? money(entry.new_cost)
-                        : "—"}
+                      {entry.new_cost != null ? money(entry.new_cost) : "—"}
                     </td>
                     <td>
                       {entry.previous_selling_price != null
                         ? money(entry.previous_selling_price)
                         : "—"}
                     </td>
-                    <td className={styles.money}>
+                    <td className={admin.textWhiteBold}>
                       {entry.new_selling_price != null
                         ? money(entry.new_selling_price)
                         : "—"}

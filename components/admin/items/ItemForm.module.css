@@ -45,8 +45,15 @@
   width: 100%;
 }
 
-.skuInput {
-  padding-right: 105px !important;
+.skuInputRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+}
+
+.skuInputRow .skuInput {
+  flex: 1;
 }
 
 .skuButtonAdornment {

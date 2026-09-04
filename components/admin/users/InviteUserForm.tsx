@@ -1,93 +1,117 @@
 "use client";
 
 import { useActionState } from "react";
-import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import type { InviteResult, RoleInfo } from "@/lib/admin/users";
 import { inviteUserAction } from "@/app/admin/users/actions";
-import styles from "./user-forms.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className={styles.saveButton} disabled={pending}>
+    <AdminButton type="submit" variant="primary" loading={pending}>
       {pending ? "Sending invite…" : "Send invite"}
-    </button>
+    </AdminButton>
   );
 }
 
 export function InviteUserForm({ roles }: { roles: RoleInfo[] }) {
-  const [state, formAction] = useActionState<InviteResult, FormData>(inviteUserAction, {
-    ok: false,
-  });
+  const [state, formAction] = useActionState<InviteResult, FormData>(
+    inviteUserAction,
+    {
+      ok: false,
+    },
+  );
 
   return (
-    <form action={formAction} className={styles.form}>
+    <form action={formAction} className={adminStyles.stack}>
       {state?.ok ? (
         <DbNotice
           type="success"
           message={state.message || "Invitation sent successfully."}
         />
       ) : state?.message ? (
-        <DbNotice
-          type="error"
-          message={state.message}
-        />
+        <DbNotice type="error" message={state.message} />
       ) : null}
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="full_name">
+      <div className={adminStyles.formField}>
+        <label className={adminStyles.formLabel} htmlFor="full_name">
           Full name
         </label>
         <input
           id="full_name"
           name="full_name"
-          className={styles.input}
+          className={adminStyles.inputField}
           placeholder="e.g. Thandi Nkosi"
           autoComplete="name"
         />
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.label} htmlFor="email">
+      <div className={adminStyles.formField}>
+        <label className={adminStyles.formLabel} htmlFor="email">
           Email address *
         </label>
         <input
           id="email"
           name="email"
           type="email"
-          className={styles.input}
+          className={adminStyles.inputField}
           placeholder="name@school.co.za"
           required
           autoComplete="off"
         />
         {state?.errors?.email ? (
-          <span className={styles.error} role="alert">
+          <span className={adminStyles.error} role="alert">
             {state.errors.email}
           </span>
         ) : null}
       </div>
 
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.label}>Initial roles</legend>
-        <div className={styles.checkList}>
+      <fieldset
+        className={adminStyles.formField}
+        style={{ border: "none", margin: 0, padding: 0 }}
+      >
+        <legend className={adminStyles.formLabel}>Initial roles</legend>
+        <div className={adminStyles.stack}>
           {roles.map((role) => (
-            <label key={role.id} className={styles.checkRow}>
-              <input type="checkbox" name="roles" value={role.slug} className={styles.checkbox} />
+            <label
+              key={role.id}
+              className={adminStyles.stackRow}
+              style={{
+                alignItems: "flex-start",
+                background: "var(--a-bg)",
+                border: "1px solid var(--a-border-strong)",
+                borderRadius: "var(--a-radius-sm)",
+                padding: "10px 14px",
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="checkbox"
+                name="roles"
+                value={role.slug}
+                className={adminStyles.checkbox}
+              />
               <span>
-                <span className={styles.checkLabel}>{role.name}</span>
-                <span className={styles.checkHint}>{role.description}</span>
+                <span className={adminStyles.cWhite}>{role.name}</span>
+                <span
+                  className={adminStyles.cSubtle}
+                  style={{ display: "block", marginTop: 2 }}
+                >
+                  {role.description}
+                </span>
               </span>
             </label>
           ))}
         </div>
       </fieldset>
 
-      <div className={styles.actions}>
-        <Link href="/admin/users" className={styles.cancelButton}>
+      <div className={adminStyles.stackRow} style={{ marginTop: 6 }}>
+        <AdminButton href="/admin/users" variant="secondary">
           Cancel
-        </Link>
+        </AdminButton>
         <SubmitButton />
       </div>
     </form>

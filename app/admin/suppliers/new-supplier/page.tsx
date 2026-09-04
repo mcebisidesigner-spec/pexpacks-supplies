@@ -1,7 +1,6 @@
-import { ArrowLeft, Building2, CreditCard, Mail, Save } from "lucide-react";
+import { Building2, CreditCard, Mail, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
@@ -17,19 +16,18 @@ export default async function NewSupplierPage() {
       <AdminPageHeader
         title="Onboard New Supplier"
         subtitle="Add a stationery manufacturer or distributor to the Pexpacks procurement network."
-        actions={
-          <AdminButton
-            href="/admin/suppliers"
-            variant="secondary"
-            icon={<ArrowLeft size={14} />}
-          >
-            Back to Suppliers
-          </AdminButton>
-        }
+        backHref="/admin/suppliers"
+        backLabel="Back to Suppliers"
       />
 
-      <form action="/admin/suppliers" method="GET" className={adminStyles.detailLayout}>
-        <div className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}>
+      <form
+        action="/admin/suppliers"
+        method="GET"
+        className={adminStyles.detailLayout}
+      >
+        <div
+          className={`${adminStyles.flex} ${adminStyles["flex-col"]} ${adminStyles.gap18}`}
+        >
           {/* Supplier Identity */}
           <div className={adminStyles.sidebarCard}>
             <div className={adminStyles.sidebarCardHeader}>
@@ -51,7 +49,9 @@ export default async function NewSupplierPage() {
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>Supplier Code / Ref</label>
+                <label className={adminStyles.formLabel}>
+                  Supplier Code / Ref
+                </label>
                 <input
                   name="code"
                   placeholder="e.g. SUP-MAKRO-01"
@@ -60,7 +60,9 @@ export default async function NewSupplierPage() {
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>Primary Contact Person</label>
+                <label className={adminStyles.formLabel}>
+                  Primary Contact Person
+                </label>
                 <input
                   name="contact_person"
                   placeholder="e.g. Accounts Manager"
@@ -90,7 +92,9 @@ export default async function NewSupplierPage() {
 
             <div className={adminStyles.grid2equal}>
               <div>
-                <label className={adminStyles.formLabel}>Procurement Email *</label>
+                <label className={adminStyles.formLabel}>
+                  Procurement Email *
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -133,7 +137,9 @@ export default async function NewSupplierPage() {
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>Standard Lead Time (Days)</label>
+                <label className={adminStyles.formLabel}>
+                  Standard Lead Time (Days)
+                </label>
                 <input
                   type="number"
                   name="lead_time"
@@ -143,7 +149,10 @@ export default async function NewSupplierPage() {
               </div>
 
               <div className={adminStyles.pt12}>
-                <button type="submit" className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}>
+                <button
+                  type="submit"
+                  className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}
+                >
                   <Save size={14} /> Onboard Supplier
                 </button>
               </div>

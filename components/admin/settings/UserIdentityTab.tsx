@@ -12,7 +12,6 @@ import {
   AlertTriangle,
   AlertCircle,
   CheckCircle2,
-  RefreshCw,
 } from "lucide-react";
 import type { RoleInfo, UserListItem } from "@/lib/admin/users";
 import {
@@ -20,7 +19,7 @@ import {
   deleteUserFromSettingsAction,
 } from "@/app/admin/settings/actions";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-import styles from "./SettingsControlCentre.module.css";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 
 interface UserIdentityTabProps {
@@ -319,7 +318,7 @@ export function UserIdentityTab({
       {/* Users Directory Table Card */}
       <div className={adminStyles.tableCard}>
         <div className={adminStyles.tableWrapper}>
-          <table className={styles.table}>
+          <table className={adminStyles.table}>
             <thead>
               <tr>
                 <th>User / Identity</th>
@@ -507,24 +506,13 @@ export function UserIdentityTab({
                               🔒 Permanent
                             </span>
                           ) : canDelete ? (
-                            <button
-                              type="button"
+                            <AdminButton
+                              variant="danger"
+                              size="sm"
+                              icon={<Trash2 size={12} />}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleRequestDelete(user);
-                              }}
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "6px",
-                                padding: "6px 12px",
-                                backgroundColor: "rgba(239, 68, 68, 0.1)",
-                                border: "1px solid rgba(239, 68, 68, 0.3)",
-                                borderRadius: "6px",
-                                color: "#f87171",
-                                fontSize: "12px",
-                                fontWeight: 600,
-                                cursor: "pointer",
                               }}
                               data-db-tooltip={
                                 isSuper
@@ -532,8 +520,8 @@ export function UserIdentityTab({
                                   : "Delete User Account"
                               }
                             >
-                              <Trash2 size={12} /> Delete
-                            </button>
+                              Delete
+                            </AdminButton>
                           ) : null}
                         </div>
                       </td>
@@ -646,19 +634,12 @@ export function UserIdentityTab({
                 </div>
               </div>
 
-              <button
-                type="button"
+              <AdminButton
+                variant="ghost"
+                size="sm"
+                icon={<X size={20} />}
                 onClick={() => setSelectedUser(null)}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "#64748b",
-                  cursor: "pointer",
-                  padding: "4px",
-                }}
-              >
-                <X size={20} />
-              </button>
+              />
             </div>
 
             {/* Feedback Alert */}
@@ -914,22 +895,13 @@ export function UserIdentityTab({
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <button
-                  type="button"
+                <AdminButton
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setSelectedUser(null)}
-                  style={{
-                    background: "transparent",
-                    border: "1px solid rgba(51, 65, 85, 0.8)",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    color: "#cbd5e1",
-                    fontSize: "0.8125rem",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
                 >
                   Close
-                </button>
+                </AdminButton>
 
                 {(() => {
                   const selectedIsSuper =
@@ -944,67 +916,33 @@ export function UserIdentityTab({
                     !selectedIsSelf && (!selectedIsSuper || isSuperUser);
 
                   return canDeleteSelected ? (
-                    <button
-                      type="button"
+                    <AdminButton
+                      variant="danger"
+                      size="sm"
+                      icon={<Trash2 size={13} />}
                       onClick={() => handleRequestDelete(selectedUser)}
-                      style={{
-                        background: "rgba(239, 68, 68, 0.1)",
-                        border: "1px solid rgba(239, 68, 68, 0.35)",
-                        borderRadius: "8px",
-                        padding: "8px 14px",
-                        color: "#f87171",
-                        fontSize: "0.8125rem",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                      }}
                       data-db-tooltip={
                         selectedIsSuper
                           ? "Delete Superuser Account"
                           : "Delete User Account"
                       }
                     >
-                      <Trash2 size={13} />{" "}
                       {selectedIsSuper ? "Delete Superuser" : "Delete User"}
-                    </button>
+                    </AdminButton>
                   ) : null;
                 })()}
               </div>
 
-              <button
-                type="button"
-                onClick={handleSaveRoles}
+              <AdminButton
+                variant="primary"
+                size="md"
+                icon={isPending ? undefined : <CheckCircle2 size={14} />}
+                loading={isPending}
                 disabled={isPending}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  backgroundColor: isPending ? "#1e293b" : "#10b981",
-                  color: isPending ? "#64748b" : "#ffffff",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "9px 20px",
-                  fontSize: "0.8125rem",
-                  fontWeight: 700,
-                  cursor: isPending ? "not-allowed" : "pointer",
-                  boxShadow: isPending
-                    ? "none"
-                    : "0 4px 12px rgba(16, 185, 129, 0.3)",
-                }}
+                onClick={handleSaveRoles}
               >
-                {isPending ? (
-                  <>
-                    <RefreshCw size={14} className="animate-spin" /> Saving
-                    Changes...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 size={14} /> Save Role Changes
-                  </>
-                )}
-              </button>
+                {isPending ? "Saving Changes..." : "Save Role Changes"}
+              </AdminButton>
             </div>
           </div>
         </div>
@@ -1138,54 +1076,25 @@ export function UserIdentityTab({
                   gap: "10px",
                 }}
               >
-                <button
-                  type="button"
+                <AdminButton
+                  variant="secondary"
+                  size="sm"
                   onClick={() => setUserToDelete(null)}
                   disabled={isDeleting}
-                  style={{
-                    background: "transparent",
-                    border: "1px solid rgba(51, 65, 85, 0.8)",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    color: "#cbd5e1",
-                    fontSize: "0.8125rem",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
                 >
                   Cancel
-                </button>
+                </AdminButton>
 
-                <button
-                  type="button"
-                  onClick={handleConfirmDelete}
+                <AdminButton
+                  variant="danger"
+                  size="sm"
+                  icon={isDeleting ? undefined : <Trash2 size={13} />}
+                  loading={isDeleting}
                   disabled={isDeleting}
-                  style={{
-                    backgroundColor: "#ef4444",
-                    color: "#ffffff",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 18px",
-                    fontSize: "0.8125rem",
-                    fontWeight: 700,
-                    cursor: isDeleting ? "not-allowed" : "pointer",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    boxShadow: "0 4px 12px rgba(239, 68, 68, 0.35)",
-                  }}
+                  onClick={handleConfirmDelete}
                 >
-                  {isDeleting ? (
-                    <>
-                      <RefreshCw size={13} className="animate-spin" />{" "}
-                      Deleting...
-                    </>
-                  ) : (
-                    <>
-                      <Trash2 size={13} /> Yes, Delete User
-                    </>
-                  )}
-                </button>
+                  {isDeleting ? "Deleting..." : "Yes, Delete User"}
+                </AdminButton>
               </div>
             </div>
           </div>

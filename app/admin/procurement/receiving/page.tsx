@@ -1,10 +1,9 @@
 import { Package } from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
-import {
-  listPurchaseOrdersForReceiving,
-} from "@/lib/admin/operations";
+import { listPurchaseOrdersForReceiving } from "@/lib/admin/operations";
 import { createSupplierReceiptAction } from "../../operations-actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
@@ -26,7 +25,7 @@ export default async function ReceivingPage() {
       />
 
       {purchaseOrders.length === 0 ? (
-        <div className={adminStyles.formPanel}>
+        <div className={adminStyles.sidebarCard}>
           <Package aria-hidden="true" />
           <p>No purchase orders are awaiting receipt.</p>
         </div>
@@ -45,12 +44,18 @@ export default async function ReceivingPage() {
             : 0;
 
           return (
-            <section key={po.id} className={adminStyles.formPanel}>
+            <section key={po.id} className={adminStyles.sidebarCard}>
               <h2>
                 {po.purchase_order_number}
                 <StatusBadge
                   status={po.status}
-                  tone={po.status === "received" ? "emerald" : po.status === "partially_received" ? "amber" : "slate"}
+                  tone={
+                    po.status === "received"
+                      ? "emerald"
+                      : po.status === "partially_received"
+                        ? "amber"
+                        : "slate"
+                  }
                   className={adminStyles.ml8}
                 />
               </h2>
@@ -86,12 +91,15 @@ export default async function ReceivingPage() {
                           <td>
                             {hasPermission(session, "procurement.manage") ? (
                               <input
-                                className={`${adminStyles.field} ${adminStyles.w80}`}
+                                className={adminStyles.inputField}
                                 type="number"
                                 min="0"
-                                max={item.ordered_quantity - item.received_quantity}
+                                max={
+                                  item.ordered_quantity - item.received_quantity
+                                }
                                 defaultValue="0"
                                 name={`received_${item.id}`}
+                                aria-label={`Qty received for ${item.master_products?.name || item.id}`}
                               />
                             ) : (
                               item.received_quantity
@@ -107,20 +115,34 @@ export default async function ReceivingPage() {
               {hasPermission(session, "procurement.manage") ? (
                 <form
                   action={createSupplierReceiptAction}
-                  className={`${adminStyles.formGrid} ${adminStyles.mt16}`}
+                  className={adminStyles.stack}
                 >
                   <input type="hidden" name="purchaseOrderId" value={po.id} />
-                  <input
-                    className={adminStyles.field}
-                    name="reference"
-                    placeholder="Delivery note / invoice ref"
-                  />
-                  <input
-                    className={`${adminStyles.field} ${adminStyles.wide}`}
-                    name="notes"
-                    placeholder="Notes (condition, discrepancies, etc.)"
-                  />
-                  <button className={adminStyles.button}>Record receipt</button>
+                  <div className={adminStyles.grid2equal}>
+                    <div>
+                      <label className={adminStyles.formLabel}>
+                        Delivery Note / Invoice Ref
+                      </label>
+                      <input
+                        className={adminStyles.inputField}
+                        name="reference"
+                        placeholder="Delivery note / invoice ref"
+                      />
+                    </div>
+                    <div>
+                      <label className={adminStyles.formLabel}>Notes</label>
+                      <input
+                        className={adminStyles.inputField}
+                        name="notes"
+                        placeholder="Notes (condition, discrepancies, etc.)"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <AdminButton type="submit" variant="primary" size="md">
+                      Record receipt
+                    </AdminButton>
+                  </div>
                 </form>
               ) : null}
             </section>

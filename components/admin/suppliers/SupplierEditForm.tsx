@@ -8,7 +8,7 @@ import { Building2, CreditCard, Mail, Save } from "lucide-react";
 import { updateSupplierAction } from "@/app/admin/suppliers/actions";
 import type { SupplierFormState } from "@/lib/admin/suppliers";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import formStyles from "./supplier-form.module.css";
 
 export interface SupplierFormDefaults {
@@ -26,13 +26,16 @@ export interface SupplierFormDefaults {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
+    <AdminButton
       type="submit"
-      disabled={pending}
-      className={`${styles.primaryBtn} ${adminStyles.hFullBtn}`}
+      variant="primary"
+      size="lg"
+      loading={pending}
+      icon={<Save size={14} />}
+      className={adminStyles.hFullBtn}
     >
-      <Save size={14} /> {pending ? "Saving…" : "Update Supplier"}
-    </button>
+      {pending ? "Saving…" : "Update Supplier"}
+    </AdminButton>
   );
 }
 
@@ -65,11 +68,11 @@ export function SupplierEditForm({
   return (
     <form action={formAction} noValidate>
       {state?.ok ? (
-        <p className={formStyles.success} role="status">
+        <p className={adminStyles.success} role="status">
           {state.message}
         </p>
       ) : state?.message ? (
-        <p className={formStyles.error} role="alert">
+        <p className={adminStyles.error} role="alert">
           {state.message}
         </p>
       ) : null}
@@ -126,7 +129,7 @@ export function SupplierEditForm({
                 <label className={adminStyles.formLabel}>Status</label>
                 <select
                   name="status"
-                  className={adminStyles.inputField}
+                  className={adminStyles.selectField}
                   defaultValue={defaults.active ? "Preferred" : "Prospect"}
                 >
                   <option value="Preferred">Preferred Partner</option>

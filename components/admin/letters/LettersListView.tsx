@@ -32,6 +32,7 @@ import {
 } from "@/components/admin/shared/DataTable";
 import { LetterPreviewModal } from "./LetterPreviewModal";
 import { EmailDispatchModal } from "./EmailDispatchModal";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { deleteLetterAction } from "@/app/admin/letters/actions";
 import type { AdminLetterRecord, ListLettersResult } from "@/lib/admin/letters";
 import type { BadgeTone } from "@/components/admin/ui";
@@ -60,6 +61,9 @@ export function LettersListView({
     null,
   );
   const [emailLetter, setEmailLetter] = useState<AdminLetterRecord | null>(
+    null,
+  );
+  const [deleteTarget, setDeleteTarget] = useState<AdminLetterRecord | null>(
     null,
   );
 
@@ -106,20 +110,19 @@ export function LettersListView({
     },
   ];
 
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
+  const handleDelete = (row: AdminLetterRecord, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (
-      !window.confirm(
-        "Are you sure you want to delete this official letter? This action cannot be undone.",
-      )
-    ) {
-      return;
-    }
+    setDeleteTarget(row);
+  };
 
-    const res = await deleteLetterAction(id);
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    const res = await deleteLetterAction(deleteTarget.id);
     if (res.ok) {
-      setLetters((prev) => prev.filter((l) => l.id !== id));
+      setLetters((prev) => prev.filter((l) => l.id !== deleteTarget.id));
+      setDeleteTarget(null);
     } else {
+      setDeleteTarget(null);
       alert(res.error || "Failed to delete letter.");
     }
   };
@@ -256,7 +259,7 @@ export function LettersListView({
             className={styles.actionDeleteBtn}
             data-db-tooltip="Delete Letter"
             aria-label={`Delete ${row.reference_number}`}
-            onClick={(e) => handleDelete(row.id, e)}
+            onClick={(e) => handleDelete(row, e)}
           >
             <Trash2 size={14} />
           </button>
@@ -438,6 +441,22 @@ export function LettersListView({
           }}
         />
       )}
+
+      {/* 6. Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        title="Delete Official Letter"
+        message={
+          deleteTarget
+            ? `Are you sure you want to delete this official letter (${deleteTarget.reference_number} - ${deleteTarget.recipient_organization})? This action cannot be undone.`
+            : ""
+        }
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

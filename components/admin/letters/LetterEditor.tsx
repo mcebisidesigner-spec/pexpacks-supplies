@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   FileText,
@@ -15,57 +15,62 @@ import {
   Mail,
   CheckCircle2,
   AlertTriangle,
-  ArrowLeft,
   Sparkles,
-  ExternalLink,
 } from "lucide-react";
-import Link from "next/link";
 import {
   saveLetterAction,
-  emailLetterAction,
+  sendLetterEmailAction,
+  searchSchoolsForLetterAction,
+  searchQuotationsForLetterAction,
 } from "@/app/admin/letters/actions";
 import type {
-  AdminLetter,
-  AdminLetterInsert,
-  LetterQuotationPayload,
+  AdminLetterRecord,
   LetterQuotationItem,
+  LetterQuotationData,
+  SaveLetterInput,
 } from "@/lib/admin/letters";
-import { formatRandFromCents } from "@/lib/admin/quotation";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./LetterEditor.module.css";
-import modalStyles from "@/components/admin/quotations/QuotationModal.module.css";
 
 interface SchoolOption {
   id: string;
   name: string;
-  emis_number?: string | null;
   province?: string | null;
-  contact_person?: string | null;
-  contact_email?: string | null;
-  contact_phone?: string | null;
-  physical_address?: string | null;
+  city?: string | null;
+  principal?: string | null;
+  email?: string | null;
+  telephone?: string | null;
+  address?: string | null;
 }
 
 interface QuotationOption {
   id: string;
-  quotation_number: string;
+  quote_number: string;
   school_name?: string | null;
   recipient_name?: string | null;
-  recipient_email?: string | null;
-  total_cents: number;
-  items?: any[];
+  total_amount: number;
+  items?: LetterQuotationItem[];
 }
 
 interface LetterEditorProps {
-  initialLetter?: AdminLetter | null;
-  schools: SchoolOption[];
-  existingQuotations?: QuotationOption[];
+  initialLetter?: AdminLetterRecord | null;
+}
+
+function formatRand(amount: number): string {
+  return `R ${Number(amount || 0).toLocaleString("en-ZA", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 }
 
 const PRESET_TEMPLATES = [
   {
     id: "partnership",
     name: "Partnership Proposal",
-    subject: "Institutional Stationery & Scholastic Supply Partnership — 2026/2027 Academic Year",
+    subject:
+      "Institutional Stationery & Scholastic Supply Partnership — 2026/2027 Academic Year",
     content: `Dear Principal and School Governing Body,
 
 We are pleased to introduce PexPacks Supplies as your dedicated partner for institutional stationery, scholastic packs, and classroom essentials.
@@ -85,7 +90,8 @@ We look forward to fostering an enduring and mutually rewarding partnership with
   {
     id: "quotation_transmittal",
     name: "Quotation Transmittal",
-    subject: "Formal Quotation Transmittal: Institutional Scholastic & Office Supplies",
+    subject:
+      "Formal Quotation Transmittal: Institutional Scholastic & Office Supplies",
     content: `Dear School Management Team,
 
 Please find enclosed our formal commercial quotation for the requested scholastic supplies and educational stationery packs.
@@ -102,7 +108,8 @@ Should you require any line-item adjustments or additional bundle customizations
   {
     id: "credit_terms",
     name: "Credit Terms Application",
-    subject: "Formal Notification: 30-Day Institutional Account Facility & Settlement Terms",
+    subject:
+      "Formal Notification: 30-Day Institutional Account Facility & Settlement Terms",
     content: `Dear Finance Office / Bursar,
 
 Following our recent commercial review, PexPacks Supplies is pleased to confirm the approval of your institutional 30-Day Commercial Account facility.
@@ -130,96 +137,89 @@ Please feel free to reach out directly should you have any questions or require 
   },
 ];
 
-export function LetterEditor({
-  initialLetter,
-  schools,
-  existingQuotations = [],
-}: LetterEditorProps) {
+export function LetterEditor({ initialLetter }: LetterEditorProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [schools, setSchools] = useState<SchoolOption[]>([]);
+  const [existingQuotations, setExistingQuotations] = useState<
+    QuotationOption[]
+  >([]);
 
   // Mode & Recipient
+  const recipientModeInit: "school" | "manual" =
+    initialLetter?.recipient_type === "registered_school" ? "school" : "manual";
   const [recipientMode, setRecipientMode] = useState<"school" | "manual">(
-    initialLetter?.recipient_mode || (initialLetter?.school_id ? "school" : "manual")
+    initialLetter?.school_id ? "school" : recipientModeInit,
   );
   const [selectedSchoolId, setSelectedSchoolId] = useState<string>(
-    initialLetter?.school_id || ""
+    initialLetter?.school_id || "",
   );
   const [schoolSearchQuery, setSchoolSearchQuery] = useState<string>("");
   const [showSchoolDropdown, setShowSchoolDropdown] = useState<boolean>(false);
 
   // Recipient Fields
   const [recipientName, setRecipientName] = useState<string>(
-    initialLetter?.recipient_name || ""
+    initialLetter?.recipient_name || "",
   );
   const [recipientTitle, setRecipientTitle] = useState<string>(
-    initialLetter?.recipient_title || ""
+    initialLetter?.recipient_title || "",
   );
   const [recipientOrg, setRecipientOrg] = useState<string>(
-    initialLetter?.recipient_organization || ""
+    initialLetter?.recipient_organization || "",
   );
   const [recipientEmail, setRecipientEmail] = useState<string>(
-    initialLetter?.recipient_email || ""
-  );
-  const [recipientPhone, setRecipientPhone] = useState<string>(
-    initialLetter?.recipient_phone || ""
+    initialLetter?.recipient_email || "",
   );
   const [recipientAddress, setRecipientAddress] = useState<string>(
-    initialLetter?.recipient_address || ""
+    initialLetter?.recipient_address || "",
   );
 
   // Document Fields
   const [subject, setSubject] = useState<string>(
-    initialLetter?.subject || "Institutional Stationery & Scholastic Supply Partnership"
+    initialLetter?.subject ||
+      "Institutional Stationery & Scholastic Supply Partnership",
   );
   const [content, setContent] = useState<string>(
-    initialLetter?.content || PRESET_TEMPLATES[0].content
+    initialLetter?.body_markdown || PRESET_TEMPLATES[0].content,
   );
   const [signatoryName, setSignatoryName] = useState<string>(
-    initialLetter?.signatory_name || "Mcebisi Hlatshwayo"
+    initialLetter?.signatory_name || "Mcebisi Hlatshwayo",
   );
   const [signatoryTitle, setSignatoryTitle] = useState<string>(
-    initialLetter?.signatory_title || "Managing Director"
-  );
-  const [signatoryEmail, setSignatoryEmail] = useState<string>(
-    initialLetter?.signatory_email || "info@pexpacks.co.za"
-  );
-  const [signatoryPhone, setSignatoryPhone] = useState<string>(
-    initialLetter?.signatory_phone || "+27 81 234 5678"
+    initialLetter?.signatory_title || "Managing Director",
   );
 
   // Quotation Integration
   const [includeQuotation, setIncludeQuotation] = useState<boolean>(
-    initialLetter?.include_quotation || false
+    initialLetter?.include_quotation || false,
   );
   const [quotationRefId, setQuotationRefId] = useState<string>(
-    initialLetter?.quotation_id || ""
+    initialLetter?.quotation_id || "",
   );
   const [quotationTitle, setQuotationTitle] = useState<string>(
-    initialLetter?.quotation_payload?.title || "Itemized Quotation Schedule"
+    initialLetter?.quotation_data?.quote_number
+      ? `Quotation ${initialLetter.quotation_data.quote_number}`
+      : "Itemized Quotation Schedule",
   );
   const [quotationNotes, setQuotationNotes] = useState<string>(
-    initialLetter?.quotation_payload?.notes || "All prices include 15% VAT where applicable. Valid for 30 days."
+    initialLetter?.quotation_data?.notes ||
+      "All prices include 15% VAT where applicable. Valid for 30 days.",
   );
   const [quotationItems, setQuotationItems] = useState<LetterQuotationItem[]>(
-    initialLetter?.quotation_payload?.items || [
+    initialLetter?.quotation_data?.items || [
       {
-        id: "item-1",
-        description: "Grade R-7 Comprehensive Stationery Pack",
+        item_title: "Grade R-7 Comprehensive Stationery Pack",
         quantity: 100,
-        unit_price_cents: 25000,
-        vat_rate: 0.15,
-        total_cents: 2500000,
+        unit_price: 250.0,
+        total_price: 25000.0,
       },
       {
-        id: "item-2",
-        description: "Standard Blue Ballpoint Pens (Box of 50)",
+        item_title: "Standard Blue Ballpoint Pens (Box of 50)",
         quantity: 20,
-        unit_price_cents: 12500,
-        vat_rate: 0.15,
-        total_cents: 250000,
+        unit_price: 125.0,
+        total_price: 2500.0,
       },
-    ]
+    ],
   );
 
   // UI state
@@ -227,60 +227,93 @@ export function LetterEditor({
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
   const [emailSubject, setEmailSubject] = useState<string>(
-    `Official PexPacks Letter: ${subject}`
+    `Official PexPacks Letter: ${subject}`,
   );
   const [emailBodyMessage, setEmailBodyMessage] = useState<string>(
-    `Dear ${recipientName || "Valued Partner"},\n\nPlease find attached the official correspondence from PexPacks Supplies.\n\nKind regards,\n${signatoryName}\n${signatoryTitle}\nPexPacks Supplies`
+    `Dear ${recipientName || "Valued Partner"},\n\nPlease find attached the official correspondence from PexPacks Supplies.\n\nKind regards,\n${signatoryName}\n${signatoryTitle}\nPexPacks Supplies`,
   );
   const [feedback, setFeedback] = useState<{
     type: "success" | "error";
     message: string;
   } | null>(null);
 
+  // Load schools & quotations for the pickers
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const [schoolRes, quoteRes] = await Promise.all([
+        searchSchoolsForLetterAction(""),
+        searchQuotationsForLetterAction(""),
+      ]);
+      if (!active) return;
+      if (schoolRes.ok && Array.isArray(schoolRes.data)) {
+        setSchools(schoolRes.data as SchoolOption[]);
+      }
+      if (quoteRes.ok && Array.isArray(quoteRes.data)) {
+        setExistingQuotations(quoteRes.data as QuotationOption[]);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
   // Filter schools
   const filteredSchools = schools.filter(
     (s) =>
       s.name.toLowerCase().includes(schoolSearchQuery.toLowerCase()) ||
-      (s.emis_number && s.emis_number.includes(schoolSearchQuery))
+      (s.city &&
+        s.city.toLowerCase().includes(schoolSearchQuery.toLowerCase())) ||
+      (s.province &&
+        s.province.toLowerCase().includes(schoolSearchQuery.toLowerCase())),
   );
 
   // On school select
   function handleSelectSchool(school: SchoolOption) {
     setSelectedSchoolId(school.id);
     setRecipientOrg(school.name);
-    if (school.contact_person) setRecipientName(school.contact_person);
-    if (school.contact_email) setRecipientEmail(school.contact_email);
-    if (school.contact_phone) setRecipientPhone(school.contact_phone);
-    if (school.physical_address) setRecipientAddress(school.physical_address);
+    if (school.principal) setRecipientName(school.principal);
+    if (school.email) setRecipientEmail(school.email);
+    if (school.address || school.city || school.province) {
+      setRecipientAddress(
+        [school.address, school.city, school.province]
+          .filter(Boolean)
+          .join(", "),
+      );
+    }
     setSchoolSearchQuery(school.name);
     setShowSchoolDropdown(false);
   }
 
   // Preset Template Apply
-  function handleApplyTemplate(template: typeof PRESET_TEMPLATES[0]) {
+  function handleApplyTemplate(template: (typeof PRESET_TEMPLATES)[0]) {
     setActiveTemplate(template.id);
     setSubject(template.subject);
     setContent(template.content);
   }
 
-  // Quotation calculations
-  const quoteSubtotalCents = quotationItems.reduce(
-    (sum, item) => sum + item.unit_price_cents * item.quantity,
-    0
+  // Quotation calculations (rands)
+  const quoteSubtotal = quotationItems.reduce(
+    (sum, item) => sum + (item.unit_price || 0) * (item.quantity || 0),
+    0,
   );
-  const quoteVatCents = Math.round(quoteSubtotalCents * 0.15);
-  const quoteTotalCents = quoteSubtotalCents + quoteVatCents;
+  const quoteVat = Math.round(quoteSubtotal * 0.15 * 100) / 100;
+  const quoteTotal = Math.round((quoteSubtotal + quoteVat) * 100) / 100;
+
+  function computeLineTotal(item: LetterQuotationItem): number {
+    return (
+      Math.round((item.unit_price || 0) * (item.quantity || 0) * 100) / 100
+    );
+  }
 
   function handleAddQuoteItem() {
     setQuotationItems([
       ...quotationItems,
       {
-        id: `item-${Date.now()}`,
-        description: "Scholastic Material Item",
+        item_title: "Scholastic Material Item",
         quantity: 1,
-        unit_price_cents: 1000,
-        vat_rate: 0.15,
-        total_cents: 1000,
+        unit_price: 10.0,
+        total_price: 10.0,
       },
     ]);
   }
@@ -288,12 +321,12 @@ export function LetterEditor({
   function handleUpdateQuoteItem(
     index: number,
     field: keyof LetterQuotationItem,
-    val: any
+    val: unknown,
   ) {
     const next = [...quotationItems];
-    const current = { ...next[index], [field]: val };
-    if (field === "quantity" || field === "unit_price_cents") {
-      current.total_cents = Number(current.quantity) * Number(current.unit_price_cents);
+    const current = { ...next[index], [field]: val } as LetterQuotationItem;
+    if (field === "quantity" || field === "unit_price") {
+      current.total_price = computeLineTotal(current);
     }
     next[index] = current;
     setQuotationItems(next);
@@ -303,71 +336,90 @@ export function LetterEditor({
     setQuotationItems(quotationItems.filter((_, i) => i !== index));
   }
 
-  // Pull in existing quotation
+  // Pull in existing quotation (rands)
   function handleSelectExistingQuotation(quoteId: string) {
     setQuotationRefId(quoteId);
     const quote = existingQuotations.find((q) => q.id === quoteId);
     if (quote && quote.items && quote.items.length > 0) {
       setQuotationItems(
-        quote.items.map((item: any, idx: number) => ({
+        quote.items.map((item, idx) => ({
           id: item.id || `item-${idx}`,
+          item_title: item.item_title || "Quoted Product",
           sku: item.sku || "",
-          description: item.description || item.title || "Quoted Product",
+          unit: item.unit || "",
           quantity: item.quantity || 1,
-          unit_price_cents: item.unit_price_cents || 0,
-          vat_rate: item.vat_rate || 0.15,
-          total_cents: (item.quantity || 1) * (item.unit_price_cents || 0),
-        }))
+          unit_price: item.unit_price || 0,
+          total_price:
+            item.total_price ??
+            Math.round((item.quantity || 1) * (item.unit_price || 0) * 100) /
+              100,
+        })),
+      );
+      setQuotationTitle(
+        quote.quote_number ? `Quotation ${quote.quote_number}` : quotationTitle,
       );
     }
+  }
+
+  function buildQuotationData(): LetterQuotationData | undefined {
+    if (!includeQuotation) return undefined;
+    return {
+      quote_number: initialLetter?.quotation_data?.quote_number || undefined,
+      subtotal: Math.round(quoteSubtotal * 100) / 100,
+      vat_rate: 0.15,
+      vat_amount: quoteVat,
+      total_amount: quoteTotal,
+      currency: "ZAR",
+      notes: quotationNotes,
+      items: quotationItems.map((item) => ({
+        item_title: item.item_title,
+        sku: item.sku || null,
+        unit: item.unit || null,
+        quantity: item.quantity,
+        unit_price: item.unit_price || 0,
+        total_price: item.total_price || computeLineTotal(item),
+      })),
+    };
   }
 
   // Save Document
   async function handleSave(status: "draft" | "generated" = "draft") {
     setFeedback(null);
 
-    const quotationPayload: LetterQuotationPayload | undefined = includeQuotation
-      ? {
-          title: quotationTitle,
-          notes: quotationNotes,
-          items: quotationItems,
-          subtotal_cents: quoteSubtotalCents,
-          vat_cents: quoteVatCents,
-          total_cents: quoteTotalCents,
-        }
-      : undefined;
-
-    const payload: AdminLetterInsert = {
-      subject,
-      content,
-      recipient_mode: recipientMode,
-      school_id: recipientMode === "school" ? selectedSchoolId || null : null,
-      recipient_name: recipientName,
+    const input: SaveLetterInput = {
+      id: initialLetter?.id,
+      school_id:
+        recipientMode === "school" && selectedSchoolId
+          ? selectedSchoolId
+          : null,
+      quotation_id: includeQuotation && quotationRefId ? quotationRefId : null,
+      recipient_type:
+        recipientMode === "school" ? "registered_school" : "private_client",
+      recipient_organization: recipientOrg || "Pexpacks Supplies (Pty) Ltd",
       recipient_title: recipientTitle || null,
-      recipient_organization: recipientOrg || null,
-      recipient_email: recipientEmail || null,
-      recipient_phone: recipientPhone || null,
+      recipient_name: recipientName || "Valued Client",
+      recipient_email: recipientEmail,
+      recipient_country: "South Africa",
       recipient_address: recipientAddress || null,
+      subject: subject,
+      body_markdown: content,
+      include_quotation: includeQuotation,
+      quotation_data: buildQuotationData(),
       signatory_name: signatoryName,
       signatory_title: signatoryTitle,
-      signatory_email: signatoryEmail || null,
-      signatory_phone: signatoryPhone || null,
-      signatory_company: "PexPacks Supplies (Pty) Ltd",
-      include_quotation: includeQuotation,
-      quotation_id: includeQuotation ? quotationRefId || null : null,
-      quotation_payload: quotationPayload,
       status,
     };
 
     startTransition(async () => {
-      const result = await saveLetterAction(payload, initialLetter?.id);
-      if (result.success && result.letter) {
+      const result = await saveLetterAction(input);
+      if (result.ok && result.data) {
+        const saved = result.data;
         setFeedback({
           type: "success",
-          message: `Letter successfully saved as ${status.toUpperCase()} (${result.letter.reference_number}).`,
+          message: `Letter successfully saved as ${status.toUpperCase()} (${saved.reference_number}).`,
         });
         if (!initialLetter?.id) {
-          router.push(`/admin/letters/${result.letter.id}`);
+          router.push(`/admin/letters/${saved.id}`);
         } else {
           router.refresh();
         }
@@ -398,14 +450,13 @@ export function LetterEditor({
     }
 
     startTransition(async () => {
-      const res = await emailLetterAction({
+      const res = await sendLetterEmailAction({
         letterId: initialLetter.id,
-        toEmail: recipientEmail,
-        subject: emailSubject,
-        message: emailBodyMessage,
+        recipientEmail,
+        customMessage: emailBodyMessage,
       });
 
-      if (res.success) {
+      if (res.ok) {
         setEmailModalOpen(false);
         setFeedback({
           type: "success",
@@ -423,61 +474,47 @@ export function LetterEditor({
 
   // Open native Mailto
   function handleOpenMailto() {
-    const mailtoUrl = `mailto:${encodeURIComponent(recipientEmail)}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(
+    const mailtoUrl = `mailto:${encodeURIComponent(
+      recipientEmail,
+    )}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
       `Dear ${recipientName || "Valued Customer"},\n\nPlease find attached the official correspondence from PexPacks Supplies regarding: ${subject}.\n\nReference: ${
         initialLetter?.reference_number || "PX-DOC-DRAFT"
-      }\n\nKind regards,\n${signatoryName}\n${signatoryTitle}\nPexPacks Supplies`
+      }\n\nKind regards,\n${signatoryName}\n${signatoryTitle}\nPexPacks Supplies`,
     )}`;
     window.location.href = mailtoUrl;
   }
 
   return (
-    <div className={styles.container}>
-      {/* Top Header & Breadcrumbs */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Link
-              href="/admin/letters"
-              className="db-btn db-btn-secondary"
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, height: 36, padding: "0 12px" }}
-            >
-              <ArrowLeft size={16} /> Back to Letters
-            </Link>
-            <div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0, color: "var(--db-text-primary)" }}>
-                {initialLetter ? `Edit Letter: ${initialLetter.reference_number}` : "Create Official Commercial Letter"}
-              </h1>
-              <p style={{ fontSize: 13, color: "var(--db-text-muted)", margin: "4px 0 0 0" }}>
-                Draft institutional correspondence, proposals, and quotation-backed cover letters on official PexPacks letterhead.
-              </p>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              type="button"
+    <div className={adminStyles.page}>
+      <AdminPageHeader
+        backHref="/admin/letters"
+        backLabel="Back to Letters"
+        title={initialLetter ? "Edit Official Letter" : "New Official Letter"}
+        titleHighlight={
+          initialLetter ? initialLetter.reference_number : undefined
+        }
+        subtitle="Draft institutional correspondence, proposals, and quotation-backed cover letters on official PexPacks letterhead."
+        actions={
+          <>
+            <AdminButton
+              variant="secondary"
+              icon={<Save size={14} />}
+              disabled={isPending}
               onClick={() => handleSave("draft")}
-              disabled={isPending}
-              className="db-btn db-btn-secondary"
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
             >
-              <Save size={16} /> Save Draft
-            </button>
-            <button
-              type="button"
+              Save Draft
+            </AdminButton>
+            <AdminButton
+              variant="primary"
+              icon={<CheckCircle2 size={14} />}
+              disabled={isPending}
               onClick={() => handleSave("generated")}
-              disabled={isPending}
-              className="db-btn db-btn-primary"
-              style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
             >
-              <CheckCircle2 size={16} /> Finalize Document
-            </button>
-          </div>
-        </div>
-      </div>
+              Finalize Document
+            </AdminButton>
+          </>
+        }
+      />
 
       {/* Flash Alert Banner */}
       {feedback && (
@@ -516,19 +553,15 @@ export function LetterEditor({
       )}
 
       {/* Main Grid Layout */}
-      <div className={styles.splitLayout}>
+      <div className={adminStyles.detailLayout}>
         {/* Main Content Column */}
-        <div className={styles.mainColumn}>
+        <div className={adminStyles.leftColumn}>
           {/* Card 1: Recipient Routing */}
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardTitleGroup}>
-                <h2 className={styles.cardTitle}>
-                  <Building2 size={18} className={styles.cardIcon} /> Recipient Target & Routing
-                </h2>
-                <p className={styles.cardSubtitle}>
-                  Choose registered South African school database entity or manual institutional / international client.
-                </p>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Building2 size={16} className={adminStyles.iconTeal} />
+                <span>Recipient Target &amp; Routing</span>
               </div>
 
               {/* Mode Toggle */}
@@ -537,7 +570,9 @@ export function LetterEditor({
                   type="button"
                   onClick={() => setRecipientMode("school")}
                   className={`${styles.modeToggleButton} ${
-                    recipientMode === "school" ? styles.modeToggleButtonActive : ""
+                    recipientMode === "school"
+                      ? styles.modeToggleButtonActive
+                      : ""
                   }`}
                 >
                   <Building2 size={14} /> Registered School
@@ -546,7 +581,9 @@ export function LetterEditor({
                   type="button"
                   onClick={() => setRecipientMode("manual")}
                   className={`${styles.modeToggleButton} ${
-                    recipientMode === "manual" ? styles.modeToggleButtonActive : ""
+                    recipientMode === "manual"
+                      ? styles.modeToggleButtonActive
+                      : ""
                   }`}
                 >
                   <User size={14} /> Private / Manual Client
@@ -556,71 +593,77 @@ export function LetterEditor({
 
             {/* School Search or Manual Fields */}
             {recipientMode === "school" ? (
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>
-                  Search Registered School <span className={styles.labelRequired}>*</span>
-                </label>
-                <div className={styles.searchWrapper}>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    placeholder="Search by school name or EMIS number..."
-                    value={schoolSearchQuery}
-                    onChange={(e) => {
-                      setSchoolSearchQuery(e.target.value);
-                      setShowSchoolDropdown(true);
-                    }}
-                    onFocus={() => setShowSchoolDropdown(true)}
-                  />
-                  {showSchoolDropdown && filteredSchools.length > 0 && (
-                    <div className={styles.searchResultsDropdown}>
-                      {filteredSchools.slice(0, 8).map((school) => (
-                        <button
-                          key={school.id}
-                          type="button"
-                          className={styles.searchResultItem}
-                          onClick={() => handleSelectSchool(school)}
-                        >
-                          <div>
-                            <span className={styles.schoolName}>{school.name}</span>
-                            {school.province && (
-                              <span className={styles.schoolLocation}>
-                                ({school.province})
+              <div className={adminStyles.formField}>
+                <div>
+                  <label className={adminStyles.formLabel}>
+                    Search Registered School *
+                  </label>
+                  <div className={styles.searchWrapper}>
+                    <input
+                      type="text"
+                      className={adminStyles.inputField}
+                      placeholder="Search by school name or town..."
+                      value={schoolSearchQuery}
+                      onChange={(e) => {
+                        setSchoolSearchQuery(e.target.value);
+                        setShowSchoolDropdown(true);
+                      }}
+                      onFocus={() => setShowSchoolDropdown(true)}
+                    />
+                    {showSchoolDropdown && filteredSchools.length > 0 && (
+                      <div className={styles.searchResultsDropdown}>
+                        {filteredSchools.slice(0, 8).map((school) => (
+                          <button
+                            key={school.id}
+                            type="button"
+                            className={styles.searchResultItem}
+                            onClick={() => handleSelectSchool(school)}
+                          >
+                            <div>
+                              <span className={styles.schoolName}>
+                                {school.name}
+                              </span>
+                              {school.province && (
+                                <span className={styles.schoolLocation}>
+                                  ({school.province})
+                                </span>
+                              )}
+                            </div>
+                            {school.city && (
+                              <span className={styles.schoolEmis}>
+                                {school.city}
                               </span>
                             )}
-                          </div>
-                          {school.emis_number && (
-                            <span className={styles.schoolEmis}>
-                              EMIS: {school.emis_number}
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : null}
 
             {/* Recipient Details Form Grid */}
-            <div className={styles.grid2}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>
-                  Addressee / Contact Person <span className={styles.labelRequired}>*</span>
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Addressee / Contact Person *
                 </label>
                 <input
                   type="text"
-                  className={styles.input}
+                  className={adminStyles.inputField}
                   placeholder="e.g. Dr. Jane Smith / The Principal"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
                 />
               </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Recipient Title / Designation</label>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Recipient Title / Designation
+                </label>
                 <input
                   type="text"
-                  className={styles.input}
+                  className={adminStyles.inputField}
                   placeholder="e.g. Head of Procurement / Principal"
                   value={recipientTitle}
                   onChange={(e) => setRecipientTitle(e.target.value)}
@@ -628,144 +671,138 @@ export function LetterEditor({
               </div>
             </div>
 
-            <div className={styles.grid3}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>
-                  Organization / School Name <span className={styles.labelRequired}>*</span>
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Organization / School Name *
                 </label>
                 <input
                   type="text"
-                  className={styles.input}
+                  className={adminStyles.inputField}
                   placeholder="e.g. Sandton Primary School"
                   value={recipientOrg}
                   onChange={(e) => setRecipientOrg(e.target.value)}
                 />
               </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>
-                  Recipient Email <span className={styles.labelRequired}>*</span>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Recipient Email *
                 </label>
                 <input
                   type="email"
-                  className={styles.input}
+                  className={adminStyles.inputField}
                   placeholder="e.g. principal@school.co.za"
                   value={recipientEmail}
                   onChange={(e) => setRecipientEmail(e.target.value)}
                 />
               </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Recipient Contact Phone</label>
-                <input
-                  type="tel"
-                  className={styles.input}
-                  placeholder="e.g. +27 11 555 0192"
-                  value={recipientPhone}
-                  onChange={(e) => setRecipientPhone(e.target.value)}
-                />
-              </div>
             </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Recipient Physical / Postal Address</label>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder="e.g. 104 Willowbrook Road, Sandton, Johannesburg, 2196"
-                value={recipientAddress}
-                onChange={(e) => setRecipientAddress(e.target.value)}
-              />
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Recipient Physical / Postal Address
+                </label>
+                <input
+                  type="text"
+                  className={adminStyles.inputField}
+                  placeholder="e.g. 104 Willowbrook Road, Sandton, Johannesburg, 2196"
+                  value={recipientAddress}
+                  onChange={(e) => setRecipientAddress(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
           {/* Card 2: Subject & Letterhead Content */}
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardTitleGroup}>
-                <h2 className={styles.cardTitle}>
-                  <FileText size={18} className={styles.cardIcon} /> Document Body & Template
-                </h2>
-                <p className={styles.cardSubtitle}>
-                  Select quick institutional template presets or customize the formal correspondence body.
-                </p>
-              </div>
-
-              {/* Template Picker Pills */}
-              <div className={styles.templatePicker}>
-                <span className={styles.templateLabel}>
-                  <Sparkles size={12} style={{ display: "inline", marginRight: 4 }} /> Presets:
-                </span>
-                {PRESET_TEMPLATES.map((tmpl) => (
-                  <button
-                    key={tmpl.id}
-                    type="button"
-                    onClick={() => handleApplyTemplate(tmpl)}
-                    className={`${styles.templatePill} ${
-                      activeTemplate === tmpl.id ? styles.templatePillActive : ""
-                    }`}
-                  >
-                    {tmpl.name}
-                  </button>
-                ))}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <FileText size={16} className={adminStyles.iconBlue} />
+                <span>Document Body &amp; Template</span>
               </div>
             </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>
-                Document Subject / Reference Heading <span className={styles.labelRequired}>*</span>
-              </label>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder="Subject line..."
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-              />
+            {/* Template Picker Pills */}
+            <div className={styles.templatePicker}>
+              <span className={styles.templateLabel}>
+                <Sparkles
+                  size={12}
+                  style={{ display: "inline", marginRight: 4 }}
+                />{" "}
+                Presets:
+              </span>
+              {PRESET_TEMPLATES.map((tmpl) => (
+                <button
+                  key={tmpl.id}
+                  type="button"
+                  onClick={() => handleApplyTemplate(tmpl)}
+                  className={`${styles.templatePill} ${
+                    activeTemplate === tmpl.id ? styles.templatePillActive : ""
+                  }`}
+                >
+                  {tmpl.name}
+                </button>
+              ))}
             </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>
-                Formal Body Content <span className={styles.labelRequired}>*</span>
-              </label>
-              <textarea
-                className={styles.textarea}
-                placeholder="Compose letter content..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-              />
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Document Subject / Reference Heading *
+                </label>
+                <input
+                  type="text"
+                  className={adminStyles.inputField}
+                  placeholder="Subject line..."
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Formal Body Content *
+                </label>
+                <textarea
+                  className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd}`}
+                  style={{ minHeight: 300 }}
+                  placeholder="Compose letter content..."
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
           {/* Card 3: Embedded Quotation Schedule */}
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardTitleGroup}>
-                <h2 className={styles.cardTitle}>
-                  <label className={styles.checkboxLabel}>
-                    <input
-                      type="checkbox"
-                      className={styles.checkboxInput}
-                      checked={includeQuotation}
-                      onChange={(e) => setIncludeQuotation(e.target.checked)}
-                    />
-                    Include Itemized Commercial Quotation Schedule
-                  </label>
-                </h2>
-                <p className={styles.cardSubtitle}>
-                  Embed formal financial schedules and VAT line items directly into the generated PDF document.
-                </p>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <label className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkboxInput}
+                    checked={includeQuotation}
+                    onChange={(e) => setIncludeQuotation(e.target.checked)}
+                  />
+                  Include Itemized Commercial Quotation Schedule
+                </label>
               </div>
 
               {includeQuotation && existingQuotations.length > 0 && (
                 <div style={{ minWidth: 220 }}>
                   <select
-                    className={styles.select}
+                    className={adminStyles.selectField}
                     value={quotationRefId}
-                    onChange={(e) => handleSelectExistingQuotation(e.target.value)}
+                    onChange={(e) =>
+                      handleSelectExistingQuotation(e.target.value)
+                    }
                   >
                     <option value="">-- Import Existing Quotation --</option>
                     {existingQuotations.map((q) => (
                       <option key={q.id} value={q.id}>
-                        {q.quotation_number} — {formatRandFromCents(q.total_cents)}
+                        {q.quote_number} — {formatRand(q.total_amount)}
                       </option>
                     ))}
                   </select>
@@ -774,22 +811,26 @@ export function LetterEditor({
             </div>
 
             {includeQuotation && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                <div className={styles.grid2}>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Quotation Schedule Heading</label>
+              <div className={adminStyles.formStackCompact}>
+                <div className={adminStyles.grid2equal}>
+                  <div>
+                    <label className={adminStyles.formLabel}>
+                      Quotation Schedule Heading
+                    </label>
                     <input
                       type="text"
-                      className={styles.input}
+                      className={adminStyles.inputField}
                       value={quotationTitle}
                       onChange={(e) => setQuotationTitle(e.target.value)}
                     />
                   </div>
-                  <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Quotation Notes / Terms</label>
+                  <div>
+                    <label className={adminStyles.formLabel}>
+                      Quotation Notes / Terms
+                    </label>
                     <input
                       type="text"
-                      className={styles.input}
+                      className={adminStyles.inputField}
                       value={quotationNotes}
                       onChange={(e) => setQuotationNotes(e.target.value)}
                     />
@@ -801,10 +842,18 @@ export function LetterEditor({
                   <table className={styles.table}>
                     <thead>
                       <tr>
-                        <th className={styles.th} style={{ width: "45%" }}>Description</th>
-                        <th className={styles.th} style={{ width: "15%" }}>Qty</th>
-                        <th className={styles.th} style={{ width: "20%" }}>Unit (Cents)</th>
-                        <th className={styles.th} style={{ width: "15%" }}>Total</th>
+                        <th className={styles.th} style={{ width: "45%" }}>
+                          Description
+                        </th>
+                        <th className={styles.th} style={{ width: "15%" }}>
+                          Qty
+                        </th>
+                        <th className={styles.th} style={{ width: "20%" }}>
+                          Unit Price (R)
+                        </th>
+                        <th className={styles.th} style={{ width: "15%" }}>
+                          Total
+                        </th>
                         <th className={styles.th} style={{ width: "5%" }}></th>
                       </tr>
                     </thead>
@@ -815,9 +864,13 @@ export function LetterEditor({
                             <input
                               type="text"
                               className={styles.tableInput}
-                              value={item.description}
+                              value={item.item_title}
                               onChange={(e) =>
-                                handleUpdateQuoteItem(idx, "description", e.target.value)
+                                handleUpdateQuoteItem(
+                                  idx,
+                                  "item_title",
+                                  e.target.value,
+                                )
                               }
                             />
                           </td>
@@ -828,7 +881,11 @@ export function LetterEditor({
                               value={item.quantity}
                               min={1}
                               onChange={(e) =>
-                                handleUpdateQuoteItem(idx, "quantity", parseInt(e.target.value) || 1)
+                                handleUpdateQuoteItem(
+                                  idx,
+                                  "quantity",
+                                  parseInt(e.target.value, 10) || 1,
+                                )
                               }
                             />
                           </td>
@@ -836,15 +893,22 @@ export function LetterEditor({
                             <input
                               type="number"
                               className={styles.tableInput}
-                              value={item.unit_price_cents}
-                              step={100}
+                              value={item.unit_price}
+                              step={0.01}
+                              min={0}
                               onChange={(e) =>
-                                handleUpdateQuoteItem(idx, "unit_price_cents", parseInt(e.target.value) || 0)
+                                handleUpdateQuoteItem(
+                                  idx,
+                                  "unit_price",
+                                  parseFloat(e.target.value) || 0,
+                                )
                               }
                             />
                           </td>
                           <td className={styles.td} style={{ fontWeight: 600 }}>
-                            {formatRandFromCents(item.total_cents)}
+                            {formatRand(
+                              item.total_price || computeLineTotal(item),
+                            )}
                           </td>
                           <td className={styles.td}>
                             <button
@@ -867,28 +931,27 @@ export function LetterEditor({
                   </table>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
-                  <button
-                    type="button"
+                <div className={adminStyles.sidebarFlexBetween}>
+                  <AdminButton
+                    variant="secondary"
+                    icon={<Plus size={14} />}
                     onClick={handleAddQuoteItem}
-                    className="db-btn db-btn-secondary"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
                   >
-                    <Plus size={16} /> Add Quotation Line
-                  </button>
+                    Add Quotation Line
+                  </AdminButton>
 
                   <div className={styles.quoteSummary}>
                     <div className={styles.summaryRow}>
                       <span>Subtotal (Excl. VAT):</span>
-                      <span>{formatRandFromCents(quoteSubtotalCents)}</span>
+                      <span>{formatRand(quoteSubtotal)}</span>
                     </div>
                     <div className={styles.summaryRow}>
                       <span>VAT (15%):</span>
-                      <span>{formatRandFromCents(quoteVatCents)}</span>
+                      <span>{formatRand(quoteVat)}</span>
                     </div>
                     <div className={styles.summaryTotal}>
                       <span>Quotation Total:</span>
-                      <span>{formatRandFromCents(quoteTotalCents)}</span>
+                      <span>{formatRand(quoteTotal)}</span>
                     </div>
                   </div>
                 </div>
@@ -898,150 +961,186 @@ export function LetterEditor({
         </div>
 
         {/* Side Panel: Signatory & Multi-Channel Actions */}
-        <div className={styles.sideColumn}>
-          <div className={styles.stickySide}>
-            {/* Card: Document Meta */}
-            <div className={styles.card}>
-              <h3 className={styles.cardTitle} style={{ fontSize: 14 }}>
-                Document Metadata
-              </h3>
-              <div className={styles.specList}>
-                <div className={styles.specRow}>
-                  <span className={styles.specLabel}>Reference</span>
-                  <span className={styles.specValue}>
-                    {initialLetter?.reference_number || "AUTO-GENERATED"}
-                  </span>
-                </div>
-                <div className={styles.specRow}>
-                  <span className={styles.specLabel}>Status</span>
-                  <span className={styles.specValue} style={{ textTransform: "uppercase" }}>
-                    {initialLetter?.status || "DRAFT"}
-                  </span>
-                </div>
-                <div className={styles.specRow}>
-                  <span className={styles.specLabel}>Recipient Type</span>
-                  <span className={styles.specValue} style={{ textTransform: "capitalize" }}>
-                    {recipientMode}
-                  </span>
-                </div>
+        <aside className={adminStyles.sidebarColumn}>
+          {/* Card: Document Meta */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <span>Document Metadata</span>
               </div>
             </div>
+            <div className={styles.specList}>
+              <div className={styles.specRow}>
+                <span className={styles.specLabel}>Reference</span>
+                <span className={styles.specValue}>
+                  {initialLetter?.reference_number || "AUTO-GENERATED"}
+                </span>
+              </div>
+              <div className={styles.specRow}>
+                <span className={styles.specLabel}>Status</span>
+                <span
+                  className={styles.specValue}
+                  style={{ textTransform: "uppercase" }}
+                >
+                  {initialLetter?.status || "DRAFT"}
+                </span>
+              </div>
+              <div className={styles.specRow}>
+                <span className={styles.specLabel}>Recipient Type</span>
+                <span
+                  className={styles.specValue}
+                  style={{ textTransform: "capitalize" }}
+                >
+                  {recipientMode}
+                </span>
+              </div>
+            </div>
+          </div>
 
-            {/* Card: Signatory Controls */}
-            <div className={styles.card}>
-              <h3 className={styles.cardTitle} style={{ fontSize: 14 }}>
-                Authorized Signatory
-              </h3>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Signatory Name</label>
+          {/* Card: Signatory Controls */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <span>Authorized Signatory</span>
+              </div>
+            </div>
+            <div className={adminStyles.formStackCompact}>
+              <div>
+                <label className={adminStyles.formLabel}>Signatory Name</label>
                 <input
                   type="text"
-                  className={styles.input}
+                  className={adminStyles.inputField}
                   value={signatoryName}
                   onChange={(e) => setSignatoryName(e.target.value)}
                 />
               </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Signatory Designation</label>
+              <div>
+                <label className={adminStyles.formLabel}>
+                  Signatory Designation
+                </label>
                 <input
                   type="text"
-                  className={styles.input}
+                  className={adminStyles.inputField}
                   value={signatoryTitle}
                   onChange={(e) => setSignatoryTitle(e.target.value)}
                 />
               </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Direct Email</label>
-                <input
-                  type="email"
-                  className={styles.input}
-                  value={signatoryEmail}
-                  onChange={(e) => setSignatoryEmail(e.target.value)}
-                />
-              </div>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Direct Phone</label>
-                <input
-                  type="tel"
-                  className={styles.input}
-                  value={signatoryPhone}
-                  onChange={(e) => setSignatoryPhone(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Card: Multi-Channel Distribution */}
-            <div className={styles.card}>
-              <h3 className={styles.cardTitle} style={{ fontSize: 14 }}>
-                Distribution & Output
-              </h3>
-
-              <div className={styles.actionStack}>
-                {initialLetter?.id ? (
-                  <>
-                    <a
-                      href={`/api/admin/letters/${initialLetter.id}/pdf`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="db-btn db-btn-secondary"
-                      style={{ width: "100%", justifyContent: "center", display: "inline-flex", alignItems: "center", gap: 8 }}
-                    >
-                      <Download size={16} /> Download PDF
-                    </a>
-
-                    <button
-                      type="button"
-                      onClick={() => setPreviewOpen(true)}
-                      className="db-btn db-btn-secondary"
-                      style={{ width: "100%", justifyContent: "center", display: "inline-flex", alignItems: "center", gap: 8 }}
-                    >
-                      <Eye size={16} /> Live PDF Preview
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setEmailModalOpen(true)}
-                      className="db-btn db-btn-primary"
-                      style={{ width: "100%", justifyContent: "center", display: "inline-flex", alignItems: "center", gap: 8 }}
-                    >
-                      <Send size={16} /> Dispatch via Email
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleOpenMailto}
-                      className="db-btn db-btn-secondary"
-                      style={{ width: "100%", justifyContent: "center", display: "inline-flex", alignItems: "center", gap: 8 }}
-                    >
-                      <Mail size={16} /> Open Mail Client (mailto:)
-                    </button>
-                  </>
-                ) : (
-                  <p style={{ fontSize: 12, color: "var(--db-text-muted)", margin: 0, textAlign: "center" }}>
-                    Save document draft to enable PDF download, live preview, and direct email distribution.
-                  </p>
-                )}
-              </div>
             </div>
           </div>
-        </div>
+
+          {/* Card: Multi-Channel Distribution */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <span>Distribution &amp; Output</span>
+              </div>
+            </div>
+
+            <div className={adminStyles.formStackCompact}>
+              {initialLetter?.id ? (
+                <>
+                  <a
+                    href={`/api/admin/letters/${initialLetter.id}/pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="db-btn db-btn-secondary"
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Download size={16} /> Download PDF
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() => setPreviewOpen(true)}
+                    className="db-btn db-btn-secondary"
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Eye size={16} /> Live PDF Preview
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEmailModalOpen(true)}
+                    className="db-btn db-btn-primary"
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Send size={16} /> Dispatch via Email
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleOpenMailto}
+                    className="db-btn db-btn-secondary"
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Mail size={16} /> Open Mail Client (mailto:)
+                  </button>
+                </>
+              ) : (
+                <p
+                  style={{
+                    fontSize: 12,
+                    color: "var(--db-text-muted)",
+                    margin: 0,
+                    textAlign: "center",
+                  }}
+                >
+                  Save document draft to enable PDF download, live preview, and
+                  direct email distribution.
+                </p>
+              )}
+            </div>
+          </div>
+        </aside>
       </div>
 
       {/* PDF Live Preview Modal */}
       {previewOpen && initialLetter?.id && (
-        <div className={modalStyles.modalOverlay} onClick={() => setPreviewOpen(false)}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setPreviewOpen(false)}
+        >
           <div
-            className={modalStyles.modalContent}
-            style={{ maxWidth: 900, height: "85vh", display: "flex", flexDirection: "column" }}
+            className={styles.modalContent}
+            style={{
+              maxWidth: 900,
+              height: "85vh",
+              display: "flex",
+              flexDirection: "column",
+            }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={modalStyles.modalHeader}>
-              <h2 className={modalStyles.modalTitle}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
                 PDF Preview: {initialLetter.reference_number}
               </h2>
               <button
                 type="button"
-                className={modalStyles.closeBtn}
+                className={styles.closeBtn}
                 onClick={() => setPreviewOpen(false)}
               >
                 ✕
@@ -1050,7 +1149,12 @@ export function LetterEditor({
             <div style={{ flex: 1, padding: 16, background: "#1e293b" }}>
               <iframe
                 src={`/api/admin/letters/${initialLetter.id}/pdf`}
-                style={{ width: "100%", height: "100%", border: "none", borderRadius: 8 }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                  borderRadius: 8,
+                }}
                 title="Letter PDF Preview"
               />
             </div>
@@ -1060,53 +1164,66 @@ export function LetterEditor({
 
       {/* Email Dispatch Modal */}
       {emailModalOpen && initialLetter?.id && (
-        <div className={modalStyles.modalOverlay} onClick={() => setEmailModalOpen(false)}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setEmailModalOpen(false)}
+        >
           <div
-            className={modalStyles.modalContent}
+            className={styles.modalContent}
             style={{ maxWidth: 580 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={modalStyles.modalHeader}>
-              <h2 className={modalStyles.modalTitle}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
                 Dispatch Document via Resend
               </h2>
               <button
                 type="button"
-                className={modalStyles.closeBtn}
+                className={styles.closeBtn}
                 onClick={() => setEmailModalOpen(false)}
               >
                 ✕
               </button>
             </div>
-            <div className={modalStyles.modalBody} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Recipient Email Address</label>
-                <input
-                  type="email"
-                  className={styles.input}
-                  value={recipientEmail}
-                  onChange={(e) => setRecipientEmail(e.target.value)}
-                />
+            <div className={styles.modalBody}>
+              <div className={adminStyles.formField}>
+                <div>
+                  <label className={adminStyles.formLabel}>
+                    Recipient Email Address
+                  </label>
+                  <input
+                    type="email"
+                    className={adminStyles.inputField}
+                    value={recipientEmail}
+                    onChange={(e) => setRecipientEmail(e.target.value)}
+                  />
+                </div>
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Email Subject</label>
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={emailSubject}
-                  onChange={(e) => setEmailSubject(e.target.value)}
-                />
+              <div className={adminStyles.formField}>
+                <div>
+                  <label className={adminStyles.formLabel}>Email Subject</label>
+                  <input
+                    type="text"
+                    className={adminStyles.inputField}
+                    value={emailSubject}
+                    onChange={(e) => setEmailSubject(e.target.value)}
+                  />
+                </div>
               </div>
 
-              <div className={styles.fieldGroup}>
-                <label className={styles.label}>Email Message Body</label>
-                <textarea
-                  className={styles.textarea}
-                  style={{ minHeight: 140 }}
-                  value={emailBodyMessage}
-                  onChange={(e) => setEmailBodyMessage(e.target.value)}
-                />
+              <div className={adminStyles.formField}>
+                <div>
+                  <label className={adminStyles.formLabel}>
+                    Email Message Body
+                  </label>
+                  <textarea
+                    className={adminStyles.textareaField}
+                    style={{ minHeight: 140 }}
+                    value={emailBodyMessage}
+                    onChange={(e) => setEmailBodyMessage(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div
@@ -1119,28 +1236,27 @@ export function LetterEditor({
                   color: "var(--db-text-muted)",
                 }}
               >
-                📎 <strong>Attachment:</strong> {initialLetter.reference_number}.pdf (Rendered official letterhead document)
+                📎 <strong>Attachment:</strong> {initialLetter.reference_number}
+                .pdf (Rendered official letterhead document)
               </div>
             </div>
 
-            <div className={modalStyles.modalFooter}>
-              <button
-                type="button"
-                className="db-btn db-btn-secondary"
+            <div className={styles.modalFooter}>
+              <AdminButton
+                variant="secondary"
                 onClick={() => setEmailModalOpen(false)}
                 disabled={isPending}
               >
                 Cancel
-              </button>
-              <button
-                type="button"
-                className="db-btn db-btn-primary"
+              </AdminButton>
+              <AdminButton
+                variant="primary"
+                icon={<Send size={16} />}
                 onClick={handleSendEmail}
                 disabled={isPending || !recipientEmail}
-                style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
               >
-                <Send size={16} /> {isPending ? "Sending..." : "Send Email"}
-              </button>
+                {isPending ? "Sending..." : "Send Email"}
+              </AdminButton>
             </div>
           </div>
         </div>

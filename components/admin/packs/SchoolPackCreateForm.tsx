@@ -22,10 +22,8 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import itemStyles from "./ItemsManager.module.css";
-import styles from "./SchoolPackCreateForm.module.css";
 
 const PAGE_SIZE = 4;
 const GRADES = [
@@ -158,7 +156,7 @@ export function SchoolPackCreateForm({
     <form
       action={formAction}
       onSubmit={handleSubmit}
-      className={`${coreStyles.container} ${styles.form}`}
+      className={adminStyles.formStack}
     >
       <input type="hidden" name="school_id" value={schoolId} />
       <input type="hidden" name="visible" value="on" />
@@ -177,9 +175,7 @@ export function SchoolPackCreateForm({
       ) : null}
 
       {/* 5 Summary Metric Stat Cards matching reference image */}
-      <div
-        className={`${adminStyles.metricsGrid5} ${coreStyles.packMetricsGrid}`}
-      >
+      <div className={adminStyles.metricsGrid5}>
         <MetricCard
           label="Pack Price"
           value={formattedPrice}
@@ -223,22 +219,26 @@ export function SchoolPackCreateForm({
 
       {/* Middle Section (2-Column Grid: Set Pack Grade & Items + Pack Summary) */}
       <div className={adminStyles.detailLayout}>
-        <div className={styles.leftStack}>
-          <section className={`${adminStyles.tableCard} ${styles.priceCard}`}>
-            <div className={styles.priceHeader}>
-              <div>
-                <h2 className={styles.cardTitle}>Set Pack Grade & Items</h2>
+        <div className={adminStyles.leftColumn}>
+          <section className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Layers size={16} className={adminStyles.iconTeal} />
+                <span>Set Pack Grade &amp; Items</span>
               </div>
             </div>
 
-            <div className={styles.priceControls}>
-              <label className={styles.fieldGroup}>
-                <span className={styles.fieldLabel}>Select Grade *</span>
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="grade">
+                  Select Grade <span className={adminStyles.muted}>*</span>
+                </label>
                 <select
+                  id="grade"
                   name="grade"
                   value={selectedGrade}
                   onChange={(event) => setSelectedGrade(event.target.value)}
-                  className={styles.fieldSelect}
+                  className={adminStyles.selectField}
                 >
                   {GRADES.map((grade) => (
                     <option key={grade} value={grade}>
@@ -246,10 +246,14 @@ export function SchoolPackCreateForm({
                     </option>
                   ))}
                 </select>
-              </label>
+              </div>
+            </div>
 
-              <div className={`${styles.fieldGroup} ${styles.itemSearchGroup}`}>
-                <span className={styles.fieldLabel}>Add Stationery Items</span>
+            <div className={adminStyles.formField}>
+              <div>
+                <span className={adminStyles.formLabel}>
+                  Add Stationery Items
+                </span>
                 <GradePackItemSelector
                   key={selectorKey}
                   initialItems={lines}
@@ -334,14 +338,14 @@ export function SchoolPackCreateForm({
                     </td>
                     <td>
                       <div className={itemStyles.actions}>
-                        <button
+                        <AdminButton
                           type="button"
-                          className={itemStyles.iconBtnRed}
+                          variant="danger"
+                          size="sm"
+                          icon={<Trash2 size={14} />}
                           onClick={() => removeLine(line.id)}
-                          data-db-tooltip="Delete Item"
-                        >
-                          <Trash2 size={14} />
-                        </button>
+                          title="Delete Item"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -349,7 +353,7 @@ export function SchoolPackCreateForm({
               })
             ) : (
               <tr>
-                <td className={styles.emptyRow} colSpan={6}>
+                <td className={adminStyles.emptyCell} colSpan={6}>
                   Search and add stationery items to build this pack.
                 </td>
               </tr>

@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { RotateCw, Save, Sparkles } from "lucide-react";
+import { RotateCw, Save, Sparkles, Package, Store } from "lucide-react";
 import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { PACK_ITEM_ICONS, isPackItemIconKey } from "@/lib/packs/itemIcons";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
-import { FloatingInput } from "@/components/ui/FloatingInput";
-import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { PEXCO_CLASSIFICATIONS } from "@/lib/admin/system-settings-shared";
 import type { MasterPricingConfig } from "@/lib/admin/items";
@@ -189,7 +187,7 @@ export function ItemForm({
   };
 
   return (
-    <form action={formAction} className={styles.container}>
+    <form action={formAction} className={adminStyles.stack}>
       {/* Banner Alert Messages */}
       {state?.ok ? (
         <DbNotice
@@ -200,10 +198,7 @@ export function ItemForm({
           }
         />
       ) : state?.message ? (
-        <DbNotice
-          type="error"
-          message={state.message}
-        />
+        <DbNotice type="error" message={state.message} />
       ) : null}
 
       <input type="hidden" name="sort_order" value={item?.sort_order ?? 0} />
@@ -214,281 +209,399 @@ export function ItemForm({
         value={item?.pack_id ?? packs[0]?.id ?? ""}
       />
 
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={adminStyles.sectionIconTeal}>
-            <ItemIcon name={icon || "folder"} size={16} />
-          </div>
-          <span>Product Metadata &amp; Catalogue Information</span>
-        </div>
+      <div className={adminStyles.detailLayout}>
+        {/* ---- LEFT COLUMN ---- */}
+        <div className={adminStyles.leftColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <ItemIcon name={icon || "folder"} size={16} />
+                <span>Product Metadata &amp; Catalogue Information</span>
+              </div>
+            </div>
 
-        {/* Row 1: SKU & Category */}
-        <div className={styles.grid2}>
-          <FloatingInput
-            id="sku"
-            name="sku"
-            label="SKU"
-            value={sku}
-            className={styles.skuInput}
-            onChange={handleSkuChange}
-            error={state?.errors?.sku}
-            rightAdornment={
-              <button
-                type="button"
-                onClick={handleRegenerateSku}
-                data-db-tooltip={
-                  isCustomSku
-                    ? "Custom SKU (Click to Auto-sync)"
-                    : "Auto-synced (Click to Refresh)"
-                }
-                className={`${styles.skuButtonAdornment} ${isCustomSku ? styles.skuButtonLocked : ""}`}
-              >
-                {isCustomSku ? <RotateCw size={11} /> : <Sparkles size={11} />}
-                <span>{isCustomSku ? "Auto-sync" : "Auto-sync"}</span>
-              </button>
-            }
-          />
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="sku">
+                  SKU
+                </label>
+                <div className={styles.skuInputRow}>
+                  <input
+                    id="sku"
+                    name="sku"
+                    className={`${adminStyles.inputField} ${styles.skuInput}`}
+                    value={sku}
+                    onChange={handleSkuChange}
+                    placeholder="Auto-generated"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRegenerateSku}
+                    data-db-tooltip={
+                      isCustomSku
+                        ? "Custom SKU (Click to Auto-sync)"
+                        : "Auto-synced (Click to Refresh)"
+                    }
+                    className={`${styles.skuButtonAdornment} ${
+                      isCustomSku ? styles.skuButtonLocked : ""
+                    }`}
+                  >
+                    {isCustomSku ? (
+                      <RotateCw size={11} />
+                    ) : (
+                      <Sparkles size={11} />
+                    )}
+                    <span>Auto-sync</span>
+                  </button>
+                </div>
+                {state?.errors?.sku && (
+                  <span className={styles.fieldError}>{state.errors.sku}</span>
+                )}
+              </div>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="category">
+                  Category
+                </label>
+                <select
+                  id="category"
+                  name="category"
+                  value={category}
+                  onChange={handleCategoryChange}
+                  className={adminStyles.selectField}
+                  aria-label="Category"
+                >
+                  {PRODUCT_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+                {state?.errors?.category && (
+                  <span className={styles.fieldError}>
+                    {state.errors.category}
+                  </span>
+                )}
+              </div>
+            </div>
 
-          <div className={styles.categoryField}>
-            <label htmlFor="category" className={styles.categoryLabel}>
-              Category
-            </label>
-            <select
-              id="category"
-              name="category"
-              value={category}
-              onChange={handleCategoryChange}
-              className={styles.select}
-              aria-label="Category"
-            >
-              {PRODUCT_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            {state?.errors?.category && (
-              <span className={styles.fieldError}>{state.errors.category}</span>
-            )}
-          </div>
-        </div>
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="name">
+                  Product Name <span className={adminStyles.muted}>*</span>
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  className={adminStyles.inputField}
+                  value={productName}
+                  onChange={handleNameChange}
+                  placeholder="e.g. A4 Exercise Book 72pg"
+                  required
+                />
+                {state?.errors?.name && (
+                  <span className={styles.fieldError}>{state.errors.name}</span>
+                )}
+              </div>
+            </div>
 
-        {/* Row 2: Product Name */}
-        <FloatingInput
-          id="name"
-          name="name"
-          label="Product Name"
-          value={productName}
-          onChange={handleNameChange}
-          required
-          error={state?.errors?.name}
-        />
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="description">
+                  Description &amp; Specifications
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  className={adminStyles.textareaField}
+                  defaultValue={item?.description ?? ""}
+                  placeholder="Product description, material, and specifications..."
+                />
+                {state?.errors?.description && (
+                  <span className={styles.fieldError}>
+                    {state.errors.description}
+                  </span>
+                )}
+              </div>
+            </div>
 
-        {/* Row 3: Description */}
-        <FloatingTextarea
-          id="description"
-          name="description"
-          label="Description &amp; Specifications"
-          defaultValue={item?.description ?? ""}
-          error={state?.errors?.description}
-        />
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label
+                  className={adminStyles.formLabel}
+                  htmlFor="specification"
+                >
+                  Pack / Unit (e.g. Pack, Box, Each)
+                </label>
+                <input
+                  id="specification"
+                  name="specification"
+                  className={adminStyles.inputField}
+                  defaultValue={item?.specification ?? ""}
+                  placeholder="e.g. Pack of 10"
+                />
+                {state?.errors?.specification && (
+                  <span className={styles.fieldError}>
+                    {state.errors.specification}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="quantity">
+                  Quantity
+                </label>
+                <input
+                  id="quantity"
+                  name="quantity"
+                  inputMode="numeric"
+                  className={adminStyles.inputField}
+                  defaultValue={item?.quantity ?? 1}
+                  placeholder="1"
+                />
+                {state?.errors?.quantity && (
+                  <span className={styles.fieldError}>
+                    {state.errors.quantity}
+                  </span>
+                )}
+              </div>
+            </div>
 
-        {/* Row 4: Pack / Unit & Qty */}
-        <div className={styles.grid2}>
-          <FloatingInput
-            id="specification"
-            name="specification"
-            label="Pack / Unit (e.g. Pack, Box, Each)"
-            defaultValue={item?.specification ?? ""}
-            error={state?.errors?.specification}
-          />
-
-          <FloatingInput
-            id="quantity"
-            name="quantity"
-            inputMode="numeric"
-            label="Quantity"
-            defaultValue={item?.quantity ?? 1}
-            error={state?.errors?.quantity}
-          />
-        </div>
-
-        {/* Row 5: Price, Supplier Source & Visibility */}
-        <div className={styles.grid2}>
-          <div className={styles.priceCell}>
-            <FloatingInput
-              id="price"
-              name="price"
-              inputMode="decimal"
-              label={masterMode ? "Cost Price (R)" : "Selling Price (R)"}
-              defaultValue={masterMode ? undefined : (item?.unit_price ?? "")}
-              value={masterMode ? costValue : undefined}
-              onChange={masterMode ? handlePriceChange : undefined}
-              error={state?.errors?.price}
-            />
-            {masterMode && (
-              <div
-                className={styles.sellingPreview}
-                data-testid="selling-preview"
-              >
-                <span className={styles.sellingPreviewLabel}>
-                  Calculated Selling Price
+            {/* Pexcover Classification */}
+            <div className={adminStyles.formField}>
+              <div>
+                <span className={adminStyles.formLabel}>
+                  📚 Pexcover™ Book-Covering Classification
                 </span>
-                <span className={styles.sellingPreviewValue}>
-                  {computedSellingPrice != null
-                    ? `R ${computedSellingPrice.toFixed(2)}`
-                    : "—"}
-                </span>
-                <span className={styles.sellingPreviewHint}>
-                  = Cost + Target Margin (auto)
+                <p className={adminStyles.muted}>
+                  Enable if this product is a book or exercise book that
+                  requires covering. The PEXCO code selects the covering
+                  classification.
+                </p>
+                <label
+                  className={styles.checkboxLabel}
+                  htmlFor="requires_pexcover"
+                >
+                  <input
+                    id="requires_pexcover"
+                    type="checkbox"
+                    name="requires_pexcover"
+                    checked={requiresPexcover}
+                    onChange={(e) => {
+                      setRequiresPexcover(e.target.checked);
+                      if (!e.target.checked) setPexcoCode("");
+                    }}
+                    className={adminStyles.checkbox}
+                  />
+                  Requires Pexcover™ covering
+                </label>
+                {requiresPexcover && (
+                  <div className={adminStyles.formField}>
+                    <div>
+                      <input
+                        type="hidden"
+                        name="pexco_code"
+                        value={pexcoCode}
+                      />
+                      <label
+                        className={adminStyles.formLabel}
+                        htmlFor="pexco_code_select"
+                      >
+                        PEXCO Classification Code
+                      </label>
+                      <select
+                        id="pexco_code_select"
+                        className={adminStyles.selectField}
+                        value={pexcoCode}
+                        onChange={(e) => setPexcoCode(e.target.value)}
+                        aria-label="PEXCO classification code"
+                      >
+                        <option value="">— Select PEXCO Code —</option>
+                        {PEXCO_CLASSIFICATIONS.map((classification) => (
+                          <option
+                            key={classification.code}
+                            value={classification.code}
+                          >
+                            {classification.code} — {classification.label}
+                          </option>
+                        ))}
+                      </select>
+                      {state?.errors?.pexco_code && (
+                        <span className={styles.fieldError}>
+                          {state.errors.pexco_code}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Icon Picker */}
+            <div className={adminStyles.formField}>
+              <div>
+                <span className={adminStyles.formLabel}>Item Icon Symbol</span>
+                <div className={adminStyles.stackRow}>
+                  {icon ? (
+                    <div className={styles.iconSelectedPreview}>
+                      <ItemIcon name={icon} size={16} />
+                      <span>Selected: {icon}</span>
+                    </div>
+                  ) : (
+                    <span className={adminStyles.muted}>
+                      No icon selected (auto fallback used)
+                    </span>
+                  )}
+                </div>
+                <div
+                  className={styles.iconGrid}
+                  role="group"
+                  aria-label="Pick an icon"
+                >
+                  {PACK_ITEM_ICONS.map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      className={`${styles.iconOption} ${
+                        icon === option.key ? styles.iconOptionActive : ""
+                      }`}
+                      onClick={() =>
+                        setIcon(icon === option.key ? "" : option.key)
+                      }
+                      data-db-tooltip={option.label}
+                      aria-pressed={icon === option.key}
+                    >
+                      <ItemIcon name={option.key} size={20} />
+                    </button>
+                  ))}
+                </div>
+                <span className={adminStyles.muted}>
+                  Optional item emblem displayed alongside the product on school
+                  pack checkouts.
                 </span>
               </div>
-            )}
-          </div>
-
-          <div className={styles.categoryField}>
-            <label htmlFor="supplier_id" className={styles.categoryLabel}>
-              Supplier (Cost Price Source)
-            </label>
-            <select
-              id="supplier_id"
-              name="supplier_id"
-              value={supplierId}
-              onChange={(e) => setSupplierId(e.target.value)}
-              className={styles.select}
-              aria-label="Supplier whose cost price is used"
-            >
-              <option value="">— Select Supplier (Cost Price Source) —</option>
-              {suppliers.map((sup) => (
-                <option key={sup.id} value={sup.id}>
-                  {sup.name} {sup.code ? `(${sup.code})` : ""}
-                </option>
-              ))}
-            </select>
-            <span className={styles.hint}>
-              Select the supplier whose cost price is used for this product.
-            </span>
-
-            <div className={styles.checkboxCell} style={{ marginTop: "10px" }}>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  name="visible"
-                  defaultChecked={item?.visible ?? true}
-                  className={adminStyles.checkbox}
-                />
-                Visible on Public Catalogue
-              </label>
             </div>
           </div>
         </div>
 
-        {/* Row 6: Pexcover Classification */}
-        <div className={styles.pexcoverSection}>
-          <div className={styles.pexcoverHeader}>
-            <span className={styles.pexcoverLabel}>
-              📚 Pexcover™ Book-Covering Classification
-            </span>
-            <span className={styles.pexcoverHint}>
-              Enable if this product is a book or exercise book that requires
-              covering. The PEXCO code selects the covering classification — its
-              covering rate is set in System Control Centre → Pricing &amp;
-              Margin and billed at checkout.
-            </span>
-          </div>
-          <div className={styles.pexcoverRow}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name="requires_pexcover"
-                checked={requiresPexcover}
-                onChange={(e) => {
-                  setRequiresPexcover(e.target.checked);
-                  if (!e.target.checked) setPexcoCode("");
-                }}
-                className={adminStyles.checkbox}
-              />
-              Requires Pexcover™ covering
-            </label>
-            {requiresPexcover && (
-              <div className={styles.pexcoSelect}>
-                <input type="hidden" name="pexco_code" value={pexcoCode} />
+        {/* ---- RIGHT / SIDEBAR COLUMN ---- */}
+        <aside className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Package size={16} className={adminStyles.iconTeal} />
+                <span>Pricing &amp; Availability</span>
+              </div>
+            </div>
+
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="price">
+                  {masterMode ? "Cost Price (R)" : "Selling Price (R)"}
+                </label>
+                <input
+                  id="price"
+                  name="price"
+                  inputMode="decimal"
+                  className={adminStyles.inputField}
+                  defaultValue={
+                    masterMode ? undefined : (item?.unit_price ?? "")
+                  }
+                  value={masterMode ? costValue : undefined}
+                  onChange={masterMode ? handlePriceChange : undefined}
+                  placeholder="0.00"
+                />
+                {state?.errors?.price && (
+                  <span className={styles.fieldError}>
+                    {state.errors.price}
+                  </span>
+                )}
+                {masterMode && (
+                  <div
+                    className={styles.sellingPreview}
+                    data-testid="selling-preview"
+                  >
+                    <span className={styles.sellingPreviewLabel}>
+                      Calculated Selling Price
+                    </span>
+                    <span className={styles.sellingPreviewValue}>
+                      {computedSellingPrice != null
+                        ? `R ${computedSellingPrice.toFixed(2)}`
+                        : "—"}
+                    </span>
+                    <span className={styles.sellingPreviewHint}>
+                      = Cost + Target Margin (auto)
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="supplier_id">
+                  Supplier (Cost Price Source)
+                </label>
                 <select
-                  id="pexco_code_select"
-                  className={styles.select}
-                  value={pexcoCode}
-                  onChange={(e) => setPexcoCode(e.target.value)}
-                  aria-label="PEXCO classification code"
+                  id="supplier_id"
+                  name="supplier_id"
+                  value={supplierId}
+                  onChange={(e) => setSupplierId(e.target.value)}
+                  className={adminStyles.selectField}
+                  aria-label="Supplier whose cost price is used"
                 >
-                  <option value="">— Select PEXCO Code —</option>
-                  {PEXCO_CLASSIFICATIONS.map((classification) => (
-                    <option
-                      key={classification.code}
-                      value={classification.code}
-                    >
-                      {classification.code} — {classification.label}
+                  <option value="">
+                    — Select Supplier (Cost Price Source) —
+                  </option>
+                  {suppliers.map((sup) => (
+                    <option key={sup.id} value={sup.id}>
+                      {sup.name} {sup.code ? `(${sup.code})` : ""}
                     </option>
                   ))}
                 </select>
-                {state?.errors?.pexco_code && (
-                  <span className={styles.fieldError}>
-                    {state.errors.pexco_code}
-                  </span>
-                )}
+                <span className={adminStyles.muted}>
+                  Select the supplier whose cost price is used for this product.
+                </span>
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Icon Picker Section */}
-        <div className={styles.iconSection}>
-          <div className={styles.iconHeaderRow}>
-            <span className={styles.iconLabel}>Item Icon Symbol</span>
-            {icon ? (
-              <div className={styles.iconSelectedPreview}>
-                <ItemIcon name={icon} size={16} />
-                <span>Selected: {icon}</span>
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={styles.checkboxLabel} htmlFor="visible">
+                  <input
+                    id="visible"
+                    type="checkbox"
+                    name="visible"
+                    defaultChecked={item?.visible ?? true}
+                    className={adminStyles.checkbox}
+                  />
+                  Visible on Public Catalogue
+                </label>
               </div>
-            ) : (
-              <span className={styles.hint}>
-                No icon selected (auto fallback used)
+            </div>
+
+            <div className={adminStyles.stackRow}>
+              <AdminButton href={returnTo} variant="secondary" size="md">
+                Cancel
+              </AdminButton>
+              <SubmitButton label={submitLabel} />
+            </div>
+          </div>
+
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Store size={16} className={adminStyles.iconBlue} />
+                <span>Product Type</span>
+              </div>
+            </div>
+            <div className={adminStyles.stack}>
+              <span className={adminStyles.muted}>
+                {masterMode
+                  ? "Master catalogue product — reusable across school packs."
+                  : "Pack-specific item."}
               </span>
-            )}
+            </div>
           </div>
-
-          <div
-            className={styles.iconGrid}
-            role="group"
-            aria-label="Pick an icon"
-          >
-            {PACK_ITEM_ICONS.map((option) => (
-              <button
-                key={option.key}
-                type="button"
-                className={`${styles.iconOption} ${
-                  icon === option.key ? styles.iconOptionActive : ""
-                }`}
-                onClick={() => setIcon(icon === option.key ? "" : option.key)}
-                data-db-tooltip={option.label}
-                aria-pressed={icon === option.key}
-              >
-                <ItemIcon name={option.key} size={20} />
-              </button>
-            ))}
-          </div>
-          <span className={styles.hint}>
-            Optional item emblem displayed alongside the product on school pack
-            checkouts.
-          </span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className={styles.actionsRow}>
-          <AdminButton href={returnTo} variant="secondary" size="md">
-            Cancel
-          </AdminButton>
-          <SubmitButton label={submitLabel} />
-        </div>
+        </aside>
       </div>
     </form>
   );

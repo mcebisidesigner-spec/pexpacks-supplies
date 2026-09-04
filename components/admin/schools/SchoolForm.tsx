@@ -4,10 +4,12 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   Building2,
-  ChevronDown,
   Image as ImageIcon,
-  Save,
+  MapPin,
+  Phone,
+  Mail,
   ShieldCheck,
+  GraduationCap,
 } from "lucide-react";
 import type { SchoolFormState, SchoolRow } from "@/lib/admin/schools";
 import { WarningBannerModal } from "@/components/admin/ui/WarningBannerModal";
@@ -16,11 +18,9 @@ import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
 import { DateField } from "@/components/admin/DateField";
-import { FloatingInput } from "@/components/ui/FloatingInput";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { FieldError } from "@/components/admin/ui/Form";
 import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
-import styles from "@/components/admin/views/CorePagesView.module.css";
 import adminStyles from "@/app/admin/admin.module.css";
 import formStyles from "./SchoolForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
@@ -41,7 +41,7 @@ function SubmitButton({ label }: { label: string }) {
       variant="primary"
       size="md"
       loading={pending}
-      icon={<Save size={14} />}
+      icon={<GraduationCap size={14} />}
     >
       {label}
     </AdminButton>
@@ -141,7 +141,8 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
       : school?.is_partner
         ? "partner"
         : "non_partner");
-  const [currentPartnership, setCurrentPartnership] = useState(initialPartnership);
+  const [currentPartnership, setCurrentPartnership] =
+    useState(initialPartnership);
   const [currentPublication, setCurrentPublication] = useState(
     school?.publication_status === "ready_for_review"
       ? "ready_for_review"
@@ -227,7 +228,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
   };
 
   return (
-    <form ref={formRef} action={formAction} className={formStyles.formLayout}>
+    <form ref={formRef} action={formAction} className={adminStyles.stack}>
       <input type="hidden" name="logo" value={logoValue} />
 
       {/* Banner Alert Messages */}
@@ -237,263 +238,327 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
           message={state.message || "School updated successfully."}
         />
       ) : state?.message ? (
-        <DbNotice
-          type="error"
-          message={state.message}
-        />
+        <DbNotice type="error" message={state.message} />
       ) : null}
 
-      {/* Section 1: Identity & Location */}
-      <div className={formStyles.card}>
-        <div className={formStyles.cardHeader}>
-          <div className={adminStyles.sectionIconTeal}>
-            <Building2 size={16} />
-          </div>
-          <span>School Identity &amp; Primary Details</span>
-        </div>
+      {/* Two-Column Detail Layout */}
+      <div className={adminStyles.detailLayout}>
+        {/* ---- LEFT COLUMN ---- */}
+        <div className={adminStyles.leftColumn}>
+          {/* Section 1: Identity & Location */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <Building2 size={16} className={adminStyles.iconTeal} />
+                <span>School Identity &amp; Primary Details</span>
+              </div>
+            </div>
 
-        <div className={formStyles.grid3}>
-          <div className={formStyles.colSpan2}>
-            <FloatingInput
-              id="name"
-              name="name"
-              label="School Name"
-              defaultValue={school?.name ?? ""}
-              required
-              error={state?.errors?.name}
-            />
-          </div>
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="name">
+                  School Name <span className={adminStyles.muted}>*</span>
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  className={adminStyles.inputField}
+                  defaultValue={school?.name ?? ""}
+                  placeholder="e.g. Example Primary School"
+                  required
+                />
+                {err("name")}
+              </div>
+            </div>
 
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="slug"
-              name="slug"
-              label="URL Slug / Identifier"
-              defaultValue={str(school?.slug)}
-              error={state?.errors?.slug}
-            />
-          </div>
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="slug">
+                  URL Slug / Identifier
+                </label>
+                <input
+                  id="slug"
+                  name="slug"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.slug)}
+                  placeholder="e.g. example-primary-school"
+                />
+                {err("slug")}
+              </div>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="city">
+                  City / Town
+                </label>
+                <input
+                  id="city"
+                  name="city"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.city)}
+                  placeholder="e.g. Cape Town"
+                />
+                {err("city")}
+              </div>
+            </div>
 
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="city"
-              name="city"
-              label="City / Town"
-              defaultValue={str(school?.city)}
-              error={state?.errors?.city}
-            />
-          </div>
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="province">
+                  Province
+                </label>
+                <input
+                  id="province"
+                  name="province"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.province)}
+                  placeholder="e.g. Western Cape"
+                />
+                {err("province")}
+              </div>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="district">
+                  District
+                </label>
+                <input
+                  id="district"
+                  name="district"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.district)}
+                  placeholder="e.g. Metro Central Education District"
+                />
+                {err("district")}
+              </div>
+            </div>
 
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="province"
-              name="province"
-              label="Province"
-              defaultValue={str(school?.province)}
-              error={state?.errors?.province}
-            />
-          </div>
+            <div className={adminStyles.grid2equal}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="email">
+                  Contact Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.email)}
+                  placeholder="admin@example.co.za"
+                />
+                {err("email")}
+              </div>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="telephone">
+                  Telephone
+                </label>
+                <input
+                  id="telephone"
+                  name="telephone"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.telephone)}
+                  placeholder="+27 21 000 0000"
+                />
+                {err("telephone")}
+              </div>
+            </div>
 
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="district"
-              name="district"
-              label="District"
-              defaultValue={str(school?.district)}
-              error={state?.errors?.district}
-            />
-          </div>
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="principal">
+                  School Official Website
+                </label>
+                <input
+                  id="principal"
+                  name="principal"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.principal)}
+                  placeholder="https://www.example.co.za"
+                />
+                {err("principal")}
+              </div>
+            </div>
 
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="email"
-              name="email"
-              type="email"
-              label="Contact Email"
-              defaultValue={str(school?.email)}
-              error={state?.errors?.email}
-            />
-          </div>
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="address">
+                  Physical Address
+                </label>
+                <input
+                  id="address"
+                  name="address"
+                  className={adminStyles.inputField}
+                  defaultValue={str(school?.address)}
+                  placeholder="1 School Road, Suburb, City, 0000"
+                />
+                {err("address")}
+              </div>
+            </div>
 
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="telephone"
-              name="telephone"
-              label="Telephone"
-              defaultValue={str(school?.telephone)}
-              error={state?.errors?.telephone}
-            />
-          </div>
-
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="principal"
-              name="principal"
-              label="School Official Website"
-              defaultValue={str(school?.principal)}
-              error={state?.errors?.principal}
-            />
-          </div>
-
-          <div className={formStyles.colSpan3}>
-            <FloatingInput
-              id="address"
-              name="address"
-              label="Physical Address"
-              defaultValue={str(school?.address)}
-              error={state?.errors?.address}
-            />
-          </div>
-          <div className={formStyles.colSpan2}>
-            <div className={formStyles.floatingSelectWrapper}>
-              <div className={formStyles.floatingSelectContainer}>
-                <select
-                  id="school_type_preset"
-                  value={gradePreset}
-                  onChange={(e) =>
-                    handlePresetChange(e.target.value as GradePreset)
-                  }
-                  className={formStyles.floatingSelect}
-                >
-                  <option value="high">High School (Grade 8–12)</option>
-                  <option value="primary">Primary School (Grade R–7)</option>
-                  <option value="combined">Combined School (Grade R–12)</option>
-                  <option value="custom">Custom (Select Grades)</option>
-                </select>
+            {/* Offered Grades */}
+            <div className={adminStyles.formField}>
+              <div>
                 <label
+                  className={adminStyles.formLabel}
                   htmlFor="school_type_preset"
-                  className={formStyles.floatingSelectLabel}
                 >
                   Offered Grades
                 </label>
-                <span className={formStyles.floatingSelectArrow}>
-                  <ChevronDown size={14} />
-                </span>
-              </div>
-              <input
-                type="hidden"
-                name="grades"
-                value={selectedGrades.join(", ")}
-              />
-              {err("grades")}
-            </div>
-          </div>
-
-          <div className={formStyles.colSpan1}>
-            <FloatingInput
-              id="custom_badge"
-              name="custom_badge"
-              label="Search Pill Badge"
-              defaultValue={str(school?.custom_badge) || DEFAULT_PACKS_BADGE}
-              error={state?.errors?.custom_badge}
-            />
-          </div>
-
-          {gradePreset === "custom" && (
-            <div className={formStyles.colSpan3}>
-              <div className={formStyles.customGradesBox}>
-                <span className={formStyles.customGradesTitle}>
-                  Select Individual Offered Grades (Grade R – 12):
-                </span>
-                <div className={formStyles.gradesChipsGrid}>
-                  {ALL_GRADES.map((g) => {
-                    const isChecked = selectedGrades.includes(g);
-                    return (
-                      <label
-                        key={g}
-                        className={`${formStyles.gradeChip} ${isChecked ? formStyles.gradeChipActive : ""}`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => handleToggleGrade(g)}
-                          className={formStyles.gradeChipCheckbox}
-                        />
-                        <span>{g}</span>
-                      </label>
-                    );
-                  })}
+                <div className={formStyles.floatingSelectWrapper}>
+                  <div className={formStyles.floatingSelectContainer}>
+                    <select
+                      id="school_type_preset"
+                      value={gradePreset}
+                      onChange={(e) =>
+                        handlePresetChange(e.target.value as GradePreset)
+                      }
+                      className={adminStyles.selectField}
+                    >
+                      <option value="high">High School (Grade 8–12)</option>
+                      <option value="primary">
+                        Primary School (Grade R–7)
+                      </option>
+                      <option value="combined">
+                        Combined School (Grade R–12)
+                      </option>
+                      <option value="custom">Custom (Select Grades)</option>
+                    </select>
+                  </div>
+                  <input
+                    type="hidden"
+                    name="grades"
+                    value={selectedGrades.join(", ")}
+                  />
+                  {err("grades")}
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Bottom Horizontal Row (Desktop: Side-by-Side, Mobile: Stacked) */}
-      <div className={formStyles.bottomRow}>
-        {/* Section 3: School Logo Branding (Left Card) */}
-        <div className={formStyles.card}>
-          <div className={formStyles.cardHeader}>
-            <ImageIcon size={16} className={adminStyles.iconAmber} />
-            <span>School Logo Branding</span>
-          </div>
-
-          <div className={formStyles.logoUploadContainer}>
-            <div className={formStyles.logoUploadBox}>
-              {logoPreview ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoPreview}
-                  alt="School logo preview"
-                  className={formStyles.logoPreviewImg}
-                />
-              ) : (
-                <SchoolLogoPlaceholder width={80} height={80} />
-              )}
-              <input
-                type="file"
-                name="logo_file"
-                accept="image/png,image/webp,image/svg+xml,image/jpeg"
-                className={formStyles.logoFileInput}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const url = URL.createObjectURL(file);
-                    setLogoPreview(url);
-                    setLogoValue("");
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="custom_badge">
+                  Search Pill Badge
+                </label>
+                <input
+                  id="custom_badge"
+                  name="custom_badge"
+                  className={adminStyles.inputField}
+                  defaultValue={
+                    str(school?.custom_badge) || DEFAULT_PACKS_BADGE
                   }
-                }}
-              />
+                  placeholder="e.g. Top 10 high school"
+                />
+                {err("custom_badge")}
+              </div>
             </div>
 
-            <div className={formStyles.logoInfoGroup}>
-              <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>
-                Upload School Emblem / Logo
-              </p>
-              <p className={`${adminStyles.cSubtle} ${styles.text11}`}>
-                PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder
-                used if empty.
-              </p>
-              {logoPreview ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLogoPreview(null);
-                    setLogoValue("");
+            {gradePreset === "custom" && (
+              <div className={adminStyles.formField}>
+                <div>
+                  <span className={adminStyles.formLabel}>
+                    Select Individual Offered Grades (Grade R – 12):
+                  </span>
+                  <div className={formStyles.gradesChipsGrid}>
+                    {ALL_GRADES.map((g) => {
+                      const isChecked = selectedGrades.includes(g);
+                      return (
+                        <label
+                          key={g}
+                          className={`${formStyles.gradeChip} ${
+                            isChecked ? formStyles.gradeChipActive : ""
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleToggleGrade(g)}
+                            className={formStyles.gradeChipCheckbox}
+                          />
+                          <span>{g}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Section: School Logo Branding */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <ImageIcon size={16} className={adminStyles.iconAmber} />
+                <span>School Logo Branding</span>
+              </div>
+            </div>
+
+            <div className={formStyles.logoUploadContainer}>
+              <div className={formStyles.logoUploadBox}>
+                {logoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={logoPreview}
+                    alt="School logo preview"
+                    className={formStyles.logoPreviewImg}
+                  />
+                ) : (
+                  <SchoolLogoPlaceholder width={80} height={80} />
+                )}
+                <input
+                  type="file"
+                  name="logo_file"
+                  accept="image/png,image/webp,image/svg+xml,image/jpeg"
+                  className={formStyles.logoFileInput}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setLogoPreview(url);
+                      setLogoValue("");
+                    }
                   }}
-                  className={formStyles.removeLogoBtn}
-                >
-                  Remove logo
-                </button>
-              ) : null}
+                />
+              </div>
+
+              <div className={formStyles.logoInfoGroup}>
+                <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>
+                  Upload School Emblem / Logo
+                </p>
+                <p className={`${adminStyles.cSubtle} ${adminStyles.muted}`}>
+                  PNG, WebP, SVG or JPG (max 10 MB). Auto-fallback placeholder
+                  used if empty.
+                </p>
+                {logoPreview ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLogoPreview(null);
+                      setLogoValue("");
+                    }}
+                    className={formStyles.removeLogoBtn}
+                  >
+                    Remove logo
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Section 4: Status & Flags (Right Card) */}
-        <div className={formStyles.card}>
-          <div className={formStyles.cardHeader}>
-            <div className={adminStyles.sectionIconTeal}>
-              <ShieldCheck size={16} />
+        {/* ---- RIGHT / SIDEBAR COLUMN ---- */}
+        <aside className={adminStyles.sidebarColumn}>
+          {/* Section: Public & Partnership */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <ShieldCheck size={16} className={adminStyles.iconTeal} />
+                <span>Public &amp; Partnership</span>
+              </div>
             </div>
-            <span>Public &amp; Partnership</span>
-          </div>
 
-          <div className={formStyles.sideGroup}>
-            <div className={formStyles.sideFieldsRow}>
-              <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="publication_status">
+            <div className={adminStyles.formField}>
+              <div>
+                <label
+                  className={adminStyles.formLabel}
+                  htmlFor="publication_status"
+                >
                   Publication Status
                 </label>
                 <AdminDropdown
@@ -502,15 +567,23 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   value={currentPublication}
                   onChange={setCurrentPublication}
                   options={[
-                    { value: "published", label: "Published — Live Storefront" },
-                    { value: "ready_for_review", label: "Ready for Review — Unpublished" },
+                    {
+                      value: "published",
+                      label: "Published — Live Storefront",
+                    },
+                    {
+                      value: "ready_for_review",
+                      label: "Ready for Review — Unpublished",
+                    },
                   ]}
                 />
                 {err("publication_status")}
               </div>
+            </div>
 
-              <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="partnership">
+            <div className={adminStyles.formField}>
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="partnership">
                   Partnership
                 </label>
                 <AdminDropdown
@@ -526,16 +599,22 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   options={[
                     { value: "partner", label: "Partner" },
                     { value: "non_partner", label: "Non-partner" },
-                    { value: "refused_partner", label: "Refused Partnership" },
+                    {
+                      value: "refused_partner",
+                      label: "Refused Partnership",
+                    },
                   ]}
                 />
                 {err("partnership")}
               </div>
             </div>
 
-            <div className={formStyles.sideFieldsRow}>
-              <div className={formStyles.sideField}>
-                <label className={formStyles.sideLabel} htmlFor="feature_status">
+            <div className={adminStyles.formField}>
+              <div>
+                <label
+                  className={adminStyles.formLabel}
+                  htmlFor="feature_status"
+                >
                   Feature Status
                 </label>
                 <AdminDropdown
@@ -550,10 +629,12 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 />
                 {err("feature_status")}
               </div>
+            </div>
 
-              <div className={formStyles.sideField}>
+            <div className={adminStyles.formField}>
+              <div>
                 <label
-                  className={formStyles.sideLabel}
+                  className={adminStyles.formLabel}
                   htmlFor="parent_collection_accepted"
                 >
                   Parent Collection Option
@@ -573,9 +654,12 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
             </div>
 
             {currentPartnership === "partner" ? (
-              <div className={formStyles.sideFieldsRow}>
-                <div className={formStyles.sideField}>
-                  <label className={formStyles.sideLabel} htmlFor="partner_since">
+              <div className={adminStyles.formField}>
+                <div>
+                  <label
+                    className={adminStyles.formLabel}
+                    htmlFor="partner_since"
+                  >
                     Partner Since Date
                   </label>
                   <DateField
@@ -612,7 +696,31 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               </AdminButton>
             </div>
           </div>
-        </div>
+
+          {/* Section: Contact Summary */}
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <MapPin size={16} className={adminStyles.iconBlue} />
+                <span>Contact Snapshot</span>
+              </div>
+            </div>
+            <div className={adminStyles.stack}>
+              <div className={adminStyles.stackRow}>
+                <Mail size={14} className={adminStyles.iconTeal} />
+                <span className={adminStyles.cSubtle}>
+                  {str(school?.email) || "—"}
+                </span>
+              </div>
+              <div className={adminStyles.stackRow}>
+                <Phone size={14} className={adminStyles.iconTeal} />
+                <span className={adminStyles.cSubtle}>
+                  {str(school?.telephone) || "—"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
 
       <SaveBar isDirty={isDirty} onSave={saveForm} onDiscard={discardChanges} />

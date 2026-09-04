@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, Clock, Link2, MessageSquare, Send, X } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  Link2,
+  MessageSquare,
+  Send,
+  X,
+} from "lucide-react";
 import styles from "./TaskDrawer.module.css";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import { FloatingInput } from "@/components/ui/FloatingInput";
 import {
   loadTaskActivitiesAction,
   addTaskCommentAction,
@@ -21,7 +27,12 @@ export interface TaskDrawerProps {
   onTaskUpdated?: () => void;
 }
 
-export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerProps) {
+export function TaskDrawer({
+  task,
+  isOpen,
+  onClose,
+  onTaskUpdated,
+}: TaskDrawerProps) {
   const [comments, setComments] = useState<TaskCommentRow[]>([]);
   const [commentText, setCommentText] = useState("");
   const [isLoadingComments, setIsLoadingComments] = useState(false);
@@ -95,7 +106,7 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
     if (res.ok && res.comment) {
       const savedComment = res.comment;
       setComments((prev) =>
-        prev.map((c) => (c.id === tempComment.id ? savedComment : c))
+        prev.map((c) => (c.id === tempComment.id ? savedComment : c)),
       );
     }
   };
@@ -117,7 +128,12 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
   };
 
   return (
-    <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
+    <div
+      className={styles.backdrop}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <div className={styles.titleGroup}>
@@ -125,14 +141,23 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
               <StatusBadge status={status} showDot />
               <StatusBadge status={task.priority} showDot />
               {task.due_at && (
-                <span className={styles.metaRow} style={{ color: "#94a3b8", fontSize: "12px" }}>
-                  <Clock size={12} /> Due {new Date(task.due_at).toLocaleDateString("en-ZA")}
+                <span
+                  className={styles.metaRow}
+                  style={{ color: "#94a3b8", fontSize: "12px" }}
+                >
+                  <Clock size={12} /> Due{" "}
+                  {new Date(task.due_at).toLocaleDateString("en-ZA")}
                 </span>
               )}
             </div>
             <h2 className={styles.title}>{task.title}</h2>
           </div>
-          <button type="button" onClick={onClose} className={styles.closeBtn} aria-label="Close drawer">
+          <button
+            type="button"
+            onClick={onClose}
+            className={styles.closeBtn}
+            aria-label="Close drawer"
+          >
             <X size={16} />
           </button>
         </div>
@@ -144,7 +169,8 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
               <div className={styles.linkedEntityBox}>
                 <Link2 size={14} />
                 <span>
-                  {task.entity_type.toUpperCase()}: {task.entity_id || "General"}
+                  {task.entity_type.toUpperCase()}:{" "}
+                  {task.entity_id || "General"}
                 </span>
               </div>
             </div>
@@ -152,19 +178,28 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
 
           {task.description && (
             <div className={styles.section}>
-              <span className={styles.sectionTitle}>Description &amp; Objective</span>
+              <span className={styles.sectionTitle}>
+                Description &amp; Objective
+              </span>
               <div className={styles.descriptionBox}>{task.description}</div>
             </div>
           )}
 
           <div className={styles.section}>
-            <span className={styles.sectionTitle}>Activity Thread &amp; Notes</span>
+            <span className={styles.sectionTitle}>
+              Activity Thread &amp; Notes
+            </span>
             <div className={styles.threadList}>
               {isLoadingComments ? (
-                <div className={styles.emptyComments}>Loading activity thread...</div>
+                <div className={styles.emptyComments}>
+                  Loading activity thread...
+                </div>
               ) : comments.length === 0 ? (
                 <div className={styles.emptyComments}>
-                  <MessageSquare size={20} style={{ margin: "0 auto 8px", opacity: 0.5 }} />
+                  <MessageSquare
+                    size={20}
+                    style={{ margin: "0 auto 8px", opacity: 0.5 }}
+                  />
                   <div>No discussion yet. Start the conversation below.</div>
                 </div>
               ) : (
@@ -172,7 +207,12 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
                   <div key={c.id} className={styles.commentCard}>
                     <div className={styles.commentTop}>
                       <span className={styles.commentAuthor}>Staff Member</span>
-                      <span>{new Date(c.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                      <span>
+                        {new Date(c.created_at).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
                     </div>
                     <div className={styles.commentBody}>{c.body}</div>
                   </div>
@@ -183,14 +223,18 @@ export function TaskDrawer({ task, isOpen, onClose, onTaskUpdated }: TaskDrawerP
         </div>
 
         <div className={styles.footer}>
-          <form onSubmit={handleAddComment} className="flex items-center gap-2 w-full">
+          <form
+            onSubmit={handleAddComment}
+            className="flex items-center gap-2 w-full"
+          >
             <div className="flex-1">
-              <FloatingInput
-                label="Write a comment or note..."
+              <input
+                className={styles.commentInput}
+                placeholder="Write a comment or note..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 disabled={isSubmittingComment}
-                bgSurface="bg-[#090e17]"
+                aria-label="Write a comment or note"
               />
             </div>
             <AdminButton

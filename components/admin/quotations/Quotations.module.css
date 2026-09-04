@@ -168,40 +168,42 @@
   width: 100%;
 }
 
-/* Segmented Toggle (School / Custom) */
+/* Segmented Toggle (School / Custom) — matches LetterEditor modeToggle */
 .clientTypeToggle {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  background-color: var(--db-surface-inner, var(--db-surface-inner));
-  border: 1px solid var(--db-border, var(--db-border));
-  border-radius: var(--db-radius-pill, 9999px);
   padding: 3px;
+  background: var(--db-surface-inner, #111a2e);
+  border: 1px solid var(--db-border, rgba(30, 41, 59, 0.9));
+  border-radius: 8px;
+  gap: 4px;
 }
 
 .clientTypeBtn {
-  background: transparent;
-  border: none;
-  color: var(--db-text-muted, var(--db-text-muted));
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 5px 14px;
-  border-radius: var(--db-radius-pill, 9999px);
+  border: none;
+  background: transparent;
+  color: var(--db-text-muted, #94a3b8);
   cursor: pointer;
-  transition: all var(--db-transition-fast, 120ms ease);
-  outline: none;
+  transition: all 150ms ease;
   font-family: inherit;
 }
 
 .clientTypeBtn:hover {
-  color: var(--db-text-primary, var(--db-text-primary));
+  color: var(--db-text-primary, #ffffff);
 }
 
 .clientTypeBtnActive {
-  background: linear-gradient(135deg, var(--db-brand, var(--db-brand)) 0%, var(--db-brand-strong, var(--db-brand-strong)) 100%);
+  background: var(--db-brand, #10b981);
   color: #ffffff !important;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
 }
 
 /* Line Items Table Dark Theming */

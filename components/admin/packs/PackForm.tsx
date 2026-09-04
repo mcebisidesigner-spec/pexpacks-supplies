@@ -2,9 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useActionState } from "react";
-import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import clsx from "clsx";
+import { Save } from "lucide-react";
 import type { PackFormState, PackSchool } from "@/lib/admin/packs";
 import { ArticlePackCard } from "@/components/packs/ArticlePackCard";
 import type { PackListItem } from "@/components/packs/packListTypes";
@@ -12,16 +11,23 @@ import GradePackItemSelector, {
   type PackLine,
 } from "@/components/grade-packs/GradePackItemSelector";
 import { formatCurrency } from "@/lib/formatCurrency";
-import formStyles from "../schools/SchoolForm.module.css";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./PackForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className={formStyles.saveButton} disabled={pending}>
-      {pending ? "Creating…" : label}
-    </button>
+    <AdminButton
+      type="submit"
+      variant="primary"
+      size="md"
+      loading={pending}
+      icon={<Save size={14} />}
+    >
+      {label}
+    </AdminButton>
   );
 }
 
@@ -73,7 +79,7 @@ function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
       <input
         type="text"
         id="school_picker"
-        className={formStyles.input}
+        className={adminStyles.inputField}
         placeholder="Search or select a school…"
         value={inputValue}
         onChange={(e) => {
@@ -107,10 +113,7 @@ function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
                 type="button"
                 role="option"
                 aria-selected={school.id === value}
-                className={clsx(
-                  styles.pickerOption,
-                  school.id === value && styles.pickerOptionSelected
-                )}
+                className={`${styles.pickerOption}${school.id === value ? ` ${styles.pickerOptionSelected}` : ""}`}
                 onClick={() => {
                   onChange(school.id);
                   setQuery("");
@@ -128,7 +131,7 @@ function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
         </div>
       ) : null}
       {error ? (
-        <span className={formStyles.error} role="alert">
+        <span className={adminStyles.error} role="alert">
           {error}
         </span>
       ) : null}
@@ -142,7 +145,11 @@ interface PackFormProps {
   action: (prev: PackFormState, formData: FormData) => Promise<PackFormState>;
 }
 
-export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProps) {
+export function PackForm({
+  schools,
+  defaultSchoolId = "",
+  action,
+}: PackFormProps) {
   const [state, formAction] = useActionState<PackFormState, FormData>(action, {
     ok: false,
   });
@@ -151,7 +158,8 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
   const itemsRef = useRef<PackLine[]>([]);
   const itemsInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedSchool = schools.find((school) => school.id === schoolId) ?? null;
+  const selectedSchool =
+    schools.find((school) => school.id === schoolId) ?? null;
   const previewGrade = displayGrade(grade);
   const previewItems: PackListItem[] = [];
 
@@ -167,13 +175,17 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
 
   const err = (field: string) =>
     state?.errors?.[field] ? (
-      <span className={formStyles.error} role="alert">
+      <span className={adminStyles.error} role="alert">
         {state.errors[field]}
       </span>
     ) : null;
 
   return (
-    <form action={formAction} onSubmit={handleSubmit} className={formStyles.form}>
+    <form
+      action={formAction}
+      onSubmit={handleSubmit}
+      className={adminStyles.formStack}
+    >
       <input
         type="hidden"
         name="items"
@@ -187,17 +199,16 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
           message={state.message || "Pack saved successfully."}
         />
       ) : state?.message ? (
-        <DbNotice
-          type="error"
-          message={state.message}
-        />
+        <DbNotice type="error" message={state.message} />
       ) : null}
 
-      <div className={formStyles.section}>
-        <h2 className={formStyles.sectionTitle}>Pack details</h2>
+      <div className={adminStyles.sidebarCard}>
+        <div className={adminStyles.sidebarCardHeader}>
+          <span className={adminStyles.sidebarHeaderTitle}>Pack details</span>
+        </div>
 
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="school_picker">
+        <div className={adminStyles.formField}>
+          <label className={adminStyles.formLabel} htmlFor="school_picker">
             Which school *
           </label>
           <SchoolPicker
@@ -209,43 +220,56 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
           {err("school_id")}
         </div>
 
-        <div className={formStyles.field}>
-          <label className={formStyles.label} htmlFor="grade">
+        <div className={adminStyles.formField}>
+          <label className={adminStyles.formLabel} htmlFor="grade">
             Grade *
           </label>
           <input
             id="grade"
             name="grade"
-            className={formStyles.input}
+            className={adminStyles.inputField}
             value={grade}
             onChange={(e) => setGrade(e.target.value)}
             placeholder="e.g. Grade 10, 10 or R"
             required
           />
-          <span className={formStyles.hint}>
+          <span className={adminStyles.mutedText}>
             The grade shown on the pack card, e.g. Grade 10.
           </span>
           {err("grade")}
         </div>
 
-        <div className={formStyles.checkboxes}>
-          <label className={formStyles.checkbox}>
-            <input type="checkbox" name="visible" defaultChecked />
+        <div className={adminStyles.formField}>
+          <label className={adminStyles.formLabel}>
+            <input
+              type="checkbox"
+              name="visible"
+              defaultChecked
+              className={adminStyles.checkbox}
+            />
             Visible on site
           </label>
-          <label className={formStyles.checkbox}>
-            <input type="checkbox" name="featured" />
+          <label className={adminStyles.formLabel}>
+            <input
+              type="checkbox"
+              name="featured"
+              className={adminStyles.checkbox}
+            />
             Featured pack
           </label>
         </div>
       </div>
 
-      <div className={formStyles.section}>
-        <h2 className={formStyles.sectionTitle}>Preview — public pack card</h2>
-        <p className={formStyles.hint}>
+      <div className={adminStyles.sidebarCard}>
+        <div className={adminStyles.sidebarCardHeader}>
+          <span className={adminStyles.sidebarHeaderTitle}>
+            Preview — public pack card
+          </span>
+        </div>
+        <p className={adminStyles.mutedText}>
           This is how the pack appears on the school page. The card and its list
-          are populated automatically by the web app — only the school, grade and
-          price drive what it shows.
+          are populated automatically by the web app — only the school, grade
+          and price drive what it shows.
         </p>
         {selectedSchool ? (
           <p className={styles.previewSchool}>{selectedSchool.name}</p>
@@ -265,17 +289,22 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
         </div>
         {selectedSchool && grade.trim() ? (
           <p className={styles.previewTitle}>
-            Will be created as &ldquo;{selectedSchool.name} {grade.trim()} Pack&rdquo;.
+            Will be created as &ldquo;{selectedSchool.name} {grade.trim()}{" "}
+            Pack&rdquo;.
           </p>
         ) : null}
       </div>
 
-      <div className={formStyles.section}>
-        <h2 className={formStyles.sectionTitle}>Items (optional)</h2>
-        <p className={formStyles.hint}>
-          Search the stationery inventory to add items to this pack now. The pack
-          price is set from their total and can be adjusted afterwards. You can
-          also add, edit or import items after the pack is created.
+      <div className={adminStyles.sidebarCard}>
+        <div className={adminStyles.sidebarCardHeader}>
+          <span className={adminStyles.sidebarHeaderTitle}>
+            Items (optional)
+          </span>
+        </div>
+        <p className={adminStyles.mutedText}>
+          Search the stationery inventory to add items to this pack now. The
+          pack price is set from their total and can be adjusted afterwards. You
+          can also add, edit or import items after the pack is created.
         </p>
         <GradePackItemSelector
           initialItems={[]}
@@ -286,10 +315,15 @@ export function PackForm({ schools, defaultSchoolId = "", action }: PackFormProp
         {err("items")}
       </div>
 
-      <div className={formStyles.actions}>
-        <Link href="/admin/packs" className={formStyles.cancelButton}>
+      <div className={adminStyles.stackRow}>
+        <AdminButton
+          type="button"
+          variant="secondary"
+          size="md"
+          href="/admin/packs"
+        >
           Cancel
-        </Link>
+        </AdminButton>
         <SubmitButton label="Create pack" />
       </div>
     </form>

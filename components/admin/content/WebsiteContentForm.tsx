@@ -2,16 +2,29 @@
 
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { Save } from "lucide-react";
 import { updateWebsiteContentAction } from "@/app/admin/content/actions";
-import type { ContentField, ContentFormState, ContentSection } from "@/lib/admin/content";
+import type {
+  ContentField,
+  ContentFormState,
+  ContentSection,
+} from "@/lib/admin/content";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
+import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./content-form.module.css";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" className={styles.saveButton} disabled={pending}>
+    <AdminButton
+      type="submit"
+      variant="primary"
+      size="md"
+      loading={pending}
+      icon={<Save size={14} />}
+    >
       {pending ? "Saving…" : "Save section"}
-    </button>
+    </AdminButton>
   );
 }
 
@@ -24,11 +37,11 @@ export function WebsiteContentForm({
 }) {
   const [state, formAction] = useActionState<ContentFormState, FormData>(
     updateWebsiteContentAction.bind(null, section.key),
-    {}
+    {},
   );
 
   return (
-    <form action={formAction} className={styles.form}>
+    <form action={formAction} className={adminStyles.stack}>
       {state?.ok ? (
         <p className={styles.success} role="status">
           {state.message}
@@ -39,17 +52,36 @@ export function WebsiteContentForm({
         </p>
       ) : null}
 
-      {section.fields.map((field) => (
-        <FieldControl
-          key={field.key}
-          field={field}
-          value={values[field.key]}
-          error={state?.errors?.[field.key]}
-        />
-      ))}
-
-      <div className={styles.actions}>
-        <SubmitButton />
+      <div className={adminStyles.detailLayout}>
+        <div className={adminStyles.leftColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <span>Section Content</span>
+              </div>
+            </div>
+            {section.fields.map((field) => (
+              <FieldControl
+                key={field.key}
+                field={field}
+                value={values[field.key]}
+                error={state?.errors?.[field.key]}
+              />
+            ))}
+          </div>
+        </div>
+        <aside className={adminStyles.sidebarColumn}>
+          <div className={adminStyles.sidebarCard}>
+            <div className={adminStyles.sidebarCardHeader}>
+              <div className={adminStyles.sidebarHeaderTitle}>
+                <span>Save</span>
+              </div>
+            </div>
+            <div className={adminStyles.stackRow}>
+              <SubmitButton />
+            </div>
+          </div>
+        </aside>
       </div>
     </form>
   );
@@ -68,49 +100,61 @@ function FieldControl({
 
   if (field.type === "checkbox") {
     return (
-      <label className={styles.checkboxRow}>
-        <input
-          type="checkbox"
-          id={fieldId}
-          name={field.key}
-          defaultChecked={Boolean(value)}
-          className={styles.checkbox}
-        />
-        <span>
-          <span className={styles.checkLabel}>{field.label}</span>
-          {field.help ? <span className={styles.checkHelp}>{field.help}</span> : null}
-        </span>
-      </label>
+      <div className={adminStyles.formField}>
+        <div>
+          <label className={styles.checkboxRow}>
+            <input
+              type="checkbox"
+              id={fieldId}
+              name={field.key}
+              defaultChecked={Boolean(value)}
+              className={adminStyles.checkbox}
+            />
+            <span>
+              <span className={styles.checkLabel}>{field.label}</span>
+            </span>
+          </label>
+          {field.help ? (
+            <p className={adminStyles.muted}>{field.help}</p>
+          ) : null}
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={fieldId}>
-        {field.label}
-      </label>
-      {field.type === "textarea" ? (
-        <textarea
-          id={fieldId}
-          name={field.key}
-          rows={field.key.includes("description") || field.key === "answer" ? 6 : 3}
-          className={styles.textarea}
-          defaultValue={String(value ?? "")}
-        />
-      ) : (
-        <input
-          id={fieldId}
-          name={field.key}
-          type="text"
-          className={styles.input}
-          defaultValue={String(value ?? "")}
-        />
-      )}
-      {error ? (
-        <span className={styles.error} role="alert">
-          {error}
-        </span>
-      ) : null}
+    <div className={adminStyles.formField}>
+      <div>
+        <label className={adminStyles.formLabel} htmlFor={fieldId}>
+          {field.label}
+        </label>
+        {field.type === "textarea" ? (
+          <textarea
+            id={fieldId}
+            name={field.key}
+            rows={
+              field.key.includes("description") || field.key === "answer"
+                ? 6
+                : 3
+            }
+            className={adminStyles.textareaField}
+            defaultValue={String(value ?? "")}
+          />
+        ) : (
+          <input
+            id={fieldId}
+            name={field.key}
+            type="text"
+            className={adminStyles.inputField}
+            defaultValue={String(value ?? "")}
+          />
+        )}
+        {error ? (
+          <span className={styles.error} role="alert">
+            {error}
+          </span>
+        ) : null}
+      </div>
     </div>
   );
 }

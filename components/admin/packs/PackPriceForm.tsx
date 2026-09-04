@@ -9,7 +9,6 @@ import { updatePackPriceAction } from "@/app/admin/packs/actions";
 import type { PackFormState } from "@/lib/admin/packs";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "./SchoolPackCreateForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 const GRADES = [
@@ -71,7 +70,8 @@ export function PackPriceForm({
   }, [packTitle]);
 
   const [selectedGrade, setSelectedGrade] = useState<string>(initialGrade);
-  const targetPrice = price > 0 ? price : (subtotal != null ? Math.round(subtotal * 100) / 100 : 0);
+  const targetPrice =
+    price > 0 ? price : subtotal != null ? Math.round(subtotal * 100) / 100 : 0;
   const [value, setValue] = useState<string>(String(targetPrice));
 
   useEffect(() => {
@@ -79,25 +79,23 @@ export function PackPriceForm({
   }, [targetPrice]);
 
   return (
-    <div className={`${adminStyles.tableCard} ${styles.priceCard}`}>
+    <div className={adminStyles.sidebarCard}>
       <form id={formId} action={formAction}>
         <input type="hidden" name="recalculate" value="true" />
         <input type="hidden" name="price" value={value} readOnly />
-        <div className={styles.priceHeader}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-            <h2 className={styles.cardTitle}>{title}</h2>
-            {showSubmit ? <SubmitButton /> : null}
-          </div>
+        <div className={adminStyles.sidebarCardHeader}>
+          <span className={adminStyles.sidebarHeaderTitle}>{title}</span>
+          {showSubmit ? <SubmitButton /> : null}
         </div>
 
-        <div className={styles.priceControls}>
-          <label className={styles.fieldGroup}>
-            <span className={styles.fieldLabel}>Select Grade *</span>
+        <div className={adminStyles.formField}>
+          <div>
+            <label className={adminStyles.formLabel}>Select Grade *</label>
             <select
               name="grade"
               value={selectedGrade}
               onChange={(event) => setSelectedGrade(event.target.value)}
-              className={styles.fieldSelect}
+              className={adminStyles.selectField}
             >
               {GRADES.map((grade) => (
                 <option key={grade} value={grade}>
@@ -105,12 +103,12 @@ export function PackPriceForm({
                 </option>
               ))}
             </select>
-          </label>
-
-          <div className={`${styles.fieldGroup} ${styles.itemSearchGroup}`}>
-            <span className={styles.fieldLabel}>Add Stationery Items</span>
-            {children}
           </div>
+        </div>
+
+        <div className={adminStyles.formField}>
+          <span className={adminStyles.formLabel}>Add Stationery Items</span>
+          {children}
         </div>
 
         {state?.ok ? (
@@ -119,10 +117,7 @@ export function PackPriceForm({
             message={state.message || "Price updated successfully."}
           />
         ) : state?.errors?.price ? (
-          <DbNotice
-            type="error"
-            message={state.errors.price}
-          />
+          <DbNotice type="error" message={state.errors.price} />
         ) : null}
       </form>
     </div>

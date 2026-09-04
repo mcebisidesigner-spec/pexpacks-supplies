@@ -2,10 +2,8 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import useSWR from "swr";
 import {
-  ArrowLeft,
   Plus,
   Trash2,
   Save,
@@ -20,7 +18,7 @@ import {
   Truck,
   CheckCircle2,
   X,
-  Calendar,
+  User,
 } from "lucide-react";
 import {
   createQuotationAction,
@@ -28,12 +26,11 @@ import {
   importSchoolPackItemsAction,
 } from "@/app/admin/quotations/actions";
 import { DateField } from "@/components/admin/DateField";
-import { FloatingInput } from "@/components/ui/FloatingInput";
-import { FloatingTextarea } from "@/components/ui/FloatingTextarea";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import type { QuotationStatus } from "@/lib/admin/quotations";
 import styles from "./Quotations.module.css";
-import db from "@/components/admin/ui/AdminDesignSystem.module.css";
+import adminStyles from "@/app/admin/admin.module.css";
 
 export interface MasterProductOption {
   id: string;
@@ -510,32 +507,27 @@ export function QuotationBuilderForm({
   }
 
   return (
-    <div className={`${db.page} ${db.stack}`}>
-      {/* 1. Top Back Button */}
-      <Link href="/admin/quotations" className={db.backLink}>
-        <ArrowLeft size={14} />
-        Back to Quotations
-      </Link>
-
-      {/* 2. Top Header Row */}
-      <div className={db.pageHeader}>
-        <div className={db.pageHeading}>
-          <h1 className={db.pageTitle}>New Quotation</h1>
-          <p className={db.pageSubtitle}>
-            Compose an official school price quotation with live line items and
-            automated calculation.
-          </p>
-        </div>
-
-        <div className={styles.preparedByArea}>
-          <FloatingInput
-            label="Prepared by"
-            value={preparedBy}
-            onChange={(e) => setPreparedBy(e.target.value)}
-            bgSurface="bg-[#070b12]"
-          />
-        </div>
-      </div>
+    <div className={adminStyles.page}>
+      <AdminPageHeader
+        backHref="/admin/quotations"
+        backLabel="Back to Quotations"
+        title="New Quotation"
+        subtitle="Compose an official school price quotation with live line items and automated calculation."
+        actions={
+          <div className={styles.preparedByArea}>
+            <label className={adminStyles.formLabel} htmlFor="prepared_by">
+              Prepared by
+            </label>
+            <input
+              id="prepared_by"
+              className={adminStyles.inputField}
+              placeholder="Your name"
+              value={preparedBy}
+              onChange={(e) => setPreparedBy(e.target.value)}
+            />
+          </div>
+        }
+      />
 
       {errorMsg ? (
         <div className={styles.errorBanner}>
@@ -543,184 +535,217 @@ export function QuotationBuilderForm({
         </div>
       ) : null}
 
-      <div className={db.splitLayout}>
-        {/* LEFT COLUMN: Main Form */}
-        <div className={db.mainColumn}>
-          {/* Card A: Client Details */}
-          <div className={`${db.card} ${db.cardPadded}`}>
-            <div className={db.cardHeader}>
-              <div className={db.cardTitle}>
-                <Building2 size={16} className={db.cardIcon} />
-                Client Details
-              </div>
-              <div className={styles.clientTypeToggle}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCustomClient(false);
-                    setSelectedSchoolId("");
-                    setSchoolSearch("");
-                  }}
-                  className={`${styles.clientTypeBtn} ${
-                    !isCustomClient ? styles.clientTypeBtnActive : ""
-                  }`}
-                >
-                  School
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCustomClient(true);
-                    setSelectedSchoolId("");
-                    setSchoolSearch("");
-                  }}
-                  className={`${styles.clientTypeBtn} ${
-                    isCustomClient ? styles.clientTypeBtnActive : ""
-                  }`}
-                >
-                  Custom
-                </button>
-              </div>
-            </div>
-
-            <div className={db.cardBody}>
-              {!isCustomClient && (
-                <div
-                  className={styles.schoolSearchWrapper}
-                  ref={schoolSearchContainerRef}
-                >
-                  <FloatingInput
-                    label="Search Registered Schools (3,342 in DB)..."
-                    value={schoolSearch}
-                    onChange={(e) => {
-                      setSchoolSearch(e.target.value);
-                      setIsSchoolDrawerOpen(true);
+      <div className={adminStyles.stack}>
+        <div className={adminStyles.detailLayout}>
+          {/* LEFT COLUMN: Main Form */}
+          <div className={adminStyles.leftColumn}>
+            {/* Card A: Client Details */}
+            <div className={adminStyles.sidebarCard}>
+              <div className={adminStyles.sidebarCardHeader}>
+                <div className={adminStyles.sidebarHeaderTitle}>
+                  <Building2 size={16} className={adminStyles.iconTeal} />
+                  <span>Client Details</span>
+                </div>
+                <div className={styles.clientTypeToggle}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsCustomClient(false);
+                      setSelectedSchoolId("");
+                      setSchoolSearch("");
                     }}
-                    onFocus={() => setIsSchoolDrawerOpen(true)}
-                    bgSurface="bg-[#0c1322]"
-                  />
-
-                  {isSchoolDrawerOpen && (
-                    <div className={styles.schoolDropdown}>
-                      {isSearchingSchools ? (
-                        <div className={styles.schoolDropdownLoading}>
-                          <Loader2 size={16} className={styles.spinIcon} />
-                          Searching database...
-                        </div>
-                      ) : matchingSchools.length > 0 ? (
-                        matchingSchools.map((s) => (
-                          <button
-                            key={s.id}
-                            type="button"
-                            className={styles.schoolOptionBtn}
-                            onClick={() => handleSelectSchool(s)}
-                          >
-                            <div className={styles.schoolOptionName}>
-                              {s.name}
-                            </div>
-                            <div className={styles.schoolOptionMeta}>
-                              {s.city || "Johannesburg"},{" "}
-                              {s.province || "Gauteng"}
-                            </div>
-                          </button>
-                        ))
-                      ) : debouncedSchoolQuery.length >= 3 ? (
-                        <div className={styles.schoolDropdownEmpty}>
-                          No schools found for &ldquo;{debouncedSchoolQuery}
-                          &rdquo;
-                        </div>
-                      ) : (
-                        <div className={styles.schoolDropdownEmpty}>
-                          Type at least 3 letters to search schools
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    className={`${styles.clientTypeBtn} ${
+                      !isCustomClient ? styles.clientTypeBtnActive : ""
+                    }`}
+                  >
+                    <Building2 size={14} /> School
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsCustomClient(true);
+                      setSelectedSchoolId("");
+                      setSchoolSearch("");
+                    }}
+                    className={`${styles.clientTypeBtn} ${
+                      isCustomClient ? styles.clientTypeBtnActive : ""
+                    }`}
+                  >
+                    <User size={14} /> Custom
+                  </button>
                 </div>
-              )}
-
-              <div className={db.formGrid2}>
-                <FloatingInput
-                  label="Recipient / Attn *"
-                  value={recipientName}
-                  onChange={(e) => setRecipientName(e.target.value)}
-                  bgSurface="bg-[#0c1322]"
-                />
-                <FloatingInput
-                  label="Recipient Email *"
-                  type="email"
-                  value={recipientEmail}
-                  onChange={(e) => setRecipientEmail(e.target.value)}
-                  bgSurface="bg-[#0c1322]"
-                />
               </div>
 
-              <div className={db.formGrid2}>
-                <FloatingInput
-                  label="Recipient Phone"
-                  value={recipientPhone}
-                  onChange={(e) => setRecipientPhone(e.target.value)}
-                  bgSurface="bg-[#0c1322]"
-                />
-                <div className={styles.fieldGroup}>
-                  <label className={styles.datePickerLabel}>
-                    <Calendar size={13} />
-                    Valid Until
-                  </label>
-                  <DateField
-                    value={validUntil}
-                    onChange={(val) => setValidUntil(val)}
-                    min={new Date().toISOString().split("T")[0]}
-                  />
+              <div className={adminStyles.stack}>
+                {!isCustomClient && (
+                  <div
+                    className={styles.schoolSearchWrapper}
+                    ref={schoolSearchContainerRef}
+                  >
+                    <label
+                      className={adminStyles.formLabel}
+                      htmlFor="school_search"
+                    >
+                      Search Registered Schools
+                    </label>
+                    <input
+                      id="school_search"
+                      className={adminStyles.inputField}
+                      placeholder="Type at least 3 letters to search schools..."
+                      value={schoolSearch}
+                      onChange={(e) => {
+                        setSchoolSearch(e.target.value);
+                        setIsSchoolDrawerOpen(true);
+                      }}
+                      onFocus={() => setIsSchoolDrawerOpen(true)}
+                    />
+
+                    {isSchoolDrawerOpen && (
+                      <div className={styles.schoolDropdown}>
+                        {isSearchingSchools ? (
+                          <div className={styles.schoolDropdownLoading}>
+                            <Loader2 size={16} className={styles.spinIcon} />
+                            Searching database...
+                          </div>
+                        ) : matchingSchools.length > 0 ? (
+                          matchingSchools.map((s) => (
+                            <button
+                              key={s.id}
+                              type="button"
+                              className={styles.schoolOptionBtn}
+                              onClick={() => handleSelectSchool(s)}
+                            >
+                              <div className={styles.schoolOptionName}>
+                                {s.name}
+                              </div>
+                              <div className={styles.schoolOptionMeta}>
+                                {s.city || "Johannesburg"},{" "}
+                                {s.province || "Gauteng"}
+                              </div>
+                            </button>
+                          ))
+                        ) : debouncedSchoolQuery.length >= 3 ? (
+                          <div className={styles.schoolDropdownEmpty}>
+                            No schools found for &ldquo;{debouncedSchoolQuery}
+                            &rdquo;
+                          </div>
+                        ) : (
+                          <div className={styles.schoolDropdownEmpty}>
+                            Type at least 3 letters to search schools
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className={adminStyles.grid2equal}>
+                  <div>
+                    <label
+                      className={adminStyles.formLabel}
+                      htmlFor="recipient_name"
+                    >
+                      Recipient / Attn *
+                    </label>
+                    <input
+                      id="recipient_name"
+                      className={adminStyles.inputField}
+                      placeholder="e.g. Example Primary School Bursar"
+                      value={recipientName}
+                      onChange={(e) => setRecipientName(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className={adminStyles.formLabel}
+                      htmlFor="recipient_email"
+                    >
+                      Recipient Email *
+                    </label>
+                    <input
+                      id="recipient_email"
+                      type="email"
+                      className={adminStyles.inputField}
+                      placeholder="accounts@school.co.za"
+                      value={recipientEmail}
+                      onChange={(e) => setRecipientEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className={adminStyles.grid2equal}>
+                  <div>
+                    <label
+                      className={adminStyles.formLabel}
+                      htmlFor="recipient_phone"
+                    >
+                      Recipient Phone
+                    </label>
+                    <input
+                      id="recipient_phone"
+                      className={adminStyles.inputField}
+                      placeholder="+27 11 000 0000"
+                      value={recipientPhone}
+                      onChange={(e) => setRecipientPhone(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      className={adminStyles.formLabel}
+                      htmlFor="valid_until"
+                    >
+                      Valid Until
+                    </label>
+                    <DateField
+                      value={validUntil}
+                      onChange={(val) => setValidUntil(val)}
+                      min={new Date().toISOString().split("T")[0]}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Card B: Line Items Table */}
-          <div
-            className={`${db.card} ${db.cardPadded}`}
-            ref={lineItemsTableRef}
-          >
-            <div className={db.cardHeader}>
-              <div className={db.cardTitle}>
-                <Package size={16} className={db.cardIcon} />
-                Quotation Line Items
+            {/* Card B: Line Items Table */}
+            <div className={adminStyles.sidebarCard} ref={lineItemsTableRef}>
+              <div className={adminStyles.sidebarCardHeader}>
+                <div className={adminStyles.sidebarHeaderTitle}>
+                  <Package size={16} className={adminStyles.iconBlue} />
+                  <span>Quotation Line Items</span>
+                </div>
+                <div className={adminStyles.stackRow}>
+                  <AdminButton
+                    variant="secondary"
+                    size="sm"
+                    icon={<Layers size={13} />}
+                    onClick={() => {
+                      if (selectedSchoolId) {
+                        handleSchoolSelectForPack(selectedSchoolId);
+                      }
+                      setShowPackImportModal(true);
+                    }}
+                  >
+                    Import Pack
+                  </AdminButton>
+                  <AdminButton
+                    variant="secondary"
+                    size="sm"
+                    icon={<FileSpreadsheet size={13} />}
+                    onClick={() => setShowCsvImportModal(true)}
+                  >
+                    Import CSV
+                  </AdminButton>
+                  <AdminButton
+                    variant="outline"
+                    size="sm"
+                    icon={<Plus size={13} />}
+                    onClick={handleAddItem}
+                  >
+                    Add Item
+                  </AdminButton>
+                </div>
               </div>
-              <div className={db.actionGroup}>
-                <AdminButton
-                  variant="secondary"
-                  size="sm"
-                  icon={<Layers size={13} />}
-                  onClick={() => {
-                    if (selectedSchoolId) {
-                      handleSchoolSelectForPack(selectedSchoolId);
-                    }
-                    setShowPackImportModal(true);
-                  }}
-                >
-                  Import Pack
-                </AdminButton>
-                <AdminButton
-                  variant="secondary"
-                  size="sm"
-                  icon={<FileSpreadsheet size={13} />}
-                  onClick={() => setShowCsvImportModal(true)}
-                >
-                  Import CSV
-                </AdminButton>
-                <AdminButton
-                  variant="outline"
-                  size="sm"
-                  icon={<Plus size={13} />}
-                  onClick={handleAddItem}
-                >
-                  Add Item
-                </AdminButton>
-              </div>
-            </div>
 
-            <div className={db.cardBody}>
               <div className={styles.tableScroll}>
                 <table className={styles.itemsTable}>
                   <thead>
@@ -916,157 +941,171 @@ export function QuotationBuilderForm({
                 </table>
               </div>
             </div>
-          </div>
 
-          {/* Card C: Notes & Terms */}
-          <div className={`${db.card} ${db.cardPadded}`}>
-            <div className={db.cardHeader}>
-              <div className={db.cardTitle}>
-                <FileText size={16} className={db.cardIcon} />
-                Quotation Notes &amp; Settlement Terms
-              </div>
-            </div>
-
-            <div className={db.cardBody}>
-              {/* Quick Template Chips */}
-              <div className={db.actionGroup}>
-                {STANDARD_NOTE_TEMPLATES.map((tmpl, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setNotes(tmpl.text)}
-                    className={styles.templateChip}
-                  >
-                    <Sparkles size={11} />
-                    {tmpl.label}
-                  </button>
-                ))}
-              </div>
-
-              <FloatingTextarea
-                label="Quotation Terms and Settlement Notes"
-                rows={4}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                bgSurface="bg-[#0c1322]"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Price Summary Sidebar */}
-        <div className={db.sideColumn}>
-          <div className={db.stickySide}>
-            <div className={db.summaryCard}>
-              <h2 className={db.summaryTitle}>Price Summary</h2>
-
-              <div className={db.summaryRow}>
-                <span className={styles.summaryLabel}>Gross Subtotal</span>
-                <span className={db.summaryValue}>
-                  {formatZAR(rawSubtotal)}
-                </span>
-              </div>
-
-              {/* Discount Row */}
-              <div className={styles.summaryAdjustmentRow}>
-                <div className={styles.summaryLabelIcon}>
-                  <Percent size={13} className={styles.textMuted} />
-                  <span className={styles.summaryLabel}>Discount (ZAR)</span>
+            {/* Card C: Notes & Terms */}
+            <div className={adminStyles.sidebarCard}>
+              <div className={adminStyles.sidebarCardHeader}>
+                <div className={adminStyles.sidebarHeaderTitle}>
+                  <FileText size={16} className={adminStyles.iconAmber} />
+                  <span>Quotation Notes &amp; Settlement Terms</span>
                 </div>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  value={discountAmount}
-                  onChange={(e) =>
-                    setDiscountAmount(
-                      e.target.value === ""
-                        ? ""
-                        : Math.max(0, parseFloat(e.target.value) || 0),
-                    )
-                  }
-                  className={styles.summaryAdjInput}
-                />
               </div>
 
-              {/* Delivery Fee Row */}
-              <div className={styles.summaryAdjustmentRow}>
-                <div className={styles.summaryLabelIcon}>
-                  <Truck size={13} className={styles.textMuted} />
-                  <span className={styles.summaryLabel}>Delivery Fee</span>
+              <div className={adminStyles.stack}>
+                {/* Quick Template Chips */}
+                <div className={adminStyles.stackRow}>
+                  {STANDARD_NOTE_TEMPLATES.map((tmpl, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setNotes(tmpl.text)}
+                      className={styles.templateChip}
+                    >
+                      <Sparkles size={11} />
+                      {tmpl.label}
+                    </button>
+                  ))}
                 </div>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  value={deliveryFee}
-                  onChange={(e) =>
-                    setDeliveryFee(
-                      e.target.value === ""
-                        ? ""
-                        : Math.max(0, parseFloat(e.target.value) || 0),
-                    )
-                  }
-                  className={styles.summaryAdjInput}
-                />
-              </div>
 
-              {/* VAT Toggle */}
-              <div className={styles.summaryVatToggleRow}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={vatEnabled}
-                    onChange={(e) => setVatEnabled(e.target.checked)}
-                    className={styles.checkboxControl}
+                <div>
+                  <label className={adminStyles.formLabel} htmlFor="notes">
+                    Quotation Terms and Settlement Notes
+                  </label>
+                  <textarea
+                    id="notes"
+                    rows={4}
+                    className={adminStyles.textareaField}
+                    placeholder="Add settlement terms, validity, or dispatch notes..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
                   />
-                  <span>Apply Standard 15% VAT</span>
-                </label>
-                <span className={db.summaryValue}>{formatZAR(vatAmount)}</span>
-              </div>
-
-              <div className={db.summaryTotal}>
-                <span className={db.summaryTotalLabel}>Total Amount</span>
-                <span className={db.summaryTotalValue}>
-                  {formatZAR(totalAmount)}
-                </span>
-              </div>
-
-              <div className={styles.summaryActions}>
-                <AdminButton
-                  type="button"
-                  onClick={() => handleSubmit("sent")}
-                  disabled={busy}
-                  variant="primary"
-                  size="lg"
-                >
-                  {busy ? (
-                    <Loader2 size={15} className={styles.spinIcon} />
-                  ) : (
-                    <CheckCircle2 size={15} />
-                  )}
-                  Create &amp; Issue Quotation
-                </AdminButton>
-
-                <AdminButton
-                  type="button"
-                  onClick={() => handleSubmit("draft")}
-                  disabled={busy}
-                  variant="secondary"
-                  size="lg"
-                >
-                  {busy ? (
-                    <Loader2 size={15} className={styles.spinIcon} />
-                  ) : (
-                    <Save size={15} />
-                  )}
-                  Save as Draft
-                </AdminButton>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* RIGHT COLUMN: Price Summary Sidebar */}
+          <aside className={adminStyles.sidebarColumn}>
+            <div className={adminStyles.sidebarCard}>
+              <div className={adminStyles.sidebarCardHeader}>
+                <div className={adminStyles.sidebarHeaderTitle}>
+                  <span>Price Summary</span>
+                </div>
+              </div>
+
+              <div className={adminStyles.stack}>
+                <div className={adminStyles.sidebarFlexBetween}>
+                  <span className={styles.summaryLabel}>Gross Subtotal</span>
+                  <span className={adminStyles.cWhite}>
+                    {formatZAR(rawSubtotal)}
+                  </span>
+                </div>
+
+                {/* Discount Row */}
+                <div className={styles.summaryAdjustmentRow}>
+                  <div className={styles.summaryLabelIcon}>
+                    <Percent size={13} className={styles.textMuted} />
+                    <span className={styles.summaryLabel}>Discount (ZAR)</span>
+                  </div>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    value={discountAmount}
+                    onChange={(e) =>
+                      setDiscountAmount(
+                        e.target.value === ""
+                          ? ""
+                          : Math.max(0, parseFloat(e.target.value) || 0),
+                      )
+                    }
+                    className={styles.summaryAdjInput}
+                  />
+                </div>
+
+                {/* Delivery Fee Row */}
+                <div className={styles.summaryAdjustmentRow}>
+                  <div className={styles.summaryLabelIcon}>
+                    <Truck size={13} className={styles.textMuted} />
+                    <span className={styles.summaryLabel}>Delivery Fee</span>
+                  </div>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="0.00"
+                    value={deliveryFee}
+                    onChange={(e) =>
+                      setDeliveryFee(
+                        e.target.value === ""
+                          ? ""
+                          : Math.max(0, parseFloat(e.target.value) || 0),
+                      )
+                    }
+                    className={styles.summaryAdjInput}
+                  />
+                </div>
+
+                {/* VAT Toggle */}
+                <div className={styles.summaryVatToggleRow}>
+                  <label className={styles.checkboxLabel}>
+                    <input
+                      type="checkbox"
+                      checked={vatEnabled}
+                      onChange={(e) => setVatEnabled(e.target.checked)}
+                      className={styles.checkboxControl}
+                    />
+                    <span>Apply Standard 15% VAT</span>
+                  </label>
+                  <span className={styles.summaryValue}>
+                    {formatZAR(vatAmount)}
+                  </span>
+                </div>
+
+                <div
+                  className={`${adminStyles.sidebarFlexBetween} ${adminStyles.pt12}`}
+                >
+                  <span className={adminStyles.fw600}>Total Amount</span>
+                  <span className={adminStyles.cWhite}>
+                    {formatZAR(totalAmount)}
+                  </span>
+                </div>
+
+                <div className={styles.summaryActions}>
+                  <AdminButton
+                    type="button"
+                    onClick={() => handleSubmit("sent")}
+                    disabled={busy}
+                    variant="primary"
+                    size="lg"
+                  >
+                    {busy ? (
+                      <Loader2 size={15} className={styles.spinIcon} />
+                    ) : (
+                      <CheckCircle2 size={15} />
+                    )}
+                    Create &amp; Issue Quotation
+                  </AdminButton>
+
+                  <AdminButton
+                    type="button"
+                    onClick={() => handleSubmit("draft")}
+                    disabled={busy}
+                    variant="secondary"
+                    size="lg"
+                  >
+                    {busy ? (
+                      <Loader2 size={15} className={styles.spinIcon} />
+                    ) : (
+                      <Save size={15} />
+                    )}
+                    Save as Draft
+                  </AdminButton>
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
 

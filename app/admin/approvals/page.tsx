@@ -1,4 +1,10 @@
-import { CheckCircle2, Clock, XCircle, Ban, ClipboardCheck } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  XCircle,
+  Ban,
+  ClipboardCheck,
+} from "lucide-react";
 import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { listApprovals } from "@/lib/admin/operations";
 import { formatDateTime } from "@/lib/admin/ui-utils";
@@ -9,7 +15,6 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { updateApprovalAction } from "../operations-actions";
 import admin from "../admin.module.css";
-import styles from "../operations.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -25,13 +30,20 @@ export default async function ApprovalsPage() {
   const cancelled = allApprovals.filter((a) => a.status === "cancelled").length;
 
   return (
-    <div className={styles.page}>
+    <div className={admin.page}>
       <AdminPageHeader
         title="Approvals & Governance"
         subtitle="Review and action pending authorization requests across procurement and pricing."
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "20px" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: "14px",
+          marginBottom: "20px",
+        }}
+      >
         <MetricCard
           label="Pending Approvals"
           value={pendingApprovals.length}
@@ -63,7 +75,7 @@ export default async function ApprovalsPage() {
       </div>
 
       {pendingApprovals.length > 0 ? (
-        <section className={styles.formPanel}>
+        <section className={admin.sidebarCard}>
           <h2>Pending approvals ({pendingApprovals.length})</h2>
           <div className={admin.tableCard}>
             <div className={admin.tableWrapper}>
@@ -81,26 +93,32 @@ export default async function ApprovalsPage() {
                   {pendingApprovals.map((approval) => (
                     <tr key={approval.id}>
                       <td>
-                        <StatusBadge status={approval.approval_type} tone="blue" showDot />
+                        <StatusBadge
+                          status={approval.approval_type}
+                          tone="blue"
+                          showDot
+                        />
                       </td>
                       <td>
                         <strong>{approval.entity_type}</strong>
-                        <div className={styles.mono}>{approval.entity_id}</div>
+                        <div className={admin.mono}>{approval.entity_id}</div>
                       </td>
-                      <td className={styles.muted}>
-                        {approval.reason || "—"}
-                      </td>
-                      <td className={styles.muted}>
+                      <td className={admin.cMuted}>{approval.reason || "—"}</td>
+                      <td className={admin.cMuted}>
                         {formatDateTime(approval.created_at)}
                       </td>
                       <td>
                         {hasPermission(session, "approvals.manage") ? (
                           <form
-                            action={updateApprovalAction.bind(null, approval.id)}
-                            className={styles.inlineForm}
+                            action={updateApprovalAction.bind(
+                              null,
+                              approval.id,
+                            )}
+                            className={admin.inlineForm}
                           >
                             <select
-                              className={`${styles.field} ${styles.compact}`}
+                              className={admin.inputField}
+                              style={{ width: "88px", flexShrink: 0 }}
                               name="status"
                             >
                               <option value="approved">Approve</option>
@@ -108,7 +126,8 @@ export default async function ApprovalsPage() {
                               <option value="cancelled">Cancel</option>
                             </select>
                             <input
-                              className={`${styles.field} ${styles.compact}`}
+                              className={admin.inputField}
+                              style={{ width: "88px", flexShrink: 0 }}
                               name="decisionNotes"
                               placeholder="Notes"
                             />
@@ -126,7 +145,7 @@ export default async function ApprovalsPage() {
           </div>
         </section>
       ) : (
-        <section className={styles.formPanel}>
+        <section className={admin.sidebarCard}>
           <EmptyState
             icon={<ClipboardCheck aria-hidden="true" />}
             title="All caught up!"

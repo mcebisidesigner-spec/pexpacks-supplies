@@ -33,6 +33,7 @@ import {
 } from "@/lib/admin/system-settings-shared";
 import type { RoleInfo, UserListItem } from "@/lib/admin/users";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
+import { AdminButton } from "@/components/admin/ui/AdminButton";
 import {
   exportSettingsAction,
   restoreSettingsAction,
@@ -569,12 +570,14 @@ export function SettingsControlCentre({
                   channels
                 </p>
               </div>
-              <div className={styles.formGrid}>
-                <div className={styles.field}>
-                  <label className={styles.label}>Legal Trading Name</label>
+              <div className={adminStyles.grid2equal}>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
+                    Legal Trading Name
+                  </label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     defaultValue={String(
                       settingsState["business.trading_name"]?.value ??
                         "Pexpacks Supplies (Pty) Ltd",
@@ -584,11 +587,13 @@ export function SettingsControlCentre({
                     }
                   />
                 </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Customer Support Email</label>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
+                    Customer Support Email
+                  </label>
                   <input
                     type="email"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     defaultValue={String(
                       settingsState["business.support_email"]?.value ??
                         "helpme@pexpacks.co.za",
@@ -601,11 +606,13 @@ export function SettingsControlCentre({
                     }
                   />
                 </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Legal & POPIA Email</label>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
+                    Legal & POPIA Email
+                  </label>
                   <input
                     type="email"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     defaultValue={String(
                       settingsState["business.legal_email"]?.value ??
                         "helpme@pexpacks.co.za",
@@ -615,11 +622,13 @@ export function SettingsControlCentre({
                     }
                   />
                 </div>
-                <div className={styles.field}>
-                  <label className={styles.label}>Support Telephone</label>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
+                    Support Telephone
+                  </label>
                   <input
                     type="text"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     defaultValue={String(
                       settingsState["business.support_phone"]?.value ??
                         "0780036048",
@@ -657,22 +666,24 @@ export function SettingsControlCentre({
                     <em>Packaging Cost</em>, <em>Assembly Cost</em>, or{" "}
                     <em>Freight Cost</em> will automatically trigger a full
                     recalculation of every Grade Pack&apos;s selling price in
-                    the database. Margin is applied to item cost first, then fixed
-                    pack costs are added.
+                    the database. Margin is applied to item cost first, then
+                    fixed pack costs are added.
                   </p>
                 </div>
               </div>
 
-              <div className={styles.formGrid}>
+              <div className={adminStyles.grid2equal}>
                 {/* Target Margin */}
-                <div className={styles.field}>
-                  <label className={styles.label}>Target Gross Margin %</label>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
+                    Target Gross Margin %
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     max="99"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     value={pricingDrafts["pricing.target_margin_pct"]}
                     onChange={(e) =>
                       setPricingDraft(
@@ -681,7 +692,7 @@ export function SettingsControlCentre({
                       )
                     }
                   />
-                  <span className={styles.hint}>
+                  <span className={adminStyles.inputFieldMuted}>
                     Applied to the stationery item subtotal first. Fixed
                     packaging, assembly, and freight are then added per pack.
                     Target: <strong>{draftMarginPercent().toFixed(1)}%</strong>.
@@ -689,14 +700,16 @@ export function SettingsControlCentre({
                 </div>
 
                 {/* Low Margin Alert */}
-                <div className={styles.field}>
-                  <label className={styles.label}>Low Margin Alert %</label>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
+                    Low Margin Alert %
+                  </label>
                   <input
                     type="number"
                     step="0.1"
                     min="0"
                     max="99"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     value={pricingDrafts["pricing.low_margin_warning_pct"]}
                     onChange={(e) =>
                       setPricingDraft(
@@ -705,69 +718,71 @@ export function SettingsControlCentre({
                       )
                     }
                   />
-                  <span className={styles.hint}>
+                  <span className={adminStyles.inputFieldMuted}>
                     Packs with achieved margin below this floor are flagged with
                     a ⚠️ Low Margin badge.
                   </span>
                 </div>
 
                 {/* Packaging Cost */}
-                <div className={styles.field}>
-                  <label className={styles.label}>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
                     Packaging Cost per Pack (R)
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     value={pricingDrafts["pricing.packaging_cost"]}
                     onChange={(e) =>
                       setPricingDraft("pricing.packaging_cost", e.target.value)
                     }
                   />
-                  <span className={styles.hint}>
+                  <span className={adminStyles.inputFieldMuted}>
                     Added to every Grade Pack after the item margin calculation.
                   </span>
                 </div>
 
                 {/* Assembly Cost */}
-                <div className={styles.field}>
-                  <label className={styles.label}>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
                     Assembly Cost per Pack (R)
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     value={pricingDrafts["pricing.assembly_cost"]}
                     onChange={(e) =>
                       setPricingDraft("pricing.assembly_cost", e.target.value)
                     }
                   />
-                  <span className={styles.hint}>
-                    Labour / assembly fee added after the item margin calculation.
+                  <span className={adminStyles.inputFieldMuted}>
+                    Labour / assembly fee added after the item margin
+                    calculation.
                   </span>
                 </div>
 
                 {/* Freight Cost */}
-                <div className={styles.field}>
-                  <label className={styles.label}>
+                <div className={adminStyles.formField}>
+                  <label className={adminStyles.formLabel}>
                     Freight / Delivery Cost per Pack (R)
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
-                    className={styles.input}
+                    className={adminStyles.inputField}
                     value={pricingDrafts["pricing.freight_cost"]}
                     onChange={(e) =>
                       setPricingDraft("pricing.freight_cost", e.target.value)
                     }
                   />
-                  <span className={styles.hint}>
-                    Inbound logistics / freight added after the item margin calculation.
+                  <span className={adminStyles.inputFieldMuted}>
+                    Inbound logistics / freight added after the item margin
+                    calculation.
                   </span>
                 </div>
               </div>
@@ -835,7 +850,7 @@ export function SettingsControlCentre({
                                 type="number"
                                 min="0"
                                 step="0.01"
-                                className={`${styles.input} ${styles.pexcoRateInput}`}
+                                className={`${adminStyles.inputField} ${styles.pexcoRateInput}`}
                                 value={draft?.coveringSql ?? ""}
                                 placeholder="—"
                                 onChange={(e) =>
@@ -912,22 +927,22 @@ export function SettingsControlCentre({
                 </p>
               </div>
               <div className={`${adminStyles.flex} ${adminStyles.gap14}`}>
-                <button
-                  type="button"
-                  className={styles.saveButton}
+                <AdminButton
+                  variant="primary"
+                  size="md"
+                  icon={<Download className={adminStyles.settingsExportIcon} />}
                   onClick={handleExport}
                 >
-                  <Download className={adminStyles.settingsExportIcon} /> Export
-                  Settings Data Snapshot
-                </button>
-                <button
-                  type="button"
-                  className={styles.discardButton}
+                  Export Settings Data Snapshot
+                </AdminButton>
+                <AdminButton
+                  variant="outline"
+                  size="md"
+                  icon={<Upload className={adminStyles.settingsExportIcon} />}
                   onClick={() => setShowRestoreModal(true)}
                 >
-                  <Upload className={adminStyles.settingsExportIcon} /> Restore
-                  Data Snapshot
-                </button>
+                  Restore Data Snapshot
+                </AdminButton>
               </div>
 
               {showRestoreModal && (
@@ -941,27 +956,28 @@ export function SettingsControlCentre({
                   </p>
                   <textarea
                     rows={6}
-                    className={styles.textarea}
+                    className={adminStyles.textareaField}
                     placeholder="Paste settings JSON here..."
                     value={restoreJson}
                     onChange={(e) => setRestoreJson(e.target.value)}
                   />
                   <div className={adminStyles.settingsRestoreActions}>
-                    <button
-                      type="button"
-                      className={styles.saveButton}
-                      onClick={handleRestoreSubmit}
+                    <AdminButton
+                      variant="primary"
+                      size="md"
+                      loading={busyKey === "restore"}
                       disabled={!restoreJson.trim() || busyKey === "restore"}
+                      onClick={handleRestoreSubmit}
                     >
                       Confirm Restore
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.discardButton}
+                    </AdminButton>
+                    <AdminButton
+                      variant="secondary"
+                      size="md"
                       onClick={() => setShowRestoreModal(false)}
                     >
                       Cancel
-                    </button>
+                    </AdminButton>
                   </div>
                 </div>
               )}
@@ -978,7 +994,7 @@ export function SettingsControlCentre({
                   Administrators
                 </p>
               </div>
-              <table className={styles.table}>
+              <table className={adminStyles.table}>
                 <thead>
                   <tr>
                     <th>Timestamp</th>
