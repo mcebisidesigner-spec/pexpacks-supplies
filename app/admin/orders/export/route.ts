@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
 import { exportOrders, ordersToCsv } from "@/lib/admin/orders";
 
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const session = await getAdminUser();
   if (!session) {

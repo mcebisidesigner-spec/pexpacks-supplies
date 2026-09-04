@@ -39,6 +39,18 @@ function formatSchoolLocation(
 }
 
 import { buildTailoredPublicGrades } from "@/lib/schools/school-grade-packs";
+import { getFeaturedSchoolRecords } from "@/lib/schools/schoolSearchData";
+
+export async function generateStaticParams(): Promise<Array<{ schoolSlug: string }>> {
+  try {
+    const topSchools = await getFeaturedSchoolRecords(24);
+    return topSchools.map((school) => ({
+      schoolSlug: school.slug,
+    }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,

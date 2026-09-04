@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSchoolBySlug, getGradeBySlug } from "@/lib/school-utils";
+import { getCachedSchoolBySlug } from "@/lib/school-utils";
 import { getPublicSiteSettings } from "@/lib/public-data/settings";
 import { CheckoutForm } from "../CheckoutForm";
 import { buildMetadata } from "@/lib/seo";
@@ -48,12 +48,12 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
   }
 
   const [school, settings] = await Promise.all([
-    getSchoolBySlug(first),
+    getCachedSchoolBySlug(first),
     getPublicSiteSettings(),
   ]);
   if (!school) notFound();
 
-  const grade = await getGradeBySlug(first, resolvedSecond);
+  const grade = school.grades.find((g) => g.gradeSlug === resolvedSecond);
   if (!grade) notFound();
 
   return (

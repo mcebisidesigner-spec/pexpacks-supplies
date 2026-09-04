@@ -220,13 +220,13 @@ export async function getSchoolBySlug(
   }
 }
 
-export async function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
-  const school = await getSchoolBySlug(schoolSlug);
-  return school?.grades.find((grade) => grade.gradeSlug === gradeSlug);
-}
-
 export const getCachedSchoolBySlug = unstable_cache(
   async (slug: string) => getSchoolBySlug(slug) ?? null,
   ["public-school-by-slug-v2"],
   { revalidate: SCHOOL_DATA_REVALIDATE_SECONDS, tags: [SCHOOL_DATA_TAG] },
 );
+
+export async function getGradeBySlug(schoolSlug: string, gradeSlug: string) {
+  const school = await getCachedSchoolBySlug(schoolSlug);
+  return school?.grades.find((grade) => grade.gradeSlug === gradeSlug);
+}
