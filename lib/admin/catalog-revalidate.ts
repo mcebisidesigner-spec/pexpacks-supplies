@@ -57,9 +57,6 @@ export function revalidateCatalog(options?: {
 
     const paths = ["/schools", "/"];
     if (options?.schoolSlug) paths.push(`/schools/${options.schoolSlug}`);
-    if (options?.schoolSlug && options?.packSlug) {
-      paths.push(`/schools/${options.schoolSlug}/${options.packSlug}`);
-    }
     if (options?.packSlug) paths.push(`/schools/packs/${options.packSlug}`);
     if (typeof nextCache.revalidatePath === "function") {
       for (const path of paths) {

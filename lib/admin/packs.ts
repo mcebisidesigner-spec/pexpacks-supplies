@@ -1092,12 +1092,7 @@ export async function getPublicGradePackPath(
       .maybeSingle();
     if (!school?.slug) return null;
 
-    const gradeSlug = pack.slug.startsWith(`${school.slug}-grade-`)
-      ? pack.slug.slice(school.slug.length + 1)
-      : null;
-    if (!gradeSlug || !/^grade-(r|[0-9]{1,2})$/i.test(gradeSlug)) return null;
-
-    return `/schools/${school.slug}/${gradeSlug}`;
+    return `/schools/${school.slug}`;
   } catch {
     return null;
   }

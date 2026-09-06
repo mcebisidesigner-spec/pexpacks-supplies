@@ -22,7 +22,7 @@ export async function GET() {
       school.grades.map((grade) => {
         const title = `${grade.grade} Stationery Pack - ${school.name}`;
         const description = `Official 100% matched ${grade.grade} stationery pack for ${school.name} in ${school.city}. Prepared for school delivery or collection.`;
-        const link = `${siteUrl}/schools/${school.slug}/${grade.gradeSlug}`;
+        const link = `${siteUrl}/schools/${school.slug}`;
         const imageLink = school.logo
           ? `${siteUrl}${school.logo}`
           : `${siteUrl}/images/hero-school-delivery-packs.webp`;

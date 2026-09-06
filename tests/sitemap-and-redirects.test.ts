@@ -51,8 +51,20 @@ describe("Sitemap, Robots and Canonical SEO Redirects", () => {
       );
       expect(packsGradeRedirect).toBeDefined();
       expect(packsGradeRedirect?.destination).toBe(
-        "/schools/:schoolSlug/:grade*",
+        "/schools/:schoolSlug",
       );
+
+      const schoolsGradeRedirect = redirects.find(
+        (r) => r.source === "/schools/:schoolSlug/:gradeSlug",
+      );
+      expect(schoolsGradeRedirect).toBeDefined();
+      expect(schoolsGradeRedirect?.destination).toBe("/schools/:schoolSlug");
+
+      const checkoutSlugRedirect = redirects.find((r) =>
+        r.source.startsWith("/checkout/:slug"),
+      );
+      expect(checkoutSlugRedirect).toBeDefined();
+      expect(checkoutSlugRedirect?.destination).toBe("/checkout");
 
       const packsRedirect = redirects.find(
         (r) => r.source === "/packs/:schoolSlug",

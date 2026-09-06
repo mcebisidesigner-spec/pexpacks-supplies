@@ -1,11 +1,6 @@
-import { redirect, notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { TrayCheckoutClient } from "./TrayCheckoutClient";
-
-type CheckoutPageProps = {
-  searchParams: Promise<{ school?: string; grade?: string; phase?: string; pack?: string; draft?: string }>;
-};
 
 export const metadata: Metadata = {
   ...buildMetadata(
@@ -19,28 +14,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function CheckoutPage({
-  searchParams,
-}: CheckoutPageProps) {
-  const { school, grade, phase, pack, draft } = await searchParams;
-
-  if (!school && !grade && !phase && !pack) {
-    return <TrayCheckoutClient />;
-  }
-
-  let slug: string;
-
-  if (phase && pack) {
-    slug = `${encodeURIComponent(phase)}+${encodeURIComponent(pack)}`;
-  } else if (school && grade) {
-    slug = `${encodeURIComponent(school)}+${encodeURIComponent(grade)}`;
-  } else {
-    notFound();
-  }
-
-  const url = draft
-    ? `/checkout/${slug}?draft=${encodeURIComponent(draft)}`
-    : `/checkout/${slug}`;
-
-  redirect(url);
+export default function CheckoutPage() {
+  return <TrayCheckoutClient />;
 }

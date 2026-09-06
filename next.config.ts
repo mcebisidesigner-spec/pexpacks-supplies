@@ -13,7 +13,7 @@ const csp = [
   "img-src 'self' data: blob: https://raw.githubusercontent.com https://*.supabase.co https://rjuvicgqwryztwytnauo.supabase.co",
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co https://*.google-analytics.com",
-  "worker-src 'self'",
+  "worker-src 'self' blob:",
   "manifest-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
@@ -111,7 +111,17 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/packs/:schoolSlug/:grade*",
-        destination: "/schools/:schoolSlug/:grade*",
+        destination: "/schools/:schoolSlug",
+        permanent: true,
+      },
+      {
+        source: "/schools/:schoolSlug/:gradeSlug",
+        destination: "/schools/:schoolSlug",
+        permanent: true,
+      },
+      {
+        source: "/checkout/:slug((?!happypay|success)[^/]+)",
+        destination: "/checkout",
         permanent: true,
       },
       {

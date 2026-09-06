@@ -33,10 +33,6 @@ describe("Vercel Caching Strategy & Freshness Contract", () => {
     expect(schoolDetailPage).toContain("export const revalidate = 300");
     expect(schoolDetailPage).not.toContain('export const dynamic = "force-dynamic"');
 
-    const gradeDetailPage = readRepoFile("app/schools/[schoolSlug]/[gradeSlug]/page.tsx");
-    expect(gradeDetailPage).toContain("export const revalidate = 300");
-    expect(gradeDetailPage).not.toContain('export const dynamic = "force-dynamic"');
-
     const blogPage = readRepoFile("app/blog/page.tsx");
     expect(blogPage).toContain("export const revalidate = 300");
 
