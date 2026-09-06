@@ -5,7 +5,9 @@ import {
   Text,
   View,
   StyleSheet,
+  Image,
 } from "@react-pdf/renderer";
+import { PEXPACKS_LETTERHEAD_LOGO_BASE64 } from "./letterhead-logo";
 
 export interface StationeryListItem {
   name: string;
@@ -25,11 +27,14 @@ export interface StationeryPdfOptions {
 
 const styles = StyleSheet.create({
   page: {
-    padding: 36,
+    paddingTop: 28,
+    paddingBottom: 40,
+    paddingHorizontal: 36,
     fontSize: 9,
     fontFamily: "Helvetica",
     color: "#1e293b",
     backgroundColor: "#ffffff",
+    lineHeight: 1.4,
   },
   topAccentBar: {
     position: "absolute",
@@ -37,74 +42,80 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 4,
-    backgroundColor: "#10b981",
+    backgroundColor: "#0d9488",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginTop: 4,
-    marginBottom: 20,
+    marginTop: 6,
+    marginBottom: 14,
+    paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: "#e2e8f0",
-    paddingBottom: 16,
   },
   brandCol: {
     flexDirection: "column",
+    justifyContent: "center",
   },
-  brandTitle: {
-    fontSize: 20,
-    fontFamily: "Helvetica-Bold",
-    color: "#0f172a",
-    letterSpacing: -0.5,
-  },
-  brandSubtitle: {
-    fontSize: 8.5,
-    fontFamily: "Helvetica-Bold",
-    color: "#059669",
-    marginTop: 2,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
+  logo: {
+    width: 130,
+    height: 50.6,
   },
   contactCol: {
     alignItems: "flex-end",
   },
+  badge: {
+    borderWidth: 1.5,
+    borderColor: "#0d9488",
+    borderRadius: 4,
+    paddingVertical: 3.5,
+    paddingHorizontal: 12,
+    marginBottom: 6,
+  },
+  badgeText: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#0d9488",
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
   contactText: {
-    fontSize: 8,
-    color: "#64748b",
+    fontSize: 7.5,
+    color: "#334155",
     lineHeight: 1.4,
     textAlign: "right",
   },
   titleSection: {
-    marginBottom: 16,
+    marginBottom: 14,
   },
   schoolTitle: {
-    fontSize: 16,
+    fontSize: 14.5,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
+    marginBottom: 3,
   },
   gradeSubtitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: "Helvetica-Bold",
-    color: "#059669",
-    marginTop: 3,
+    color: "#0d9488",
+    marginBottom: 5,
   },
   accentUnderline: {
-    width: 42,
+    width: 32,
     height: 2.5,
-    backgroundColor: "#10b981",
-    borderRadius: 2,
-    marginTop: 6,
-    marginBottom: 8,
+    backgroundColor: "#0d9488",
+    borderRadius: 1.5,
+    marginBottom: 7,
   },
   checklistInfo: {
-    fontSize: 8.5,
+    fontSize: 8,
     color: "#64748b",
   },
   table: {
-    marginTop: 10,
-    marginBottom: 16,
+    marginTop: 6,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: "#e2e8f0",
     borderRadius: 4,
@@ -113,89 +124,98 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     backgroundColor: "#0f172a",
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingVertical: 6.5,
+    paddingHorizontal: 10,
     alignItems: "center",
   },
   thText: {
-    fontSize: 7.5,
+    fontSize: 7,
     fontFamily: "Helvetica-Bold",
-    color: "#f8fafc",
+    color: "#ffffff",
     textTransform: "uppercase",
-    letterSpacing: 0.4,
+    letterSpacing: 0.5,
   },
   tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: "#f1f5f9",
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    borderBottomColor: "#e2e8f0",
+    paddingVertical: 6.5,
+    paddingHorizontal: 10,
     alignItems: "center",
   },
   tableRowEven: {
     backgroundColor: "#f8fafc",
   },
   colCheck: { width: "8%", alignItems: "center" },
-  colQty: { width: "12%", textAlign: "center" },
-  colItem: { width: "45%" },
-  colDesc: { width: "35%" },
+  colQty: { width: "10%", alignItems: "center" },
+  colItem: { width: "44%" },
+  colDesc: { width: "38%" },
   checkboxBox: {
-    width: 10,
-    height: 10,
+    width: 9.5,
+    height: 9.5,
     borderWidth: 1,
     borderColor: "#0f172a",
-    borderRadius: 2,
+    borderRadius: 1.5,
   },
-  cellText: {
-    fontSize: 8.5,
-    color: "#334155",
-  },
-  cellTextBold: {
-    fontSize: 8.5,
+  qtyText: {
+    fontSize: 8,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
+    textAlign: "center",
+  },
+  itemText: {
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    color: "#0f172a",
+  },
+  descText: {
+    fontSize: 7.5,
+    fontFamily: "Helvetica",
+    color: "#334155",
   },
   priceBox: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#f0fdfa",
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "#99f6e4",
     borderRadius: 6,
-    padding: 12,
-    marginBottom: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 12,
   },
   priceLabel: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
   },
   priceValue: {
-    fontSize: 14,
+    fontSize: 13.5,
     fontFamily: "Helvetica-Bold",
-    color: "#059669",
+    color: "#0d9488",
   },
   instructionsCard: {
     backgroundColor: "#f8fafc",
     borderWidth: 1,
     borderColor: "#e2e8f0",
     borderRadius: 6,
-    padding: 10,
-    marginBottom: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 18,
   },
   instructionsTitle: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontFamily: "Helvetica-Bold",
     color: "#0f172a",
     textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 4,
+    letterSpacing: 0.3,
+    marginBottom: 3,
   },
   instructionsText: {
-    fontSize: 7.5,
+    fontSize: 7,
     color: "#64748b",
-    lineHeight: 1.4,
+    lineHeight: 1.45,
   },
   footer: {
     position: "absolute",
@@ -210,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footerText: {
-    fontSize: 7,
+    fontSize: 6.5,
     color: "#94a3b8",
   },
 });
@@ -233,16 +253,19 @@ export function StationeryListPdfDocument({
         {/* Header / Letterhead */}
         <View style={styles.header}>
           <View style={styles.brandCol}>
-            <Text style={styles.brandTitle}>Pexpacks Supplies</Text>
-            <Text style={styles.brandSubtitle}>
-              Official Academic Supplies &amp; Stationery Checklist
-            </Text>
+            <Image
+              src={PEXPACKS_LETTERHEAD_LOGO_BASE64}
+              style={styles.logo}
+            />
           </View>
 
           <View style={styles.contactCol}>
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>OFFICIAL CHECKLIST</Text>
+            </View>
             <Text style={styles.contactText}>
-              Care Desk: helpme@pexpacks.co.za | pexpacks@gmail.com{"\n"}
-              Tel / WhatsApp: +27 10 500 8422{"\n"}
+              Care Desk: care@pexpacks.co.za | pexpacks@gmail.com{"\n"}
+              Tel / WhatsApp: +27 78 003 6048{"\n"}
               www.pexpacks.co.za • Gauteng, South Africa
             </Text>
           </View>
@@ -250,7 +273,9 @@ export function StationeryListPdfDocument({
 
         {/* School & Grade Title Block */}
         <View style={styles.titleSection}>
-          <Text style={styles.schoolTitle}>{options.schoolName.toUpperCase()}</Text>
+          <Text style={styles.schoolTitle}>
+            {options.schoolName.toUpperCase()}
+          </Text>
           <Text style={styles.gradeSubtitle}>
             {options.grade} Stationery Checklist ({year})
           </Text>
@@ -264,16 +289,16 @@ export function StationeryListPdfDocument({
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <View style={styles.colCheck}>
-              <Text style={styles.thText}>Tick</Text>
+              <Text style={styles.thText}>TICK</Text>
             </View>
             <View style={styles.colQty}>
-              <Text style={styles.thText}>Qty</Text>
+              <Text style={styles.thText}>QTY</Text>
             </View>
             <View style={styles.colItem}>
-              <Text style={styles.thText}>Item Name</Text>
+              <Text style={styles.thText}>ITEM NAME</Text>
             </View>
             <View style={styles.colDesc}>
-              <Text style={styles.thText}>Specification / Note</Text>
+              <Text style={styles.thText}>SPECIFICATION / NOTE</Text>
             </View>
           </View>
 
@@ -281,8 +306,14 @@ export function StationeryListPdfDocument({
             const qtyStr =
               typeof item.quantity === "number"
                 ? `${item.quantity}x`
-                : String(item.quantity);
-            const desc = (item.description || item.specification || "-").trim();
+                : String(item.quantity).endsWith("x")
+                  ? item.quantity
+                  : `${item.quantity}x`;
+            const desc = (
+              item.specification ||
+              item.description ||
+              "-"
+            ).trim();
 
             return (
               <View
@@ -290,19 +321,20 @@ export function StationeryListPdfDocument({
                 style={[
                   styles.tableRow,
                   index % 2 === 1 ? styles.tableRowEven : {},
+                  index === options.items.length - 1 ? { borderBottomWidth: 0 } : {},
                 ]}
               >
                 <View style={styles.colCheck}>
                   <View style={styles.checkboxBox} />
                 </View>
                 <View style={styles.colQty}>
-                  <Text style={styles.cellTextBold}>{qtyStr}</Text>
+                  <Text style={styles.qtyText}>{qtyStr}</Text>
                 </View>
                 <View style={styles.colItem}>
-                  <Text style={styles.cellTextBold}>{item.name}</Text>
+                  <Text style={styles.itemText}>{item.name}</Text>
                 </View>
                 <View style={styles.colDesc}>
-                  <Text style={styles.cellText}>{desc}</Text>
+                  <Text style={styles.descText}>{desc}</Text>
                 </View>
               </View>
             );
@@ -321,7 +353,7 @@ export function StationeryListPdfDocument({
 
         {/* Microcopy & Order Instructions */}
         <View style={styles.instructionsCard}>
-          <Text style={styles.instructionsTitle}>How to Order or Verify</Text>
+          <Text style={styles.instructionsTitle}>HOW TO ORDER OR VERIFY</Text>
           <Text style={styles.instructionsText}>
             1. Use the checkboxes above to tick off items in your learner&apos;s stationery bag.{"\n"}
             2. To order pre-packed, verified stationery boxes delivered directly, visit www.pexpacks.co.za.{"\n"}

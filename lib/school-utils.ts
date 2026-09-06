@@ -78,6 +78,7 @@ function toGradePacks(packs: DbPack[]): GradePack[] {
     .map((pack) => {
       const grade = extractGradeName(pack.title, pack.slug);
       const packItems: SchoolPackItem[] = pack.items.map((item) => ({
+        id: item.id,
         name: item.name,
         quantity: item.quantity,
         unitPrice: item.unit_price,

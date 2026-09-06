@@ -8,6 +8,68 @@ import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { getGradeBySlug } from "@/lib/school-utils";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
+type PackPricingColumns = {
+  margin_rate_used: number | null;
+  packaging_cost: number | null;
+  assembly_cost: number | null;
+  freight_cost: number | null;
+  price: number | null;
+};
+
+function roundMoney(value: number) {
+  return Math.round((value + Number.EPSILON) * 100) / 100;
+}
+
+async function getPackPricingColumns(
+  packId: string,
+): Promise<PackPricingColumns | null> {
+  try {
+    const supabase = createSupabaseAdminClient();
+    const { data, error } = await supabase
+      .from("school_packs" as never)
+      .select(
+        "price,margin_rate_used,packaging_cost,assembly_cost,freight_cost",
+      )
+      .eq("id", packId)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data as unknown as PackPricingColumns;
+  } catch {
+    return null;
+  }
+}
+
+// Matches the authoritative pricing in lib/packs/calculatePackTotal.ts
+// and app/api/packs/custom-total/route.ts:
+//   full selection -> packRow.price
+//   partial/custom  -> (subtotal / (1 - marginRate)) + fixedPackCost
+function calculateCustomisedPackTotal(
+  selectedSubtotal: number,
+  isFullSelection: boolean,
+  pricing: PackPricingColumns | null,
+): number {
+  if (
+    isFullSelection &&
+    typeof pricing?.price === "number" &&
+    pricing.price > 0
+  ) {
+    return roundMoney(pricing.price);
+  }
+
+  const marginRate = Number(pricing?.margin_rate_used ?? 0);
+  const safeMarginRate = marginRate > 0 && marginRate < 1 ? marginRate : 0;
+  const fixedPackCost =
+    Number(pricing?.packaging_cost ?? 0) +
+    Number(pricing?.assembly_cost ?? 0) +
+    Number(pricing?.freight_cost ?? 0);
+
+  if (safeMarginRate > 0) {
+    return roundMoney(selectedSubtotal / (1 - safeMarginRate) + fixedPackCost);
+  }
+
+  return roundMoney(selectedSubtotal + fixedPackCost);
+}
+
 export class TrayCheckoutError extends Error {
   constructor(
     message: string,
@@ -195,13 +257,32 @@ export async function handleTrayCheckout(input: {
           ? pexcoverResult.pexcoverTotalRands
           : 0;
 
-      verifiedTotal += itemsTotal + packPexcoverCost;
+      // Apply the authoritative margin-inclusive pricing (same model as the
+      // client customiser and /api/packs/custom-total) so the server total
+      // matches what the customer is shown and charged.
+      const isFullSelection =
+        selectedItems.length > 0 &&
+        selectedItems.length === (serverPack.packItems ?? []).length &&
+        selectedItems.every(
+          (item) =>
+            item.quantity ===
+            (authoritativeItems.get(item.name.trim().toLowerCase())
+              ?.quantity ?? 0),
+        );
+      const pricing = await getPackPricingColumns(serverPack.id);
+      const packTotal = calculateCustomisedPackTotal(
+        itemsTotal,
+        isFullSelection,
+        pricing,
+      );
+
+      verifiedTotal += packTotal + packPexcoverCost;
       verifiedPacks.push({
         ...pack,
         packId: serverPack.id,
         items: selectedItems,
-        totalPrice: itemsTotal,
-        basePackPrice: itemsTotal,
+        totalPrice: packTotal,
+        basePackPrice: packTotal,
         pexcoverPrice: packPexcoverCost,
       });
     }

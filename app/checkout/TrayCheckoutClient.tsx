@@ -98,11 +98,6 @@ function getPackTotal(pack: TrayPackItem) {
   return pack.totalPrice + pexcoverCost;
 }
 
-function getItemLineTotal(item: TrayPackItem['items'][number]) {
-  return typeof item.unitPrice === 'number'
-    ? item.unitPrice * item.quantity
-    : null
-}
 
 function getPackItemPreview(pack: TrayPackItem) {
   return pack.items.slice(0, 4)
@@ -1099,14 +1094,10 @@ export function TrayCheckoutClient() {
                         className={styles.itemisedList}
                       >
                         {previewItems.map((item, itemIndex) => {
-                          const lineTotal = getItemLineTotal(item)
                           return (
                             <li key={`${pack.id}-${item.name}-${itemIndex}`}>
                               <span>{item.name}</span>
                               <span>Qty {item.quantity}</span>
-                              {lineTotal !== null ? (
-                                <strong>{formatCurrency(lineTotal)}</strong>
-                              ) : null}
                             </li>
                           )
                         })}
@@ -1115,12 +1106,6 @@ export function TrayCheckoutClient() {
                             <span>
                               Pexcover <em>(Book covering)</em>
                             </span>
-                            <span />
-                            <strong>
-                              {formatCurrency(
-                                calculatePexcoverTotal(pack.items).pexcoverTotalRands
-                              )}
-                            </strong>
                           </li>
                         ) : null}
                         {hiddenCount > 0 ? (

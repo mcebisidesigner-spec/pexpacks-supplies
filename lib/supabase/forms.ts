@@ -78,7 +78,7 @@ export async function saveOrderRecord(
       items: splitItems(data.selectedItems),
       removed_items: splitItems(data.removedItems),
       estimated_total:
-        typeof data.estimatedTotal === "number" ? data.estimatedTotal : null,
+        typeof data.estimatedTotal === "number" ? data.estimatedTotal : 0,
       pexcover_requested:
         data.message?.toLowerCase().includes("pexcover") || false,
       fulfilment_option: data.deliveryMethod || null,
