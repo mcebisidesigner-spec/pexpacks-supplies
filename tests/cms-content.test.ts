@@ -185,6 +185,25 @@ describe("Pexpacks Content CMS Module", () => {
     expect(migration).toContain("REVOKE SELECT ON public.cms_announcements FROM anon");
     expect(migration).toContain("GRANT EXECUTE ON FUNCTION public.get_public_cms_faqs()");
   });
+  it("enables RLS on operational archive tables flagged by Supabase advisors", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00099_enable_archive_table_rls.sql",
+    );
+    for (const table of [
+      "audit_logs_archive",
+      "security_audit_logs_archive",
+      "order_events_archive",
+    ]) {
+      expect(migration).toContain(`ALTER TABLE public.${table} ENABLE ROW LEVEL SECURITY`);
+      expect(migration).toContain(`REVOKE ALL ON TABLE public.${table} FROM anon`);
+      expect(migration).toContain(`GRANT ALL ON TABLE public.${table} TO service_role`);
+    }
+    expect(migration).toContain("public.has_permission('audit.view')");
+    expect(migration).toContain("public.has_permission('orders.view')");
+    expect(migration).toContain("Service role manages archived audit logs");
+    expect(migration).toContain("Service role manages archived security audit logs");
+    expect(migration).toContain("Service role manages archived order events");
+  });
 
   it("links the public blog resource hub to published CMS resources", () => {
     const blogPage = readRepoFile("app/blog/page.tsx");
