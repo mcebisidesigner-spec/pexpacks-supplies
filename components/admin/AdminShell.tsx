@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { AdminNavGroup } from "@/lib/admin/navigation";
+import { brandLogoPaths } from "@/lib/brand-assets";
 import { createClient } from "@/lib/supabase/client";
 import { ORDERED_NAV_ITEMS } from "./Sidebar";
 import styles from "./AdminShell.module.css";
@@ -303,7 +304,7 @@ export function AdminShell({
           >
             <span className={styles.brandTextGroup}>
               <Image
-                src="/images/logo.svg"
+                src={brandLogoPaths.white}
                 alt="Pexpacks"
                 width={140}
                 height={32}

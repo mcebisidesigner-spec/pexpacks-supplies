@@ -1,5 +1,6 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+import { PEXPACKS_LETTERHEAD_LOGO_BASE64 } from "@/components/pdf/letterhead-logo";
 
 const styles = StyleSheet.create({
   page: {
@@ -19,6 +20,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "#10b981",
     paddingBottom: 12,
     marginBottom: 20,
+  },
+  logo: {
+    width: 125,
+    height: 48.7,
+    marginBottom: 4,
   },
   companyName: {
     fontSize: 14,
@@ -168,7 +174,7 @@ export function LetterheadDocument(props: LetterheadProps) {
         {/* Running Header */}
         <View fixed style={styles.headerBand}>
           <View>
-            <Text style={styles.companyName}>PEXPACKS SUPPLIES (PTY) LTD</Text>
+            <Image src={PEXPACKS_LETTERHEAD_LOGO_BASE64} style={styles.logo} />
             <Text style={styles.companySubtext}>Institutional Stationery & Commercial Supply</Text>
           </View>
           <View style={styles.metaRight}>

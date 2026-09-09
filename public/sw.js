@@ -25,7 +25,7 @@ if (IS_LOCAL_DEV_HOST) {
     );
   });
 } else {
-  const APP_VERSION = "pexpacks-pwa-v4";
+  const APP_VERSION = "pexpacks-pwa-v5";
   const STATIC_CACHE = `${APP_VERSION}-static`;
   const IMAGE_CACHE = `${APP_VERSION}-images`;
   const DATA_CACHE = `${APP_VERSION}-data`;
@@ -37,7 +37,11 @@ if (IS_LOCAL_DEV_HOST) {
     "/icons/icon-192.png",
     "/icons/icon-512.png",
     "/icons/icon-maskable-512.png",
+    "/icons/apple-touch-icon.png",
     "/images/logo.svg",
+    "/images/logo-white.svg",
+    "/images/logo-icon.svg",
+    "/images/logo.png",
   ];
 
   const MAX_IMAGE_CACHE_ENTRIES = 80;
