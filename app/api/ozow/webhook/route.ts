@@ -6,7 +6,7 @@ import {
   recordOrderPaymentStatus,
 } from "@/lib/orders";
 import { getOzowConfig, ozowWebhookHash } from "@/lib/ozow/signature";
-import { sendPurchaseReceipt } from "@/lib/email/receipt";
+import { dispatchPurchaseReceipt } from "@/lib/email/deliverPurchaseReceipt";
 
 export const runtime = "nodejs";
 
@@ -173,33 +173,9 @@ export async function POST(request: NextRequest) {
       isTest: IsTest === "true",
     });
 
-    const order = await getOrderForReceipt(TransactionReference);
-
-    if (order) {
-      after(async () => {
-        try {
-          const receiptResult = await sendPurchaseReceipt(order);
-          if (!receiptResult.success) {
-            console.warn(
-              "[ozow/webhook] Receipt email not sent for",
-              TransactionReference,
-              receiptResult.error,
-            );
-          }
-        } catch (err) {
-          console.error(
-            "[ozow/webhook] Receipt email exception for",
-            TransactionReference,
-            err,
-          );
-        }
-      });
-    } else {
-      console.warn(
-        "[ozow/webhook] Order not found for receipt:",
-        TransactionReference,
-      );
-    }
+    after(async () => {
+      await dispatchPurchaseReceipt(TransactionReference);
+    });
   } else {
     await recordOrderPaymentStatus({
       orderReference: TransactionReference,

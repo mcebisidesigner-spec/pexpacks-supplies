@@ -88,7 +88,7 @@ type TrayPack = {
   gradeSlug: string;
   packName: string;
   packMode: string;
-  items: { name: string; quantity: number; unitPrice?: number }[];
+  items: { id?: string; name: string; quantity: number; unitPrice?: number }[];
   totalPrice: number;
   wantsPexcover: boolean;
   pexcoverPrice: number;
@@ -219,24 +219,22 @@ export async function handleTrayCheckout(input: {
       });
     } else {
       const authoritativeItems = new Map(
-        (serverPack.packItems ?? []).map((item) => [
-          item.name.trim().toLowerCase(),
-          item,
-        ]),
+        (serverPack.packItems ?? []).map((item) => [item.id, item]),
       );
       const selectedItems = pack.items
         .map((item) => {
-          const authoritative = authoritativeItems.get(
-            item.name.trim().toLowerCase(),
-          );
+          const authoritative = item.id
+            ? authoritativeItems.get(item.id)
+            : undefined;
           if (!authoritative) {
             throw new TrayCheckoutError(
-              `Item is no longer available in ${serverPack.grade}: ${item.name}`,
+              `A custom item is no longer available in ${serverPack.grade}. Please re-select your pack.`,
               400,
             );
           }
           const quantity = Math.max(0, Math.min(99, Math.trunc(item.quantity)));
           return {
+            id: authoritative.id,
             name: authoritative.name,
             quantity,
             unitPrice: authoritative.unitPrice ?? 0,
@@ -266,7 +264,7 @@ export async function handleTrayCheckout(input: {
         selectedItems.every(
           (item) =>
             item.quantity ===
-            (authoritativeItems.get(item.name.trim().toLowerCase())
+            (authoritativeItems.get(item.id ?? "")
               ?.quantity ?? 0),
         );
       const pricing = await getPackPricingColumns(serverPack.id);

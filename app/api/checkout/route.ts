@@ -122,6 +122,7 @@ export async function POST(request: NextRequest) {
         packMode: typeof p.packMode === "string" ? p.packMode : "full",
         items: Array.isArray(p.items)
           ? p.items.map((i: Record<string, unknown>) => ({
+              id: typeof i.id === "string" ? i.id : undefined,
               name: typeof i.name === "string" ? i.name : "",
               quantity: typeof i.quantity === "number" ? i.quantity : 0,
               unitPrice:

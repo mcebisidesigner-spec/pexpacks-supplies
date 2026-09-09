@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PRICING ENGINE TEST SUITE
  *
  * Tests the Pexcover(tm) dynamic covering calculator and the gross margin
@@ -183,14 +183,15 @@ describe("Pexcover Engine - Edge cases", () => {
     expect(result.coverableItemCount).toBe(3);
   });
 
-  it("uses fallback rate when no embedded or lookup rate", () => {
+  it("does not charge Pexcover when the authoritative rate is missing", () => {
     const item: CoverablePackItemInput = {
       quantity: 1,
       requires_pexcover: true,
       pexco_code: "PEXCO02",
     };
     const result = calculatePexcoverTotal([item]);
-    expect(result.pexcoverTotalCents).toBe(1400);
+    expect(result.pexcoverTotalCents).toBe(0);
+    expect(result.hasEligibleBooks).toBe(false);
   });
 });
 

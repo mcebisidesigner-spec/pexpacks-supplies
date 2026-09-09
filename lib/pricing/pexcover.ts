@@ -114,27 +114,9 @@ export function calculatePexcoverTotal(
       }
     }
 
-    // Standard fallback rates if lookup / embedded missing (preventing crash)
-    if (rateCents === null) {
-      switch (code.toUpperCase()) {
-        case "PEXCO01":
-          rateCents = 800; // R8.00
-          break;
-        case "PEXCO02":
-          rateCents = 1400; // R14.00
-          break;
-        case "PEXCO03":
-          rateCents = 1100; // R11.00
-          break;
-        case "PEXCO04":
-          rateCents = 1800; // R18.00
-          break;
-        default:
-          rateCents = 0;
-      }
-    }
-
-    if (rateCents <= 0) {
+    // Rates must come from the public pack snapshot or the supplied lookup.
+    // A fallback would silently charge an obsolete Settings value.
+    if (rateCents === null || rateCents <= 0) {
       continue;
     }
 

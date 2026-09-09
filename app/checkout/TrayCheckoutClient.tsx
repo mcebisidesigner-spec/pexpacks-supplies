@@ -499,6 +499,7 @@ export function TrayCheckoutClient() {
             packName: pack.packName,
             packMode: pack.packMode,
             items: pack.items.map((i) => ({
+              id: i.itemId ?? i.id,
               name: i.name,
               quantity: i.quantity,
               unitPrice: i.unitPrice,

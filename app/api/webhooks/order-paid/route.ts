@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse, after } from "next/server";
 import crypto from "node:crypto";
 import { z } from "zod";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getOrderForReceipt } from "@/lib/orders";
-import { sendPurchaseReceipt } from "@/lib/email/receipt";
+import { dispatchPurchaseReceipt } from "@/lib/email/deliverPurchaseReceipt";
 
 export const runtime = "nodejs";
 
@@ -93,43 +91,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Decoupled async dispatch via Next.js after() with safe fallback for test contexts
-  const dispatchReceipt = async () => {
-    try {
-      const order = await getOrderForReceipt(record.order_reference);
-      if (!order) {
-        console.warn(
-          "[webhook/order-paid] Order not found for reference:",
-          record.order_reference,
-        );
-        return;
-      }
-
-      const receiptResult = await sendPurchaseReceipt(order);
-      if (receiptResult.success) {
-        const admin = createSupabaseAdminClient();
-        await admin
-          .from("orders")
-          .update({
-            receipt_email_sent_at: new Date().toISOString(),
-          } as never)
-          .eq("id", record.id);
-        console.log(
-          "[webhook/order-paid] Receipt dispatched and recorded for:",
-          record.order_reference,
-        );
-      } else {
-        console.error(
-          "[webhook/order-paid] Resend dispatch failed:",
-          receiptResult.error,
-        );
-      }
-    } catch (err) {
-      console.error(
-        "[webhook/order-paid] Async error executing receipt dispatch:",
-        err,
-      );
-    }
-  };
+  const dispatchReceipt = () => dispatchPurchaseReceipt(record.order_reference);
 
   try {
     after(dispatchReceipt);

@@ -24,7 +24,7 @@ type OrderSnapshotPack = {
   packId?: string;
   schoolName: string;
   grade: string;
-  items: { name: string; quantity: number; unitPrice?: number }[];
+  items: { id?: string; name: string; quantity: number; unitPrice?: number }[];
 };
 
 async function insertOrderSnapshots(
@@ -245,6 +245,7 @@ export async function getOrderByReference(reference: string) {
   if (error || !data) return null;
 
   return data as {
+    id: string;
     order_reference: string;
     status: string;
     school_name: string;
@@ -354,7 +355,7 @@ export async function createMultiPackOrder(input: {
     gradeSlug: string;
     packName: string;
     packMode: string;
-    items: { name: string; quantity: number; unitPrice?: number }[];
+    items: { id?: string; name: string; quantity: number; unitPrice?: number }[];
     totalPrice: number;
     wantsPexcover?: boolean;
     pexcoverPrice?: number;
@@ -473,7 +474,7 @@ export async function getOrderForReceipt(reference: string) {
   const { data, error } = await supabase
     .from("orders")
     .select(
-      "order_reference, unique_customer_id, tracking_token, status, buyer_name, buyer_email, buyer_phone, learner_name, school_name, grade, pack_type, items, estimated_total, fulfilment_option, payment_gateway, gateway_reference, paid_at, metadata, created_at",
+      "id, order_reference, unique_customer_id, tracking_token, status, buyer_name, buyer_email, buyer_phone, learner_name, school_name, grade, pack_type, items, estimated_total, fulfilment_option, payment_gateway, gateway_reference, paid_at, metadata, created_at",
     )
     .eq("order_reference", reference)
     .single();
@@ -481,6 +482,7 @@ export async function getOrderForReceipt(reference: string) {
   if (error || !data) return null;
 
   return data as {
+    id: string;
     order_reference: string;
     unique_customer_id?: string | null;
     tracking_token?: string | null;
