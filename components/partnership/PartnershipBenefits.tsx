@@ -57,7 +57,7 @@ export function PartnershipBenefits() {
   return (
     <section className={styles.sectionAlt} aria-labelledby="advantages-title">
       <div className={styles.container}>
-        <div className={styles.sectionHeaderCenter}>
+        <div className={styles.sectionHeader}>
           <p className={styles.eyebrow}>The institutional proposition</p>
           <h2 id="advantages-title" className={styles.sectionTitle}>
             One Partnership. Four Institutional Advantages.

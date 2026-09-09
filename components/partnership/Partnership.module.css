@@ -34,63 +34,72 @@
   color: #ffffff;
 }
 
+.sectionHeader,
+.sectionHeaderCenter {
+  max-width: 760px;
+  margin: 0 0 34px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .eyebrow {
-  margin: var(--section-eyebrow-margin, 0 0 16px);
+  margin: var(--section-eyebrow-margin, 0 0 14px);
   color: var(--section-eyebrow-color, var(--pex-keppel, #1a7a77));
   font-size: var(--section-eyebrow-font-size, 14px);
   font-weight: var(--section-eyebrow-font-weight, 800);
   letter-spacing: var(--section-eyebrow-letter-spacing, 0);
+  text-align: left;
 }
 
 .eyebrowLight {
-  margin: var(--section-eyebrow-margin, 0 0 16px);
+  margin: var(--section-eyebrow-margin, 0 0 14px);
   color: #5eead4;
   font-size: var(--section-eyebrow-font-size, 14px);
   font-weight: var(--section-eyebrow-font-weight, 800);
   letter-spacing: var(--section-eyebrow-letter-spacing, 0);
+  text-align: left;
 }
 
 .sectionTitle {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   color: var(--pex-navy, #1a2a40);
   font-family: var(--font-heading, inherit);
-  font-size: clamp(30px, 4.2vw, 48px);
+  font-size: clamp(32px, 4.6vw, 56px);
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 1.05;
   letter-spacing: -0.01em;
+  text-align: left;
 }
 
 .sectionTitleLight {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   color: #ffffff;
   font-family: var(--font-heading, inherit);
-  font-size: clamp(30px, 4.2vw, 48px);
+  font-size: clamp(32px, 4.6vw, 56px);
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 1.05;
   letter-spacing: -0.01em;
+  text-align: left;
 }
 
 .sectionLead {
-  max-width: 680px;
-  margin: 0 0 42px;
-  color: var(--pex-muted, #4d5a5d);
-  font-size: clamp(16px, 1.8vw, 18px);
-  line-height: 1.6;
+  max-width: 760px;
+  margin: 0 0 34px;
+  color: var(--pex-text-muted, #64748b);
+  font-size: var(--text-lg, 18px);
+  line-height: 1.45;
+  text-align: left;
 }
 
 .sectionLeadLight {
-  max-width: 680px;
-  margin: 0 0 42px;
+  max-width: 760px;
+  margin: 0 0 34px;
   color: rgba(255, 255, 255, 0.82);
-  font-size: clamp(16px, 1.8vw, 18px);
-  line-height: 1.6;
-}
-
-.sectionHeaderCenter {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-size: var(--text-lg, 18px);
+  line-height: 1.45;
+  text-align: left;
 }
 
 /* ── Hero Section ── */

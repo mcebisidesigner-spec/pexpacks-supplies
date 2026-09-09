@@ -26,7 +26,7 @@ export function ManagedPartnership() {
   return (
     <section className={styles.sectionAlt} aria-labelledby="managed-model-heading">
       <div className={styles.container}>
-        <div className={styles.sectionHeaderCenter}>
+        <div className={styles.sectionHeader}>
           <p className={styles.eyebrow}>Operational division of responsibility</p>
           <h2 id="managed-model-heading" className={styles.sectionTitle}>
             Zero Administrative Load for Your Academic Staff.

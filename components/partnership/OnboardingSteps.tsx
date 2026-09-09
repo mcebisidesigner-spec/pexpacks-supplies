@@ -23,7 +23,7 @@ export function OnboardingSteps() {
   return (
     <section className={styles.sectionAlt} id="how-it-works" aria-labelledby="onboarding-steps-title">
       <div className={styles.container}>
-        <div className={styles.sectionHeaderCenter}>
+        <div className={styles.sectionHeader}>
           <p className={styles.eyebrow}>Structured implementation</p>
           <h2 id="onboarding-steps-title" className={styles.sectionTitle}>
             From Approval to Launch in Three Steps.

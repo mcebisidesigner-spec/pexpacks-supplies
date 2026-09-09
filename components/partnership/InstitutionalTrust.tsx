@@ -39,7 +39,7 @@ export function InstitutionalTrust() {
   return (
     <section className={styles.sectionAlt} aria-labelledby="trust-section-title">
       <div className={styles.container}>
-        <div className={styles.sectionHeaderCenter}>
+        <div className={styles.sectionHeader}>
           <p className={styles.eyebrow}>Operational excellence</p>
           <h2 id="trust-section-title" className={styles.sectionTitle}>
             Built for Schools. Managed by Pexpacks.

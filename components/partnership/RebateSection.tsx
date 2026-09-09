@@ -38,7 +38,7 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
   return (
     <section className={styles.section} id="rebate-calculator" aria-labelledby="rebate-heading">
       <div className={styles.container}>
-        <div className={styles.sectionHeaderCenter}>
+        <div className={styles.sectionHeader}>
           <p className={styles.eyebrow}>Annual partnership rebate</p>
           <h2 id="rebate-heading" className={styles.sectionTitle}>
             Adoption That Gives Back to Your School.
