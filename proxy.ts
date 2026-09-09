@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import {
+  ADMIN_SESSION_COOKIE,
+  verifyAdminSessionValue,
+} from "@/lib/admin/session-policy";
 
 function applySecurityHeaders(response: NextResponse) {
   response.headers.set("X-Frame-Options", "DENY");
@@ -84,8 +88,28 @@ export async function proxy(request: NextRequest) {
       console.error("[proxy] auth check failed:", err);
     }
 
-    // Redirect unauthenticated back-office requests to secure gateway
-    if (!user) {
+    // Require the signed browser-session gate as well as Supabase Auth.
+    // This prevents refresh-token persistence from reopening admin after restart.
+    const adminSession = user
+      ? await verifyAdminSessionValue(
+          request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
+          user.id,
+        )
+      : null;
+
+    // Redirect unauthenticated or expired back-office requests to secure gateway.
+    if (!user || !adminSession) {
+      if (user) {
+        try {
+          await supabase.auth.signOut();
+        } catch {
+          // Cookie clearing below still blocks another admin request.
+        }
+      }
+      response.cookies.set(ADMIN_SESSION_COOKIE, "", {
+        path: "/",
+        expires: new Date(0),
+      });
       return copyCookies(
         response,
         applySecurityHeaders(

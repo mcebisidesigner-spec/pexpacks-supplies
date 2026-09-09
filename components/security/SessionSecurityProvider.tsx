@@ -11,11 +11,13 @@ import React, {
 import { Lock, Sparkles } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth";
 
-const PRIVACY_SHIELD_IDLE_MS = 10 * 60 * 1000; // 10 minutes (600,000 ms)
-const HARD_SIGNOUT_IDLE_MS = 45 * 60 * 1000; // 45 minutes (2,700,000 ms)
+const PRIVACY_SHIELD_IDLE_MS = 15 * 60 * 1000;
+const STANDARD_HARD_SIGNOUT_IDLE_MS = 40 * 60 * 1000;
+const TRUSTED_HARD_SIGNOUT_IDLE_MS = 2 * 60 * 60 * 1000;
 const ACTIVITY_CHANNEL_NAME = "pex_security_activity_channel";
 const ACTIVITY_STORAGE_KEY = "pex_security_last_activity";
 const ACTIVITY_THROTTLE_MS = 3_000;
+const HEARTBEAT_THROTTLE_MS = 60_000;
 
 interface SessionSecurityContextType {
   isPrivacyShieldActive: boolean;
@@ -37,8 +39,10 @@ export function SessionSecurityProvider({
   children: React.ReactNode;
 }) {
   const [isPrivacyShieldActive, setIsPrivacyShieldActive] = useState(false);
+  const [sessionMode, setSessionMode] = useState<"standard" | "trusted">("standard");
   const lastActivityRef = useRef<number>(0);
   const lastSyncRef = useRef<number>(0);
+  const lastHeartbeatRef = useRef<number>(0);
   const isSigningOutRef = useRef<boolean>(false);
   const channelRef = useRef<BroadcastChannel | null>(null);
 
@@ -69,7 +73,7 @@ export function SessionSecurityProvider({
       window.localStorage.removeItem("pex_dashboard_security_notice_v2");
       window.sessionStorage.setItem(
         "pex_console_popup_notice",
-        "Session expired due to 45 minutes of inactivity."
+        "Session expired due to inactivity."
       );
     } catch {
       // ignore storage errors
@@ -97,11 +101,36 @@ export function SessionSecurityProvider({
         // ignore
       }
     }
+
+    if (now - lastHeartbeatRef.current > HEARTBEAT_THROTTLE_MS) {
+      lastHeartbeatRef.current = now;
+      void fetch("/api/admin/session/heartbeat", {
+        method: "POST",
+        cache: "no-store",
+        credentials: "same-origin",
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            window.location.replace("/pex-console-secure");
+            return;
+          }
+          const result = (await response.json()) as {
+            mode?: "standard" | "trusted";
+          };
+          if (result.mode === "trusted" || result.mode === "standard") {
+            setSessionMode(result.mode);
+          }
+        })
+        .catch(() => {
+          // A transient network failure must not extend the server-side session.
+        });
+    }
   }, []);
 
   // 4. Set up cross-tab synchronization & Activity monitoring
   useEffect(() => {
     lastActivityRef.current = Date.now();
+    resumeSession();
 
     if (typeof BroadcastChannel !== "undefined") {
       channelRef.current = new BroadcastChannel(ACTIVITY_CHANNEL_NAME);
@@ -114,7 +143,7 @@ export function SessionSecurityProvider({
           try {
             window.sessionStorage.setItem(
               "pex_console_popup_notice",
-              "Session expired due to 45 minutes of inactivity."
+              "Session expired due to inactivity."
             );
           } catch {}
           window.location.replace("/");
@@ -158,7 +187,12 @@ export function SessionSecurityProvider({
       const elapsed = now - lastActivityRef.current;
 
       // Stage 2: 20-minute hard termination
-      if (elapsed >= HARD_SIGNOUT_IDLE_MS) {
+      const hardSignoutIdleMs =
+        sessionMode === "trusted"
+          ? TRUSTED_HARD_SIGNOUT_IDLE_MS
+          : STANDARD_HARD_SIGNOUT_IDLE_MS;
+
+      if (elapsed >= hardSignoutIdleMs) {
         void performHardSignout("timeout");
         return;
       }
@@ -177,7 +211,7 @@ export function SessionSecurityProvider({
       window.removeEventListener("storage", onStorage);
       channelRef.current?.close();
     };
-  }, [performHardSignout, resumeSession]);
+  }, [performHardSignout, resumeSession, sessionMode]);
 
   return (
     <SessionSecurityContext.Provider value={{ isPrivacyShieldActive, resumeSession }}>

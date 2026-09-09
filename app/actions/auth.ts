@@ -13,6 +13,11 @@ import {
 import { logSecurityEvent } from "@/lib/security/audit";
 import { isStaffClaim } from "@/lib/admin/rbac";
 import { generateAndSendOtpEmail } from "@/lib/email/sendOtpEmail";
+import {
+  ADMIN_SESSION_COOKIE,
+  adminSessionCookieOptions,
+  createAdminSessionValue,
+} from "@/lib/admin/session-policy";
 
 export type AuthResponse = {
   ok: boolean;
@@ -249,6 +254,18 @@ export async function verifyOtpAction(
       return { ok: false, message: GENERIC_ERROR_MSG };
     }
 
+    // Create a browser-session-only, signed admin gate. It intentionally has no
+    // expiry or max-age, so a normal browser shutdown requires a new MFA login.
+    const cookieStore = await cookies();
+    cookieStore.set(
+      ADMIN_SESSION_COOKIE,
+      await createAdminSessionValue(
+        verifiedUserId,
+        trustedDevice ? "trusted" : "standard",
+      ),
+      adminSessionCookieOptions,
+    );
+
     // Reset rate limit & Log Success
     resetRateLimit(ip);
     await logSecurityEvent({
@@ -312,6 +329,12 @@ export async function logoutAction(): Promise<never> {
   const supabase = await createSupabaseServerClient();
 
   try {
+    cookieStore.set({
+      name: ADMIN_SESSION_COOKIE,
+      value: "",
+      path: "/",
+      expires: new Date(0),
+    });
     cookieStore.set({
       name: "px_admin_last_activity",
       value: "",
