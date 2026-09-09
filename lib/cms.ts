@@ -276,40 +276,6 @@ async function fetchActiveAnnouncement(
     console.error("[cms] public announcements rpc:", error);
   }
 
-  // Resilient fallback directly against cms_announcements table
-  try {
-    let query = admin
-      .from("cms_announcements")
-      .select("id, badge_text, message, link_url, link_label, display_location")
-      .eq("is_active", true)
-      .eq("status", "published");
-
-    if (location === "schools_page") {
-      query = query.eq("display_location", "schools_page");
-    } else if (location === "hero_banner") {
-      query = query.eq("display_location", "hero_banner");
-    } else if (location === "global_top") {
-      query = query.eq("display_location", "global_top");
-    } else {
-      // Default / site_header: accept global_top and hero_banner
-      query = query.in("display_location", ["global_top", "hero_banner"]);
-    }
-
-    const { data: fallbackData } = await query
-      .order("updated_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (fallbackData) {
-      const item = fallbackData as unknown as PublicAnnouncement;
-      return {
-        ...item,
-        link_url: normalizeCmsUrl(item.link_url),
-      };
-    }
-  } catch (fallbackErr) {
-    console.warn("[cms] fallback announcements query warning:", fallbackErr);
-  }
 
   return null;
 }

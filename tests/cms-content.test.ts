@@ -150,13 +150,40 @@ describe("Pexpacks Content CMS Module", () => {
 
   it("wires storefront FAQ and testimonial readers to public CMS RPCs", () => {
     const cms = readRepoFile("lib/cms.ts");
-    expect(cms).toContain('"get_public_cms_faqs" as never');
-    expect(cms).toContain('"get_public_cms_testimonials" as never');
-    expect(cms).toContain('"get_public_cms_announcements" as never');
-    expect(cms).toContain('"get_public_cms_resources" as never');
+    expect(cms).toContain("get_public_cms_faqs");
+    expect(cms).toContain("get_public_cms_testimonials");
+    expect(cms).toContain("get_public_cms_announcements");
+    expect(cms).toContain("get_public_cms_resources");
+    expect(cms).not.toContain('.from("cms_faqs")');
+    expect(cms).not.toContain('.from("cms_testimonials")');
+    expect(cms).not.toContain('.from("cms_resources")');
+    expect(cms).not.toContain('.from("cms_announcements")');
     expect(cms).toContain('"/blog"');
     expect(cms).toContain('"/schools"');
     expect(cms).toContain('"/partnership"');
+  });
+
+  it("adds scheduled public CMS RPCs and split admin read policies", () => {
+    const migration = readRepoFile(
+      "supabase/migrations/00091_cms_public_rpcs_and_scheduled_publishing.sql",
+    );
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'published'");
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS published_at timestamptz");
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS expires_at timestamptz");
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS updated_by uuid");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.get_public_cms_announcements");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.get_public_cms_faqs");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.get_public_cms_testimonials");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.get_public_cms_resources");
+    expect(migration).toContain("a.status = 'published'");
+    expect(migration).toContain("published_at <= timezone('utc', now())");
+    expect(migration).toContain("expires_at IS NULL OR");
+    expect(migration).toContain("CMS viewers read announcements");
+    expect(migration).toContain("public.has_permission('content.view')");
+    expect(migration).toContain("idx_cms_announcements_one_active_global_top");
+    expect(migration).toContain("idx_cms_announcements_one_active_schools_page");
+    expect(migration).toContain("REVOKE SELECT ON public.cms_announcements FROM anon");
+    expect(migration).toContain("GRANT EXECUTE ON FUNCTION public.get_public_cms_faqs()");
   });
 
   it("links the public blog resource hub to published CMS resources", () => {
