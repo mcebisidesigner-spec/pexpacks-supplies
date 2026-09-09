@@ -183,7 +183,15 @@ describe("Pexpacks Content CMS Module", () => {
     expect(migration).toContain("idx_cms_announcements_one_active_global_top");
     expect(migration).toContain("idx_cms_announcements_one_active_schools_page");
     expect(migration).toContain("REVOKE SELECT ON public.cms_announcements FROM anon");
-    expect(migration).toContain("GRANT EXECUTE ON FUNCTION public.get_public_cms_faqs()");
+    const finalRpcHardening = readRepoFile(
+      "supabase/migrations/00102_move_pg_trgm_and_service_role_public_rpcs.sql",
+    );
+    expect(finalRpcHardening).toContain(
+      "GRANT EXECUTE ON FUNCTION public.get_public_cms_faqs(text) TO service_role",
+    );
+    expect(finalRpcHardening).toContain(
+      "REVOKE EXECUTE ON FUNCTION public.get_public_cms_faqs(text) FROM PUBLIC, anon, authenticated",
+    );
   });
   it("enables RLS on operational archive tables flagged by Supabase advisors", () => {
     const migration = readRepoFile(

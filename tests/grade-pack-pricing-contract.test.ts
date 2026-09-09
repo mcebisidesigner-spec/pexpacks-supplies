@@ -83,8 +83,14 @@ describe("Grade Pack pricing contract", () => {
     expect(viewHardeningSql).toContain(
       "REVOKE SELECT ON public.admin_pack_items_view FROM anon, authenticated",
     );
-    expect(viewHardeningSql).toContain(
-      "GRANT EXECUTE ON FUNCTION public.get_public_school_pack(text) TO anon, authenticated, service_role",
+    const finalRpcHardeningSql = readRepoFile(
+      "supabase/migrations/00102_move_pg_trgm_and_service_role_public_rpcs.sql",
+    );
+    expect(finalRpcHardeningSql).toContain(
+      "REVOKE EXECUTE ON FUNCTION public.get_public_school_pack(text) FROM PUBLIC, anon, authenticated",
+    );
+    expect(finalRpcHardeningSql).toContain(
+      "GRANT EXECUTE ON FUNCTION public.get_public_school_pack(text) TO service_role",
     );
   });
 
