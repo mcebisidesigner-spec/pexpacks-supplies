@@ -54,6 +54,10 @@ export type FormSubmission = {
   city?: string;
   province?: string;
   learnerCount?: string;
+  schoolType?: string;
+  enquiryIntent?: string;
+  estimatedRebate?: string;
+  adoptionRate?: string;
   orderQuantity?: number;
   quantity?: string;
   pack?: string;

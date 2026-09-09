@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   FileText,
@@ -16,34 +16,43 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
+  Loader2,
+  X,
+  Bold,
+  Italic,
+  Underline,
+  List,
+  ListOrdered,
+  Heading2,
+  Minus,
+  Edit3,
+  RotateCcw,
+  FolderEdit,
+  Bookmark,
+  Check,
 } from "lucide-react";
 import {
   saveLetterAction,
   sendLetterEmailAction,
   searchSchoolsForLetterAction,
   searchQuotationsForLetterAction,
+  listLetterTemplatesAction,
+  saveLetterTemplateAction,
+  deleteLetterTemplateAction,
+  type SchoolOption,
 } from "@/app/admin/letters/actions";
-import type {
-  AdminLetterRecord,
-  LetterQuotationItem,
-  LetterQuotationData,
-  SaveLetterInput,
+import {
+  type AdminLetterRecord,
+  type LetterQuotationItem,
+  type LetterQuotationData,
+  type SaveLetterInput,
+  type AdminLetterTemplate,
+  DEFAULT_LETTER_TEMPLATES,
 } from "@/lib/admin/letters";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./LetterEditor.module.css";
-
-interface SchoolOption {
-  id: string;
-  name: string;
-  province?: string | null;
-  city?: string | null;
-  principal?: string | null;
-  email?: string | null;
-  telephone?: string | null;
-  address?: string | null;
-}
 
 interface QuotationOption {
   id: string;
@@ -147,6 +156,10 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [schools, setSchools] = useState<SchoolOption[]>([]);
+  const [isLoadingSchools, setIsLoadingSchools] = useState<boolean>(true);
+  const [isSearchingLive, setIsSearchingLive] = useState<boolean>(false);
+  const [visibleCount, setVisibleCount] = useState<number>(60);
+  const schoolSearchContainerRef = useRef<HTMLDivElement>(null);
   const [existingQuotations, setExistingQuotations] = useState<
     QuotationOption[]
   >([]);
@@ -162,6 +175,20 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
   );
   const [schoolSearchQuery, setSchoolSearchQuery] = useState<string>("");
   const [showSchoolDropdown, setShowSchoolDropdown] = useState<boolean>(false);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        schoolSearchContainerRef.current &&
+        !schoolSearchContainerRef.current.contains(e.target as Node)
+      ) {
+        setShowSchoolDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Recipient Fields
   const [recipientName, setRecipientName] = useState<string>(
@@ -191,6 +218,347 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
   const [signatoryTitle, setSignatoryTitle] = useState<string>(
     initialLetter?.signatory_title || "Managing Director",
   );
+
+  // Rich Text Editor State & Formatting
+  const [editorTab, setEditorTab] = useState<"write" | "preview">("write");
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  type FormatType =
+    | "bold"
+    | "italic"
+    | "underline"
+    | "bullet"
+    | "numbered"
+    | "heading"
+    | "divider"
+    | "uppercase"
+    | "lowercase"
+    | "titlecase";
+
+  function applyFormatting(type: FormatType) {
+    const textarea = contentTextareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const beforeText = content.substring(0, start);
+    const afterText = content.substring(end);
+
+    let replacement = "";
+    let newCursorStart = start;
+    let newCursorEnd = end;
+
+    switch (type) {
+      case "bold": {
+        if (!selectedText) {
+          replacement = "**bold text**";
+          newCursorStart = start + 2;
+          newCursorEnd = start + 11;
+        } else if (
+          selectedText.startsWith("**") &&
+          selectedText.endsWith("**") &&
+          selectedText.length >= 4
+        ) {
+          replacement = selectedText.slice(2, -2);
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        } else {
+          replacement = `**${selectedText}**`;
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        }
+        break;
+      }
+      case "italic": {
+        if (!selectedText) {
+          replacement = "*italic text*";
+          newCursorStart = start + 1;
+          newCursorEnd = start + 12;
+        } else if (
+          selectedText.startsWith("*") &&
+          selectedText.endsWith("*") &&
+          selectedText.length >= 2
+        ) {
+          replacement = selectedText.slice(1, -1);
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        } else {
+          replacement = `*${selectedText}*`;
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        }
+        break;
+      }
+      case "underline": {
+        if (!selectedText) {
+          replacement = "<u>underlined text</u>";
+          newCursorStart = start + 3;
+          newCursorEnd = start + 18;
+        } else if (
+          selectedText.startsWith("<u>") &&
+          selectedText.endsWith("</u>") &&
+          selectedText.length >= 7
+        ) {
+          replacement = selectedText.slice(3, -4);
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        } else {
+          replacement = `<u>${selectedText}</u>`;
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        }
+        break;
+      }
+      case "bullet": {
+        if (!selectedText) {
+          replacement = "• ";
+          newCursorStart = start + 2;
+          newCursorEnd = start + 2;
+        } else {
+          const lines = selectedText.split("\n");
+          const allBulleted = lines.every((line) =>
+            /^(\s*)(•|-|\*)\s+/.test(line),
+          );
+          if (allBulleted) {
+            replacement = lines
+              .map((l) => l.replace(/^(\s*)(•|-|\*)\s+/, "$1"))
+              .join("\n");
+          } else {
+            replacement = lines
+              .map((l) =>
+                l.trim().length > 0
+                  ? `• ${l.replace(/^(\s*)(•|-|\*)\s+/, "$1")}`
+                  : l,
+              )
+              .join("\n");
+          }
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        }
+        break;
+      }
+      case "numbered": {
+        if (!selectedText) {
+          replacement = "1. ";
+          newCursorStart = start + 3;
+          newCursorEnd = start + 3;
+        } else {
+          const lines = selectedText.split("\n");
+          let counter = 1;
+          replacement = lines
+            .map((l) => {
+              if (l.trim().length === 0) return l;
+              const cleaned = l.replace(/^(\s*)(\d+\.|\•|\-|\*)\s+/, "$1");
+              return `${counter++}. ${cleaned}`;
+            })
+            .join("\n");
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        }
+        break;
+      }
+      case "heading": {
+        if (!selectedText) {
+          replacement = "## ";
+          newCursorStart = start + 3;
+          newCursorEnd = start + 3;
+        } else if (selectedText.startsWith("## ")) {
+          replacement = selectedText.slice(3);
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        } else {
+          replacement = `## ${selectedText}`;
+          newCursorStart = start;
+          newCursorEnd = start + replacement.length;
+        }
+        break;
+      }
+      case "divider": {
+        replacement = "\n---\n";
+        newCursorStart = start + replacement.length;
+        newCursorEnd = start + replacement.length;
+        break;
+      }
+      case "uppercase": {
+        if (!selectedText) return;
+        replacement = selectedText.toUpperCase();
+        newCursorStart = start;
+        newCursorEnd = start + replacement.length;
+        break;
+      }
+      case "lowercase": {
+        if (!selectedText) return;
+        replacement = selectedText.toLowerCase();
+        newCursorStart = start;
+        newCursorEnd = start + replacement.length;
+        break;
+      }
+      case "titlecase": {
+        if (!selectedText) return;
+        replacement = selectedText.replace(
+          /\w\S*/g,
+          (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase(),
+        );
+        newCursorStart = start;
+        newCursorEnd = start + replacement.length;
+        break;
+      }
+    }
+
+    const updatedContent = beforeText + replacement + afterText;
+    setContent(updatedContent);
+
+    // Maintain focus and update selection range
+    requestAnimationFrame(() => {
+      if (contentTextareaRef.current) {
+        contentTextareaRef.current.focus();
+        contentTextareaRef.current.setSelectionRange(
+          newCursorStart,
+          newCursorEnd,
+        );
+      }
+    });
+  }
+
+  function handleTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === "b" || e.key === "B") {
+        e.preventDefault();
+        applyFormatting("bold");
+      } else if (e.key === "u" || e.key === "U") {
+        e.preventDefault();
+        applyFormatting("underline");
+      } else if (e.key === "i" || e.key === "I") {
+        e.preventDefault();
+        applyFormatting("italic");
+      }
+    }
+  }
+
+  function renderPreviewContent(text: string) {
+    if (!text || !text.trim()) {
+      return (
+        <div className={styles.previewEmpty}>
+          No letter body content yet. Switch to <strong>Write</strong> mode to
+          draft your letter.
+        </div>
+      );
+    }
+
+    const paragraphs = text
+      .split(/\n\s*\n/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    function parseInline(inlineText: string) {
+      const parts = inlineText.split(
+        /(\*\*[^*]+\*\*|<u>[\s\S]*?<\/u>|\*[^*]+\*)/g,
+      );
+      return parts.map((part, idx) => {
+        if (!part) return null;
+        if (
+          part.startsWith("**") &&
+          part.endsWith("**") &&
+          part.length >= 4
+        ) {
+          return (
+            <strong key={idx} className={styles.previewStrong}>
+              {part.slice(2, -2)}
+            </strong>
+          );
+        }
+        if (
+          part.startsWith("<u>") &&
+          part.endsWith("</u>") &&
+          part.length >= 7
+        ) {
+          return (
+            <span key={idx} className={styles.previewUnderline}>
+              {part.slice(3, -4)}
+            </span>
+          );
+        }
+        if (part.startsWith("*") && part.endsWith("*") && part.length >= 2) {
+          return (
+            <em key={idx} className={styles.previewEm}>
+              {part.slice(1, -1)}
+            </em>
+          );
+        }
+        return part;
+      });
+    }
+
+    return paragraphs.map((block, pIdx) => {
+      // Heading
+      if (block.startsWith("## ") || block.startsWith("# ")) {
+        const headingText = block.replace(/^#+\s*/, "");
+        return (
+          <h3 key={pIdx} className={styles.previewHeading}>
+            {parseInline(headingText)}
+          </h3>
+        );
+      }
+
+      // Divider
+      if (block === "---" || block === "***" || block === "___") {
+        return <hr key={pIdx} className={styles.previewHr} />;
+      }
+
+      // Bullet list
+      const isBulletBlock =
+        block.includes("\n* ") ||
+        block.includes("\n- ") ||
+        block.includes("\n• ") ||
+        block.startsWith("* ") ||
+        block.startsWith("- ") ||
+        block.startsWith("• ");
+
+      if (isBulletBlock) {
+        const items = block.split("\n").map((l) => l.trim()).filter(Boolean);
+        return (
+          <ul key={pIdx} className={styles.previewBulletList}>
+            {items.map((item, iIdx) => {
+              const clean = item.replace(/^(\*|\-|•)\s*/, "");
+              return <li key={iIdx}>{parseInline(clean)}</li>;
+            })}
+          </ul>
+        );
+      }
+
+      // Numbered list
+      const isNumberedBlock =
+        /^\d+\.\s+/.test(block) || block.includes("\n1. ");
+      if (isNumberedBlock) {
+        const items = block.split("\n").map((l) => l.trim()).filter(Boolean);
+        return (
+          <ol key={pIdx} className={styles.previewNumberedList}>
+            {items.map((item, iIdx) => {
+              const clean = item.replace(/^\d+\.\s*/, "");
+              return <li key={iIdx}>{parseInline(clean)}</li>;
+            })}
+          </ol>
+        );
+      }
+
+      // Salutation
+      if (pIdx === 0 && /^dear/i.test(block)) {
+        return (
+          <div key={pIdx} className={styles.previewSalutation}>
+            {parseInline(block)}
+          </div>
+        );
+      }
+
+      // Standard paragraph
+      return (
+        <p key={pIdx} className={styles.previewParagraph}>
+          {parseInline(block)}
+        </p>
+      );
+    });
+  }
 
   // Quotation Integration
   const [includeQuotation, setIncludeQuotation] = useState<boolean>(
@@ -225,10 +593,58 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
     ],
   );
 
-  // UI state
+  // Dynamic Templates & UI state
+  const [templates, setTemplates] =
+    useState<AdminLetterTemplate[]>(DEFAULT_LETTER_TEMPLATES);
   const [activeTemplate, setActiveTemplate] = useState<string>(
     initialLetter ? "" : "new_letter",
   );
+  const [originalTemplateSnapshot, setOriginalTemplateSnapshot] = useState<{
+    id: string;
+    name: string;
+    subject: string;
+    content: string;
+  } | null>(null);
+
+  // Template Modals state
+  const [showSaveTemplateModal, setShowSaveTemplateModal] =
+    useState<boolean>(false);
+  const [newTemplateName, setNewTemplateName] = useState<string>("");
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [templateToDelete, setTemplateToDelete] =
+    useState<AdminLetterTemplate | null>(null);
+  const [showManageTemplatesModal, setShowManageTemplatesModal] =
+    useState<boolean>(false);
+  const [isSavingTemplate, setIsSavingTemplate] = useState<boolean>(false);
+  const [isDeletingTemplate, setIsDeletingTemplate] = useState<boolean>(false);
+
+  // Load persistent templates from Supabase
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const res = await listLetterTemplatesAction();
+        if (!active) return;
+        if (res.ok && res.data && res.data.length > 0) {
+          setTemplates(res.data);
+        }
+      } catch (e) {
+        console.error("Failed to load letter templates:", e);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const currentLoadedTemplate = templates.find((t) => t.id === activeTemplate);
+  const isTemplateModified =
+    Boolean(currentLoadedTemplate) &&
+    activeTemplate !== "new_letter" &&
+    originalTemplateSnapshot !== null &&
+    originalTemplateSnapshot.id === activeTemplate &&
+    (subject !== originalTemplateSnapshot.subject ||
+      content !== originalTemplateSnapshot.content);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [emailModalOpen, setEmailModalOpen] = useState<boolean>(false);
   const [emailSubject, setEmailSubject] = useState<string>(
@@ -242,20 +658,27 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
     message: string;
   } | null>(null);
 
-  // Load schools & quotations for the pickers
+  // Load all 3,342+ schools & quotations for the pickers
   useEffect(() => {
     let active = true;
     (async () => {
-      const [schoolRes, quoteRes] = await Promise.all([
-        searchSchoolsForLetterAction(""),
-        searchQuotationsForLetterAction(""),
-      ]);
-      if (!active) return;
-      if (schoolRes.ok && Array.isArray(schoolRes.data)) {
-        setSchools(schoolRes.data as SchoolOption[]);
-      }
-      if (quoteRes.ok && Array.isArray(quoteRes.data)) {
-        setExistingQuotations(quoteRes.data as QuotationOption[]);
+      setIsLoadingSchools(true);
+      try {
+        const [schoolRes, quoteRes] = await Promise.all([
+          searchSchoolsForLetterAction(""),
+          searchQuotationsForLetterAction(""),
+        ]);
+        if (!active) return;
+        if (schoolRes.ok && Array.isArray(schoolRes.data)) {
+          setSchools(schoolRes.data as SchoolOption[]);
+        }
+        if (quoteRes.ok && Array.isArray(quoteRes.data)) {
+          setExistingQuotations(quoteRes.data as QuotationOption[]);
+        }
+      } catch (err) {
+        console.error("Failed to load initial schools:", err);
+      } finally {
+        if (active) setIsLoadingSchools(false);
       }
     })();
     return () => {
@@ -263,21 +686,75 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
     };
   }, []);
 
-  // Filter schools
+  // Real-time live database search: queries Supabase directly on typing to capture any newly added or updated schools
+  useEffect(() => {
+    const q = schoolSearchQuery.trim();
+    if (!q || q.length < 2) return;
+    const timer = setTimeout(async () => {
+      setIsSearchingLive(true);
+      try {
+        const res = await searchSchoolsForLetterAction(q, 100);
+        if (res.ok && Array.isArray(res.data) && res.data.length > 0) {
+          // Merge newly returned live DB schools into local schools state
+          setSchools((prev) => {
+            const existingMap = new Map(prev.map((s) => [s.id, s]));
+            for (const item of res.data as SchoolOption[]) {
+              existingMap.set(item.id, { ...existingMap.get(item.id), ...item });
+            }
+            return Array.from(existingMap.values()).sort((a, b) =>
+              a.name.localeCompare(b.name),
+            );
+          });
+        }
+      } catch (err) {
+        console.error("Live school search error:", err);
+      } finally {
+        setIsSearchingLive(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [schoolSearchQuery]);
+
+  // Reset pagination limit when search query changes
+  useEffect(() => {
+    setVisibleCount(60);
+  }, [schoolSearchQuery]);
+
+  // Progressive scroll handler to render all matched schools smoothly
+  const handleDropdownScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight - 40) {
+      setVisibleCount((prev) => Math.min(prev + 60, filteredSchools.length));
+    }
+  };
+
+  // Filter schools across full 3,342+ dataset
   const filteredSchools = schools.filter(
     (s) =>
       s.name.toLowerCase().includes(schoolSearchQuery.toLowerCase()) ||
       (s.city &&
         s.city.toLowerCase().includes(schoolSearchQuery.toLowerCase())) ||
       (s.province &&
-        s.province.toLowerCase().includes(schoolSearchQuery.toLowerCase())),
+        s.province.toLowerCase().includes(schoolSearchQuery.toLowerCase())) ||
+      (s.address &&
+        s.address.toLowerCase().includes(schoolSearchQuery.toLowerCase())),
   );
+
+  const displayedSchools = filteredSchools.slice(0, visibleCount);
 
   // On school select
   function handleSelectSchool(school: SchoolOption) {
     setSelectedSchoolId(school.id);
     setRecipientOrg(school.name);
-    if (school.principal) setRecipientName(school.principal);
+    if (school.principal) {
+      setRecipientName(school.principal);
+    } else {
+      setRecipientName("The Principal / School Governing Body");
+    }
+    if (!recipientTitle) {
+      setRecipientTitle("Head of School / Principal");
+    }
     if (school.email) setRecipientEmail(school.email);
     if (school.address || school.city || school.province) {
       setRecipientAddress(
@@ -290,15 +767,180 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
     setShowSchoolDropdown(false);
   }
 
-  // Preset Template Apply
-  function handleApplyTemplate(template: (typeof PRESET_TEMPLATES)[0]) {
-    setActiveTemplate(template.id);
-    setSubject(template.subject);
-    setContent(template.content);
-    if (template.id === "new_letter") {
+  // Template Handlers
+  function handleApplyTemplate(tmpl: {
+    id: string;
+    name: string;
+    subject: string;
+    body_markdown?: string;
+    content?: string;
+  }) {
+    setActiveTemplate(tmpl.id);
+    const tmplSubject = tmpl.subject || "";
+    const tmplContent = tmpl.body_markdown ?? tmpl.content ?? "";
+    setSubject(tmplSubject);
+    setContent(tmplContent);
+    if (tmpl.id === "new_letter") {
+      setOriginalTemplateSnapshot(null);
       setIncludeQuotation(false);
-    } else if (template.id === "quotation_transmittal") {
-      setIncludeQuotation(true);
+    } else {
+      setOriginalTemplateSnapshot({
+        id: tmpl.id,
+        name: tmpl.name,
+        subject: tmplSubject,
+        content: tmplContent,
+      });
+      if (
+        tmpl.id === "quotation_transmittal" ||
+        tmpl.name.toLowerCase().includes("quotation")
+      ) {
+        setIncludeQuotation(true);
+      }
+    }
+  }
+
+  // Update current loaded template permanently in database
+  async function handleUpdateCurrentTemplate() {
+    if (!currentLoadedTemplate || activeTemplate === "new_letter") return;
+    setIsSavingTemplate(true);
+    try {
+      const res = await saveLetterTemplateAction({
+        id: currentLoadedTemplate.id,
+        name: currentLoadedTemplate.name,
+        subject,
+        body_markdown: content,
+      });
+      if (res.ok && res.data) {
+        const updated = res.data;
+        setTemplates((prev) =>
+          prev.map((t) =>
+            t.id === updated.id ||
+            t.id === currentLoadedTemplate.id ||
+            t.name.toLowerCase() === updated.name.toLowerCase()
+              ? updated
+              : t,
+          ),
+        );
+        setActiveTemplate(updated.id);
+        setOriginalTemplateSnapshot({
+          id: updated.id,
+          name: updated.name,
+          subject: updated.subject,
+          content: updated.body_markdown,
+        });
+        setFeedback({
+          type: "success",
+          message: `Template "${updated.name}" updated successfully with current opened letter.`,
+        });
+      } else {
+        setFeedback({
+          type: "error",
+          message: res.error || "Failed to update template.",
+        });
+      }
+    } catch (err: unknown) {
+      setFeedback({
+        type: "error",
+        message:
+          err instanceof Error ? err.message : "Failed to update template.",
+      });
+    } finally {
+      setIsSavingTemplate(false);
+    }
+  }
+
+  // Revert changes back to template default content
+  function handleRevertTemplate() {
+    if (!originalTemplateSnapshot) return;
+    setSubject(originalTemplateSnapshot.subject);
+    setContent(originalTemplateSnapshot.content);
+  }
+
+  // Save as permanent template
+  async function handleSaveNewTemplateSubmit(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    const name = newTemplateName.trim();
+    if (!name) {
+      setFeedback({
+        type: "error",
+        message: "Please enter a template display name.",
+      });
+      return;
+    }
+    setIsSavingTemplate(true);
+    try {
+      const res = await saveLetterTemplateAction({
+        name,
+        subject,
+        body_markdown: content,
+      });
+      if (res.ok && res.data) {
+        const created = res.data;
+        setTemplates((prev) => [...prev, created]);
+        setActiveTemplate(created.id);
+        setOriginalTemplateSnapshot({
+          id: created.id,
+          name: created.name,
+          subject: created.subject,
+          content: created.body_markdown,
+        });
+        setShowSaveTemplateModal(false);
+        setNewTemplateName("");
+        setFeedback({
+          type: "success",
+          message: `Permanent template "${created.name}" created successfully.`,
+        });
+      } else {
+        setFeedback({
+          type: "error",
+          message: res.error || "Failed to create template.",
+        });
+      }
+    } catch (err: unknown) {
+      setFeedback({
+        type: "error",
+        message:
+          err instanceof Error ? err.message : "Failed to create template.",
+      });
+    } finally {
+      setIsSavingTemplate(false);
+    }
+  }
+
+  // Delete permanent template
+  async function handleDeleteTemplateSubmit() {
+    if (!templateToDelete) return;
+    setIsDeletingTemplate(true);
+    try {
+      const res = await deleteLetterTemplateAction(templateToDelete.id);
+      if (res.ok) {
+        const deletedId = templateToDelete.id;
+        const deletedName = templateToDelete.name;
+        setTemplates((prev) => prev.filter((t) => t.id !== deletedId));
+        if (activeTemplate === deletedId) {
+          setActiveTemplate("new_letter");
+          setOriginalTemplateSnapshot(null);
+        }
+        setShowDeleteModal(false);
+        setTemplateToDelete(null);
+        setFeedback({
+          type: "success",
+          message: `Template "${deletedName}" deleted permanently.`,
+        });
+      } else {
+        setFeedback({
+          type: "error",
+          message: res.error || "Failed to delete template.",
+        });
+      }
+    } catch (err: unknown) {
+      setFeedback({
+        type: "error",
+        message:
+          err instanceof Error ? err.message : "Failed to delete template.",
+      });
+    } finally {
+      setIsDeletingTemplate(false);
     }
   }
 
@@ -607,14 +1249,25 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
             {recipientMode === "school" ? (
               <div className={adminStyles.formField}>
                 <div>
-                  <label className={adminStyles.formLabel}>
-                    Search Registered School *
-                  </label>
-                  <div className={styles.searchWrapper}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                    <label className={adminStyles.formLabel} style={{ marginBottom: 0 }}>
+                      Search Registered School *
+                    </label>
+                    {schools.length > 0 && (
+                      <span style={{ fontSize: 11, fontFamily: "ui-monospace, monospace", color: "var(--a-accent)", fontWeight: 600 }}>
+                        {schools.length.toLocaleString()} schools in database
+                      </span>
+                    )}
+                  </div>
+                  <div className={styles.searchWrapper} ref={schoolSearchContainerRef}>
                     <input
                       type="text"
                       className={adminStyles.inputField}
-                      placeholder="Search by school name or town..."
+                      placeholder={
+                        isLoadingSchools
+                          ? "Loading 3,342 registered schools from database..."
+                          : "Search by school name, town, or province..."
+                      }
                       value={schoolSearchQuery}
                       onChange={(e) => {
                         setSchoolSearchQuery(e.target.value);
@@ -622,32 +1275,83 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                       }}
                       onFocus={() => setShowSchoolDropdown(true)}
                     />
-                    {showSchoolDropdown && filteredSchools.length > 0 && (
-                      <div className={styles.searchResultsDropdown}>
-                        {filteredSchools.slice(0, 50).map((school) => (
-                          <button
-                            key={school.id}
-                            type="button"
-                            className={styles.searchResultItem}
-                            onClick={() => handleSelectSchool(school)}
-                          >
-                            <div>
-                              <span className={styles.schoolName}>
-                                {school.name}
-                              </span>
-                              {school.province && (
-                                <span className={styles.schoolLocation}>
-                                  ({school.province})
-                                </span>
-                              )}
-                            </div>
-                            {school.city && (
-                              <span className={styles.schoolEmis}>
-                                {school.city}
-                              </span>
+                    {schoolSearchQuery && (
+                      <button
+                        type="button"
+                        className={styles.clearSearchButton}
+                        onClick={() => {
+                          setSchoolSearchQuery("");
+                          setSelectedSchoolId("");
+                          setShowSchoolDropdown(true);
+                        }}
+                        title="Clear search"
+                        aria-label="Clear search"
+                      >
+                        <X size={13} />
+                      </button>
+                    )}
+                    {showSchoolDropdown && (
+                      <div
+                        className={styles.searchResultsDropdown}
+                        onScroll={handleDropdownScroll}
+                      >
+                        <div className={styles.searchSummaryBadge}>
+                          <span>
+                            {schoolSearchQuery.trim()
+                              ? `Found ${filteredSchools.length.toLocaleString()} matching school${
+                                  filteredSchools.length === 1 ? "" : "s"
+                                }`
+                              : `All ${schools.length.toLocaleString()} Registered Schools in Database`}
+                          </span>
+                          {isSearchingLive && (
+                            <span className={styles.searchingLiveIndicator}>
+                              <Loader2 size={11} className={styles.spinIcon} /> Live DB Search
+                            </span>
+                          )}
+                        </div>
+
+                        {displayedSchools.length > 0 ? (
+                          <>
+                            {displayedSchools.map((school) => (
+                              <button
+                                key={school.id}
+                                type="button"
+                                className={styles.searchResultItem}
+                                onClick={() => handleSelectSchool(school)}
+                              >
+                                <div>
+                                  <span className={styles.schoolName}>
+                                    {school.name}
+                                  </span>
+                                  {school.province && (
+                                    <span className={styles.schoolLocation}>
+                                      ({school.province})
+                                    </span>
+                                  )}
+                                </div>
+                                {school.city && (
+                                  <span className={styles.schoolEmis}>
+                                    {school.city}
+                                  </span>
+                                )}
+                              </button>
+                            ))}
+                            {displayedSchools.length < filteredSchools.length && (
+                              <div className={styles.dropdownScrollHint}>
+                                Scroll to load more ({displayedSchools.length} of{" "}
+                                {filteredSchools.length.toLocaleString()})
+                              </div>
                             )}
-                          </button>
-                        ))}
+                          </>
+                        ) : (
+                          <div className={styles.noResultsText}>
+                            {isLoadingSchools
+                              ? "Loading schools from database..."
+                              : isSearchingLive
+                              ? "Searching live database..."
+                              : `No registered schools found matching "${schoolSearchQuery}"`}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -733,29 +1437,143 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                 <FileText size={16} className={adminStyles.iconBlue} />
                 <span>Document Body &amp; Template</span>
               </div>
+              <div className={styles.headerActions}>
+                <button
+                  type="button"
+                  onClick={() => handleSave("draft")}
+                  disabled={isPending}
+                  className={styles.cardActionBtn}
+                  title="Save current letter as a draft"
+                >
+                  <Save size={13} />
+                  Save Letter Draft
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewTemplateName(subject.trim() || "");
+                    setShowSaveTemplateModal(true);
+                  }}
+                  disabled={!subject.trim() && !content.trim()}
+                  className={`${styles.cardActionBtn} ${styles.cardActionBtnBrand}`}
+                  title="Save current letter content as a permanent reusable template"
+                >
+                  <Bookmark size={13} />
+                  + Save as Template
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowManageTemplatesModal(true)}
+                  className={styles.cardActionBtn}
+                  title="Manage, view, and delete saved templates"
+                >
+                  <FolderEdit size={13} />
+                  Manage Templates
+                </button>
+              </div>
             </div>
 
-            {/* Template Picker Pills */}
-            <div className={styles.templatePicker}>
-              <span className={styles.templateLabel}>
-                <Sparkles
-                  size={12}
-                  style={{ display: "inline", marginRight: 4 }}
-                />{" "}
-                Presets:
-              </span>
-              {PRESET_TEMPLATES.map((tmpl) => (
+            {/* Template Picker Container with Active Status & Actions */}
+            <div className={styles.templatePickerContainer}>
+              <div className={styles.templatePillsRow}>
+                <span className={styles.templateLabel}>
+                  <Sparkles
+                    size={12}
+                    style={{ display: "inline", marginRight: 4 }}
+                  />{" "}
+                  Presets:
+                </span>
                 <button
-                  key={tmpl.id}
                   type="button"
-                  onClick={() => handleApplyTemplate(tmpl)}
+                  onClick={() =>
+                    handleApplyTemplate({
+                      id: "new_letter",
+                      name: "New Letter",
+                      subject: "",
+                      content: "",
+                    })
+                  }
                   className={`${styles.templatePill} ${
-                    activeTemplate === tmpl.id ? styles.templatePillActive : ""
+                    activeTemplate === "new_letter"
+                      ? styles.templatePillActive
+                      : ""
                   }`}
                 >
-                  {tmpl.name}
+                  New Letter
                 </button>
-              ))}
+                {templates.map((tmpl) => {
+                  const isCurrentActive = activeTemplate === tmpl.id;
+                  return (
+                    <button
+                      key={tmpl.id}
+                      type="button"
+                      onClick={() => handleApplyTemplate(tmpl)}
+                      className={`${styles.templatePill} ${
+                        isCurrentActive ? styles.templatePillActive : ""
+                      }`}
+                    >
+                      {tmpl.name}
+                      {isCurrentActive && isTemplateModified && (
+                        <span
+                          className={styles.templatePillModifiedDot}
+                          title="Modified from saved template"
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Contextual Action Bar when a template is active */}
+              {activeTemplate !== "new_letter" && currentLoadedTemplate && (
+                <div className={styles.templateActionBar}>
+                  <div className={styles.templateActiveMeta}>
+                    <span>
+                      Active Template:{" "}
+                      <strong>{currentLoadedTemplate.name}</strong>
+                    </span>
+                    {isTemplateModified ? (
+                      <span className={styles.templateModifiedAlert}>
+                        <AlertTriangle size={12} />
+                        Unsaved Edits to Template
+                      </span>
+                    ) : (
+                      <span
+                        style={{
+                          fontSize: 11,
+                          color: "var(--db-text-muted, #94a3b8)",
+                        }}
+                      >
+                        Loaded from template library
+                      </span>
+                    )}
+                  </div>
+
+                  <div className={styles.templateControlBtns}>
+                    {isTemplateModified && (
+                      <button
+                        type="button"
+                        onClick={handleRevertTemplate}
+                        className={styles.templateRevertBtn}
+                        title="Revert subject and body back to template defaults"
+                      >
+                        <RotateCcw size={12} />
+                        Revert
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleUpdateCurrentTemplate}
+                      disabled={isSavingTemplate}
+                      className={styles.templateUpdateBtn}
+                      title={`Save current opened letter over "${currentLoadedTemplate.name}" template`}
+                    >
+                      <Save size={12} />
+                      {isSavingTemplate ? "Updating..." : "Update Template"}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className={adminStyles.formField}>
@@ -773,16 +1591,174 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
               </div>
 
               <div>
-                <label className={adminStyles.formLabel}>
-                  Formal Body Content *
-                </label>
-                <textarea
-                  className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd}`}
-                  style={{ minHeight: 300 }}
-                  placeholder="Compose letter content..."
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 6,
+                  }}
+                >
+                  <label
+                    className={adminStyles.formLabel}
+                    style={{ marginBottom: 0 }}
+                  >
+                    Formal Body Content *
+                  </label>
+                  <div className={styles.viewToggleWrap}>
+                    <button
+                      type="button"
+                      onClick={() => setEditorTab("write")}
+                      className={`${styles.viewToggleBtn} ${
+                        editorTab === "write" ? styles.viewToggleBtnActive : ""
+                      }`}
+                    >
+                      <Edit3 size={12} />
+                      Write
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditorTab("preview")}
+                      className={`${styles.viewToggleBtn} ${
+                        editorTab === "preview"
+                          ? styles.viewToggleBtnActive
+                          : ""
+                      }`}
+                    >
+                      <Eye size={12} />
+                      Formatted Preview
+                    </button>
+                  </div>
+                </div>
+
+                <div className={styles.editorContainer}>
+                  {/* Rich Text Format Toolbar */}
+                  <div className={styles.editorToolbar}>
+                    {/* Text Styling: Bold, Italic, Underline */}
+                    <div className={styles.toolbarGroup}>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("bold")}
+                        className={styles.toolbarBtn}
+                        title="Bold (Ctrl+B) — **text**"
+                      >
+                        <Bold size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("italic")}
+                        className={styles.toolbarBtn}
+                        title="Italic (Ctrl+I) — *text*"
+                      >
+                        <Italic size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("underline")}
+                        className={styles.toolbarBtn}
+                        title="Underline (Ctrl+U) — <u>text</u>"
+                      >
+                        <Underline size={14} />
+                      </button>
+                    </div>
+
+                    <div className={styles.toolbarDivider} />
+
+                    {/* Capitalization / Small Letters */}
+                    <div className={styles.toolbarGroup}>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("uppercase")}
+                        className={`${styles.toolbarBtn} ${styles.casePill}`}
+                        title="UPPERCASE — Make selected text capital letters"
+                      >
+                        AA
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("lowercase")}
+                        className={`${styles.toolbarBtn} ${styles.casePill}`}
+                        title="lowercase — Make selected text small letters"
+                      >
+                        aa
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("titlecase")}
+                        className={`${styles.toolbarBtn} ${styles.casePill}`}
+                        title="Title Case — Capitalize first letter of each word"
+                      >
+                        Aa
+                      </button>
+                    </div>
+
+                    <div className={styles.toolbarDivider} />
+
+                    {/* Structure: Bullet points, Numbered list, Heading, Divider line */}
+                    <div className={styles.toolbarGroup}>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("bullet")}
+                        className={styles.toolbarBtn}
+                        title="Bullet Points (• List)"
+                      >
+                        <List size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("numbered")}
+                        className={styles.toolbarBtn}
+                        title="Numbered List (1. List)"
+                      >
+                        <ListOrdered size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("heading")}
+                        className={styles.toolbarBtn}
+                        title="Heading (## Section Heading)"
+                      >
+                        <Heading2 size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => applyFormatting("divider")}
+                        className={styles.toolbarBtn}
+                        title="Divider Line (---)"
+                      >
+                        <Minus size={14} />
+                      </button>
+                    </div>
+
+                    <div
+                      style={{
+                        marginLeft: "auto",
+                        fontSize: 11,
+                        color: "var(--a-text-3, #94a3b8)",
+                      }}
+                    >
+                      {content.length} chars •{" "}
+                      {content.trim() ? content.trim().split(/\s+/).length : 0}{" "}
+                      words
+                    </div>
+                  </div>
+
+                  {editorTab === "write" ? (
+                    <textarea
+                      ref={contentTextareaRef}
+                      className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd} ${styles.editorTextareaAttached}`}
+                      style={{ minHeight: 320 }}
+                      placeholder="Compose letter content (supports **bold**, <u>underline</u>, *italic*, bullet points •)..."
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      onKeyDown={handleTextareaKeyDown}
+                    />
+                  ) : (
+                    <div className={styles.previewPaper}>
+                      {renderPreviewContent(content)}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -1268,6 +2244,308 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                 disabled={isPending || !recipientEmail}
               >
                 {isPending ? "Sending..." : "Send Email"}
+              </AdminButton>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Save as Permanent Template */}
+      {showSaveTemplateModal && (
+        <div
+          className={styles.modalBackdrop}
+          onClick={() => setShowSaveTemplateModal(false)}
+        >
+          <div
+            className={styles.modalCard}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>
+                <Bookmark
+                  size={16}
+                  style={{ color: "var(--db-brand, #10b981)" }}
+                />
+                Save as Permanent Letter Template
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowSaveTemplateModal(false)}
+                className={styles.modalCloseBtn}
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <form onSubmit={handleSaveNewTemplateSubmit}>
+              <div className={styles.modalBody}>
+                <p
+                  style={{
+                    fontSize: 12.5,
+                    color: "var(--db-text-muted, #94a3b8)",
+                    margin: 0,
+                  }}
+                >
+                  Save your current subject and body content as a permanent
+                  template in the database. All team members can select and
+                  reuse it from the Presets bar.
+                </p>
+
+                <div>
+                  <label className={adminStyles.formLabel}>
+                    Template Display Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className={adminStyles.inputField}
+                    placeholder="e.g. Term 3 Re-Opening & Procurement Brief"
+                    value={newTemplateName}
+                    onChange={(e) => setNewTemplateName(e.target.value)}
+                    autoFocus
+                  />
+                </div>
+
+                <div
+                  style={{
+                    padding: 10,
+                    background: "var(--db-surface-inner, #111a2e)",
+                    borderRadius: 6,
+                    border: "1px solid var(--db-border, rgba(30, 41, 59, 0.7))",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "var(--db-text-muted, #94a3b8)",
+                      textTransform: "uppercase",
+                      marginBottom: 4,
+                    }}
+                  >
+                    Subject Line Preview:
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12.5,
+                      color: "var(--db-text-primary, #ffffff)",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {subject || "(No subject line entered)"}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "var(--db-text-muted, #94a3b8)",
+                      marginTop: 6,
+                    }}
+                  >
+                    Body content: {content.length} characters (
+                    {content.trim() ? content.trim().split(/\s+/).length : 0}{" "}
+                    words)
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.modalFooter}>
+                <AdminButton
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowSaveTemplateModal(false)}
+                >
+                  Cancel
+                </AdminButton>
+                <AdminButton
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                  disabled={isSavingTemplate || !newTemplateName.trim()}
+                  loading={isSavingTemplate}
+                >
+                  <Save size={13} />
+                  Save Permanent Template
+                </AdminButton>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Delete Template Confirmation */}
+      {showDeleteModal && templateToDelete && (
+        <div
+          className={styles.modalBackdrop}
+          onClick={() => setShowDeleteModal(false)}
+        >
+          <div
+            className={styles.modalCard}
+            style={{ maxWidth: 460 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle} style={{ color: "#ef4444" }}>
+                <Trash2 size={16} />
+                Delete Letter Template
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className={styles.modalCloseBtn}
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className={styles.modalBody}>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "var(--db-text-primary, #ffffff)",
+                  margin: 0,
+                }}
+              >
+                Are you sure you want to permanently delete the template{" "}
+                <strong>&quot;{templateToDelete.name}&quot;</strong>?
+              </p>
+              <p
+                style={{
+                  fontSize: 12,
+                  color: "var(--db-text-muted, #94a3b8)",
+                  margin: 0,
+                }}
+              >
+                Existing letters already created with this template will not be
+                altered, but this template will be removed from future presets.
+              </p>
+            </div>
+            <div className={styles.modalFooter}>
+              <AdminButton
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </AdminButton>
+              <button
+                type="button"
+                onClick={handleDeleteTemplateSubmit}
+                disabled={isDeletingTemplate}
+                className={styles.templateDeleteBtn}
+                style={{ padding: "7px 14px", fontSize: 12 }}
+              >
+                {isDeletingTemplate ? "Deleting..." : "Permanently Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Manage All Templates */}
+      {showManageTemplatesModal && (
+        <div
+          className={styles.modalBackdrop}
+          onClick={() => setShowManageTemplatesModal(false)}
+        >
+          <div
+            className={styles.modalCard}
+            style={{ maxWidth: 580 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>
+                <FolderEdit
+                  size={16}
+                  style={{ color: "var(--db-brand, #10b981)" }}
+                />
+                Manage Official Letter Templates ({templates.length})
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowManageTemplatesModal(false)}
+                className={styles.modalCloseBtn}
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div
+              className={styles.modalBody}
+              style={{ maxHeight: 380, overflowY: "auto" }}
+            >
+              {templates.length === 0 ? (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "20px 0",
+                    color: "var(--db-text-muted, #94a3b8)",
+                    fontSize: 13,
+                  }}
+                >
+                  No saved templates found.
+                </div>
+              ) : (
+                templates.map((tmpl) => (
+                  <div key={tmpl.id} className={styles.templateListCard}>
+                    <div className={styles.templateListInfo}>
+                      <span className={styles.templateListName}>
+                        {tmpl.name}
+                      </span>
+                      <span className={styles.templateListSubject}>
+                        {tmpl.subject}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleApplyTemplate(tmpl);
+                          setShowManageTemplatesModal(false);
+                        }}
+                        className={styles.cardActionBtn}
+                        style={{ padding: "4px 8px", fontSize: 11 }}
+                        title="Load this template into the editor"
+                      >
+                        <Check size={12} />
+                        Use
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTemplateToDelete(tmpl);
+                          setShowDeleteModal(true);
+                        }}
+                        className={styles.templateDeleteBtn}
+                        style={{ padding: "4px 8px" }}
+                        title="Delete template"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className={styles.modalFooter}>
+              <AdminButton
+                type="button"
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  setShowManageTemplatesModal(false);
+                  setNewTemplateName(subject.trim() || "");
+                  setShowSaveTemplateModal(true);
+                }}
+              >
+                <Plus size={13} />
+                + Add Current as New Template
+              </AdminButton>
+              <AdminButton
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowManageTemplatesModal(false)}
+              >
+                Close
               </AdminButton>
             </div>
           </div>

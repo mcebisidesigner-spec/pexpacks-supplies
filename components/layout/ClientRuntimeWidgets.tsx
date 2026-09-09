@@ -29,6 +29,31 @@ export function ClientRuntimeWidgets() {
   }, []);
 
   useEffect(() => {
+    function stripInjectedAssistantControls() {
+      const legends = document.getElementsByTagName("legend");
+      for (let i = 0; i < legends.length; i++) {
+        const text = legends[i].textContent || "";
+        if (/assistant\s*controls/i.test(text)) {
+          const el = legends[i].closest("fieldset") || legends[i].parentElement;
+          if (el) {
+            el.remove();
+          }
+        }
+      }
+    }
+
+    stripInjectedAssistantControls();
+
+    const observer = new MutationObserver(stripInjectedAssistantControls);
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if ("requestIdleCallback" in window) {
       const idleId = window.requestIdleCallback(() => setIdleReady(true), {
         timeout: 2000,

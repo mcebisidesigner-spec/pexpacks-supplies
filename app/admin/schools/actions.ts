@@ -52,6 +52,8 @@ export async function updateSchoolAction(
 
 function revalidatePublicSchoolSurfaces() {
   revalidatePath("/admin/schools");
+  revalidatePath("/admin/letters");
+  revalidatePath("/admin/letters/new");
   revalidatePath("/schools");
   revalidatePath("/partnership");
   revalidatePath("/sitemap.xml");

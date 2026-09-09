@@ -119,7 +119,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 onClick={() => toggleGroup(item.label)}
                 className={clsx(
                   styles.navItem,
-                  (active || isExpanded) && styles.navItemActive
+                  active && styles.navItemActive
                 )}
                 aria-expanded={isExpanded}
               >

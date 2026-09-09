@@ -165,6 +165,38 @@ export interface LetterheadProps {
   };
 }
 
+export function renderFormattedPdfText(text: string) {
+  if (!text) return null;
+  const tokenRegex = /(\*\*[^*]+\*\*|<u>[\s\S]*?<\/u>|\*[^*]+\*)/g;
+  const parts = text.split(tokenRegex);
+
+  return parts.map((part, i) => {
+    if (!part) return null;
+    if (part.startsWith("**") && part.endsWith("**") && part.length >= 4) {
+      return (
+        <Text key={i} style={{ fontFamily: "Helvetica-Bold" }}>
+          {part.slice(2, -2)}
+        </Text>
+      );
+    }
+    if (part.startsWith("<u>") && part.endsWith("</u>") && part.length >= 7) {
+      return (
+        <Text key={i} style={{ textDecoration: "underline" }}>
+          {part.slice(3, -4)}
+        </Text>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*") && part.length >= 2) {
+      return (
+        <Text key={i} style={{ fontFamily: "Helvetica-Oblique" }}>
+          {part.slice(1, -1)}
+        </Text>
+      );
+    }
+    return part;
+  });
+}
+
 export function LetterheadDocument(props: LetterheadProps) {
   const paragraphs = props.body.split(/\n\s*\n/).filter(Boolean);
 
@@ -201,7 +233,7 @@ export function LetterheadDocument(props: LetterheadProps) {
         {/* Multi-Page Body Content */}
         {paragraphs.map((para, i) => (
           <Text key={i} style={styles.paragraph} wrap>
-            {para}
+            {renderFormattedPdfText(para)}
           </Text>
         ))}
 

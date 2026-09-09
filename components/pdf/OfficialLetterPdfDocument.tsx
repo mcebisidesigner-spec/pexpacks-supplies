@@ -362,6 +362,38 @@ function formatMoney(amount: number, currency = "ZAR"): string {
   })}`;
 }
 
+export function renderFormattedPdfText(text: string) {
+  if (!text) return null;
+  const tokenRegex = /(\*\*[^*]+\*\*|<u>[\s\S]*?<\/u>|\*[^*]+\*)/g;
+  const parts = text.split(tokenRegex);
+
+  return parts.map((part, i) => {
+    if (!part) return null;
+    if (part.startsWith("**") && part.endsWith("**") && part.length >= 4) {
+      return (
+        <Text key={i} style={{ fontFamily: "Helvetica-Bold" }}>
+          {part.slice(2, -2)}
+        </Text>
+      );
+    }
+    if (part.startsWith("<u>") && part.endsWith("</u>") && part.length >= 7) {
+      return (
+        <Text key={i} style={{ textDecoration: "underline" }}>
+          {part.slice(3, -4)}
+        </Text>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*") && part.length >= 2) {
+      return (
+        <Text key={i} style={{ fontFamily: "Helvetica-Oblique" }}>
+          {part.slice(1, -1)}
+        </Text>
+      );
+    }
+    return part;
+  });
+}
+
 export function OfficialLetterPdfDocument({
   data,
 }: {
@@ -489,7 +521,7 @@ export function OfficialLetterPdfDocument({
               const headingText = para.replace(/^#+\s*/, "");
               return (
                 <Text key={index} style={styles.heading2}>
-                  {headingText}
+                  {renderFormattedPdfText(headingText)}
                 </Text>
               );
             }
@@ -498,19 +530,21 @@ export function OfficialLetterPdfDocument({
             if (index === 0 && /^dear/i.test(para)) {
               return (
                 <Text key={index} style={styles.salutationText}>
-                  {para}
+                  {renderFormattedPdfText(para)}
                 </Text>
               );
             }
 
-            // Bullet list check
+            // Bullet or numbered list check
             if (
               para.includes("\n* ") ||
               para.includes("\n- ") ||
               para.includes("\n• ") ||
               para.startsWith("* ") ||
               para.startsWith("- ") ||
-              para.startsWith("• ")
+              para.startsWith("• ") ||
+              /^\d+\.\s+/.test(para) ||
+              para.includes("\n1. ")
             ) {
               const lines = para
                 .split("\n")
@@ -523,32 +557,53 @@ export function OfficialLetterPdfDocument({
                       line.startsWith("* ") ||
                       line.startsWith("- ") ||
                       line.startsWith("• ");
-                    const cleanText = isBullet
-                      ? line.replace(/^[*\-•]\s*/, "")
-                      : line;
-                    return (
-                      <View
-                        key={lIdx}
-                        style={
-                          isBullet ? styles.bulletRow : { marginBottom: 4 }
-                        }
-                      >
-                        {isBullet ? (
+                    const numberedMatch = line.match(/^(\d+\.)\s+(.*)$/);
+
+                    if (isBullet) {
+                      const cleanText = line.replace(/^[*\-•]\s*/, "");
+                      return (
+                        <View key={lIdx} style={styles.bulletRow}>
                           <Text style={styles.bulletDot}>•</Text>
-                        ) : null}
+                          <Text style={styles.bulletText}>
+                            {renderFormattedPdfText(cleanText)}
+                          </Text>
+                        </View>
+                      );
+                    }
+
+                    if (numberedMatch) {
+                      return (
+                        <View key={lIdx} style={styles.bulletRow}>
+                          <Text
+                            style={[
+                              styles.bulletDot,
+                              {
+                                width: 14,
+                                fontSize: 8.5,
+                                fontFamily: "Helvetica-Bold",
+                              },
+                            ]}
+                          >
+                            {numberedMatch[1]}
+                          </Text>
+                          <Text style={styles.bulletText}>
+                            {renderFormattedPdfText(numberedMatch[2])}
+                          </Text>
+                        </View>
+                      );
+                    }
+
+                    return (
+                      <View key={lIdx} style={{ marginBottom: 4 }}>
                         <Text
-                          style={
-                            isBullet
-                              ? styles.bulletText
-                              : {
-                                  fontSize: 9.5,
-                                  fontFamily: "Helvetica",
-                                  color: "#334155",
-                                  marginBottom: 4,
-                                }
-                          }
+                          style={{
+                            fontSize: 9.5,
+                            fontFamily: "Helvetica",
+                            color: "#334155",
+                            marginBottom: 4,
+                          }}
                         >
-                          {cleanText}
+                          {renderFormattedPdfText(line)}
                         </Text>
                       </View>
                     );
@@ -560,7 +615,7 @@ export function OfficialLetterPdfDocument({
             // Standard Paragraph
             return (
               <Text key={index} style={styles.paragraph}>
-                {para}
+                {renderFormattedPdfText(para)}
               </Text>
             );
           })}

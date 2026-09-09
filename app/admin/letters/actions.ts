@@ -8,8 +8,13 @@ import {
   saveLetter,
   deleteLetter,
   getLetterById,
+  listLetterTemplates,
+  saveLetterTemplate,
+  deleteLetterTemplate,
   type SaveLetterInput,
   type AdminLetterRecord,
+  type AdminLetterTemplate,
+  type SaveLetterTemplateInput,
 } from "@/lib/admin/letters";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -244,29 +249,84 @@ export async function sendLetterEmailAction({
   }
 }
 
+export interface SchoolOption {
+  id: string;
+  name: string;
+  slug?: string | null;
+  province?: string | null;
+  city?: string | null;
+  principal?: string | null;
+  email?: string | null;
+  telephone?: string | null;
+  address?: string | null;
+}
+
 /**
  * Server action to search schools for recipient auto-population.
+ * Fetches all 3,342+ schools in parallel batches when query is empty,
+ * or performs real-time live database search when query is provided.
  */
-export async function searchSchoolsForLetterAction(query: string) {
+export async function searchSchoolsForLetterAction(
+  query?: string,
+  limit = 100,
+): Promise<ActionResult<SchoolOption[]>> {
   try {
     await requireAdmin({ permission: "orders.view" });
     const supabase = createSupabaseAdminClient();
 
-    let dbQuery = supabase
-      .from("schools")
-      .select(
-        "id, name, slug, address, city, province, principal, email, telephone",
-      )
-      .order("name", { ascending: true });
+    const cleanQuery = (query || "").replace(/[%]/g, "").trim();
 
-    if (query && query.trim()) {
-      const q = query.trim();
-      dbQuery = dbQuery.or(`name.ilike.%${q}%,city.ilike.%${q}%`).limit(50);
+    // 1. Live database search when a search query is provided
+    if (cleanQuery) {
+      const { data, error } = await supabase
+        .from("schools")
+        .select(
+          "id, name, slug, address, city, province, principal, email, telephone",
+        )
+        .or(
+          `name.ilike.%${cleanQuery}%,city.ilike.%${cleanQuery}%,province.ilike.%${cleanQuery}%,slug.ilike.%${cleanQuery}%,address.ilike.%${cleanQuery}%`,
+        )
+        .order("name", { ascending: true })
+        .limit(limit);
+
+      if (error) throw error;
+      return { ok: true, data: (data || []) as SchoolOption[] };
     }
 
-    const { data, error } = await dbQuery;
-    if (error) throw error;
-    return { ok: true, data: data || [] };
+    // 2. When query is empty, fetch ALL 3,342+ schools across all database pages in parallel
+    const { count, error: countError } = await supabase
+      .from("schools")
+      .select("*", { count: "exact", head: true });
+
+    if (countError) throw countError;
+
+    const total = count || 0;
+    const PAGE_SIZE = 1000;
+    const batchCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const promises = [];
+
+    for (let i = 0; i < batchCount; i++) {
+      const from = i * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+      promises.push(
+        supabase
+          .from("schools")
+          .select(
+            "id, name, slug, address, city, province, principal, email, telephone",
+          )
+          .order("name", { ascending: true })
+          .range(from, to),
+      );
+    }
+
+    const results = await Promise.all(promises);
+    const allSchools: SchoolOption[] = [];
+    for (const res of results) {
+      if (res.error) throw res.error;
+      if (res.data) allSchools.push(...(res.data as SchoolOption[]));
+    }
+
+    return { ok: true, data: allSchools };
   } catch (err: unknown) {
     console.error("[searchSchoolsForLetterAction] Error:", err);
     return { ok: false, data: [], error: "Failed to search schools." };
@@ -304,3 +364,67 @@ export async function searchQuotationsForLetterAction(query: string) {
     return { ok: false, data: [], error: "Failed to search quotations." };
   }
 }
+
+/**
+ * Server action to list all official letter templates.
+ */
+export async function listLetterTemplatesAction(): Promise<
+  ActionResult<AdminLetterTemplate[]>
+> {
+  try {
+    await requireAdmin({ permission: "orders.view" });
+    const templates = await listLetterTemplates();
+    return { ok: true, data: templates };
+  } catch (err: unknown) {
+    console.error("[listLetterTemplatesAction] Error:", err);
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Failed to list templates.",
+    };
+  }
+}
+
+/**
+ * Server action to create or update an official letter template.
+ */
+export async function saveLetterTemplateAction(
+  input: SaveLetterTemplateInput,
+): Promise<ActionResult<AdminLetterTemplate>> {
+  try {
+    await requireAdmin({ permission: "orders.view" });
+    const template = await saveLetterTemplate(input);
+    revalidatePath("/admin/letters/new");
+    return {
+      ok: true,
+      data: template,
+      message: `Template "${template.name}" saved successfully.`,
+    };
+  } catch (err: unknown) {
+    console.error("[saveLetterTemplateAction] Error:", err);
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Failed to save template.",
+    };
+  }
+}
+
+/**
+ * Server action to delete an official letter template.
+ */
+export async function deleteLetterTemplateAction(
+  id: string,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin({ permission: "orders.view" });
+    await deleteLetterTemplate(id);
+    revalidatePath("/admin/letters/new");
+    return { ok: true, message: "Template deleted successfully." };
+  } catch (err: unknown) {
+    console.error("[deleteLetterTemplateAction] Error:", err);
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Failed to delete template.",
+    };
+  }
+}
+

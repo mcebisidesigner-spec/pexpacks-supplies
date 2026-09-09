@@ -243,7 +243,7 @@ export async function verifyOtpAction(
       }
     }
 
-    if (!verifiedSession) {
+    if (!verifiedSession || !verifiedUserId) {
       await recordFailedAttempt(ip, userAgent, maskEmail(email));
       await logSecurityEvent({
         ipAddress: ip,

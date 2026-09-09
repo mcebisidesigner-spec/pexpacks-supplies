@@ -365,7 +365,7 @@ export function AdminShell({
                     onClick={() => toggleGroup(item.label)}
                     className={clsx(
                       styles.navItem,
-                      (active || isExpanded) && styles.navItemActive,
+                      active && styles.navItemActive,
                     )}
                     aria-expanded={isExpanded}
                   >

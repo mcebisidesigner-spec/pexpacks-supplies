@@ -84,6 +84,36 @@ export interface Database {
         };
         Relationships: [];
       };
+      admin_letter_templates: {
+        Row: {
+          id: string;
+          name: string;
+          subject: string;
+          body_markdown: string;
+          sort_order: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          subject: string;
+          body_markdown: string;
+          sort_order?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          subject?: string;
+          body_markdown?: string;
+          sort_order?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       cms_announcements: {
         Row: {
           id: string;

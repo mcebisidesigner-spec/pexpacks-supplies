@@ -1,132 +1,107 @@
-import type { Metadata } from 'next'
-import { PartnerForm } from '@/components/forms/PartnerForm'
-import { Button } from '@/components/ui/Button'
-import { PageHero } from '@/components/marketing/PageHero'
-import { getPublicSchoolIndex } from '@/lib/schools/publicSchoolData'
-import { getWebsiteContent, getFaqs } from '@/lib/cms'
-import { buildMetadata } from '@/lib/seo'
-import { FaqMarquee } from '@/components/shared/FaqMarquee'
-import type { FAQ } from '@/data/faqs'
-import sectionStyles from '@/components/marketing/MarketingSections.module.css'
-import cardStyles from '@/components/marketing/MarketingCards.module.css'
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+import { getFaqs, getWebsiteContent } from "@/lib/cms";
+import { PageHero } from "@/components/marketing/PageHero";
+import { Button } from "@/components/ui/Button";
+import { FaqMarquee } from "@/components/shared/FaqMarquee";
+import { PartnershipPageContent } from "@/components/partnership/PartnershipPageContent";
+import sectionStyles from "@/components/marketing/MarketingSections.module.css";
+import type { FAQ } from "@/data/faqs";
 
-const benefits = [
-  'Your own school website with your own domain',
-  'Free hosting, SSL, and maintenance — forever',
-  'A parent ordering portal built around your lists',
-  '1.5% of every pack sold back to your school',
-  'Zero setup or ongoing fees — ever',
-]
-
-const steps = [
+const fallbackInstitutionalFaqs: FAQ[] = [
   {
-    title: 'Send your grade lists',
-    text: 'Share your approved stationery lists per grade. That is all we need to start.',
-  },
-  {
-    title: 'We build your portal',
-    text: 'Your school website and ordering system go live within 96 hours.',
-  },
-  {
-    title: 'Share one link',
-    text: 'Parents order through your school-branded link — we handle packing, payment, and delivery.',
-  },
-]
-
-const fallbackPartnershipFaqs: FAQ[] = [
-  {
-    id: 'free-website',
-    category: 'Schools',
-    question: 'Is the website and hosting really 100% free?',
+    id: "institutional-rebate-structure",
+    category: "Schools",
+    question: "How does the institutional partnership rebate work?",
     answer:
-      'Yes. Zero setup costs, monthly fees, or hidden charges. Pexpacks covers all development and hosting costs out of our standard stationery margins.',
+      "Pexpacks returns up to 3.0% of qualifying stationery turnover directly to your school development fund. The rebate rate is tiered based on parent adoption: 1.5% below 30% adoption, 2.0% between 30% and 60%, and 3.0% for 60% and above. An itemised audit statement and electronic remittance are provided annually following the seasonal back-to-school period.",
     links: [
-      { label: 'School partnership', href: '/partnership' },
-      { label: 'School partnership terms', href: '/school-partnership-terms' },
+      { label: "Partnership Overview", href: "/partnership" },
+      { label: "Partnership Terms", href: "/school-partnership-terms" },
     ],
   },
   {
-    id: 'rebate-work',
-    category: 'Schools',
-    question: 'How does the 1.5% rebate work?',
+    id: "admin-workload-teachers",
+    category: "Schools",
+    question: "Does this partnership create administrative work for teachers or bursary staff?",
     answer:
-      "Every time a parent orders through your school portal, 1.5% of the pack cost goes to your school's development fund. We transfer it annually.",
+      "Zero. Pexpacks manages list collation, inventory allocation, custom packaging, online payment collection, parent queries, and delivery. School personnel only review and approve the grade stationery specifications once per academic year and share the official link with parents.",
     links: [
-      { label: 'School partnership', href: '/partnership' },
-      { label: 'Contact Pexpacks', href: '/contact' },
+      { label: "Partnership Overview", href: "/partnership" },
+      { label: "Contact Institutional Team", href: "/contact" },
     ],
   },
   {
-    id: 'admin-work',
-    category: 'Schools',
-    question: 'Does this create admin work for my staff?',
+    id: "digital-infrastructure-scope",
+    category: "Schools",
+    question: "What is included in the 12-Month Digital Infrastructure Package?",
     answer:
-      'None. We handle packing, delivery, payments, and parent support. Your staff do nothing after sharing the link.',
+      "Qualifying partner institutions receive a complimentary 12-month digital infrastructure suite. Pexpacks builds, launches, and hosts a dedicated school ordering portal reflecting your school branding, with managed SSL encryption and zero server administration or maintenance fees.",
     links: [
-      { label: 'Find school packs', href: '/schools' },
-      { label: 'Contact support', href: '/contact' },
+      { label: "Partnership Overview", href: "/partnership" },
+      { label: "School Partnership Terms", href: "/school-partnership-terms" },
     ],
   },
   {
-    id: 'time-to-live',
-    category: 'Schools',
-    question: 'How long does it take to go live?',
+    id: "parent-payment-options",
+    category: "Schools",
+    question: "What payment options are available for parents?",
     answer:
-      'Once we receive your grade lists, we typically launch your school portal within 96 hours.',
+      "Parents can pay via credit or debit card, instant EFT, and verified Happy Pay interest-free split installments (pay in 2 or 4 equal payments). This removes all manual cash collection from the school finance desk while providing flexible affordability for families.",
     links: [
-      { label: 'Add your school', href: '/add-your-school' },
-      { label: 'School partnership', href: '/partnership' },
+      { label: "Partnership Overview", href: "/partnership" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
   {
-    id: 'after-apply',
-    category: 'Schools',
-    question: 'What happens after I apply?',
+    id: "delivery-campus-logistics",
+    category: "Schools",
+    question: "How is delivery and pack distribution handled on campus?",
     answer:
-      'We review your enquiry and get in touch to confirm your grade lists and launch your school portal. There is nothing to pay at any point.',
+      "Pexpacks accommodates your campus preferences: packs can be bulk-delivered and sorted by grade/class directly to campus prior to term opening, or dispatched directly to parents' residences with door-to-door courier tracking.",
     links: [
-      { label: 'School partnership', href: '/partnership' },
-      { label: 'Contact support', href: '/contact' },
+      { label: "Partnership Overview", href: "/partnership" },
+      { label: "Contact Support", href: "/contact" },
     ],
   },
-]
+  {
+    id: "custom-school-packaging",
+    category: "Schools",
+    question: "How does the custom-branded reusable bag program work?",
+    answer:
+      "Rather than disposable plastic bags or generic cartons, packs can be provided in durable reusable bags featuring your school crest and colours, a clear learner ID window for effortless classroom allocation, and reflective safety piping.",
+    links: [
+      { label: "Partnership Overview", href: "/partnership" },
+      { label: "Find School Packs", href: "/schools" },
+    ],
+  },
+];
 
 export const metadata: Metadata = buildMetadata(
-  'Partner With Pexpacks | Free School Website',
-  'Partner with Pexpacks and get a free school website, parent ordering portal, and 1.5% fundraising rebate on every pack sold.',
-  '/partnership',
-)
+  "School Stationery Partnerships | Pexpacks Supplies",
+  "Institutional stationery procurement, customized learner packs, and up to 3% development rebate for Gauteng primary and high schools. Zero administrative load.",
+  "/partnership",
+);
 
-export const dynamic = 'force-static'
+export const revalidate = 300;
 
 export default async function PartnerWithSchoolsPage() {
-  const [schoolIndex, content, cmsFaqs] = await Promise.all([
-    getPublicSchoolIndex(),
+  const [cmsFaqs, content] = await Promise.all([
+    getFaqs("partnership"),
     getWebsiteContent(),
-    getFaqs('partnership'),
-  ])
-  const displayFaqs: FAQ[] =
-    cmsFaqs && cmsFaqs.length > 0
-      ? cmsFaqs
-      : fallbackPartnershipFaqs
-  const hero = content['partnership.hero']
+  ]);
+  const hero = content["partnership.hero"];
   const heroEyebrow =
-    typeof hero?.eyebrow === 'string' && hero.eyebrow
+    typeof hero?.eyebrow === "string" && hero.eyebrow
       ? hero.eyebrow
-      : 'Partner with us'
+      : "Partner with us";
   const heroTitle =
     typeof hero?.title === "string" && hero.title
       ? hero.title
       : "Free school website +";
-  const partnerCount = schoolIndex.filter((school) => school.isPartnerSchool)
-    .length
 
-  const stats = [
-    { value: `${partnerCount}+`, label: 'schools already partnering' },
-    { value: '1.5%', label: 'rebate to your development fund' },
-    { value: '96h', label: 'from list to live portal' },
-    { value: 'R0', label: 'setup or monthly fees' },
-  ]
+  const displayFaqs: FAQ[] =
+    cmsFaqs && cmsFaqs.length > 0 ? cmsFaqs : fallbackInstitutionalFaqs;
 
   return (
     <>
@@ -138,7 +113,7 @@ export default async function PartnerWithSchoolsPage() {
         panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"
       >
         <div className={sectionStyles.buttonRow}>
-          <Button href="#partner-form" variant="primary">
+          <Button href="#partnership-enquiry" variant="primary">
             Apply to Partner
           </Button>
           <Button href="#how-it-works" variant="white">
@@ -147,172 +122,16 @@ export default async function PartnerWithSchoolsPage() {
         </div>
       </PageHero>
 
-      <section
-        className={sectionStyles.socialProofSection}
-        aria-labelledby="partnership-stats-heading"
-      >
-        <div className={sectionStyles.inner}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(160px, 1fr))',
-              gap: 14,
-              textAlign: 'center',
-            }}
-          >
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                style={{
-                  border: 'var(--card-border)',
-                  borderRadius: 20,
-                  background: 'var(--card-bg)',
-                  boxShadow: 'var(--card-shadow)',
-                  padding: '26px 16px',
-                }}
-              >
-                <strong
-                  style={{
-                    display: 'block',
-                    fontSize: 'clamp(34px, 4.5vw, 52px)',
-                    lineHeight: 1,
-                    color: 'var(--pex-primary)',
-                  }}
-                >
-                  {stat.value}
-                </strong>
-                <span
-                  style={{
-                    display: 'block',
-                    marginTop: 8,
-                    color: 'var(--pex-text-muted)',
-                    fontSize: 14,
-                    fontWeight: 700,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PartnershipPageContent />
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
-            <div>
-              <p className={sectionStyles.sectionEyebrow}>
-                Everything included
-              </p>
-              <h2>
-                Your school gets a complete online presence — at no cost.
-              </h2>
-              <p>
-                Designate Pexpacks as your official stationery partner and we
-                build, host, and maintain a professional school website with a
-                dedicated parent ordering portal. No invoices, no admin, no
-                hidden fees.
-              </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="#partner-form" variant="primary">
-                  Get your free school website
-                </Button>
-                <Button href="#how-it-works" variant="outline">
-                  How It Works
-                </Button>
-              </div>
-            </div>
-            <ul className={sectionStyles.checkList}>
-              {benefits.map((benefit) => (
-                <li key={benefit}>{benefit}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className={sectionStyles.section} id="how-it-works">
-        <div className={sectionStyles.inner}>
-          <p className={sectionStyles.sectionEyebrow}>3 steps</p>
-          <h2
-            style={{
-              margin: 0,
-              fontSize: 'clamp(32px, 4.6vw, 56px)',
-              lineHeight: 1,
-              fontWeight: 800,
-            }}
-          >
-            Go live in 3 steps
-          </h2>
-          <p
-            style={{
-              margin: '14px 0 34px',
-              color: 'var(--pex-text-muted)',
-              fontSize: 18,
-              lineHeight: 1.45,
-            }}
-          >
-            From list upload to live link — no IT meetings needed.
-          </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 22,
-            }}
-          >
-            {steps.map((step, i) => (
-              <div
-                key={step.title}
-                className={cardStyles.packCard}
-                style={{ textAlign: 'center' }}
-              >
-                <div className={cardStyles.packCardHead}>
-                  <div
-                    style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: '50%',
-                      background: 'var(--pex-keppel)',
-                      color: '#fff',
-                      fontSize: 22,
-                      fontWeight: 800,
-                      display: 'grid',
-                      placeItems: 'center',
-                      margin: '0 auto 14px',
-                    }}
-                  >
-                    {i + 1}
-                  </div>
-                  <h3 style={{ fontSize: 20, margin: 0 }}>{step.title}</h3>
-                </div>
-                <div className={cardStyles.packCardBody}>
-                  <p className={cardStyles.packDescription}>{step.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div id="partnership-faq">
+      <div id="partnership-faq" style={{ paddingBottom: "48px" }}>
         <FaqMarquee
           faqs={displayFaqs}
-          eyebrow="FAQ"
-          title="Common questions"
+          eyebrow="Institutional FAQ"
+          title="Frequently asked questions"
           seeAllHref="/faq"
         />
       </div>
-
-      <section className={sectionStyles.section} id="partner-form">
-        <div className={sectionStyles.inner}>
-          <PartnerForm />
-        </div>
-      </section>
     </>
-  )
+  );
 }

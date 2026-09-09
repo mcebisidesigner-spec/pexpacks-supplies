@@ -330,3 +330,16 @@ button:disabled {
     transform: translateX(-50%) translateY(0) scale(1) !important;
   }
 }
+
+/* ── Suppress external / browser extension injected assistant controls ── */
+body > fieldset,
+.site-shell > fieldset,
+fieldset[class*="assistant" i],
+fieldset[id*="assistant" i],
+div[class*="assistant-control" i],
+div[id*="assistant-control" i] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+

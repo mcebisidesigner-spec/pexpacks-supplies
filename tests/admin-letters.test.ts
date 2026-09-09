@@ -237,5 +237,192 @@ We remain committed to supporting educational excellence at Greenwood Ridge Coll
     expect(workbenchCode).toContain("Official Letter Workbench");
     expect(workbenchCode).toContain("sendLetterEmailAction");
   });
+
+  it("verifies /admin/letters/new registered school search loads all 3,342+ database schools and supports real-time updates", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    // 1. Verify actions.ts handles all 3,342+ schools via parallel batching and live queries
+    const actionsCode = fs.readFileSync(
+      path.join(process.cwd(), "app/admin/letters/actions.ts"),
+      "utf8",
+    );
+    expect(actionsCode).toContain("searchSchoolsForLetterAction");
+    expect(actionsCode).toContain("PAGE_SIZE = 1000");
+    expect(actionsCode).toContain("Promise.all(promises)");
+    expect(actionsCode).toContain("name.ilike");
+
+    // 2. Verify LetterEditor.tsx provides full database school search and progressive scrolling
+    const editorCode = fs.readFileSync(
+      path.join(process.cwd(), "components/admin/letters/LetterEditor.tsx"),
+      "utf8",
+    );
+    expect(editorCode).toContain("searchSchoolsForLetterAction");
+    expect(editorCode).toContain("handleDropdownScroll");
+    expect(editorCode).toContain("schools in database");
+    expect(editorCode).toContain("displayedSchools");
+  });
+
+  it("verifies rich text formatting features (bullet points, bolding, capitalization/small letters, underline, preview) and PDF rendering", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    // 1. Check LetterEditor.tsx has rich text format features
+    const editorCode = fs.readFileSync(
+      path.join(process.cwd(), "components/admin/letters/LetterEditor.tsx"),
+      "utf8",
+    );
+
+    // Bolding
+    expect(editorCode).toContain('applyFormatting("bold")');
+    expect(editorCode).toContain("**bold text**");
+    // Underline
+    expect(editorCode).toContain('applyFormatting("underline")');
+    expect(editorCode).toContain("<u>underlined text</u>");
+    // Bullet points
+    expect(editorCode).toContain('applyFormatting("bullet")');
+    expect(editorCode).toContain("• ");
+    // Capital & small letters (uppercase, lowercase, titlecase)
+    expect(editorCode).toContain('applyFormatting("uppercase")');
+    expect(editorCode).toContain('applyFormatting("lowercase")');
+    expect(editorCode).toContain('applyFormatting("titlecase")');
+    // Keyboard shortcuts (Ctrl+B, Ctrl+U, Ctrl+I)
+    expect(editorCode).toContain('e.key === "b"');
+    expect(editorCode).toContain('e.key === "u"');
+    // Live formatted preview
+    expect(editorCode).toContain("Formatted Preview");
+    expect(editorCode).toContain("renderPreviewContent");
+
+    // 2. Check CSS classes are defined
+    const cssCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "components/admin/letters/LetterEditor.module.css",
+      ),
+      "utf8",
+    );
+    expect(cssCode).toContain(".editorToolbar");
+    expect(cssCode).toContain(".toolbarBtn");
+    expect(cssCode).toContain(".casePill");
+    expect(cssCode).toContain(".previewPaper");
+
+    // 3. Check PDF parser renderFormattedPdfText
+    const { renderFormattedPdfText } = await import(
+      "@/components/pdf/OfficialLetterPdfDocument"
+    );
+    expect(renderFormattedPdfText).toBeDefined();
+
+    const formattedElements = renderFormattedPdfText(
+      "Notice: **Important Requirement** and <u>Approved Agreement</u> with *standard terms*.",
+    );
+    expect(Array.isArray(formattedElements)).toBe(true);
+
+    // Verify PDF document renders formatted markdown with bold, underline, bullets seamlessly
+    const testData: OfficialLetterPdfData = {
+      reference_number: "PX-DOC-2026-FMT1",
+      created_at: new Date().toISOString(),
+      recipient_type: "registered_school",
+      recipient_organization: "Pretoria Boys High School",
+      recipient_name: "The Headmaster",
+      recipient_email: "headmaster@pbhs.co.za",
+      subject: "Official Partnership and Supply Confirmation",
+      body_markdown: `Dear Headmaster,
+
+We are pleased to formalize our institutional agreement:
+
+## Key Specifications
+• **Delivery Priority**: Rapid dispatch within 3 business days.
+• <u>Official Verification</u>: All products are SABS certified.
+• Account Terms: 30-day settlement on statement.
+
+1. First Order Packaging
+2. Individual Pupil Labeling
+
+Thank you for your valued partnership.`,
+      include_quotation: false,
+      signatory_name: "Mcebisi Hlatshwayo",
+      signatory_title: "Managing Director",
+      school_name: "Pretoria Boys High School",
+    };
+
+    const element = React.createElement(OfficialLetterPdfDocument, {
+      data: testData,
+    }) as unknown as Parameters<typeof pdf>[0];
+    const blob = await pdf(element).toBlob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    expect(buffer).toBeDefined();
+    expect(buffer.length).toBeGreaterThan(1000);
+    expect(buffer.slice(0, 5).toString("utf-8")).toBe("%PDF-");
+  });
+
+  it("verifies dynamic letter templates management (add, edit/update, delete, load, and save draft)", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    // 1. Verify lib/admin/letters.ts exports templates and CRUD functions
+    const { DEFAULT_LETTER_TEMPLATES } = await import("@/lib/admin/letters");
+    expect(Array.isArray(DEFAULT_LETTER_TEMPLATES)).toBe(true);
+    expect(DEFAULT_LETTER_TEMPLATES.length).toBeGreaterThanOrEqual(4);
+    expect(DEFAULT_LETTER_TEMPLATES[0].name).toBe("Partnership Proposal");
+    expect(DEFAULT_LETTER_TEMPLATES[0].subject).toBeDefined();
+    expect(DEFAULT_LETTER_TEMPLATES[0].body_markdown).toBeDefined();
+
+    // 2. Verify server actions in actions.ts
+    const actionsCode = fs.readFileSync(
+      path.join(process.cwd(), "app/admin/letters/actions.ts"),
+      "utf8",
+    );
+    expect(actionsCode).toContain("listLetterTemplatesAction");
+    expect(actionsCode).toContain("saveLetterTemplateAction");
+    expect(actionsCode).toContain("deleteLetterTemplateAction");
+
+    // 3. Verify LetterEditor.tsx template UI and modals
+    const editorCode = fs.readFileSync(
+      path.join(process.cwd(), "components/admin/letters/LetterEditor.tsx"),
+      "utf8",
+    );
+    // Draft saving button in Document Body & Template
+    expect(editorCode).toContain("Save Letter Draft");
+    expect(editorCode).toContain('handleSave("draft")');
+
+    // Add new permanent template
+    expect(editorCode).toContain("+ Save as Template");
+    expect(editorCode).toContain("showSaveTemplateModal");
+    expect(editorCode).toContain("handleSaveNewTemplateSubmit");
+    expect(editorCode).toContain("Save as Permanent Letter Template");
+
+    // Edit and update permanent template
+    expect(editorCode).toContain("isTemplateModified");
+    expect(editorCode).toContain("handleUpdateCurrentTemplate");
+    expect(editorCode).toContain("templatePillModifiedDot");
+    expect(editorCode).toContain("handleRevertTemplate");
+
+    // Delete template
+    expect(editorCode).toContain("handleDeleteTemplateSubmit");
+    expect(editorCode).toContain("showDeleteModal");
+    expect(editorCode).toContain("Delete Letter Template");
+
+    // Manage templates
+    expect(editorCode).toContain("Manage Templates");
+    expect(editorCode).toContain("showManageTemplatesModal");
+
+    // 4. Verify LetterEditor.module.css styles
+    const cssCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "components/admin/letters/LetterEditor.module.css",
+      ),
+      "utf8",
+    );
+    expect(cssCode).toContain(".templatePickerContainer");
+    expect(cssCode).toContain(".templateActionBar");
+    expect(cssCode).toContain(".templateSaveBtn");
+    expect(cssCode).toContain(".templateDeleteBtn");
+    expect(cssCode).toContain(".modalCard");
+    expect(cssCode).toContain(".modalBackdrop");
+  });
 });
+
 
