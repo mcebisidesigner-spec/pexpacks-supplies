@@ -7,6 +7,7 @@ export const runtime = "nodejs";
 
 // Pre-seeded South African stationery brands as default directory
 const DEFAULT_BRANDS = [
+  { id: "brand-none", name: "Add-Brand-Name" },
   { id: "brand-aspire", name: "Aspire" },
   { id: "brand-bantex", name: "Bantex" },
   { id: "brand-bic", name: "Bic" },
@@ -34,7 +35,15 @@ export async function GET(request: NextRequest) {
       .order("name", { ascending: true });
 
     if (!error && Array.isArray(data) && data.length > 0) {
-      return NextResponse.json({ brands: data });
+      // Ensure "Add-Brand-Name" is at the top for none-brand items
+      const hasNone = data.some(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (b: any) => b.name?.toLowerCase() === "add-brand-name",
+      );
+      const brands = hasNone
+        ? data
+        : [{ id: "brand-none", name: "Add-Brand-Name" }, ...data];
+      return NextResponse.json({ brands });
     }
   } catch {
     // Fallback if table does not yet exist

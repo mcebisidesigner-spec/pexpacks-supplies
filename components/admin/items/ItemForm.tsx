@@ -97,15 +97,17 @@ export function ItemForm({
   const [category, setCategory] = useState<string>(
     item?.category ?? "Stationery",
   );
-  const [brand, setBrand] = useState<string>(
-    item?.brand ?? (masterMode ? "Freedom" : ""),
-  );
+  const defaultBrand = item?.brand?.trim() ? item.brand : "Add-Brand-Name";
+  const [brand, setBrand] = useState<string>(defaultBrand);
   const [sku, setSku] = useState<string>(() => {
-    const defaultBrand = item?.brand ?? (masterMode ? "Freedom" : "");
     if (!item?.name) return item?.sku ?? "";
     const oldAutoSku = generateSkuFromName(item.name, item.category);
-    // If the existing SKU matches the old auto format without brand, upgrade it to include brand
-    if (item?.sku === oldAutoSku && defaultBrand) {
+    // If the existing SKU matches the old auto format without brand, upgrade it to include brand if brand is not none
+    if (
+      item?.sku === oldAutoSku &&
+      defaultBrand &&
+      defaultBrand.toLowerCase() !== "add-brand-name"
+    ) {
       return generateSkuFromName(item.name, item.category, defaultBrand);
     }
     if (item?.sku) return item.sku;
@@ -113,7 +115,6 @@ export function ItemForm({
   });
   const [isCustomSku, setIsCustomSku] = useState<boolean>(() => {
     if (!item?.sku) return false;
-    const defaultBrand = item?.brand ?? (masterMode ? "Freedom" : "");
     const autoWithBrand = generateSkuFromName(
       item.name || "",
       item.category,
@@ -134,6 +135,7 @@ export function ItemForm({
   const [pexcoCode, setPexcoCode] = useState<string>(item?.pexco_code ?? "");
   const [supplierId, setSupplierId] = useState<string>(item?.supplier_id ?? "");
   const [brandsList, setBrandsList] = useState<{ id: string; name: string }[]>([
+    { id: "brand-none", name: "Add-Brand-Name" },
     { id: "brand-aspire", name: "Aspire" },
     { id: "brand-bantex", name: "Bantex" },
     { id: "brand-bic", name: "Bic" },
@@ -160,7 +162,11 @@ export function ItemForm({
       .then((r) => r.json())
       .then((data) => {
         if (data?.brands && Array.isArray(data.brands) && data.brands.length > 0) {
-          setBrandsList(data.brands);
+          const list = [...data.brands];
+          if (!list.some((b) => b.name.toLowerCase() === "add-brand-name")) {
+            list.unshift({ id: "brand-none", name: "Add-Brand-Name" });
+          }
+          setBrandsList(list);
         }
       })
       .catch(() => {});

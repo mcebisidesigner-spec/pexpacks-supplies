@@ -225,7 +225,7 @@ function itemFromMaster(product: MasterProductRow): ItemRow {
     name: product.name,
     sku: product.sku,
     category: product.category || "Stationery",
-    brand: product.brand || null,
+    brand: product.brand || "Add-Brand-Name",
     description: product.description || null,
     specification: product.specification || null,
     quantity: 1,
@@ -644,7 +644,7 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
           name: matchedMaster.name,
           sku: matchedMaster.sku,
           category: matchedMaster.category || "Stationery",
-          brand: matchedMaster.brand || null,
+          brand: matchedMaster.brand || "Add-Brand-Name",
           description: matchedMaster.description || null,
           specification:
             matchedMaster.specification || matchedMaster.packaging || null,

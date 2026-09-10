@@ -152,8 +152,9 @@ function getDeterministicSequence(name: string): string {
  */
 export function getBrandCode(brand?: string | null): string {
   if (!brand || !brand.trim()) return "";
-  return brand
-    .trim()
+  const clean = brand.trim();
+  if (clean.toLowerCase() === "add-brand-name") return "";
+  return clean
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, "")
     .slice(0, 7);

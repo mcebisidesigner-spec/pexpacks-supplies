@@ -94,6 +94,7 @@ export interface ProductEditFormProps {
  * Pre-seeded South African stationery brands
  */
 export const PRESEEDED_SA_BRANDS: Brand[] = [
+  { id: "brand-none", name: "Add-Brand-Name" },
   { id: "brand-aspire", name: "Aspire" },
   { id: "brand-bantex", name: "Bantex" },
   { id: "brand-bic", name: "Bic" },

@@ -50,6 +50,7 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
     ];
 
     const brandNames = PRESEEDED_SA_BRANDS.map((b) => b.name);
+    expect(brandNames).toContain("Add-Brand-Name");
     for (const expected of expectedBrands) {
       expect(brandNames).toContain(expected);
     }
@@ -60,7 +61,7 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
     expect(typeof ProductEditForm).toBe("function");
   });
 
-  it("verifies brands API route handles GET and default fallback brands", async () => {
+  it("verifies brands API route handles GET and default fallback brands including Add-Brand-Name", async () => {
     const { GET } = await import("@/app/api/brands/route");
     const req = new Request("http://localhost:3000/api/brands", {
       method: "GET",
@@ -71,7 +72,10 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
     const data = await res.json();
     expect(data.brands).toBeDefined();
     expect(Array.isArray(data.brands)).toBe(true);
-    expect(data.brands.length).toBeGreaterThanOrEqual(15);
+    expect(data.brands.some((b: any) => b.name === "Add-Brand-Name")).toBe(
+      true,
+    );
+    expect(data.brands.length).toBeGreaterThanOrEqual(16);
   });
 
   it("verifies parseItemForm correctly parses and includes brand field", async () => {
@@ -165,6 +169,15 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
     expect(getBrandCode("Freedom")).toBe("FREEDOM");
     expect(getBrandCode("Croxley")).toBe("CROXLEY");
     expect(getBrandCode("Staedtler")).toBe("STAEDTL");
+    expect(getBrandCode("Add-Brand-Name")).toBe("");
+
+    // None brand name default produces clean SKU
+    const skuWithNoneBrand = generateSkuFromName(
+      "Chair Bag Small",
+      "Packaging",
+      "Add-Brand-Name",
+    );
+    expect(skuWithNoneBrand).not.toContain("ADDBRAN");
 
     // Product Name + Brand combination
     const skuWithBrand = generateSkuFromName(
