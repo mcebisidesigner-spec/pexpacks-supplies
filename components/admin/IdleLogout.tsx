@@ -30,9 +30,8 @@ function authorizeRuntimeSession() {
 }
 
 /**
- * Ends an admin session after 45 minutes of visible dashboard inactivity.
- * Hidden dashboard tabs pause their local timer so work in another application
- * does not cause a logout or require browser-level activity permissions.
+ * Legacy client-side guard for mounts that do not use SessionSecurityProvider.
+ * The proxy session gate remains the authoritative server-side control.
  */
 export function IdleLogout() {
   const [showPrompt, setShowPrompt] = useState(false);
@@ -68,10 +67,13 @@ export function IdleLogout() {
     let lastActivitySync = 0;
     let signingOut = false;
     let fallbackPaused = document.visibilityState === "hidden";
-    // Since IdleLogout only renders inside AdminLayout after requireAdmin() server verification,
-    // authorize the runtime session immediately for this tab.
-    authorizeRuntimeSession();
-    let runtimeAuthorized = true;
+    let runtimeAuthorized = false;
+    try {
+      runtimeAuthorized =
+        window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) === "active";
+    } catch {
+      // A cross-tab handshake may still authorize this tab.
+    }
 
     const channel =
       typeof BroadcastChannel === "undefined"
@@ -88,7 +90,7 @@ export function IdleLogout() {
 
       const message =
         reason === "idle"
-          ? "Dashboard closed after 45 minutes of inactivity."
+          ? "Dashboard closed after 40 minutes of inactivity."
           : "Dashboard session closed after the browser or device restarted.";
 
       try {
@@ -145,7 +147,7 @@ export function IdleLogout() {
         signingOut = true;
         const msg =
           message.reason === "idle"
-            ? "Dashboard closed after 45 minutes of inactivity."
+            ? "Dashboard closed after 40 minutes of inactivity."
             : "Dashboard session closed after the browser or device restarted.";
         try {
           window.sessionStorage.setItem("pex_console_popup_notice", msg);

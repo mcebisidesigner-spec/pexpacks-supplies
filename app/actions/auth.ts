@@ -34,7 +34,9 @@ async function getClientContext() {
     const headerList = await headers();
     const forwardedFor = headerList?.get("x-forwarded-for");
     const realIp = headerList?.get("x-real-ip");
-    const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : realIp || "127.0.0.1";
+    const ip = forwardedFor
+      ? forwardedFor.split(",")[0].trim()
+      : realIp || "127.0.0.1";
     const userAgent = headerList?.get("user-agent") || "Unknown";
     return { ip, userAgent };
   } catch {
@@ -47,7 +49,7 @@ async function getClientContext() {
  */
 export async function authenticatePasswordAction(
   prevState: AuthResponse,
-  formData: FormData
+  formData: FormData,
 ): Promise<AuthResponse> {
   try {
     const { ip, userAgent } = await getClientContext();
@@ -71,7 +73,7 @@ export async function authenticatePasswordAction(
       return {
         ok: false,
         message: `Too many failed attempts. Please try again in ${Math.ceil(
-          rateLimit.resetSeconds / 60
+          rateLimit.resetSeconds / 60,
         )} minutes.`,
       };
     }
@@ -100,7 +102,7 @@ export async function authenticatePasswordAction(
     // 3. Verify Administrative Role Claim
     const user = authData.user;
     const isStaff = isStaffClaim(
-      user.app_metadata as Record<string, unknown> | undefined
+      user.app_metadata as Record<string, unknown> | undefined,
     );
 
     if (!isStaff) {
@@ -154,7 +156,7 @@ export async function authenticatePasswordAction(
 export async function verifyOtpAction(
   email: string,
   token: string,
-  trustedDevice: boolean = false
+  trustedDevice: boolean = false,
 ): Promise<AuthResponse> {
   try {
     const { ip, userAgent } = await getClientContext();
@@ -169,7 +171,7 @@ export async function verifyOtpAction(
       return {
         ok: false,
         message: `Too many attempts. Please try again in ${Math.ceil(
-          rateLimit.resetSeconds / 60
+          rateLimit.resetSeconds / 60,
         )} minutes.`,
       };
     }
@@ -298,7 +300,10 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
 
     const rateLimit = checkRateLimit(ip);
     if (!rateLimit.allowed) {
-      return { ok: false, message: "Rate limit exceeded. Please wait a moment." };
+      return {
+        ok: false,
+        message: "Rate limit exceeded. Please wait a moment.",
+      };
     }
 
     const otpResult = await generateAndSendOtpEmail(email);
@@ -314,7 +319,10 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
       email,
     });
 
-    return { ok: true, message: "6-digit verification code sent to your email." };
+    return {
+      ok: true,
+      message: "6-digit verification code sent to your email.",
+    };
   } catch (err) {
     console.error("[auth-action] resendOtpAction exception:", err);
     return { ok: false, message: "Could not resend verification code." };
@@ -354,24 +362,34 @@ export async function logoutAction(): Promise<never> {
  */
 export async function setPermanentPasswordAction(
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
 ): Promise<{ ok: boolean; message: string }> {
   try {
     const supabaseServer = await createSupabaseServerClient();
-    const { data: userData, error: userError } = await supabaseServer.auth.getUser();
+    const { data: userData, error: userError } =
+      await supabaseServer.auth.getUser();
 
     if (userError || !userData?.user) {
-      return { ok: false, message: "Authentication required to establish a new password." };
+      return {
+        ok: false,
+        message: "Authentication required to establish a new password.",
+      };
     }
 
     const user = userData.user;
 
     if (!password || password.length < 8) {
-      return { ok: false, message: "Password must be at least 8 characters long." };
+      return {
+        ok: false,
+        message: "Password must be at least 8 characters long.",
+      };
     }
 
     if (password !== confirmPassword) {
-      return { ok: false, message: "Passwords do not match. Please verify and try again." };
+      return {
+        ok: false,
+        message: "Passwords do not match. Please verify and try again.",
+      };
     }
 
     // 1. Update user password via server client session
@@ -383,7 +401,10 @@ export async function setPermanentPasswordAction(
     });
 
     if (updateError) {
-      return { ok: false, message: updateError.message || "Failed to update password." };
+      return {
+        ok: false,
+        message: updateError.message || "Failed to update password.",
+      };
     }
 
     // 2. Also ensure Supabase Admin client clears user_metadata
@@ -425,9 +446,16 @@ export async function setPermanentPasswordAction(
       // ignore
     }
 
-    return { ok: true, message: "Permanent password successfully created! Please log in with your new password." };
+    return {
+      ok: true,
+      message:
+        "Permanent password successfully created! Please log in with your new password.",
+    };
   } catch (err) {
     console.error("[auth-action] setPermanentPasswordAction exception:", err);
-    return { ok: false, message: "An unexpected error occurred while establishing password." };
+    return {
+      ok: false,
+      message: "An unexpected error occurred while establishing password.",
+    };
   }
 }

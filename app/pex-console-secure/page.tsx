@@ -1,14 +1,28 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useTransition } from "react";
-import { ShieldCheck, Eye, EyeOff, Lock, ArrowRight, AlertTriangle, RefreshCw } from "lucide-react";
+import {
+  ShieldCheck,
+  Eye,
+  EyeOff,
+  Lock,
+  ArrowRight,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { FloatingInput } from "@/components/ui/FloatingInput";
-import { authenticatePasswordAction, verifyOtpAction, resendOtpAction } from "@/app/actions/auth";
+import {
+  authenticatePasswordAction,
+  verifyOtpAction,
+  resendOtpAction,
+} from "@/app/actions/auth";
 import styles from "./ConsolePage.module.css";
 
 export default function PexConsoleGateway() {
-  const [step, setStep] = useState<"credentials" | "otp_challenge">("credentials");
+  const [step, setStep] = useState<"credentials" | "otp_challenge">(
+    "credentials",
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -64,7 +78,9 @@ export default function PexConsoleGateway() {
     if (typeof window !== "undefined") {
       // 1. Check for popup notice stored in sessionStorage (e.g. idle logout or restart)
       try {
-        const storedNotice = window.sessionStorage.getItem("pex_console_popup_notice");
+        const storedNotice = window.sessionStorage.getItem(
+          "pex_console_popup_notice",
+        );
         if (storedNotice) {
           window.sessionStorage.removeItem("pex_console_popup_notice");
           setModalNotice({
@@ -82,13 +98,21 @@ export default function PexConsoleGateway() {
       const urlOtp = params.get("otp");
       const statusParam = params.get("status") || params.get("message");
 
-      if (statusParam === "password_updated" || statusParam === "password_set") {
+      if (
+        statusParam === "password_updated" ||
+        statusParam === "password_set"
+      ) {
         setModalNotice({
           title: "Permanent Password Established",
-          message: "Your permanent password has been set successfully! Please sign in using your new password to access the portal.",
+          message:
+            "Your permanent password has been set successfully! Please sign in using your new password to access the portal.",
           type: "info",
         });
-        window.history.replaceState({}, document.title, window.location.pathname);
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname,
+        );
       } else if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
         setOtpValues(urlOtp.split(""));
         try {
@@ -105,7 +129,11 @@ export default function PexConsoleGateway() {
         });
 
         // Immediately clean address bar to keep URL 100% clean (/pex-console-secure)
-        window.history.replaceState({}, document.title, window.location.pathname);
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname,
+        );
       }
     }
   }, []);
@@ -126,7 +154,9 @@ export default function PexConsoleGateway() {
         setTimerSeconds(300);
         setCanResend(false);
       } else {
-        setErrorMessage(res.message || "Invalid login credentials or verification code.");
+        setErrorMessage(
+          res.message || "Invalid login credentials or verification code.",
+        );
       }
     });
   }
@@ -159,7 +189,10 @@ export default function PexConsoleGateway() {
     }
   }
 
-  function handleOtpKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
+  function handleOtpKeyDown(
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) {
     if (e.key === "Backspace" && !otpValues[index] && index > 0) {
       otpRefs.current[index - 1]?.focus();
     }
@@ -167,7 +200,10 @@ export default function PexConsoleGateway() {
 
   function handleOtpPaste(e: React.ClipboardEvent<HTMLInputElement>) {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, 6);
     if (pasted.length === 6) {
       const next = pasted.split("");
       setOtpValues(next);
@@ -196,7 +232,9 @@ export default function PexConsoleGateway() {
           }
           window.location.replace(res.redirectUrl || "/admin");
         } else {
-          setErrorMessage(res.message || "Invalid login credentials or verification code.");
+          setErrorMessage(
+            res.message || "Invalid login credentials or verification code.",
+          );
         }
       } catch (err) {
         console.error("[otp-submit] Submission exception:", err);
@@ -291,7 +329,9 @@ export default function PexConsoleGateway() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className={styles.passwordEyeBtn}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -308,11 +348,13 @@ export default function PexConsoleGateway() {
                 className={styles.trustedCheckbox}
               />
               <label htmlFor="trusted-device" className={styles.trustedLabel}>
-                <span className={styles.trustedTitle}>This is a trusted private computer</span>
+                <span className={styles.trustedTitle}>
+                  This is a trusted private computer
+                </span>
                 <span className={styles.trustedSubtext}>
                   {isTrustedDevice
-                    ? "Maintains standard secure session on this device"
-                    : "Public/Shared mode: closing browser or tab immediately clears session"}
+                    ? "Signs out after 2 hours of inactivity; sensitive data shields after 15 minutes."
+                    : "Signs out after 40 minutes of inactivity; sensitive data shields after 15 minutes."}
                 </span>
               </label>
             </div>
@@ -324,7 +366,8 @@ export default function PexConsoleGateway() {
             >
               {isPending ? (
                 <>
-                  <RefreshCw size={16} className="animate-spin" /> Authenticating...
+                  <RefreshCw size={16} className="animate-spin" />{" "}
+                  Authenticating...
                 </>
               ) : (
                 <>
@@ -378,7 +421,9 @@ export default function PexConsoleGateway() {
             <div className={styles.timerRow}>
               <span>
                 Code expires in:{" "}
-                <strong style={{ color: timerSeconds < 60 ? "#ef4444" : "#ffffff" }}>
+                <strong
+                  style={{ color: timerSeconds < 60 ? "#ef4444" : "#ffffff" }}
+                >
                   {formatTimer(timerSeconds)}
                 </strong>
               </span>
@@ -400,7 +445,8 @@ export default function PexConsoleGateway() {
             >
               {isPending ? (
                 <>
-                  <RefreshCw size={16} className="animate-spin" /> Verifying OTP...
+                  <RefreshCw size={16} className="animate-spin" /> Verifying
+                  OTP...
                 </>
               ) : (
                 <>

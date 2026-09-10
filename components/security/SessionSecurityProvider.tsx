@@ -18,6 +18,8 @@ const ACTIVITY_CHANNEL_NAME = "pex_security_activity_channel";
 const ACTIVITY_STORAGE_KEY = "pex_security_last_activity";
 const ACTIVITY_THROTTLE_MS = 3_000;
 const HEARTBEAT_THROTTLE_MS = 60_000;
+const ADMIN_RUNTIME_SESSION_KEY = "px_admin_runtime_session";
+const RUNTIME_HANDSHAKE_MS = 750;
 
 interface SessionSecurityContextType {
   isPrivacyShieldActive: boolean;
@@ -39,7 +41,11 @@ export function SessionSecurityProvider({
   children: React.ReactNode;
 }) {
   const [isPrivacyShieldActive, setIsPrivacyShieldActive] = useState(false);
-  const [sessionMode, setSessionMode] = useState<"standard" | "trusted">("standard");
+  const [isRuntimeSessionVerified, setIsRuntimeSessionVerified] =
+    useState(false);
+  const [sessionMode, setSessionMode] = useState<"standard" | "trusted">(
+    "standard",
+  );
   const lastActivityRef = useRef<number>(0);
   const lastSyncRef = useRef<number>(0);
   const lastHeartbeatRef = useRef<number>(0);
@@ -58,33 +64,36 @@ export function SessionSecurityProvider({
   }, []);
 
   // 2. Hard session termination & cache purge
-  const performHardSignout = useCallback(async (reason: "timeout" | "manual" = "timeout") => {
-    if (isSigningOutRef.current) return;
-    isSigningOutRef.current = true;
+  const performHardSignout = useCallback(
+    async (reason: "timeout" | "manual" = "timeout") => {
+      if (isSigningOutRef.current) return;
+      isSigningOutRef.current = true;
 
-    try {
-      channelRef.current?.postMessage({ type: "HARD_SIGNOUT", reason });
-    } catch {
-      // ignore
-    }
+      try {
+        channelRef.current?.postMessage({ type: "HARD_SIGNOUT", reason });
+      } catch {
+        // ignore
+      }
 
-    try {
-      window.sessionStorage.clear();
-      window.localStorage.removeItem("pex_dashboard_security_notice_v2");
-      window.sessionStorage.setItem(
-        "pex_console_popup_notice",
-        "Session expired due to inactivity."
-      );
-    } catch {
-      // ignore storage errors
-    }
+      try {
+        window.sessionStorage.clear();
+        window.localStorage.removeItem("pex_dashboard_security_notice_v2");
+        window.sessionStorage.setItem(
+          "pex_console_popup_notice",
+          "Session expired due to inactivity.",
+        );
+      } catch {
+        // ignore storage errors
+      }
 
-    try {
-      await logoutAction();
-    } catch {
-      window.location.replace("/");
-    }
-  }, []);
+      try {
+        await logoutAction();
+      } catch {
+        window.location.replace("/");
+      }
+    },
+    [],
+  );
 
   // 3. Resume session and clear privacy blur shield
   const resumeSession = useCallback(() => {
@@ -127,23 +136,92 @@ export function SessionSecurityProvider({
     }
   }, []);
 
-  // 4. Set up cross-tab synchronization & Activity monitoring
+  // 4. Require a same-browser runtime marker before revealing dashboard data.
+  // A new tab can be authorized by an already-active tab; after restart no tab
+  // responds, so the Supabase session is revoked instead of silently reopening.
   useEffect(() => {
+    let authorized = false;
+    let handshake: BroadcastChannel | null = null;
+    let timer: number | undefined;
+
+    const authorize = () => {
+      if (authorized) return;
+      authorized = true;
+      try {
+        window.sessionStorage.setItem(ADMIN_RUNTIME_SESSION_KEY, "active");
+      } catch {
+        // The signed server gate still protects storage-restricted browsers.
+      }
+      setIsRuntimeSessionVerified(true);
+      handshake?.close();
+    };
+
+    try {
+      if (
+        window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) === "active"
+      ) {
+        authorize();
+        return;
+      }
+    } catch {
+      // Request authorization from an already-active tab below.
+    }
+
+    if (typeof BroadcastChannel !== "undefined") {
+      handshake = new BroadcastChannel(ACTIVITY_CHANNEL_NAME);
+      handshake.onmessage = (event) => {
+        if (event.data?.type === "RUNTIME_SESSION_ACTIVE") authorize();
+      };
+      handshake.postMessage({ type: "RUNTIME_SESSION_REQUEST" });
+    }
+
+    timer = window.setTimeout(() => {
+      if (!authorized) void performHardSignout("manual");
+    }, RUNTIME_HANDSHAKE_MS);
+
+    return () => {
+      if (timer) window.clearTimeout(timer);
+      handshake?.close();
+    };
+  }, [performHardSignout]);
+
+  // 5. Set up cross-tab synchronization & activity monitoring after runtime verification.
+  useEffect(() => {
+    if (!isRuntimeSessionVerified) return;
     lastActivityRef.current = Date.now();
     resumeSession();
 
     if (typeof BroadcastChannel !== "undefined") {
       channelRef.current = new BroadcastChannel(ACTIVITY_CHANNEL_NAME);
       channelRef.current.onmessage = (event) => {
-        if (event.data?.type === "ACTIVITY_PING" && typeof event.data?.at === "number") {
-          lastActivityRef.current = Math.max(lastActivityRef.current, event.data.at);
+        if (event.data?.type === "RUNTIME_SESSION_REQUEST") {
+          try {
+            if (
+              window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) ===
+              "active"
+            ) {
+              channelRef.current?.postMessage({
+                type: "RUNTIME_SESSION_ACTIVE",
+              });
+            }
+          } catch {
+            // Storage-restricted browsers rely on the server-side gate only.
+          }
+        } else if (
+          event.data?.type === "ACTIVITY_PING" &&
+          typeof event.data?.at === "number"
+        ) {
+          lastActivityRef.current = Math.max(
+            lastActivityRef.current,
+            event.data.at,
+          );
           setIsPrivacyShieldActive(false);
         } else if (event.data?.type === "HARD_SIGNOUT") {
           isSigningOutRef.current = true;
           try {
             window.sessionStorage.setItem(
               "pex_console_popup_notice",
-              "Session expired due to inactivity."
+              "Session expired due to inactivity.",
             );
           } catch {}
           window.location.replace("/");
@@ -162,7 +240,6 @@ export function SessionSecurityProvider({
     };
     window.addEventListener("storage", onStorage);
 
-    // User activity listeners
     const handleUserActivity = () => {
       resumeSession();
     };
@@ -180,13 +257,10 @@ export function SessionSecurityProvider({
       window.addEventListener(evt, handleUserActivity, { passive: true });
     });
 
-    // 5. Timer Tick Interval (Checks every 2 seconds)
     const interval = setInterval(() => {
       if (isSigningOutRef.current) return;
       const now = Date.now();
       const elapsed = now - lastActivityRef.current;
-
-      // Stage 2: 20-minute hard termination
       const hardSignoutIdleMs =
         sessionMode === "trusted"
           ? TRUSTED_HARD_SIGNOUT_IDLE_MS
@@ -197,7 +271,6 @@ export function SessionSecurityProvider({
         return;
       }
 
-      // Stage 1: 2-minute privacy blur mask
       if (elapsed >= PRIVACY_SHIELD_IDLE_MS) {
         setIsPrivacyShieldActive(true);
       }
@@ -211,16 +284,27 @@ export function SessionSecurityProvider({
       window.removeEventListener("storage", onStorage);
       channelRef.current?.close();
     };
-  }, [performHardSignout, resumeSession, sessionMode]);
+  }, [
+    isRuntimeSessionVerified,
+    performHardSignout,
+    resumeSession,
+    sessionMode,
+  ]);
+
+  const isShieldVisible = !isRuntimeSessionVerified || isPrivacyShieldActive;
 
   return (
-    <SessionSecurityContext.Provider value={{ isPrivacyShieldActive, resumeSession }}>
+    <SessionSecurityContext.Provider
+      value={{ isPrivacyShieldActive, resumeSession }}
+    >
       {children}
 
-      {/* Stage 1: 2-Minute Visual Privacy Mask (Idle Shield) */}
-      {isPrivacyShieldActive && (
+      {/* Startup verification and the 15-minute visual privacy shield. */}
+      {isShieldVisible && (
         <div
-          onClick={resumeSession}
+          onClick={() => {
+            if (isRuntimeSessionVerified) resumeSession();
+          }}
           style={{
             position: "fixed",
             inset: 0,
@@ -265,7 +349,7 @@ export function SessionSecurityProvider({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              resumeSession();
+              if (isRuntimeSessionVerified) resumeSession();
             }}
           >
             {/* Glowing Lock Badge */}
@@ -306,7 +390,9 @@ export function SessionSecurityProvider({
               }}
             >
               <Sparkles size={11} />
-              Privacy Shield Active
+              {isRuntimeSessionVerified
+                ? "Privacy Shield Active"
+                : "Securing Dashboard"}
             </div>
 
             <h2
@@ -318,7 +404,9 @@ export function SessionSecurityProvider({
                 letterSpacing: "-0.01em",
               }}
             >
-              Dashboard Paused for Privacy
+              {isRuntimeSessionVerified
+                ? "Dashboard Paused for Privacy"
+                : "Verifying Session"}
             </h2>
 
             <p
@@ -329,13 +417,16 @@ export function SessionSecurityProvider({
                 margin: "0 0 24px",
               }}
             >
-              Sensitive company and school data has been shielded from unattended viewing.
-              Move your mouse, tap the screen, or press any key to resume your session.
+              {isRuntimeSessionVerified
+                ? "Sensitive company and school data has been shielded from unattended viewing. Move your mouse, tap the screen, or press any key to resume your session."
+                : "Checking this browser session before displaying protected data."}
             </p>
 
             <button
               type="button"
-              onClick={resumeSession}
+              onClick={() => {
+                if (isRuntimeSessionVerified) resumeSession();
+              }}
               style={{
                 width: "100%",
                 padding: "11px 20px",
@@ -350,7 +441,7 @@ export function SessionSecurityProvider({
                 boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
               }}
             >
-              Resume Session
+              {isRuntimeSessionVerified ? "Resume Session" : "Verifying..."}
             </button>
           </div>
         </div>

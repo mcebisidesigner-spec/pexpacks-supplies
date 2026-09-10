@@ -22,12 +22,16 @@ function getSigningSecret() {
 function toBase64Url(bytes: Uint8Array) {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
 }
 
 async function sign(value: string) {
   const secret = getSigningSecret();
-  if (!secret) throw new Error("Admin session signing secret is not configured.");
+  if (!secret)
+    throw new Error("Admin session signing secret is not configured.");
 
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -37,7 +41,11 @@ async function sign(value: string) {
     false,
     ["sign"],
   );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(value));
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(value),
+  );
   return toBase64Url(new Uint8Array(signature));
 }
 
@@ -65,7 +73,8 @@ export async function verifyAdminSessionValue(
 ): Promise<VerifiedAdminSession | null> {
   if (!value) return null;
 
-  const [version, rawMode, rawLastActiveAt, rawUserId, signature, ...extra] = value.split(".");
+  const [version, rawMode, rawLastActiveAt, rawUserId, signature, ...extra] =
+    value.split(".");
   if (
     version !== "v1" ||
     (rawMode !== "standard" && rawMode !== "trusted") ||
@@ -78,7 +87,10 @@ export async function verifyAdminSessionValue(
   }
 
   const lastActiveAt = Number(rawLastActiveAt);
-  if (!Number.isSafeInteger(lastActiveAt) || lastActiveAt > Date.now() + 60_000) {
+  if (
+    !Number.isSafeInteger(lastActiveAt) ||
+    lastActiveAt > Date.now() + 60_000
+  ) {
     return null;
   }
 
@@ -86,7 +98,8 @@ export async function verifyAdminSessionValue(
   const expected = await sign(payload);
   if (!safeEqual(signature, expected)) return null;
 
-  const maxIdle = rawMode === "trusted" ? ADMIN_TRUSTED_IDLE_MS : ADMIN_STANDARD_IDLE_MS;
+  const maxIdle =
+    rawMode === "trusted" ? ADMIN_TRUSTED_IDLE_MS : ADMIN_STANDARD_IDLE_MS;
   if (Date.now() - lastActiveAt > maxIdle) return null;
 
   return { mode: rawMode, lastActiveAt };

@@ -37,9 +37,8 @@ export function DeviceActivityPrompt({
           <Laptop size={20} />
         </div>
         <p className={styles.messageText}>
-          Pexpacks protects this dashboard by closing the session after 45
-          minutes without activity. The timer pauses while you work in another
-          application.
+          Pexpacks shields sensitive dashboard data after 15 minutes without
+          activity and closes standard sessions after 40 minutes.
         </p>
       </div>
 

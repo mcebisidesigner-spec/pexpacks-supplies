@@ -147,8 +147,16 @@ export async function proxy(request: NextRequest) {
       console.error("[proxy] console auth check failed:", err);
     }
 
-    // If already authenticated, redirect directly to /admin
-    if (user) {
+    const adminSession = user
+      ? await verifyAdminSessionValue(
+          request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
+          user.id,
+        )
+      : null;
+
+    // A persisted Supabase refresh token is not sufficient to reopen admin.
+    // Only a fresh OTP-created browser session may bypass the gateway.
+    if (user && adminSession) {
       return copyCookies(
         response,
         applySecurityHeaders(
@@ -159,6 +167,17 @@ export async function proxy(request: NextRequest) {
       );
     }
 
+    if (user) {
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        // Clearing the gate below still requires a fresh OTP login.
+      }
+      response.cookies.set(ADMIN_SESSION_COOKIE, "", {
+        path: "/",
+        expires: new Date(0),
+      });
+    }
     response.headers.set(
       "Cache-Control",
       "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
