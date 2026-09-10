@@ -284,7 +284,7 @@ export function MasterProductsPageView({
         subtitle="Centralised product catalogue managing verified supplier costs and active retail selling prices."
         actions={
           <AdminButton
-            href="/admin/products/add-item"
+            href="/admin/products/add-product"
             variant="primary"
             icon={<Plus size={14} />}
           >

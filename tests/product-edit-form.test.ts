@@ -21,13 +21,13 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
 
   it("verifies auto-generated SKU structure following Pexpacks nomenclature", () => {
     const sku1 = generateVariantSku("College Exercise Unruled", "Freedom", 0);
-    expect(sku1).toBe("PEX-STN-CEU-FREEDOM-01");
+    expect(sku1).toBe("PEX-CEU-FREEDOM-01");
 
     const sku2 = generateVariantSku("Hardcover 2 Quire Notebook", "Croxley", 1);
-    expect(sku2).toBe("PEX-STN-H2Q-CROXLEY-02");
+    expect(sku2).toBe("PEX-H2Q-CROXLEY-02");
 
     const sku3 = generateVariantSku("Eraser", "Staedtler", 2);
-    expect(sku3).toBe("PEX-STN-ERA-STAEDTL-03");
+    expect(sku3).toBe("PEX-ERA-STAEDTL-03");
   });
 
   it("verifies pre-seeded South African stationery brands list", () => {
@@ -185,7 +185,7 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
       "Stationery",
       "Freedom",
     );
-    expect(skuWithBrand).toContain("PEX-STN-CEU-FREEDOM");
+    expect(skuWithBrand).toContain("PEX-CEU-FREEDOM");
 
     const skuWithCroxley = generateSkuFromName(
       "Hardcover 2 Quire Notebook",
@@ -193,7 +193,7 @@ describe("ProductEditForm & Brand Variant Workflow Engine", () => {
       "Croxley",
       "02",
     );
-    expect(skuWithCroxley).toBe("PEX-STN-H2QN-CROXLEY-02");
+    expect(skuWithCroxley).toBe("PEX-H2QN-CROXLEY-02");
 
     // Check ItemForm implementation
     const fs = await import("node:fs");

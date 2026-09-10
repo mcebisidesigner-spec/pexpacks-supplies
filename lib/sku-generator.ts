@@ -1,7 +1,7 @@
 /**
  * Automated Real-time SKU Generator for Pexpacks Supplies
- * Format: PEX-[CATEGORY]-[ABBR_NAME]-[SEQ]
- * Examples: PEX-WRT-00101, PEX-BOK-00102, PEX-BAG-00103, PEX-STN-A4CF-101
+ * Format: PEX-[ABBR_NAME]-[BRAND]-[SEQ] or PEX-[ABBR_NAME]-[SEQ]
+ * Examples: PEX-CEU-FREEDOM-992, PEX-CEU-992, PEX-CBS-952
  */
 
 const CATEGORY_MAP: Record<string, string> = {
@@ -162,10 +162,10 @@ export function getBrandCode(brand?: string | null): string {
 
 /**
  * Generates a clean, standardized PEX SKU in real-time combining Product Name and Brand.
- * Format: PEX-[CATEGORY]-[ABBR_NAME]-[BRAND]-[SEQ] or PEX-[CATEGORY]-[ABBR_NAME]-[SEQ]
+ * Format: PEX-[ABBR_NAME]-[BRAND]-[SEQ] or PEX-[ABBR_NAME]-[SEQ]
  * Examples:
- * - With brand: PEX-STN-CEU-FREEDOM-992
- * - Without brand: PEX-WRT-00101, PEX-BOK-00102
+ * - With brand: PEX-CEU-FREEDOM-992
+ * - Without brand: PEX-CEU-992
  */
 export function generateSkuFromName(
   name: string,
@@ -191,13 +191,12 @@ export function generateSkuFromName(
     brandArg = customSeq ? String(customSeq) : null;
   }
 
-  const catCode = getCategoryCode(category);
   const nameAbbr = getNameAbbreviation(name);
   const brandCode = getBrandCode(brandArg);
   const seq = seqArg != null ? String(seqArg) : getDeterministicSequence(name);
 
   if (brandCode) {
-    return sanitizeSku(`PEX-${catCode}-${nameAbbr}-${brandCode}-${seq}`);
+    return sanitizeSku(`PEX-${nameAbbr}-${brandCode}-${seq}`);
   }
-  return sanitizeSku(`PEX-${catCode}-${nameAbbr}-${seq}`);
+  return sanitizeSku(`PEX-${nameAbbr}-${seq}`);
 }

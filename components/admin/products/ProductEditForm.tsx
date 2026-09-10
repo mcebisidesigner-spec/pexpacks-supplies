@@ -154,14 +154,14 @@ export function calculateSellingPrice(
 
 /**
  * Generates an automated SKU following the Pexpacks nomenclature:
- * e.g., PEX-STN-CEU-[BRAND]-[SEQ]
+ * e.g., PEX-CEU-FREEDOM-01
  */
 export function generateVariantSku(
   productName: string,
   brandName: string,
   existingCount: number = 0,
 ): string {
-  const prefix = "PEX-STN";
+  const prefix = "PEX";
 
   // Initials from product name (e.g. "College Exercise Unruled" -> "CEU")
   const words = productName
@@ -409,7 +409,7 @@ export function ProductEditForm({
         master_product_id: initialMasterProduct?.id || `mp-${Date.now()}`,
         brand_id: freedomBrand?.id || "brand-freedom",
         brand_name: freedomBrand?.name || "Freedom",
-        sku: "PEX-STN-CEU-992",
+        sku: "PEX-CEU-FREEDOM-992",
         cost_price: initialCost,
         selling_price: initialSelling,
         supplier_id: suppliers[0]?.id || "sup-bsc",
@@ -1017,7 +1017,7 @@ export function ProductEditForm({
                       setCustomSkuInput(e.target.value);
                       setIsCustomSku(true);
                     }}
-                    placeholder="PEX-STN-CEU-..."
+                    placeholder="PEX-CEU-FREEDOM-..."
                     className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all font-mono text-xs"
                   />
                 </div>

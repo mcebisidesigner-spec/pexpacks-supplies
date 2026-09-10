@@ -55,6 +55,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/admin/products/add-item",
+        destination: "/admin/products/add-product",
+        permanent: true,
+      },
+      {
         source: "/school",
         destination: "/schools",
         permanent: true,
