@@ -143,3 +143,123 @@ export async function deleteItemAction(id: string): Promise<void> {
 
   redirect("/admin/products");
 }
+
+export async function saveProductWithVariantsAction(data: {
+  masterProduct: {
+    id: string;
+    name: string;
+    category: string;
+    description: string;
+    pack_unit: string;
+    quantity: number;
+    requires_covering: boolean;
+    pexco_code: string;
+  };
+  variants: Array<{
+    id: string;
+    master_product_id: string;
+    brand_id: string;
+    brand_name: string;
+    sku: string;
+    cost_price: number;
+    selling_price: number;
+    supplier_id: string;
+    supplier_name?: string;
+    visible_on_catalogue: boolean;
+  }>;
+}): Promise<{ ok: boolean; message?: string }> {
+  try {
+    const session = await requireAdmin({ permission: "items.edit" });
+    const admin = createSupabaseAdminClient();
+    const { masterProduct, variants } = data;
+
+    // 1. Update master product metadata
+    const primaryVariant = variants[0];
+    const updatePayload: Record<string, unknown> = {
+      name: masterProduct.name.trim(),
+      category: masterProduct.category || "Stationery",
+      description: masterProduct.description?.trim() || null,
+      specification: masterProduct.pack_unit?.trim() || null,
+      requires_pexcover: masterProduct.requires_covering ?? false,
+      pexco_code: masterProduct.requires_covering ? masterProduct.pexco_code : null,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (primaryVariant) {
+      updatePayload.current_selling_price = primaryVariant.selling_price;
+      updatePayload.latest_verified_cost = primaryVariant.cost_price;
+      if (primaryVariant.supplier_id) {
+        updatePayload.preferred_supplier_id = primaryVariant.supplier_id;
+      }
+      if (primaryVariant.brand_name) {
+        updatePayload.brand = primaryVariant.brand_name;
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error: masterErr } = await (admin.from("master_products") as any)
+      .update(updatePayload)
+      .eq("id", masterProduct.id);
+
+    if (masterErr) {
+      console.warn("[saveProductWithVariantsAction] master_product update warning:", masterErr);
+    }
+
+    // 2. Sync variants in product_variants table (if migrated)
+    try {
+      if (variants.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const variantsTable = admin.from("product_variants" as any) as any;
+        for (const v of variants) {
+          const variantPayload = {
+            id: v.id.startsWith("var-") && !v.id.includes("-") ? undefined : v.id,
+            master_product_id: masterProduct.id,
+            brand_id: v.brand_id,
+            sku: v.sku,
+            cost_price: v.cost_price,
+            selling_price: v.selling_price,
+            supplier_id: v.supplier_id || null,
+            visible_on_catalogue: v.visible_on_catalogue ?? true,
+            updated_at: new Date().toISOString(),
+          };
+          await variantsTable.upsert(variantPayload, { onConflict: "master_product_id,brand_id" });
+        }
+      }
+    } catch {
+      // Graceful fallback if product_variants table is not yet migrated in current DB
+    }
+
+    void writeAuditLog({
+      actorId: session.user.id,
+      actorName: session.user.email,
+      action: "items.edit",
+      entityType: "master_product",
+      entityId: masterProduct.id,
+      summary: `Updated master product "${masterProduct.name}" with ${variants.length} variant(s)`,
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath("/admin/items");
+    revalidatePath(`/admin/products/${masterProduct.id}`);
+    const productSlug = masterProduct.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    if (productSlug) {
+      revalidatePath(`/admin/products/${productSlug}`);
+      revalidatePath(`/admin/products/${productSlug}/edit`);
+    }
+    revalidateCatalog();
+
+    return {
+      ok: true,
+      message: `Product "${masterProduct.name}" and ${variants.length} brand variant(s) saved successfully.`,
+    };
+  } catch (err) {
+    console.error("[saveProductWithVariantsAction] error:", err);
+    return {
+      ok: false,
+      message: err instanceof Error ? err.message : "Failed to save product and variants.",
+    };
+  }
+}

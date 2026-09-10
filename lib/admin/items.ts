@@ -87,6 +87,7 @@ export const itemSchema = z.object({
     .min(1, "Enter an item name")
     .max(200, "Item name is too long"),
   category: optString(200, "category"),
+  brand: optString(100, "brand").nullable().optional(),
   description: optString(2000, "description"),
   specification: optString(2000, "specification"),
   quantity: countField,
@@ -141,8 +142,10 @@ function schoolPackItemsTable(admin: SupabaseAdminClient) {
   return admin.from("school_pack_items");
 }
 
-function productSku(data: Pick<ItemFormData, "category" | "name">): string {
-  return generateSkuFromName(data.name, data.category);
+function productSku(
+  data: Pick<ItemFormData, "category" | "name"> & { brand?: string | null },
+): string {
+  return generateSkuFromName(data.name, data.category, data.brand);
 }
 
 export interface MasterPricingInput {
@@ -242,6 +245,7 @@ async function ensureMasterProduct(
     ItemFormData,
     | "name"
     | "category"
+    | "brand"
     | "description"
     | "specification"
     | "visible"
@@ -262,6 +266,7 @@ async function ensureMasterProduct(
     name: data.name.trim(),
     description: data.description,
     category: data.category,
+    brand: data.brand || null,
     specification: data.specification,
     icon: data.icon || null,
     visibility: data.visible ? "public" : "internal",
@@ -356,6 +361,7 @@ export function parseItemForm(formData: FormData): ParsedItemForm {
     sku: raw(formData, "sku"),
     name: raw(formData, "name"),
     category: raw(formData, "category"),
+    brand: raw(formData, "brand") || null,
     description: raw(formData, "description"),
     specification: raw(formData, "specification"),
     quantity: raw(formData, "quantity") || "1",
@@ -938,6 +944,7 @@ export async function updateItem(
           sku: skuVal,
           name: parsed.data.name.trim(),
           category: parsed.data.category,
+          brand: parsed.data.brand || null,
           description: parsed.data.description,
           specification: parsed.data.specification,
           icon: parsed.data.icon || null,

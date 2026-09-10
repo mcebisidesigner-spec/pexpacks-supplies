@@ -62,3 +62,5 @@ export function EditProductClient({
     </>
   );
 }
+
+export default EditProductClient;

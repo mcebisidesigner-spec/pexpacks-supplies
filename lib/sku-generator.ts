@@ -148,18 +148,55 @@ function getDeterministicSequence(name: string): string {
 }
 
 /**
- * Generates a clean, standardized PEX SKU in real-time.
- * Format: PEX-[CATEGORY]-[ABBR_NAME]-[SEQ]
- * Example: PEX-WRT-00101, PEX-BOK-00102, PEX-STN-A4CPF-101
+ * Derives a clean, uppercase Brand Code (e.g. FREEDOM, CROXLEY, STAEDTL)
+ */
+export function getBrandCode(brand?: string | null): string {
+  if (!brand || !brand.trim()) return "";
+  return brand
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .slice(0, 7);
+}
+
+/**
+ * Generates a clean, standardized PEX SKU in real-time combining Product Name and Brand.
+ * Format: PEX-[CATEGORY]-[ABBR_NAME]-[BRAND]-[SEQ] or PEX-[CATEGORY]-[ABBR_NAME]-[SEQ]
+ * Examples:
+ * - With brand: PEX-STN-CEU-FREEDOM-992
+ * - Without brand: PEX-WRT-00101, PEX-BOK-00102
  */
 export function generateSkuFromName(
   name: string,
   category?: string | null,
-  customSeq?: string | number
+  brandOrSeq?: string | number | null,
+  customSeq?: string | number | null,
 ): string {
+  let seqArg: string | number | undefined;
+  let brandArg: string | null = null;
+
+  if (typeof brandOrSeq === "number") {
+    seqArg = brandOrSeq;
+    brandArg = customSeq ? String(customSeq) : null;
+  } else if (typeof brandOrSeq === "string") {
+    if (/^\d+$/.test(brandOrSeq.trim())) {
+      seqArg = brandOrSeq.trim();
+      brandArg = customSeq ? String(customSeq) : null;
+    } else {
+      brandArg = brandOrSeq;
+      seqArg = customSeq != null ? String(customSeq) : undefined;
+    }
+  } else {
+    brandArg = customSeq ? String(customSeq) : null;
+  }
+
   const catCode = getCategoryCode(category);
   const nameAbbr = getNameAbbreviation(name);
-  const seq = customSeq ? String(customSeq) : getDeterministicSequence(name);
+  const brandCode = getBrandCode(brandArg);
+  const seq = seqArg != null ? String(seqArg) : getDeterministicSequence(name);
 
+  if (brandCode) {
+    return sanitizeSku(`PEX-${catCode}-${nameAbbr}-${brandCode}-${seq}`);
+  }
   return sanitizeSku(`PEX-${catCode}-${nameAbbr}-${seq}`);
 }

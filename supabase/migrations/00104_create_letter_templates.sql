@@ -15,12 +15,18 @@ CREATE INDEX IF NOT EXISTS idx_admin_letter_templates_sort ON public.admin_lette
 
 ALTER TABLE public.admin_letter_templates ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated staff full access letter templates" 
-  ON public.admin_letter_templates 
-  FOR ALL 
-  TO authenticated 
-  USING (true)
-  WITH CHECK (true);
+CREATE POLICY "Order viewers read letter templates"
+  ON public.admin_letter_templates
+  FOR SELECT
+  TO authenticated
+  USING (public.has_permission('orders.view'));
+
+CREATE POLICY "Order editors manage letter templates"
+  ON public.admin_letter_templates
+  FOR ALL
+  TO authenticated
+  USING (public.has_permission('orders.edit'))
+  WITH CHECK (public.has_permission('orders.edit'));
 
 INSERT INTO public.admin_letter_templates (name, subject, body_markdown, sort_order)
 VALUES

@@ -93,7 +93,40 @@ import {
   SpellCheck,
   Languages,
   AlignLeft,
+  BookCopy,
+  BookText,
+  BookmarkCheck,
+  FileStack,
+  FolderOpen,
+  FolderArchive,
+  Files,
+  Wallet,
+  Glasses,
+  CaseSensitive,
+  CaseUpper,
+  SquarePen,
 } from "lucide-react";
+
+function TapeIcon({ size = 20, className = "", ...rest }: { size?: number; className?: string; [key: string]: unknown }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      {...rest}
+    >
+      <circle cx="9" cy="12" r="7" />
+      <circle cx="9" cy="12" r="2.5" />
+      <path d="M9 19h11a2 2 0 0 0 2-2v-3" />
+    </svg>
+  );
+}
 
 type ItemIconProps = {
   name?: string;
@@ -108,12 +141,22 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     // ── Books & Paper ────────────────────────────────────────
     case "notebook":
       return <BookOpen {...props} />;
+    case "book-copy":
+      return <BookCopy {...props} />;
+    case "book-text":
+      return <BookText {...props} />;
     case "pad":
       return <Book {...props} />;
+    case "file-stack":
+      return <FileStack {...props} />;
+    case "files":
+      return <Files {...props} />;
     case "file":
       return <FileText {...props} />;
     case "folder":
       return <Folder {...props} />;
+    case "bookmark-check":
+      return <BookmarkCheck {...props} />;
     case "layers":
       return <Layers {...props} />;
     case "scroll":
@@ -174,6 +217,8 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
       return <PaintBucket {...props} />;
     case "signature":
       return <Signature {...props} />;
+    case "square-pen":
+      return <SquarePen {...props} />;
 
     // ── Math & Measurement ───────────────────────────────────
     case "ruler":
@@ -200,6 +245,8 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
       return <Paperclip {...props} />;
     case "pin":
       return <Pin {...props} />;
+    case "tape":
+      return <TapeIcon {...props} />;
     case "stamp":
       return <Stamp {...props} />;
 
@@ -224,6 +271,12 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
       return <ShoppingBag {...props} />;
     case "folders":
       return <Folders {...props} />;
+    case "folder-open":
+      return <FolderOpen {...props} />;
+    case "folder-archive":
+      return <FolderArchive {...props} />;
+    case "wallet":
+      return <Wallet {...props} />;
     case "package":
       return <Package {...props} />;
 
@@ -246,6 +299,8 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
       return <Dna {...props} />;
     case "thermometer":
       return <Thermometer {...props} />;
+    case "glasses":
+      return <Glasses {...props} />;
 
     // ── Art, Music & Tech ────────────────────────────────────
     case "music":
@@ -316,6 +371,10 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
       return <Languages {...props} />;
     case "align-left":
       return <AlignLeft {...props} />;
+    case "case-sensitive":
+      return <CaseSensitive {...props} />;
+    case "case-upper":
+      return <CaseUpper {...props} />;
 
     default:
       return <Box {...props} />;

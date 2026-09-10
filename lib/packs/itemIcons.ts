@@ -94,14 +94,32 @@ export type PackItemIconKey =
   | "type"
   | "spell-check"
   | "languages"
-  | "align-left";
+  | "align-left"
+  | "tape"
+  | "book-copy"
+  | "book-text"
+  | "bookmark-check"
+  | "file-stack"
+  | "folder-open"
+  | "folder-archive"
+  | "files"
+  | "wallet"
+  | "glasses"
+  | "case-sensitive"
+  | "case-upper"
+  | "square-pen";
 
 export const PACK_ITEM_ICONS: { key: PackItemIconKey; label: string }[] = [
   // ── Books & Paper ──────────────────────────────────────────────
   { key: "notebook", label: "Notebook / Exercise Book" },
+  { key: "book-copy", label: "Counter Book / Duplicate Book / Book Copy" },
+  { key: "book-text", label: "Storybook / Reading Literature" },
   { key: "pad", label: "Writing Pad / Exam Pad" },
+  { key: "file-stack", label: "Exam Pad Stack / Ream Paper" },
+  { key: "files", label: "Loose Sheets / Plastic Pockets / Sleeves" },
   { key: "file", label: "Document / File" },
   { key: "folder", label: "Folder / Doc Wallet" },
+  { key: "bookmark-check", label: "Subject Index / Bookmark" },
   { key: "layers", label: "Construction Paper / Board" },
   { key: "scroll", label: "Flipchart / Poster Paper" },
   { key: "newspaper", label: "Dictionary / Text Paper" },
@@ -133,6 +151,7 @@ export const PACK_ITEM_ICONS: { key: PackItemIconKey; label: string }[] = [
   { key: "brush", label: "Art Brush / Paint Brush" },
   { key: "paint-bucket", label: "Paint Bucket / Fill Tool" },
   { key: "signature", label: "Signature / Calligraphy" },
+  { key: "square-pen", label: "Workbook Entry / Worksheet Pen" },
 
   // ── Math & Measurement ─────────────────────────────────────────
   { key: "ruler", label: "Ruler / Scale" },
@@ -148,6 +167,7 @@ export const PACK_ITEM_ICONS: { key: PackItemIconKey; label: string }[] = [
   { key: "glue", label: "Glue Stick / Adhesive" },
   { key: "paperclip", label: "Paperclips / Fasteners" },
   { key: "pin", label: "Pushpins / Thumb Tacks" },
+  { key: "tape", label: "Tape / Adhesive Tape / Sellotape" },
   { key: "stamp", label: "Stamp / Seal / Date Stamp" },
 
   // ── Bags & Cases ───────────────────────────────────────────────
@@ -161,6 +181,9 @@ export const PACK_ITEM_ICONS: { key: PackItemIconKey; label: string }[] = [
   { key: "briefcase", label: "Briefcase / Professional Bag" },
   { key: "shopping-bag", label: "Shopping Bag / Gift Bag" },
   { key: "folders", label: "Multiple Folders / File Organizer" },
+  { key: "folder-open", label: "Document Wallet / Open File" },
+  { key: "folder-archive", label: "Lever Arch File / Ringbinder" },
+  { key: "wallet", label: "Pencil Pouch / Exam Case / Wallet" },
   { key: "package", label: "Package / Parcel / Delivery" },
 
   // ── STEM & Science ─────────────────────────────────────────────
@@ -173,6 +196,7 @@ export const PACK_ITEM_ICONS: { key: PackItemIconKey; label: string }[] = [
   { key: "test-tubes", label: "Test Tubes / Lab Set" },
   { key: "dna", label: "DNA Helix / Biology" },
   { key: "thermometer", label: "Thermometer / Temperature" },
+  { key: "glasses", label: "Lab Safety Goggles / Spectacles" },
 
   // ── Art, Music & Tech ──────────────────────────────────────────
   { key: "music", label: "Music / Recorder Instrument" },
@@ -212,6 +236,8 @@ export const PACK_ITEM_ICONS: { key: PackItemIconKey; label: string }[] = [
   { key: "spell-check", label: "Spell Check / Proofreading" },
   { key: "languages", label: "Languages / Translation" },
   { key: "align-left", label: "Left Alignment / Text Format" },
+  { key: "case-sensitive", label: "Handwriting / Text Case / Literacy" },
+  { key: "case-upper", label: "Capital Letters / Phonics" },
 ];
 
 export function isPackItemIconKey(value: string): value is PackItemIconKey {

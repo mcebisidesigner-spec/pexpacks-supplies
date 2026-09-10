@@ -345,6 +345,15 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     color: "#065f46",
   },
+  pageNumber: {
+    position: "absolute",
+    bottom: 18,
+    right: 40,
+    fontSize: 8,
+    fontFamily: "Helvetica",
+    color: "#94a3b8",
+    textAlign: "right",
+  },
 });
 
 function formatMoney(amount: number, currency = "ZAR"): string {
@@ -729,6 +738,15 @@ export function OfficialLetterPdfDocument({
             Pexpacks Supplies (Pty) Ltd
           </Text>
         </View>
+
+        {/* Page numbering at bottom right when document exceeds one page */}
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : ""
+          }
+          fixed
+        />
       </Page>
     </Document>
   );

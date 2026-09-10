@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { RotateCw, Save, Sparkles, Package, Store } from "lucide-react";
+import { RotateCw, Save, Sparkles, Package, Store, Tag, X } from "lucide-react";
 import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
@@ -14,6 +14,7 @@ import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { PEXCO_CLASSIFICATIONS } from "@/lib/admin/system-settings-shared";
 import type { MasterPricingConfig } from "@/lib/admin/items";
+import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./ItemForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
@@ -96,16 +97,166 @@ export function ItemForm({
   const [category, setCategory] = useState<string>(
     item?.category ?? "Stationery",
   );
-  const [sku, setSku] = useState<string>(
-    item?.sku ??
-      (item?.name ? generateSkuFromName(item.name, item.category) : ""),
+  const [brand, setBrand] = useState<string>(
+    item?.brand ?? (masterMode ? "Freedom" : ""),
   );
-  const [isCustomSku, setIsCustomSku] = useState<boolean>(Boolean(item?.sku));
+  const [sku, setSku] = useState<string>(() => {
+    const defaultBrand = item?.brand ?? (masterMode ? "Freedom" : "");
+    if (!item?.name) return item?.sku ?? "";
+    const oldAutoSku = generateSkuFromName(item.name, item.category);
+    // If the existing SKU matches the old auto format without brand, upgrade it to include brand
+    if (item?.sku === oldAutoSku && defaultBrand) {
+      return generateSkuFromName(item.name, item.category, defaultBrand);
+    }
+    if (item?.sku) return item.sku;
+    return generateSkuFromName(item.name, item.category, defaultBrand);
+  });
+  const [isCustomSku, setIsCustomSku] = useState<boolean>(() => {
+    if (!item?.sku) return false;
+    const defaultBrand = item?.brand ?? (masterMode ? "Freedom" : "");
+    const autoWithBrand = generateSkuFromName(
+      item.name || "",
+      item.category,
+      defaultBrand,
+    );
+    const oldAutoWithoutBrand = generateSkuFromName(
+      item.name || "",
+      item.category,
+    );
+    if (item.sku === autoWithBrand || item.sku === oldAutoWithoutBrand) {
+      return false;
+    }
+    return true;
+  });
   const [requiresPexcover, setRequiresPexcover] = useState<boolean>(
     item?.requires_pexcover ?? false,
   );
   const [pexcoCode, setPexcoCode] = useState<string>(item?.pexco_code ?? "");
   const [supplierId, setSupplierId] = useState<string>(item?.supplier_id ?? "");
+  const [brandsList, setBrandsList] = useState<{ id: string; name: string }[]>([
+    { id: "brand-aspire", name: "Aspire" },
+    { id: "brand-bantex", name: "Bantex" },
+    { id: "brand-bic", name: "Bic" },
+    { id: "brand-croxley", name: "Croxley" },
+    { id: "brand-faber-castell", name: "Faber-Castell" },
+    { id: "brand-freedom", name: "Freedom" },
+    { id: "brand-lion", name: "Lion" },
+    { id: "brand-mondi", name: "Mondi" },
+    { id: "brand-oxford", name: "Oxford" },
+    { id: "brand-pilot", name: "Pilot" },
+    { id: "brand-pritt", name: "Pritt" },
+    { id: "brand-sasco", name: "Sasco" },
+    { id: "brand-sigma", name: "Sigma" },
+    { id: "brand-staedtler", name: "Staedtler" },
+    { id: "brand-typek", name: "Typek" },
+  ]);
+  const [showBrandModal, setShowBrandModal] = useState(false);
+  const [newBrandName, setNewBrandName] = useState("");
+  const [isCreatingBrand, setIsCreatingBrand] = useState(false);
+  const [brandModalError, setBrandModalError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/brands")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.brands && Array.isArray(data.brands) && data.brands.length > 0) {
+          setBrandsList(data.brands);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleBrandSelect = (val: string) => {
+    if (val === "__ADD_NEW_BRAND__") {
+      setNewBrandName("");
+      setBrandModalError(null);
+      setShowBrandModal(true);
+      return;
+    }
+    setBrand(val);
+    if (!isCustomSku && productName.trim()) {
+      const newSku = generateSkuFromName(productName, category, val);
+      setSku(newSku);
+      onSkuChange?.(newSku);
+    }
+  };
+
+  const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    handleBrandSelect(e.target.value);
+  };
+
+  const handleCreateBrand = async () => {
+    const clean = newBrandName.trim();
+    if (!clean || clean.length < 2) {
+      setBrandModalError("Brand name must be at least 2 characters.");
+      return;
+    }
+    setIsCreatingBrand(true);
+    setBrandModalError(null);
+    try {
+      const res = await fetch("/api/brands", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: clean }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const created = data.brand || {
+          id: `brand-${clean.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+          name: clean,
+        };
+        setBrandsList((prev) => {
+          if (prev.some((b) => b.name.toLowerCase() === clean.toLowerCase())) {
+            return prev;
+          }
+          return [...prev, created].sort((a, b) => a.name.localeCompare(b.name));
+        });
+        setBrand(created.name);
+        if (!isCustomSku && productName.trim()) {
+          const newSku = generateSkuFromName(
+            productName,
+            category,
+            created.name,
+          );
+          setSku(newSku);
+          onSkuChange?.(newSku);
+        }
+        setShowBrandModal(false);
+      } else {
+        const fallback = {
+          id: `brand-${clean.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+          name: clean,
+        };
+        setBrandsList((prev) =>
+          [...prev, fallback].sort((a, b) => a.name.localeCompare(b.name)),
+        );
+        setBrand(clean);
+        if (!isCustomSku && productName.trim()) {
+          const newSku = generateSkuFromName(productName, category, clean);
+          setSku(newSku);
+          onSkuChange?.(newSku);
+        }
+        setShowBrandModal(false);
+      }
+    } catch {
+      const fallback = {
+        id: `brand-${clean.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+        name: clean,
+      };
+      setBrandsList((prev) =>
+        [...prev, fallback].sort((a, b) => a.name.localeCompare(b.name)),
+      );
+      setBrand(clean);
+      if (!isCustomSku && productName.trim()) {
+        const newSku = generateSkuFromName(productName, category, clean);
+        setSku(newSku);
+        onSkuChange?.(newSku);
+      }
+      setShowBrandModal(false);
+    } finally {
+      setIsCreatingBrand(false);
+    }
+  };
 
   const initialCostValue = masterMode
     ? (item?.unit_cost ?? item?.unit_price ?? "")
@@ -154,7 +305,7 @@ export function ItemForm({
     setProductName(val);
     onNameChange?.(val);
     if (!isCustomSku && val.trim()) {
-      const newSku = generateSkuFromName(val, category);
+      const newSku = generateSkuFromName(val, category, brand);
       setSku(newSku);
       onSkuChange?.(newSku);
     }
@@ -165,7 +316,7 @@ export function ItemForm({
     setCategory(val);
     onCategoryChange?.(val);
     if (!isCustomSku && productName.trim()) {
-      const newSku = generateSkuFromName(productName, val);
+      const newSku = generateSkuFromName(productName, val, brand);
       setSku(newSku);
       onSkuChange?.(newSku);
     }
@@ -181,7 +332,11 @@ export function ItemForm({
   const handleRegenerateSku = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsCustomSku(false);
-    const newSku = generateSkuFromName(productName.trim() || "Item", category);
+    const newSku = generateSkuFromName(
+      productName.trim() || "Item",
+      category,
+      brand,
+    );
     setSku(newSku);
     onSkuChange?.(newSku);
   };
@@ -208,6 +363,8 @@ export function ItemForm({
         name="pack_id"
         value={item?.pack_id ?? packs[0]?.id ?? ""}
       />
+      <input type="hidden" name="category" value={category} />
+      {!masterMode && <input type="hidden" name="brand" value={brand} />}
 
       <div className={adminStyles.detailLayout}>
         {/* ---- LEFT COLUMN ---- */}
@@ -258,51 +415,106 @@ export function ItemForm({
                   <span className={styles.fieldError}>{state.errors.sku}</span>
                 )}
               </div>
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="category">
-                  Category
-                </label>
-                <select
-                  id="category"
-                  name="category"
-                  value={category}
-                  onChange={handleCategoryChange}
-                  className={adminStyles.selectField}
-                  aria-label="Category"
-                >
-                  {PRODUCT_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-                {state?.errors?.category && (
-                  <span className={styles.fieldError}>
-                    {state.errors.category}
-                  </span>
-                )}
-              </div>
+              {!masterMode && (
+                <div>
+                  <label className={adminStyles.formLabel} htmlFor="category">
+                    Category
+                  </label>
+                  <select
+                    id="category"
+                    name="category"
+                    value={category}
+                    onChange={handleCategoryChange}
+                    className={adminStyles.selectField}
+                    aria-label="Category"
+                  >
+                    {PRODUCT_CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                  {state?.errors?.category && (
+                    <span className={styles.fieldError}>
+                      {state.errors.category}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
-            <div className={adminStyles.formField}>
-              <div>
-                <label className={adminStyles.formLabel} htmlFor="name">
-                  Product Name <span className={adminStyles.muted}>*</span>
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  className={adminStyles.inputField}
-                  value={productName}
-                  onChange={handleNameChange}
-                  placeholder="e.g. A4 Exercise Book 72pg"
-                  required
-                />
-                {state?.errors?.name && (
-                  <span className={styles.fieldError}>{state.errors.name}</span>
-                )}
+            {masterMode ? (
+              <div className={adminStyles.grid2equal}>
+                <div>
+                  <label className={adminStyles.formLabel} htmlFor="name">
+                    Product Name <span className={adminStyles.muted}>*</span>
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    className={adminStyles.inputField}
+                    value={productName}
+                    onChange={handleNameChange}
+                    placeholder="e.g. A4 Exercise Book 72pg"
+                    required
+                  />
+                  {state?.errors?.name && (
+                    <span className={styles.fieldError}>{state.errors.name}</span>
+                  )}
+                </div>
+
+                <div>
+                  <label className={adminStyles.formLabel} htmlFor="brand">
+                    Brand name <span className={adminStyles.muted}>*</span>
+                  </label>
+                  <AdminDropdown<string>
+                    id="brand"
+                    name="brand"
+                    value={brand}
+                    placeholder="— Select Brand —"
+                    searchable={true}
+                    searchPlaceholder="Search brand by name..."
+                    options={brandsList.map((b) => ({
+                      value: b.name,
+                      label: b.name,
+                    }))}
+                    onChange={handleBrandSelect}
+                    footerAction={{
+                      label: "+ Add New Brand...",
+                      value: "__ADD_NEW_BRAND__",
+                      onClick: () => {
+                        setNewBrandName("");
+                        setBrandModalError(null);
+                        setShowBrandModal(true);
+                      },
+                    }}
+                  />
+                  {state?.errors?.brand && (
+                    <span className={styles.fieldError}>{state.errors.brand}</span>
+                  )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className={adminStyles.formField}>
+                <div>
+                  <label className={adminStyles.formLabel} htmlFor="name">
+                    Product Name <span className={adminStyles.muted}>*</span>
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    className={adminStyles.inputField}
+                    value={productName}
+                    onChange={handleNameChange}
+                    placeholder="e.g. A4 Exercise Book 72pg"
+                    required
+                  />
+                  {state?.errors?.name && (
+                    <span className={styles.fieldError}>{state.errors.name}</span>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className={adminStyles.formField}>
               <div>
@@ -435,7 +647,7 @@ export function ItemForm({
               </div>
             </div>
 
-            {/* Icon Picker */}
+            {/* Icon Picker (for all stationery products and pack items) */}
             <div className={adminStyles.formField}>
               <div>
                 <span className={adminStyles.formLabel}>Item Icon Symbol</span>
@@ -474,8 +686,8 @@ export function ItemForm({
                   ))}
                 </div>
                 <span className={adminStyles.muted}>
-                  Optional item emblem displayed alongside the product on school
-                  pack checkouts.
+                  Stationery item emblem displayed alongside the product across
+                  catalogues, packs, and checkouts.
                 </span>
               </div>
             </div>
@@ -603,6 +815,139 @@ export function ItemForm({
           </div>
         </aside>
       </div>
+
+      {/* Brand Creation Modal */}
+      {showBrandModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="brand-modal-heading"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+            backgroundColor: "rgba(11, 17, 30, 0.85)",
+            backdropFilter: "blur(6px)",
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              maxWidth: "420px",
+              borderRadius: "12px",
+              backgroundColor: "var(--a-surface, #0f172a)",
+              border: "1px solid var(--a-border, rgba(30, 41, 59, 0.9))",
+              padding: "24px",
+              boxShadow:
+                "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)",
+              color: "var(--a-text, #ffffff)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: "16px",
+                borderBottom:
+                  "1px solid var(--a-border, rgba(30, 41, 59, 0.6))",
+                paddingBottom: "12px",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <Tag size={16} style={{ color: "#10b981" }} />
+                <h3
+                  id="brand-modal-heading"
+                  style={{
+                    margin: 0,
+                    fontSize: "15px",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                  }}
+                >
+                  Add New Brand
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBrandModal(false)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "#94a3b8",
+                  cursor: "pointer",
+                  padding: "4px",
+                }}
+                aria-label="Close dialog"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div style={{ marginBottom: "16px" }}>
+              <label className={adminStyles.formLabel} htmlFor="new-brand-name">
+                Brand Name <span className={adminStyles.muted}>*</span>
+              </label>
+              <input
+                id="new-brand-name"
+                className={adminStyles.inputField}
+                value={newBrandName}
+                onChange={(e) => {
+                  setNewBrandName(e.target.value);
+                  if (brandModalError) setBrandModalError(null);
+                }}
+                placeholder="e.g. Treeline, Artline, Dala..."
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void handleCreateBrand();
+                  }
+                }}
+              />
+              {brandModalError && (
+                <span
+                  className={styles.fieldError}
+                  style={{ marginTop: "6px", display: "block" }}
+                >
+                  {brandModalError}
+                </span>
+              )}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                paddingTop: "12px",
+                borderTop: "1px solid var(--a-border, rgba(30, 41, 59, 0.6))",
+              }}
+            >
+              <button
+                type="button"
+                className={adminStyles.secondaryButton}
+                onClick={() => setShowBrandModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={adminStyles.primaryButton}
+                onClick={handleCreateBrand}
+                disabled={isCreatingBrand}
+              >
+                {isCreatingBrand ? "Creating..." : "Create & Select Brand"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

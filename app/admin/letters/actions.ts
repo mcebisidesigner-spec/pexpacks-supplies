@@ -32,7 +32,7 @@ export async function saveLetterAction(
   input: SaveLetterInput,
 ): Promise<ActionResult<AdminLetterRecord>> {
   try {
-    await requireAdmin({ permission: "orders.view" });
+    await requireAdmin({ permission: "orders.edit" });
     const letter = await saveLetter(input);
     revalidatePath("/admin/letters");
     revalidatePath("/admin/documents");
@@ -51,7 +51,7 @@ export async function saveLetterAction(
  */
 export async function deleteLetterAction(id: string): Promise<ActionResult> {
   try {
-    await requireAdmin({ permission: "orders.view" });
+    await requireAdmin({ permission: "orders.edit" });
     await deleteLetter(id);
     revalidatePath("/admin/letters");
     revalidatePath("/admin/documents");
@@ -78,7 +78,7 @@ export async function sendLetterEmailAction({
   customMessage?: string;
 }): Promise<ActionResult> {
   try {
-    await requireAdmin({ permission: "orders.view" });
+    await requireAdmin({ permission: "orders.edit" });
     const letter = await getLetterById(letterId);
 
     if (!letter) {
@@ -391,7 +391,7 @@ export async function saveLetterTemplateAction(
   input: SaveLetterTemplateInput,
 ): Promise<ActionResult<AdminLetterTemplate>> {
   try {
-    await requireAdmin({ permission: "orders.view" });
+    await requireAdmin({ permission: "orders.edit" });
     const template = await saveLetterTemplate(input);
     revalidatePath("/admin/letters/new");
     return {
@@ -415,7 +415,7 @@ export async function deleteLetterTemplateAction(
   id: string,
 ): Promise<ActionResult> {
   try {
-    await requireAdmin({ permission: "orders.view" });
+    await requireAdmin({ permission: "orders.edit" });
     await deleteLetterTemplate(id);
     revalidatePath("/admin/letters/new");
     return { ok: true, message: "Template deleted successfully." };
@@ -427,4 +427,3 @@ export async function deleteLetterTemplateAction(
     };
   }
 }
-

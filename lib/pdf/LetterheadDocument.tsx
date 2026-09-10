@@ -265,10 +265,14 @@ export function LetterheadDocument(props: LetterheadProps) {
           <Text style={styles.signoffCompany}>Pexpacks Commercial Administration</Text>
         </View>
 
-        {/* Running Footer with Page Numbers */}
+        {/* Running Footer with Page Numbers (only when exceeding one page) */}
         <View fixed style={styles.footer}>
           <Text>Pexpacks Supplies (Pty) Ltd • Reg: 2026/000000/07 • support@pexpacks.co.za</Text>
-          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
+          <Text
+            render={({ pageNumber, totalPages }) =>
+              totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : ""
+            }
+          />
         </View>
       </Page>
     </Document>

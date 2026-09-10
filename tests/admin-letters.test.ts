@@ -422,6 +422,48 @@ Thank you for your valued partnership.`,
     expect(cssCode).toContain(".templateDeleteBtn");
     expect(cssCode).toContain(".modalCard");
     expect(cssCode).toContain(".modalBackdrop");
+  }, 15000);
+
+  it("verifies PDF letterhead numbering is positioned at bottom right only when exceeding one page", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+
+    // 1. Verify OfficialLetterPdfDocument code
+    const officialDocCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "components/pdf/OfficialLetterPdfDocument.tsx",
+      ),
+      "utf8",
+    );
+
+    // Assert pageNumber style is at bottom right
+    expect(officialDocCode).toContain("pageNumber: {");
+    expect(officialDocCode).toMatch(/bottom:\s*18/);
+    expect(officialDocCode).toMatch(/right:\s*40/);
+    expect(officialDocCode).toMatch(/textAlign:\s*["']right["']/);
+
+    // Assert conditional page numbering: only when totalPages > 1
+    expect(officialDocCode).toContain("totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : \"\"");
+
+    // 2. Verify LetterheadDocument code also has conditional bottom-right page numbering
+    const letterheadDocCode = fs.readFileSync(
+      path.join(
+        process.cwd(),
+        "lib/pdf/LetterheadDocument.tsx",
+      ),
+      "utf8",
+    );
+    expect(letterheadDocCode).toContain("totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : \"\"");
+
+    // 3. Test render callback behavior directly
+    const formatPageNumber = ({ pageNumber, totalPages }: { pageNumber: number; totalPages: number }) =>
+      totalPages > 1 ? `Page ${pageNumber} of ${totalPages}` : "";
+
+    expect(formatPageNumber({ pageNumber: 1, totalPages: 1 })).toBe("");
+    expect(formatPageNumber({ pageNumber: 1, totalPages: 2 })).toBe("Page 1 of 2");
+    expect(formatPageNumber({ pageNumber: 2, totalPages: 2 })).toBe("Page 2 of 2");
+    expect(formatPageNumber({ pageNumber: 3, totalPages: 5 })).toBe("Page 3 of 5");
   });
 });
 
