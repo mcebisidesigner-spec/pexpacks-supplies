@@ -5,7 +5,7 @@ import {
   type LegalDocumentConfig,
 } from "@/components/policy/LegalDocumentPage";
 
-const careEmail = "helpme@pexpacks.co.za";
+const careEmail = "care@pexpacks.co.za";
 const careEmailHref = `mailto:${careEmail}`;
 const canonicalUrl = "https://pexpacks.co.za/email-disclaimer";
 
@@ -139,8 +139,7 @@ const config: LegalDocumentConfig = {
               If you receive personal information belonging to another person,
               such as order manifests, learner data, or supplier details, in
               error, you must not process, share, or store that data. Report the
-              disclosure to <a href={careEmailHref}>{careEmail}</a>{" "}
-              immediately.
+              disclosure to <a href={careEmailHref}>{careEmail}</a> immediately.
             </li>
           </ul>
         </>
@@ -150,8 +149,7 @@ const config: LegalDocumentConfig = {
       id: "authority",
       eyebrow: "Section 4",
       title: "Contracts & Authority",
-      summary:
-        "Limits on contractual or financial commitments made by email.",
+      summary: "Limits on contractual or financial commitments made by email.",
       content: (
         <p>
           No employee, contractor, or agent of Pexpacks Supplies is authorised
@@ -187,8 +185,7 @@ const config: LegalDocumentConfig = {
       id: "security",
       eyebrow: "Section 6",
       title: "Security & Malware Notice",
-      summary:
-        "Security responsibilities for recipients of Pexpacks email.",
+      summary: "Security responsibilities for recipients of Pexpacks email.",
       content: (
         <p>
           While we use reasonable security measures to scan outgoing
@@ -204,8 +201,7 @@ const config: LegalDocumentConfig = {
       id: "company-details",
       eyebrow: "Section 7",
       title: "Corporate & Customer Care Details",
-      summary:
-        "Official business and inquiry details for Pexpacks Supplies.",
+      summary: "Official business and inquiry details for Pexpacks Supplies.",
       content: (
         <ul>
           <li>

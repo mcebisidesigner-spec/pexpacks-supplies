@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import {
-  generalEmail,
   hasWhatsAppNumber,
   orderWhatsAppHref,
   phoneNumber,
@@ -51,6 +50,8 @@ const socialLinks = [
       ]
     : []),
 ] as const;
+
+const FOOTER_EMAIL = "helpme@pexpacks.co.za";
 
 const policyGroups = [
   {
@@ -123,7 +124,7 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
 export function Footer({ company }: FooterContent) {
   const currentYear = new Date().getFullYear();
   const siteName = company?.site_name || "Pexpacks";
-  const email = generalEmail;
+  const email = FOOTER_EMAIL;
   const emailHref = `mailto:${email}`;
   const phone = company?.support_phone || phoneNumber;
   const phoneHrefLocal = phone ? telHref(phone) : "#";
@@ -133,7 +134,11 @@ export function Footer({ company }: FooterContent) {
       <div className={styles.footerInner}>
         <div className={styles.topSection}>
           <div className={styles.brandBlock}>
-            <Link href="/" className={styles.logoLink} aria-label={`${siteName} home`}>
+            <Link
+              href="/"
+              className={styles.logoLink}
+              aria-label={`${siteName} home`}
+            >
               <Logo variant="white" className={styles.logoImage} />
             </Link>
             <FooterHappyPayLink className={styles.happyPayMobile} />
@@ -143,7 +148,10 @@ export function Footer({ company }: FooterContent) {
             <FooterNav />
 
             <div className={styles.infoRow}>
-              <address className={styles.contactDetails} aria-label={`${siteName} contact details`}>
+              <address
+                className={styles.contactDetails}
+                aria-label={`${siteName} contact details`}
+              >
                 {phone ? (
                   <>
                     <a href={phoneHrefLocal} className={styles.contactLink}>
@@ -159,37 +167,44 @@ export function Footer({ company }: FooterContent) {
                 </a>
               </address>
 
-              <details className={styles.policyDisclosure} suppressHydrationWarning>
-              <summary className={styles.policySummary}>
-                <span>{siteName} policies &amp; information:</span>
-                <span className={styles.policyChevron} aria-hidden="true" />
-              </summary>
-              <div className={styles.policyPanel}>
-                {policyGroups.map((group) => (
-                  <section className={styles.policyGroup} key={group.title}>
-                    <h2>{group.title}</h2>
-                    <ul>
-                      {group.links.map((link) => (
-                        <li key={link.label}>
-                          <Link href={link.href} className={styles.policyLink}>
-                            {link.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ))}
-              </div>
-            </details>
+              <details
+                className={styles.policyDisclosure}
+                suppressHydrationWarning
+              >
+                <summary className={styles.policySummary}>
+                  <span>{siteName} policies &amp; information:</span>
+                  <span className={styles.policyChevron} aria-hidden="true" />
+                </summary>
+                <div className={styles.policyPanel}>
+                  {policyGroups.map((group) => (
+                    <section className={styles.policyGroup} key={group.title}>
+                      <h2>{group.title}</h2>
+                      <ul>
+                        {group.links.map((link) => (
+                          <li key={link.label}>
+                            <Link
+                              href={link.href}
+                              className={styles.policyLink}
+                            >
+                              {link.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
+                </div>
+              </details>
+            </div>
           </div>
         </div>
-      </div>
 
         <hr className={styles.divider} />
 
         <div className={styles.bottomSection}>
           <p className={styles.copyright}>
-            &copy; {currentYear} Pexpacks (Pty) Ltd. All rights reserved. Design:{"  "}
+            &copy; {currentYear} Pexpacks (Pty) Ltd. All rights reserved.
+            Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"
