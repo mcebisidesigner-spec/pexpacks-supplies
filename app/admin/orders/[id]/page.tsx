@@ -4,6 +4,10 @@ import { requireAdmin, hasPermission } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
 import { listOrderItems } from "@/lib/admin/operations";
 import {
+  normalisePexcoverPaperStyle,
+  pexcoverPaperStyleLabel,
+} from "@/lib/pricing/pexcover-paper-style";
+import {
   orderStatusLabel,
   PAYMENT_GATEWAY_LABELS,
 } from "@/lib/admin/order-constants";
@@ -49,6 +53,7 @@ interface PackEntry {
   total_price?: number | null;
   wants_pexcover?: boolean | null;
   pexcover_price?: number | null;
+  pexcover_paper_style?: string | null;
   base_pack_price?: number | null;
 }
 
@@ -117,7 +122,15 @@ function PackContentsCard({
             ) : null}
             {entry.wants_pexcover ? (
               <div className={styles.pexcoverTag}>
-                + Pexcover protection requested
+                <span>Pexcover requested</span>
+                <span>
+                  {pexcoverPaperStyleLabel(
+                    normalisePexcoverPaperStyle(entry.pexcover_paper_style),
+                  )}
+                  {entry.pexcover_price != null
+                    ? ` - ${money(entry.pexcover_price)}`
+                    : null}
+                </span>
               </div>
             ) : null}
             <ItemsList items={entry.items} />

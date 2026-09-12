@@ -202,3 +202,12 @@
   margin-left: 6px;
   font-weight: 600;
 }
+
+.pexcoverTag {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--db-brand);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}

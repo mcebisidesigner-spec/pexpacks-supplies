@@ -194,3 +194,16 @@ describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
     );
   });
 });
+describe("Pexcover fulfilment visibility", () => {
+  it("shows the captured paper style and charge on the protected order page", () => {
+    const orderPage = readFileSync(
+      resolve(process.cwd(), "app/admin/orders/[id]/page.tsx"),
+      "utf8",
+    );
+
+    expect(orderPage).toContain("pexcover_paper_style");
+    expect(orderPage).toContain("normalisePexcoverPaperStyle");
+    expect(orderPage).toContain("pexcoverPaperStyleLabel");
+    expect(orderPage).toContain("Pexcover requested");
+  });
+});
