@@ -1877,6 +1877,7 @@ export async function listOrderItems(orderIdOrRef: string) {
     pricing_version: string | null;
     school_name_snapshot: string | null;
     grade_snapshot: string | null;
+    requires_pexcover: boolean;
     created_at: string;
   }[];
 }

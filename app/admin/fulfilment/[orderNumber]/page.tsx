@@ -2,10 +2,7 @@ import { ArrowLeft, Barcode, Save } from "lucide-react";
 import { notFound } from "next/navigation";
 import { hasPermission, requireAdmin } from "@/lib/admin/rbac";
 import { getOrder } from "@/lib/admin/orders";
-import {
-  getFulfilmentWorkflow,
-  listOrderItems,
-} from "@/lib/admin/operations";
+import { getFulfilmentWorkflow, listOrderItems } from "@/lib/admin/operations";
 import {
   normalisePexcoverPaperStyle,
   pexcoverPaperStyleLabel,
@@ -31,7 +28,9 @@ interface PackEntry {
 }
 
 function money(value: number | null | undefined): string {
-  return value == null || !Number.isFinite(value) ? "-" : `R ${value.toFixed(2)}`;
+  return value == null || !Number.isFinite(value)
+    ? "-"
+    : `R ${value.toFixed(2)}`;
 }
 
 const STEPS = [
@@ -67,10 +66,15 @@ function canAdvanceStage(
   if (stage === "delivered") return fulfilmentStatus === "dispatched";
   return false;
 }
-export default async function FulfilmentDetailPage({ params }: FulfilmentDetailPageProps) {
+export default async function FulfilmentDetailPage({
+  params,
+}: FulfilmentDetailPageProps) {
   const session = await requireAdmin({ permission: "fulfilment.view" });
   const { orderNumber } = await params;
-  const [order, items] = await Promise.all([getOrder(orderNumber), listOrderItems(orderNumber)]);
+  const [order, items] = await Promise.all([
+    getOrder(orderNumber),
+    listOrderItems(orderNumber),
+  ]);
 
   if (!order) {
     notFound();
@@ -83,7 +87,8 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
   const canManageFulfilment = hasPermission(session, "fulfilment.manage");
   const packedCount = items.filter((item) => item.product_id).length;
   const totalCount = items.length;
-  const packedPercent = totalCount > 0 ? Math.round((packedCount / totalCount) * 100) : 0;
+  const packedPercent =
+    totalCount > 0 ? Math.round((packedCount / totalCount) * 100) : 0;
   const metadata = (order.metadata ?? {}) as { packs?: unknown };
   const packEntries = Array.isArray(metadata.packs)
     ? (metadata.packs as PackEntry[])
@@ -97,8 +102,16 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
         subtitle={`School: ${order.school_name || "-"} - ${order.grade || "-"} - Customer: ${order.buyer_name || "-"}`}
         actions={
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <StatusBadge status={order.status || "pending"} tone="blue" showDot />
-            <AdminButton href="/admin/fulfilment" variant="secondary" icon={<ArrowLeft size={14} />}>
+            <StatusBadge
+              status={order.status || "pending"}
+              tone="blue"
+              showDot
+            />
+            <AdminButton
+              href="/admin/fulfilment"
+              variant="secondary"
+              icon={<ArrowLeft size={14} />}
+            >
               Back to Packing Queue
             </AdminButton>
           </div>
@@ -106,12 +119,17 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
       />
 
       {pexcoverPacks.length > 0 ? (
-        <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18}`}>
+        <div
+          className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18}`}
+        >
           <div className={`${adminStyles.headerRow} ${adminStyles.mb16}`}>
             <div>
-              <h2 className={styles.sectionHeaderTitle}>Pexcover covering instructions</h2>
+              <h2 className={styles.sectionHeaderTitle}>
+                Pexcover covering instructions
+              </h2>
               <p className={styles.sectionSubtitle}>
-                Apply the selected covering style only to these paid pack services.
+                Apply the selected covering style only to these paid pack
+                services.
               </p>
             </div>
             <StatusBadge
@@ -153,7 +171,9 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
         </div>
       ) : null}
       <div className={`${adminStyles.tableCard} ${adminStyles.pCard}`}>
-        <div className={`${styles.text11} ${adminStyles.fw700} ${adminStyles.uppercase} ${adminStyles.lsWide} ${adminStyles.cSubtle} ${adminStyles.mb12}`}>
+        <div
+          className={`${styles.text11} ${adminStyles.fw700} ${adminStyles.uppercase} ${adminStyles.lsWide} ${adminStyles.cSubtle} ${adminStyles.mb12}`}
+        >
           Packing Lifecycle Stepper
         </div>
         <div className={adminStyles.grid6}>
@@ -184,11 +204,18 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
         </div>
       </div>
 
-      <div className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18} ${adminStyles.mt18}`}>
+      <div
+        className={`${adminStyles.tableCard} ${adminStyles.tableCardPadded18} ${adminStyles.mt18}`}
+      >
         <div className={`${adminStyles.headerRow} ${adminStyles.mb16}`}>
           <div>
-            <h2 className={styles.sectionHeaderTitle}>Item Pack-Out &amp; Barcode Verification</h2>
-            <p className={styles.sectionSubtitle}>Verify normalized order items against the paid commercial snapshot.</p>
+            <h2 className={styles.sectionHeaderTitle}>
+              Item Pack-Out &amp; Barcode Verification
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Verify normalized order items against the paid commercial
+              snapshot.
+            </p>
           </div>
           <StatusBadge
             status="Snapshot"
@@ -213,31 +240,55 @@ export default async function FulfilmentDetailPage({ params }: FulfilmentDetailP
               {items.map((row) => (
                 <tr key={row.id}>
                   <td>
-                    <input type="checkbox" defaultChecked={Boolean(row.product_id)} className={adminStyles.checkboxAccented} />
+                    <input
+                      type="checkbox"
+                      defaultChecked={Boolean(row.product_id)}
+                      className={adminStyles.checkboxAccented}
+                    />
                   </td>
                   <td>
-                    <div className={adminStyles.fw600}>{row.product_name_snapshot}</div>
-                    <div className={adminStyles.cMuted}>{row.school_name_snapshot || order.school_name} {row.grade_snapshot || order.grade}</div>
+                    <div className={adminStyles.fw600}>
+                      {row.product_name_snapshot}
+                    </div>
+                    {row.requires_pexcover ? (
+                      <div className={adminStyles.cMuted}>
+                        Pexcover covering required
+                      </div>
+                    ) : null}
+                    <div className={adminStyles.cMuted}>
+                      {row.school_name_snapshot || order.school_name}{" "}
+                      {row.grade_snapshot || order.grade}
+                    </div>
                   </td>
                   <td>
-                    <strong className={adminStyles.fw700}>{row.quantity}</strong>
+                    <strong className={adminStyles.fw700}>
+                      {row.quantity}
+                    </strong>
                   </td>
                   <td className={adminStyles.cMuted}>{row.sku_snapshot}</td>
                   <td>
-                    {row.product_id ? <StatusBadge status="Matched" tone="emerald" /> : <StatusBadge status="Unmatched" tone="amber" />}
+                    {row.product_id ? (
+                      <StatusBadge status="Matched" tone="emerald" />
+                    ) : (
+                      <StatusBadge status="Unmatched" tone="amber" />
+                    )}
                   </td>
                 </tr>
               ))}
               {items.length === 0 && (
                 <tr>
-                  <td colSpan={5} className={adminStyles.cMuted}>No normalized order items found for this order.</td>
+                  <td colSpan={5} className={adminStyles.cMuted}>
+                    No normalized order items found for this order.
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
 
-        <div className={`${adminStyles.flex} ${adminStyles.justifyBetween} ${adminStyles.itemsCenter} ${adminStyles.mt18} ${adminStyles.pt14} ${adminStyles.borderTopDark}`}>
+        <div
+          className={`${adminStyles.flex} ${adminStyles.justifyBetween} ${adminStyles.itemsCenter} ${adminStyles.mt18} ${adminStyles.pt14} ${adminStyles.borderTopDark}`}
+        >
           <button className={styles.secondaryBtn} type="button">
             <Barcode size={14} /> Scan Next Item
           </button>
