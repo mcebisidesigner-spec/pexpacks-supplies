@@ -6,6 +6,7 @@ import {
   getOrderByIdempotencyKey,
 } from "@/lib/orders";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
+import { normalisePexcoverPaperStyle } from "@/lib/pricing/pexcover-paper-style";
 import { getGradeBySlug } from "@/lib/school-utils";
 import {
   isSameOriginRequest,
@@ -131,6 +132,7 @@ export async function POST(request: NextRequest) {
           : [],
         totalPrice: typeof p.totalPrice === "number" ? p.totalPrice : 0,
         wantsPexcover: p.wantsPexcover === true,
+        pexcoverPaperStyle: normalisePexcoverPaperStyle(p.pexcoverPaperStyle),
         pexcoverPrice:
           typeof p.pexcoverPrice === "number" ? p.pexcoverPrice : 0,
         basePackPrice:

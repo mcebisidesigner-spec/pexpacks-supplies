@@ -38,6 +38,11 @@ describe("admin inactivity prompt", () => {
     expect(sessionProvider).toContain("/api/admin/session/heartbeat");
     expect(sessionProvider).toContain("RUNTIME_SESSION_REQUEST");
     expect(sessionProvider).toContain("RUNTIME_SESSION_ACTIVE");
+    expect(sessionProvider).toContain("RUNTIME_LOGIN_GRACE_MS");
+    expect(sessionProvider).toContain("canReuseRuntimeMarker");
+    expect(sessionProvider).not.toContain('ADMIN_RUNTIME_SESSION_KEY, "active"');
+    expect(sessionProvider).toContain('type === "reload"');
+    expect(sessionProvider).not.toContain('type === "back_forward"');
     expect(proxy).toContain("verifyAdminSessionValue");
     expect(proxy).toContain("ADMIN_SESSION_COOKIE");
   });

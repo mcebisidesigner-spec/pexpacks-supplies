@@ -2,6 +2,10 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import { createSupabaseAdminClient } from "./supabase/admin";
 import { DASHBOARD_STATS_TAG, DASHBOARD_SUMMARY_TAG } from "./admin/dashboard";
+import {
+  normalisePexcoverPaperStyle,
+  type PexcoverPaperStyle,
+} from "./pricing/pexcover-paper-style";
 
 function generateOrderReference(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
@@ -355,7 +359,12 @@ export async function createMultiPackOrder(input: {
     gradeSlug: string;
     packName: string;
     packMode: string;
-    items: { id?: string; name: string; quantity: number; unitPrice?: number }[];
+    items: {
+      id?: string;
+      name: string;
+      quantity: number;
+      unitPrice?: number;
+    }[];
     totalPrice: number;
     wantsPexcover?: boolean;
     pexcoverPrice?: number;
@@ -417,6 +426,9 @@ export async function createMultiPackOrder(input: {
           p.totalPrice + (p.wantsPexcover ? p.pexcoverPrice || 0 : 0),
         wants_pexcover: p.wantsPexcover || false,
         pexcover_price: p.wantsPexcover ? p.pexcoverPrice || 0 : 0,
+        pexcover_paper_style: p.wantsPexcover
+          ? normalisePexcoverPaperStyle(p.pexcoverPaperStyle)
+          : null,
         base_pack_price: p.basePackPrice || p.totalPrice,
       })),
       pack_count: input.packs.length,

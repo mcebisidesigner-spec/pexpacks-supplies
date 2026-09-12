@@ -85,4 +85,51 @@ describe("least-privilege database audit controls", () => {
     expect(migration).toContain("REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC");
     expect(migration).toContain("GRANT EXECUTE ON FUNCTIONS TO service_role");
   });
+  it("removes explicit future function execution grants for anon and authenticated roles", () => {
+    const migration = read(
+      "supabase/migrations/00110_revoke_future_function_execute_grants.sql",
+    );
+    expect(migration).toContain("REVOKE ALL ON FUNCTIONS FROM PUBLIC, anon, authenticated");
+    expect(migration).toContain("GRANT EXECUTE ON FUNCTIONS TO service_role");
+  });
+  it("captures the public testimonial school name and retires the legacy admin pack RPC", () => {
+    const migration = read(
+      "supabase/migrations/00111_capture_cms_and_bounded_admin_rpc.sql",
+    );
+    expect(migration).toContain("ADD COLUMN IF NOT EXISTS school_name text");
+    expect(migration).toContain("school_name text");
+    expect(migration).toContain("DROP FUNCTION IF EXISTS public.get_admin_pack_school_groups");
+    expect(migration).toContain("TO service_role");
+  });
+  it("retires the redundant row-level dashboard summary trigger", () => {
+    const migration = read(
+      "supabase/migrations/00112_retire_redundant_dashboard_summary_trigger.sql",
+    );
+    expect(migration).toContain("DROP TRIGGER IF EXISTS trg_maintain_order_summary");
+    expect(migration).toContain("DROP FUNCTION IF EXISTS public.update_dashboard_summary_on_order()");
+  });
+  it("enforces a nonblank slug for every public school route", () => {
+    const migration = read(
+      "supabase/migrations/00113_enforce_public_school_slug_integrity.sql",
+    );
+    expect(migration).toContain("ALTER COLUMN slug SET NOT NULL");
+    expect(migration).toContain("CHECK (btrim(slug) <> '')");
+  });
+});
+
+
+describe("payment and quotation contract hardening", () => {
+  it("keeps completed payment fields mandatory and preserves money precision", () => {
+    const migration = read(
+      "supabase/migrations/00114_normalize_payment_and_quotation_contract.sql",
+    );
+
+    expect(migration).toContain("Cannot enforce payments integrity");
+    expect(migration).toContain("ALTER COLUMN amount SET NOT NULL");
+    expect(migration).toContain("ALTER COLUMN currency SET NOT NULL");
+    expect(migration).toContain("ALTER COLUMN payment_gateway SET NOT NULL");
+    expect(migration).toContain("ALTER COLUMN status SET NOT NULL");
+    expect(migration).toContain("numeric(12,2)");
+    expect(migration).toContain("Cannot narrow quotation monetary precision");
+  });
 });

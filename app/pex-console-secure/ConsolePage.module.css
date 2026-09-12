@@ -341,20 +341,22 @@
   width: 100%;
   height: var(--db-control-height);
   margin-top: 4px;
-  background: linear-gradient(135deg, var(--db-brand) 0%, var(--db-brand-strong) 100%);
-  border: none;
+  background: var(--pex-coral, #ff6f59);
+  border: 1px solid rgba(255, 111, 89, 0.4);
   border-radius: var(--db-radius-control);
   color: #ffffff;
   font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
   transition: all var(--db-transition);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 14px rgba(255, 111, 89, 0.35);
 }
 
 .modalActionBtn:hover {
-  background: linear-gradient(135deg, #18d396 0%, #047857 100%);
-  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
+  background: var(--pex-coral-hover, #e85e4b);
+  border-color: rgba(255, 111, 89, 0.6);
+  box-shadow: 0 6px 18px rgba(255, 111, 89, 0.5);
+  transform: translateY(-1px);
 }
 
 @keyframes fadeIn {

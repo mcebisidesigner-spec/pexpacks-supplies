@@ -4,8 +4,16 @@ import {
   isSameOriginRequest,
   rateLimitRequest,
 } from "@/lib/security/requestGuards";
-import { handleTrayCheckout, TrayCheckoutError, trayErrorResponse } from "@/lib/checkout/trayCheckout";
-import { upsertCustomerAndLearner, linkOrderToCustomerAndLearner } from "@/lib/admin/operations";
+import {
+  handleTrayCheckout,
+  TrayCheckoutError,
+  trayErrorResponse,
+} from "@/lib/checkout/trayCheckout";
+import {
+  upsertCustomerAndLearner,
+  linkOrderToCustomerAndLearner,
+} from "@/lib/admin/operations";
+import { normalisePexcoverPaperStyle } from "@/lib/pricing/pexcover-paper-style";
 
 export const runtime = "nodejs";
 
@@ -13,7 +21,7 @@ export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json(
       { success: false, error: "Invalid request origin." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -25,8 +33,12 @@ export async function POST(request: NextRequest) {
 
   if (!limit.allowed) {
     return NextResponse.json(
-      { success: false, error: "Too many checkout attempts. Please wait a few minutes and try again." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+      {
+        success: false,
+        error:
+          "Too many checkout attempts. Please wait a few minutes and try again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 
@@ -35,9 +47,7 @@ export async function POST(request: NextRequest) {
   const privateKey = process.env.OZOW_PRIVATE_KEY ?? "";
   const apiKey = process.env.OZOW_API_KEY ?? "";
   const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "";
+    process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "";
   const isTest = process.env.OZOW_IS_TEST === "true";
 
   const missingKeys: string[] = [];
@@ -51,7 +61,7 @@ export async function POST(request: NextRequest) {
     console.error(`[ozow/checkout] ${errorMsg}`);
     return NextResponse.json(
       { success: false, error: errorMsg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -63,7 +73,7 @@ export async function POST(request: NextRequest) {
     } catch {
       return NextResponse.json(
         { success: false, error: "Invalid JSON body." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -90,17 +100,26 @@ export async function POST(request: NextRequest) {
 
     let createdOrderId: string | null = null;
     const buyerName = typeof body.buyerName === "string" ? body.buyerName : "";
-    const buyerPhone = typeof body.buyerPhone === "string" ? body.buyerPhone : "";
+    const buyerPhone =
+      typeof body.buyerPhone === "string" ? body.buyerPhone : "";
 
     // Convert single-pack checkout to tray format so orders are always created in DB
     if (packsRaw.length === 0 && !isTrayOrder) {
-      const schoolSlug = typeof body.schoolSlug === "string" ? body.schoolSlug : "";
-      const schoolName = typeof body.schoolName === "string" ? body.schoolName : "";
+      const schoolSlug =
+        typeof body.schoolSlug === "string" ? body.schoolSlug : "";
+      const schoolName =
+        typeof body.schoolName === "string" ? body.schoolName : "";
       const grade = typeof body.grade === "string" ? body.grade : "";
-      const gradeSlug = typeof body.gradeSlug === "string" ? body.gradeSlug : "";
-      const packType = typeof body.packType === "string" ? body.packType : "full";
-      const learnerName = typeof body.learnerName === "string" ? body.learnerName : "";
-      const deliveryMethod = typeof body.deliveryMethod === "string" ? body.deliveryMethod : "school_collection";
+      const gradeSlug =
+        typeof body.gradeSlug === "string" ? body.gradeSlug : "";
+      const packType =
+        typeof body.packType === "string" ? body.packType : "full";
+      const learnerName =
+        typeof body.learnerName === "string" ? body.learnerName : "";
+      const deliveryMethod =
+        typeof body.deliveryMethod === "string"
+          ? body.deliveryMethod
+          : "school_collection";
       const notes = typeof body.notes === "string" ? body.notes : undefined;
       const items = Array.isArray(body.items) ? body.items : [];
 
@@ -119,12 +138,17 @@ export async function POST(request: NextRequest) {
         })),
         totalPrice: rawAmount,
         wantsPexcover: body.pexcoverSelected === true,
-        pexcoverPrice: typeof body.pexcoverAmount === "number" ? body.pexcoverAmount : 0,
+        pexcoverPaperStyle: normalisePexcoverPaperStyle(
+          body.pexcoverPaperStyle,
+        ),
+        pexcoverPrice:
+          typeof body.pexcoverAmount === "number" ? body.pexcoverAmount : 0,
         basePackPrice: rawAmount,
       };
 
       const idempotencyKey =
-        typeof body.idempotencyKey === "string" && body.idempotencyKey.length > 0
+        typeof body.idempotencyKey === "string" &&
+        body.idempotencyKey.length > 0
           ? body.idempotencyKey
           : typeof body.orderId === "string"
             ? body.orderId
@@ -157,11 +181,18 @@ export async function POST(request: NextRequest) {
 
     // Tray/Multi-pack path
     if (packsRaw.length > 0 || isTrayOrder) {
-      const deliveryMethod = typeof body.deliveryMethod === "string" ? body.deliveryMethod : "school_collection";
-      const primarySchoolSlug = typeof body.primarySchoolSlug === "string" ? body.primarySchoolSlug : undefined;
+      const deliveryMethod =
+        typeof body.deliveryMethod === "string"
+          ? body.deliveryMethod
+          : "school_collection";
+      const primarySchoolSlug =
+        typeof body.primarySchoolSlug === "string"
+          ? body.primarySchoolSlug
+          : undefined;
       const notes = typeof body.notes === "string" ? body.notes : undefined;
       const idempotencyKey =
-        typeof body.idempotencyKey === "string" && body.idempotencyKey.length > 0
+        typeof body.idempotencyKey === "string" &&
+        body.idempotencyKey.length > 0
           ? body.idempotencyKey
           : undefined;
 
@@ -178,13 +209,17 @@ export async function POST(request: NextRequest) {
               id: typeof i.id === "string" ? i.id : undefined,
               name: typeof i.name === "string" ? i.name : "",
               quantity: typeof i.quantity === "number" ? i.quantity : 0,
-              unitPrice: typeof i.unitPrice === "number" ? i.unitPrice : undefined,
+              unitPrice:
+                typeof i.unitPrice === "number" ? i.unitPrice : undefined,
             }))
           : [],
         totalPrice: typeof p.totalPrice === "number" ? p.totalPrice : 0,
         wantsPexcover: p.wantsPexcover === true,
-        pexcoverPrice: typeof p.pexcoverPrice === "number" ? p.pexcoverPrice : 0,
-        basePackPrice: typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
+        pexcoverPaperStyle: normalisePexcoverPaperStyle(p.pexcoverPaperStyle),
+        pexcoverPrice:
+          typeof p.pexcoverPrice === "number" ? p.pexcoverPrice : 0,
+        basePackPrice:
+          typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
       }));
 
       const order = await handleTrayCheckout({
@@ -216,17 +251,22 @@ export async function POST(request: NextRequest) {
     if (createdOrderId && buyerName && customerEmail) {
       try {
         const firstPack = packsRaw[0] || {};
-        const learnerName = typeof firstPack.learnerName === "string" ? firstPack.learnerName : buyerName;
-        const schoolSlug = typeof body.schoolSlug === "string"
-          ? body.schoolSlug
-          : typeof firstPack.schoolSlug === "string"
-            ? firstPack.schoolSlug
-            : "";
-        const grade = typeof body.grade === "string"
-          ? body.grade
-          : typeof firstPack.grade === "string"
-            ? firstPack.grade
-            : "";
+        const learnerName =
+          typeof firstPack.learnerName === "string"
+            ? firstPack.learnerName
+            : buyerName;
+        const schoolSlug =
+          typeof body.schoolSlug === "string"
+            ? body.schoolSlug
+            : typeof firstPack.schoolSlug === "string"
+              ? firstPack.schoolSlug
+              : "";
+        const grade =
+          typeof body.grade === "string"
+            ? body.grade
+            : typeof firstPack.grade === "string"
+              ? firstPack.grade
+              : "";
 
         const { customerId, learnerId } = await upsertCustomerAndLearner({
           buyerName,
@@ -236,7 +276,11 @@ export async function POST(request: NextRequest) {
           schoolSlug,
           grade,
         });
-        await linkOrderToCustomerAndLearner(createdOrderId, customerId, learnerId);
+        await linkOrderToCustomerAndLearner(
+          createdOrderId,
+          customerId,
+          learnerId,
+        );
       } catch (linkErr) {
         console.warn("[ozow/checkout] customer/learner link warning:", linkErr);
       }
@@ -245,14 +289,14 @@ export async function POST(request: NextRequest) {
     if (!transactionReference) {
       return NextResponse.json(
         { success: false, error: "Order reference or orderId is required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!rawAmount || rawAmount <= 0) {
       return NextResponse.json(
         { success: false, error: "Valid amount is required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -285,7 +329,9 @@ export async function POST(request: NextRequest) {
       .join("")
       .toLowerCase();
 
-    const hashCheck = createHash("sha512").update(rawHashString, "utf8").digest("hex");
+    const hashCheck = createHash("sha512")
+      .update(rawHashString, "utf8")
+      .digest("hex");
 
     const payload: Record<string, string | boolean> = {
       siteCode,
@@ -311,7 +357,7 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
         ApiKey: apiKey,
       },
       body: JSON.stringify(payload),
@@ -335,7 +381,11 @@ export async function POST(request: NextRequest) {
             : "";
 
     if (!ozowRes.ok || !paymentUrl) {
-      console.error("Ozow Gateway API Reject:", ozowRes.status, ozowData || rawBody);
+      console.error(
+        "Ozow Gateway API Reject:",
+        ozowRes.status,
+        ozowData || rawBody,
+      );
 
       const errorMessage =
         (typeof ozowData?.errorMessage === "string" && ozowData.errorMessage) ||
@@ -350,7 +400,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(
         { success: false, error: String(errorMessage) },
-        { status: ozowRes.status || 502 }
+        { status: ozowRes.status || 502 },
       );
     }
 
@@ -366,15 +416,18 @@ export async function POST(request: NextRequest) {
 
     console.error(
       "[ozow/checkout] Unexpected error:",
-      error instanceof Error ? (error.stack || error.message) : error
+      error instanceof Error ? error.stack || error.message : error,
     );
 
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Failed to initialize Ozow payment.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to initialize Ozow payment.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
+import type { PexcoverPaperStyle } from "@/lib/pricing/pexcover-paper-style";
 
 export type TrayPackLineItem = {
   id: string;
@@ -37,6 +38,7 @@ export type TrayPackItem = {
   subtotal: number;
   totalPrice: number;
   wantsPexcover?: boolean;
+  pexcoverPaperStyle?: PexcoverPaperStyle;
   sourcePath?: string;
   createdAt: string;
   updatedAt: string;
@@ -51,7 +53,12 @@ type PackTrayState = {
 type PackTrayActions = {
   addPack: (pack: TrayPackItem) => void;
   updatePack: (id: string, changes: Partial<TrayPackItem>) => void;
-  updatePackDetails: (packId: string, learnerName: string, wantsPexcover: boolean) => void;
+  updatePackDetails: (
+    packId: string,
+    learnerName: string,
+    wantsPexcover: boolean,
+    pexcoverPaperStyle?: PexcoverPaperStyle,
+  ) => void;
   removePack: (id: string) => void;
   clearPacks: () => void;
   retainPublicSchoolPacks: (visibleSchoolSlugs: string[]) => void;
@@ -81,12 +88,19 @@ export const usePackTrayStore = create<PackTrayState & PackTrayActions>()(
       updatePack: (id, changes) => {
         set((state) => ({
           packs: state.packs.map((p) =>
-            p.id === id ? { ...p, ...changes, updatedAt: new Date().toISOString() } : p
+            p.id === id
+              ? { ...p, ...changes, updatedAt: new Date().toISOString() }
+              : p,
           ),
         }));
       },
 
-      updatePackDetails: (packId, learnerName, wantsPexcover) => {
+      updatePackDetails: (
+        packId,
+        learnerName,
+        wantsPexcover,
+        pexcoverPaperStyle,
+      ) => {
         set((state) => ({
           packs: state.packs.map((pack) =>
             pack.id === packId
@@ -94,9 +108,14 @@ export const usePackTrayStore = create<PackTrayState & PackTrayActions>()(
                   ...pack,
                   learnerName,
                   wantsPexcover,
+                  ...(pexcoverPaperStyle
+                    ? { pexcoverPaperStyle }
+                    : wantsPexcover && !pack.pexcoverPaperStyle
+                      ? { pexcoverPaperStyle: "STANDARD_KRAFT" }
+                      : {}),
                   updatedAt: new Date().toISOString(),
                 }
-              : pack
+              : pack,
           ),
         }));
       },
@@ -159,6 +178,6 @@ export const usePackTrayStore = create<PackTrayState & PackTrayActions>()(
       partialize: (state) => ({
         packs: state.packs,
       }),
-    }
-  )
+    },
+  ),
 );

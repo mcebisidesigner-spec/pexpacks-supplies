@@ -20,6 +20,7 @@ const ACTIVITY_THROTTLE_MS = 3_000;
 const HEARTBEAT_THROTTLE_MS = 60_000;
 const ADMIN_RUNTIME_SESSION_KEY = "px_admin_runtime_session";
 const RUNTIME_HANDSHAKE_MS = 750;
+const RUNTIME_LOGIN_GRACE_MS = 30_000;
 
 interface SessionSecurityContextType {
   isPrivacyShieldActive: boolean;
@@ -34,6 +35,42 @@ const SessionSecurityContext = createContext<SessionSecurityContextType>({
 export function useSessionSecurity() {
   return useContext(SessionSecurityContext);
 }
+
+function navigationType() {
+  const entry = window.performance.getEntriesByType("navigation")[0] as
+    | PerformanceNavigationTiming
+    | undefined;
+  return entry?.type;
+}
+
+function canReuseRuntimeMarker() {
+  try {
+    const issuedAt = Number(
+      window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY),
+    );
+    if (!Number.isSafeInteger(issuedAt) || issuedAt > Date.now()) return false;
+
+    const type = navigationType();
+    return (
+      type === "reload" ||
+      Date.now() - issuedAt <= RUNTIME_LOGIN_GRACE_MS
+    );
+  } catch {
+    return false;
+  }
+}
+
+function markRuntimeSessionActive() {
+  try {
+    window.sessionStorage.setItem(
+      ADMIN_RUNTIME_SESSION_KEY,
+      String(Date.now()),
+    );
+  } catch {
+    // The signed server gate still protects storage-restricted browsers.
+  }
+}
+
 
 export function SessionSecurityProvider({
   children,
@@ -147,19 +184,13 @@ export function SessionSecurityProvider({
     const authorize = () => {
       if (authorized) return;
       authorized = true;
-      try {
-        window.sessionStorage.setItem(ADMIN_RUNTIME_SESSION_KEY, "active");
-      } catch {
-        // The signed server gate still protects storage-restricted browsers.
-      }
+      markRuntimeSessionActive();
       setIsRuntimeSessionVerified(true);
       handshake?.close();
     };
 
     try {
-      if (
-        window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) === "active"
-      ) {
+      if (canReuseRuntimeMarker()) {
         authorize();
         return;
       }
@@ -195,18 +226,7 @@ export function SessionSecurityProvider({
       channelRef.current = new BroadcastChannel(ACTIVITY_CHANNEL_NAME);
       channelRef.current.onmessage = (event) => {
         if (event.data?.type === "RUNTIME_SESSION_REQUEST") {
-          try {
-            if (
-              window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) ===
-              "active"
-            ) {
-              channelRef.current?.postMessage({
-                type: "RUNTIME_SESSION_ACTIVE",
-              });
-            }
-          } catch {
-            // Storage-restricted browsers rely on the server-side gate only.
-          }
+          channelRef.current?.postMessage({ type: "RUNTIME_SESSION_ACTIVE" });
         } else if (
           event.data?.type === "ACTIVITY_PING" &&
           typeof event.data?.at === "number"
@@ -433,12 +453,12 @@ export function SessionSecurityProvider({
                 fontSize: "13px",
                 fontWeight: 600,
                 color: "#ffffff",
-                backgroundColor: "#10b981",
-                border: "none",
+                backgroundColor: "var(--pex-coral, #ff6f59)",
+                border: "1px solid rgba(255, 111, 89, 0.4)",
                 borderRadius: "8px",
                 cursor: "pointer",
                 transition: "all 0.15s ease",
-                boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
+                boxShadow: "0 4px 14px rgba(255, 111, 89, 0.35)",
               }}
             >
               {isRuntimeSessionVerified ? "Resume Session" : "Verifying..."}

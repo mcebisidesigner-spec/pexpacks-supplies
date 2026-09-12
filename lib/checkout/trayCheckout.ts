@@ -5,6 +5,11 @@ import {
   getOrderByIdempotencyKey,
 } from "@/lib/orders";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
+import {
+  normalisePexcoverPaperStyle,
+  pexcoverPaperStyleLabel,
+  type PexcoverPaperStyle,
+} from "@/lib/pricing/pexcover-paper-style";
 import { getGradeBySlug } from "@/lib/school-utils";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -152,7 +157,10 @@ export async function handleTrayCheckout(input: {
         .in("slug", schoolSlugs);
 
       if (schoolsError) {
-        console.error("[trayCheckout] Failed to check collection eligibility:", schoolsError);
+        console.error(
+          "[trayCheckout] Failed to check collection eligibility:",
+          schoolsError,
+        );
       } else if (schoolsData) {
         const disallowed = schoolsData.filter(
           (s) => s.parent_collection_accepted === false,
@@ -216,6 +224,10 @@ export async function handleTrayCheckout(input: {
         totalPrice: serverPack.price,
         basePackPrice: serverPack.price,
         pexcoverPrice: packPexcoverCost,
+        pexcoverPaperStyle:
+          pack.wantsPexcover && pexcoverResult.hasEligibleBooks
+            ? normalisePexcoverPaperStyle(pack.pexcoverPaperStyle)
+            : undefined,
       });
     } else {
       const authoritativeItems = new Map(
@@ -264,8 +276,7 @@ export async function handleTrayCheckout(input: {
         selectedItems.every(
           (item) =>
             item.quantity ===
-            (authoritativeItems.get(item.id ?? "")
-              ?.quantity ?? 0),
+            (authoritativeItems.get(item.id ?? "")?.quantity ?? 0),
         );
       const pricing = await getPackPricingColumns(serverPack.id);
       const packTotal = calculateCustomisedPackTotal(
@@ -282,6 +293,10 @@ export async function handleTrayCheckout(input: {
         totalPrice: packTotal,
         basePackPrice: packTotal,
         pexcoverPrice: packPexcoverCost,
+        pexcoverPaperStyle:
+          pack.wantsPexcover && pexcoverResult.hasEligibleBooks
+            ? normalisePexcoverPaperStyle(pack.pexcoverPaperStyle)
+            : undefined,
       });
     }
   }
@@ -314,7 +329,7 @@ export async function handleTrayCheckout(input: {
       `Pack: ${pack.packName} (${pack.packMode})`,
       ...pack.items.map((i) => `${i.quantity} x ${i.name}`),
       pack.wantsPexcover
-        ? `Pexcover book covering - R ${pack.pexcoverPrice}`
+        ? `Pexcover book covering - R ${pack.pexcoverPrice} (${pexcoverPaperStyleLabel(normalisePexcoverPaperStyle(pack.pexcoverPaperStyle))})`
         : "",
       `---`,
     ]),

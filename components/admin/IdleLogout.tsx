@@ -13,6 +13,7 @@ import {
 const CHECK_EVERY_MS = 15_000;
 const ACTIVITY_SYNC_THROTTLE_MS = 5_000;
 const TAB_HANDSHAKE_MS = 750;
+const RUNTIME_LOGIN_GRACE_MS = 30_000;
 const SECURITY_NOTICE_KEY = "pex_dashboard_security_notice_v2";
 
 type ActivityMessage =
@@ -23,7 +24,7 @@ type ActivityMessage =
 
 function authorizeRuntimeSession() {
   try {
-    window.sessionStorage.setItem(ADMIN_RUNTIME_SESSION_KEY, "active");
+    window.sessionStorage.setItem(ADMIN_RUNTIME_SESSION_KEY, String(Date.now()));
   } catch {
     // Storage may be disabled; the idle timeout remains active for this tab.
   }
@@ -69,8 +70,19 @@ export function IdleLogout() {
     let fallbackPaused = document.visibilityState === "hidden";
     let runtimeAuthorized = false;
     try {
+      const issuedAt = Number(
+        window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY),
+      );
+      const navigation = window.performance.getEntriesByType("navigation")[0] as
+        | PerformanceNavigationTiming
+        | undefined;
       runtimeAuthorized =
-        window.sessionStorage.getItem(ADMIN_RUNTIME_SESSION_KEY) === "active";
+        Number.isSafeInteger(issuedAt) &&
+        issuedAt <= Date.now() &&
+        (
+          navigation?.type === "reload" ||
+          Date.now() - issuedAt <= RUNTIME_LOGIN_GRACE_MS
+        );
     } catch {
       // A cross-tab handshake may still authorize this tab.
     }

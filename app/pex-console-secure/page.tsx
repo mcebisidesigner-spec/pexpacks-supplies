@@ -226,7 +226,10 @@ export default function PexConsoleGateway() {
         const res = await verifyOtpAction(email, token, isTrustedDevice);
         if (res.ok) {
           try {
-            window.sessionStorage.setItem("px_admin_runtime_session", "active");
+            window.sessionStorage.setItem(
+              "px_admin_runtime_session",
+              String(Date.now()),
+            );
           } catch {
             // ignore
           }

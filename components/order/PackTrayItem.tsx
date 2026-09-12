@@ -6,6 +6,10 @@ import type { TrayPackItem } from "@/store/usePackTrayStore";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
+import {
+  PexcoverDrawerCard,
+  type PexcoverPaperStyle,
+} from "@/components/checkout/PexcoverDrawerCard";
 import styles from "./GlobalPackTray.module.css";
 
 type PackTrayItemProps = {
@@ -20,22 +24,45 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
 
   const handleLearnerNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      updatePackDetails(pack.id, e.target.value, pack.wantsPexcover || false);
+      updatePackDetails(
+        pack.id,
+        e.target.value,
+        pack.wantsPexcover || false,
+        pack.pexcoverPaperStyle,
+      );
     },
-    [pack.id, pack.wantsPexcover, updatePackDetails],
+    [pack.id, pack.wantsPexcover, pack.pexcoverPaperStyle, updatePackDetails],
   );
 
   const handlePexcoverToggle = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (_packId: string, enabled: boolean) => {
       if (!pexcoverInfo.hasEligibleBooks) return;
-      updatePackDetails(pack.id, pack.learnerName || "", e.target.checked);
+      updatePackDetails(
+        pack.id,
+        pack.learnerName || "",
+        enabled,
+        pack.pexcoverPaperStyle || "STANDARD_KRAFT",
+      );
     },
     [
       pack.id,
       pack.learnerName,
+      pack.pexcoverPaperStyle,
       updatePackDetails,
       pexcoverInfo.hasEligibleBooks,
     ],
+  );
+
+  const handleSelectPaperStyle = useCallback(
+    (_packId: string, style: PexcoverPaperStyle) => {
+      updatePackDetails(
+        pack.id,
+        pack.learnerName || "",
+        true,
+        style,
+      );
+    },
+    [pack.id, pack.learnerName, updatePackDetails],
   );
 
   const handleRemove = useCallback(() => {
@@ -97,44 +124,16 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
           />
         </div>
 
-        {/* Pexcover Book Covering Section */}
-        <label
-          className={clsx(
-            styles.pexcoverToggleLabel,
-            !pexcoverInfo.hasEligibleBooks && styles.pexcoverDisabled,
-          )}
-          htmlFor={`pexcover-${pack.id}`}
-        >
-          <input
-            id={`pexcover-${pack.id}`}
-            name={`pexcover-${pack.id}`}
-            type="checkbox"
-            checked={
-              (pack.wantsPexcover && pexcoverInfo.hasEligibleBooks) || false
-            }
-            disabled={!pexcoverInfo.hasEligibleBooks}
-            className={styles.pexcoverCheckbox}
-            onChange={handlePexcoverToggle}
-          />
-          <div className={styles.pexcoverDetails}>
-            <p className={styles.pexcoverTitle}>Book Covering by Pexcover</p>
-            <p className={styles.pexcoverDesc}>
-              {pexcoverInfo.hasEligibleBooks
-                ? `${pexcoverInfo.coverableItemCount} book${pexcoverInfo.coverableItemCount === 1 ? "" : "s"} covered with protective wrap`
-                : "No coverable books in this pack"}
-            </p>
-          </div>
-          <span
-            className={clsx(
-              styles.pexcoverPrice,
-              !pexcoverInfo.hasEligibleBooks && styles.pexcoverPriceDisabled,
-            )}
-          >
-            {pexcoverInfo.hasEligibleBooks
-              ? formatCurrency(pexcoverInfo.pexcoverTotalRands)
-              : "—"}
-          </span>
-        </label>
+        {/* Pexcover Book Covering In-Card Selector */}
+        <PexcoverDrawerCard
+          packId={pack.id}
+          coverableCount={pexcoverInfo.coverableItemCount}
+          coveringPriceCents={pexcoverInfo.pexcoverTotalCents}
+          enabled={Boolean(pack.wantsPexcover && pexcoverInfo.hasEligibleBooks)}
+          selectedStyle={pack.pexcoverPaperStyle || "STANDARD_KRAFT"}
+          onToggle={handlePexcoverToggle}
+          onSelectStyle={handleSelectPaperStyle}
+        />
 
         <div className={styles.packSummaryRow}>
           <span className={styles.itemCount}>

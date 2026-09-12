@@ -1,4 +1,4 @@
-﻿.popupWrap {
+.popupWrap {
   position: fixed;
   top: 24px;
   left: 24px;
@@ -112,16 +112,16 @@
 }
 
 .allowBtn {
-  border: 1px solid var(--db-success-text);
-  background: linear-gradient(135deg, var(--db-brand) 0%, #0d9488 100%);
+  border: 1px solid rgba(255, 111, 89, 0.4);
+  background: var(--pex-coral, #ff6f59);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 14px rgba(255, 111, 89, 0.35);
 }
 
 .allowBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
-  background: linear-gradient(135deg, var(--db-success-text) 0%, var(--db-brand) 100%);
+  box-shadow: 0 6px 18px rgba(255, 111, 89, 0.5);
+  background: var(--pex-coral-hover, #e85e4b);
 }
 
 .blockBtn {

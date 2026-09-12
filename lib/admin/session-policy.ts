@@ -12,11 +12,7 @@ type VerifiedAdminSession = {
 };
 
 function getSigningSecret() {
-  return (
-    process.env.ADMIN_SESSION_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    ""
-  );
+  return process.env.ADMIN_SESSION_SECRET || "";
 }
 
 function toBase64Url(bytes: Uint8Array) {

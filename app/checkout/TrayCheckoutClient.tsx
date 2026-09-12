@@ -1,94 +1,96 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { usePackTrayStore } from '@/store/usePackTrayStore'
-import type { TrayPackItem } from '@/store/usePackTrayStore'
-import { calculateTrayTotal } from '@/lib/order/calculateTrayTotal'
-import { formatCurrency } from '@/lib/formatCurrency'
-import { calculatePexcoverTotal } from '@/lib/pricing/pexcover'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import Textarea from '@/components/ui/Textarea'
-import { buildWhatsAppHref } from '@/data/contact'
-import clsx from 'clsx'
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { usePackTrayStore } from "@/store/usePackTrayStore";
+import type { TrayPackItem } from "@/store/usePackTrayStore";
+import { calculateTrayTotal } from "@/lib/order/calculateTrayTotal";
+import { formatCurrency } from "@/lib/formatCurrency";
+import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import Textarea from "@/components/ui/Textarea";
+import { buildWhatsAppHref } from "@/data/contact";
+import clsx from "clsx";
 import {
   trackCheckoutValidationFailed,
   trackPaymentFailed,
   trackPaymentInitiated,
-} from '@/lib/analytics'
-import styles from '@/app/checkout/Checkout.module.css'
+} from "@/lib/analytics";
+import styles from "@/app/checkout/Checkout.module.css";
 
 type FulfilmentOption =
-  | 'school_collection'
-  | 'home_delivery'
-  | 'arranged_collection'
-type ContactMethod = 'whatsapp' | 'phone' | 'email'
-type CheckoutSummarySection = 'details' | 'delivery'
+  | "school_collection"
+  | "home_delivery"
+  | "arranged_collection";
+type ContactMethod = "whatsapp" | "phone" | "email";
+type CheckoutSummarySection = "details" | "delivery";
 
 const contactOptions: { value: ContactMethod; label: string }[] = [
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'phone', label: 'Phone call' },
-  { value: 'email', label: 'Email' },
-]
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "phone", label: "Phone call" },
+  { value: "email", label: "Email" },
+];
 
 const fulfilmentOptions: {
-  value: FulfilmentOption
-  title: string
-  description: string
-  note: string
+  value: FulfilmentOption;
+  title: string;
+  description: string;
+  note: string;
 }[] = [
   {
-    value: 'school_collection',
-    title: 'School collection',
-    description: 'Please pick up your stationery pack from the school or the designated handover point.',
-    note: 'Included',
-  },
-  {
-    value: 'home_delivery',
-    title: 'Home delivery',
+    value: "school_collection",
+    title: "School collection",
     description:
-      'Home delivery will incur additional charges, which will be confirmed separately.',
-    note: 'Address required',
+      "Please pick up your stationery pack from the school or the designated handover point.",
+    note: "Included",
   },
   {
-    value: 'arranged_collection',
-    title: 'Arranged collection',
-    description: 'You can choose your own delivery location. We will contact you to confirm your preferred option.',
-    note: 'We will confirm',
+    value: "home_delivery",
+    title: "Home delivery",
+    description:
+      "Home delivery will incur additional charges, which will be confirmed separately.",
+    note: "Address required",
   },
-]
+  {
+    value: "arranged_collection",
+    title: "Arranged collection",
+    description:
+      "You can choose your own delivery location. We will contact you to confirm your preferred option.",
+    note: "We will confirm",
+  },
+];
 
 function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function normalisePhone(value: string) {
-  const trimmed = value.trim()
-  if (trimmed.startsWith('+')) {
-    return `+${trimmed.slice(1).replace(/\D/g, '')}`
+  const trimmed = value.trim();
+  if (trimmed.startsWith("+")) {
+    return `+${trimmed.slice(1).replace(/\D/g, "")}`;
   }
-  const digits = trimmed.replace(/\D/g, '')
-  if (digits.startsWith('0027') && digits.length >= 13) {
-    return `+27${digits.slice(4)}`
+  const digits = trimmed.replace(/\D/g, "");
+  if (digits.startsWith("0027") && digits.length >= 13) {
+    return `+27${digits.slice(4)}`;
   }
-  return digits
+  return digits;
 }
 
 function isLikelySaPhone(value: string) {
-  const normalised = normalisePhone(value)
-  const digits = normalised.replace(/\D/g, '')
+  const normalised = normalisePhone(value);
+  const digits = normalised.replace(/\D/g, "");
   return (
-    (digits.startsWith('0') && digits.length === 10) ||
-    (digits.startsWith('27') && digits.length === 11) ||
-    (digits.startsWith('0027') && digits.length === 13)
-  )
+    (digits.startsWith("0") && digits.length === 10) ||
+    (digits.startsWith("27") && digits.length === 11) ||
+    (digits.startsWith("0027") && digits.length === 13)
+  );
 }
 
 function fulfilmentToApiMethod(option: FulfilmentOption) {
-  if (option === 'school_collection') return 'school_collection'
-  if (option === 'home_delivery') return 'delivery'
-  return 'collection_point'
+  if (option === "school_collection") return "school_collection";
+  if (option === "home_delivery") return "delivery";
+  return "collection_point";
 }
 
 function getPackTotal(pack: TrayPackItem) {
@@ -98,21 +100,20 @@ function getPackTotal(pack: TrayPackItem) {
   return pack.totalPrice + pexcoverCost;
 }
 
-
 function getPackItemPreview(pack: TrayPackItem) {
-  return pack.items.slice(0, 4)
+  return pack.items.slice(0, 4);
 }
 
 function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
-  if (option === 'school_collection') {
+  if (option === "school_collection") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5" />
       </svg>
-    )
+    );
   }
 
-  if (option === 'home_delivery') {
+  if (option === "home_delivery") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="1" y="3" width="15" height="13" rx="2" />
@@ -120,7 +121,7 @@ function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
         <circle cx="5.5" cy="18.5" r="2.5" />
         <circle cx="18.5" cy="18.5" r="2.5" />
       </svg>
-    )
+    );
   }
 
   return (
@@ -128,69 +129,72 @@ function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
       <rect x="3" y="5" width="18" height="14" rx="2" />
       <path d="M3 10h18M7 15h4" />
     </svg>
-  )
+  );
 }
 
 export function TrayCheckoutClient() {
-  const router = useRouter()
-  const packs = usePackTrayStore((s) => s.packs)
-  const openTray = usePackTrayStore((s) => s.openTray)
-  const updatePackDetails = usePackTrayStore((s) => s.updatePackDetails)
+  const router = useRouter();
+  const packs = usePackTrayStore((s) => s.packs);
+  const openTray = usePackTrayStore((s) => s.openTray);
+  const updatePackDetails = usePackTrayStore((s) => s.updatePackDetails);
 
   const [expandedPacks, setExpandedPacks] = useState<Record<string, boolean>>(
     {},
-  )
-  const [editNameIndex, setEditNameIndex] = useState<number | null>(null)
+  );
+  const [editNameIndex, setEditNameIndex] = useState<number | null>(null);
   const [learnerInputs, setLearnerInputs] = useState<string[]>(() =>
-    packs.map((p) => p.learnerName || ''),
-  )
+    packs.map((p) => p.learnerName || ""),
+  );
 
-  const [fullName, setFullName] = useState('')
-  const [buyerPhone, setBuyerPhone] = useState('')
-  const [buyerEmail, setBuyerEmail] = useState('')
+  const [fullName, setFullName] = useState("");
+  const [buyerPhone, setBuyerPhone] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState("");
   const [preferredContactMethod, setPreferredContactMethod] =
-    useState<ContactMethod>('whatsapp')
-  const [consent, setConsent] = useState(false)
+    useState<ContactMethod>("whatsapp");
+  const [consent, setConsent] = useState(false);
 
   const [disallowSchoolCollection, setDisallowSchoolCollection] =
-    useState(false)
+    useState(false);
   const [fulfilmentOption, setFulfilmentOption] =
-    useState<FulfilmentOption>('school_collection')
-  const [multiSchoolDrop, setMultiSchoolDrop] = useState<string | null>(null)
-  const [address, setAddress] = useState('')
-  const [suburb, setSuburb] = useState('')
-  const [city, setCity] = useState('')
-  const [province, setProvince] = useState('')
-  const [postalCode, setPostalCode] = useState('')
-  const [deliveryNotes, setDeliveryNotes] = useState('')
+    useState<FulfilmentOption>("school_collection");
+  const [multiSchoolDrop, setMultiSchoolDrop] = useState<string | null>(null);
+  const [address, setAddress] = useState("");
+  const [suburb, setSuburb] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [deliveryNotes, setDeliveryNotes] = useState("");
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const idempotencyKeyRef = useRef<string | null>(null)
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   const [mobileSectionSummaryOpen, setMobileSectionSummaryOpen] = useState<
     Record<CheckoutSummarySection, boolean>
   >({
     details: true,
     delivery: true,
-  })
+  });
   const fieldRefs = useRef<
     Record<string, HTMLInputElement | HTMLTextAreaElement | null>
-  >({})
+  >({});
   const sectionRefs = useRef<
     Record<CheckoutSummarySection, HTMLElement | null>
   >({
     details: null,
     delivery: null,
-  })
-  const consentRef = useRef<HTMLElement | null>(null)
-  const summaryRef = useRef<HTMLElement | null>(null)
+  });
+  const consentRef = useRef<HTMLElement | null>(null);
+  const summaryRef = useRef<HTMLElement | null>(null);
 
-  const total = useMemo(() => calculateTrayTotal(packs), [packs])
+  const total = useMemo(() => calculateTrayTotal(packs), [packs]);
 
-  const pexcoverPacks = useMemo(() => packs.filter((p) => p.wantsPexcover), [packs])
-  const pexcoverCount = pexcoverPacks.length
+  const pexcoverPacks = useMemo(
+    () => packs.filter((p) => p.wantsPexcover),
+    [packs],
+  );
+  const pexcoverCount = pexcoverPacks.length;
 
   const pexcoverTotal = useMemo(
     () =>
@@ -199,56 +203,56 @@ export function TrayCheckoutClient() {
         0,
       ),
     [pexcoverPacks],
-  )
-  const itemsTotal = total - pexcoverTotal
+  );
+  const itemsTotal = total - pexcoverTotal;
 
   const uniqueSchools = useMemo(() => {
-    const map = new Map<string, { name: string; slug: string }>()
+    const map = new Map<string, { name: string; slug: string }>();
     packs.forEach((p) => {
       if (p.schoolSlug && p.schoolName && !map.has(p.schoolSlug)) {
-        map.set(p.schoolSlug, { name: p.schoolName, slug: p.schoolSlug })
+        map.set(p.schoolSlug, { name: p.schoolName, slug: p.schoolSlug });
       }
-    })
-    return Array.from(map.values())
-  }, [packs])
+    });
+    return Array.from(map.values());
+  }, [packs]);
 
-  const isSingleSchool = uniqueSchools.length <= 1
-  const deliveryExpanded = fulfilmentOption === 'home_delivery'
-  const canSubmit = packs.length > 0 && total > 0 && !submitting
+  const isSingleSchool = uniqueSchools.length <= 1;
+  const deliveryExpanded = fulfilmentOption === "home_delivery";
+  const canSubmit = packs.length > 0 && total > 0 && !submitting;
   const detailsSectionHasErrors = Boolean(
     errors.fullName ||
     errors.buyerPhone ||
     errors.buyerEmail ||
-    Object.keys(errors).some((key) => key.startsWith('learner_')),
-  )
+    Object.keys(errors).some((key) => key.startsWith("learner_")),
+  );
   const showDetailsHiddenWarning =
-    detailsSectionHasErrors && !mobileSectionSummaryOpen.details
+    detailsSectionHasErrors && !mobileSectionSummaryOpen.details;
 
   const toggleMobileSectionSummary = useCallback(
     (section: CheckoutSummarySection) => {
       setMobileSectionSummaryOpen((current) => ({
         ...current,
         [section]: !current[section],
-      }))
+      }));
     },
     [],
-  )
+  );
 
   useEffect(() => {
     setLearnerInputs((prev) => {
-      if (prev.length === packs.length) return prev
-      return packs.map((pack, index) => prev[index] ?? pack.learnerName ?? '')
-    })
-  }, [packs])
+      if (prev.length === packs.length) return prev;
+      return packs.map((pack, index) => prev[index] ?? pack.learnerName ?? "");
+    });
+  }, [packs]);
 
   useEffect(() => {
-    if (uniqueSchools.length === 0) return
-    const slugs = uniqueSchools.map((s) => s.slug).filter(Boolean)
-    if (slugs.length === 0) return
+    if (uniqueSchools.length === 0) return;
+    const slugs = uniqueSchools.map((s) => s.slug).filter(Boolean);
+    if (slugs.length === 0) return;
 
-    fetch('/api/schools/visibility', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("/api/schools/visibility", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slugs }),
     })
       .then((res) => res.json())
@@ -258,230 +262,232 @@ export function TrayCheckoutClient() {
           Array.isArray(data.collectionDisallowedSlugs) &&
           data.collectionDisallowedSlugs.length > 0
         ) {
-          setDisallowSchoolCollection(true)
+          setDisallowSchoolCollection(true);
           setFulfilmentOption((cur) =>
-            cur === 'school_collection' ? 'home_delivery' : cur,
-          )
+            cur === "school_collection" ? "home_delivery" : cur,
+          );
         } else {
-          setDisallowSchoolCollection(false)
+          setDisallowSchoolCollection(false);
         }
       })
-      .catch(() => {})
-  }, [uniqueSchools])
+      .catch(() => {});
+  }, [uniqueSchools]);
 
   const availableFulfilmentOptions = useMemo(() => {
     return fulfilmentOptions.filter(
-      (opt) => !disallowSchoolCollection || opt.value !== 'school_collection',
-    )
-  }, [disallowSchoolCollection])
+      (opt) => !disallowSchoolCollection || opt.value !== "school_collection",
+    );
+  }, [disallowSchoolCollection]);
 
   useEffect(() => {
-    if (isSingleSchool && fulfilmentOption === 'school_collection') {
-      setMultiSchoolDrop(uniqueSchools[0]?.slug ?? null)
+    if (isSingleSchool && fulfilmentOption === "school_collection") {
+      setMultiSchoolDrop(uniqueSchools[0]?.slug ?? null);
     }
-  }, [fulfilmentOption, isSingleSchool, uniqueSchools])
+  }, [fulfilmentOption, isSingleSchool, uniqueSchools]);
 
   const deliveryAddressSummary = useMemo(() => {
     return [address, suburb, city, province, postalCode]
       .filter(Boolean)
-      .join(', ')
-  }, [address, suburb, city, province, postalCode])
+      .join(", ");
+  }, [address, suburb, city, province, postalCode]);
 
   const handleLearnerNameChange = useCallback(
     (index: number, value: string) => {
       setLearnerInputs((prev) => {
-        const next = [...prev]
-        next[index] = value
-        return next
-      })
+        const next = [...prev];
+        next[index] = value;
+        return next;
+      });
     },
     [],
-  )
+  );
 
   const handleLearnerNameBlur = useCallback(
     (index: number) => {
-      const pack = packs[index]
-      if (!pack) return
-      const name = learnerInputs[index]?.trim() || ''
-      if (name !== (pack.learnerName || '')) {
-        updatePackDetails(pack.id, name, pack.wantsPexcover || false)
+      const pack = packs[index];
+      if (!pack) return;
+      const name = learnerInputs[index]?.trim() || "";
+      if (name !== (pack.learnerName || "")) {
+        updatePackDetails(pack.id, name, pack.wantsPexcover || false);
       }
-      setEditNameIndex(null)
+      setEditNameIndex(null);
     },
     [packs, learnerInputs, updatePackDetails],
-  )
+  );
 
   const handleLearnerNameKeyDown = useCallback(
     (e: React.KeyboardEvent, index: number) => {
-      if (e.key === 'Enter') {
-        ;(e.target as HTMLInputElement).blur()
+      if (e.key === "Enter") {
+        (e.target as HTMLInputElement).blur();
       }
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setLearnerInputs((prev) => {
-          const next = [...prev]
-          next[index] = packs[index]?.learnerName || ''
-          return next
-        })
-        setEditNameIndex(null)
+          const next = [...prev];
+          next[index] = packs[index]?.learnerName || "";
+          return next;
+        });
+        setEditNameIndex(null);
       }
     },
     [packs],
-  )
+  );
 
   const handleBackToOrder = useCallback(() => {
-    openTray()
-    router.back()
-  }, [openTray, router])
+    openTray();
+    router.back();
+  }, [openTray, router]);
 
   function clearFieldError(field: string) {
     setErrors((prev) => {
-      if (!prev[field]) return prev
-      const next = { ...prev }
-      delete next[field]
-      return next
-    })
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
   }
 
   function getSectionForError(field: string): CheckoutSummarySection | null {
     if (
-      field === 'fullName' ||
-      field === 'buyerPhone' ||
-      field === 'buyerEmail'
+      field === "fullName" ||
+      field === "buyerPhone" ||
+      field === "buyerEmail"
     ) {
-      return 'details'
+      return "details";
     }
 
     if (
-      field === 'address' ||
-      field === 'suburb' ||
-      field === 'city' ||
-      field === 'province' ||
-      field === 'multiSchoolDrop'
+      field === "address" ||
+      field === "suburb" ||
+      field === "city" ||
+      field === "province" ||
+      field === "multiSchoolDrop"
     ) {
-      return 'delivery'
+      return "delivery";
     }
 
-    return null
+    return null;
   }
 
   function guideToIncompleteField(field: string) {
-    const section = getSectionForError(field)
-    const learnerMatch = field.match(/^learner_(\d+)$/)
+    const section = getSectionForError(field);
+    const learnerMatch = field.match(/^learner_(\d+)$/);
 
     if (section) {
       setMobileSectionSummaryOpen((current) => ({
         ...current,
         [section]: true,
-      }))
+      }));
     }
 
     if (learnerMatch) {
-      setEditNameIndex(Number(learnerMatch[1]))
+      setEditNameIndex(Number(learnerMatch[1]));
     }
 
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        const fieldNode = fieldRefs.current[field]
+        const fieldNode = fieldRefs.current[field];
         const target =
           fieldNode ||
           (learnerMatch ? summaryRef.current : null) ||
-          (field === 'consent' ? consentRef.current : null) ||
-          (section ? sectionRefs.current[section] : null)
+          (field === "consent" ? consentRef.current : null) ||
+          (section ? sectionRefs.current[section] : null);
 
-        target?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
 
         if (fieldNode) {
-          fieldNode.focus({ preventScroll: true })
+          fieldNode.focus({ preventScroll: true });
         } else if (target instanceof HTMLElement) {
-          target.focus({ preventScroll: true })
+          target.focus({ preventScroll: true });
         }
-      })
-    })
+      });
+    });
   }
 
   function validate(): boolean {
-    const nextErrors: Record<string, string> = {}
+    const nextErrors: Record<string, string> = {};
 
     if (packs.length === 0)
-      nextErrors.packs = 'Choose a school pack before checkout.'
+      nextErrors.packs = "Choose a school pack before checkout.";
     if (total <= 0)
-      nextErrors.total = 'Your order total must be greater than zero.'
+      nextErrors.total = "Your order total must be greater than zero.";
     if (!fullName.trim() || fullName.trim().length < 2)
-      nextErrors.fullName = 'Please enter your full name.'
+      nextErrors.fullName = "Please enter your full name.";
     if (!buyerPhone.trim())
-      nextErrors.buyerPhone = 'Please enter your phone number.'
+      nextErrors.buyerPhone = "Please enter your phone number.";
     else if (!isLikelySaPhone(buyerPhone))
-      nextErrors.buyerPhone = 'Please enter a valid South African phone number.'
+      nextErrors.buyerPhone =
+        "Please enter a valid South African phone number.";
     if (!buyerEmail.trim())
-      nextErrors.buyerEmail = 'Please enter your email address.'
+      nextErrors.buyerEmail = "Please enter your email address.";
     else if (!isValidEmail(buyerEmail.trim()))
-      nextErrors.buyerEmail = 'Please enter a valid email address.'
+      nextErrors.buyerEmail = "Please enter a valid email address.";
 
     for (let i = 0; i < packs.length; i++) {
       if (!learnerInputs[i]?.trim()) {
-        nextErrors[`learner_${i}`] = `Please enter a name for learner ${i + 1}.`
+        nextErrors[`learner_${i}`] =
+          `Please enter a name for learner ${i + 1}.`;
       }
     }
 
     if (deliveryExpanded) {
       if (!address.trim())
-        nextErrors.address = 'Please enter the delivery address.'
-      if (!suburb.trim()) nextErrors.suburb = 'Please enter the suburb.'
-      if (!city.trim()) nextErrors.city = 'Please enter the city.'
-      if (!province.trim()) nextErrors.province = 'Please enter the province.'
+        nextErrors.address = "Please enter the delivery address.";
+      if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
+      if (!city.trim()) nextErrors.city = "Please enter the city.";
+      if (!province.trim()) nextErrors.province = "Please enter the province.";
     }
 
     if (
-      fulfilmentOption === 'school_collection' &&
+      fulfilmentOption === "school_collection" &&
       uniqueSchools.length > 1 &&
       !multiSchoolDrop
     ) {
       nextErrors.multiSchoolDrop =
-        'Select which school the box should be dropped at.'
+        "Select which school the box should be dropped at.";
     }
     if (!consent)
-      nextErrors.consent = 'Please accept the order processing consent.'
+      nextErrors.consent = "Please accept the order processing consent.";
 
-    setErrors(nextErrors)
+    setErrors(nextErrors);
 
-    const firstError = Object.keys(nextErrors)[0]
+    const firstError = Object.keys(nextErrors)[0];
     if (firstError) {
       trackCheckoutValidationFailed({
-        checkoutMode: 'tray',
-        step: getSectionForError(firstError) || 'order',
+        checkoutMode: "tray",
+        step: getSectionForError(firstError) || "order",
         fields: Object.keys(nextErrors),
-      })
-      guideToIncompleteField(firstError)
+      });
+      guideToIncompleteField(firstError);
     }
 
-    return Object.keys(nextErrors).length === 0
+    return Object.keys(nextErrors).length === 0;
   }
 
   async function handlePay() {
-    if (submitting) return
-    if (!validate()) return
+    if (submitting) return;
+    if (!validate()) return;
 
-    setSubmitError(null)
-    setSubmitting(true)
+    setSubmitError(null);
+    setSubmitting(true);
 
     const notes = [
-      deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : '',
-      deliveryExpanded ? `Address: ${deliveryAddressSummary}` : '',
+      deliveryNotes.trim() ? `Notes: ${deliveryNotes.trim()}` : "",
+      deliveryExpanded ? `Address: ${deliveryAddressSummary}` : "",
       preferredContactMethod
         ? `Preferred contact: ${preferredContactMethod}`
-        : '',
+        : "",
     ]
       .filter(Boolean)
-      .join(' | ')
+      .join(" | ");
 
     try {
       if (!idempotencyKeyRef.current) {
-        idempotencyKeyRef.current = crypto.randomUUID()
+        idempotencyKeyRef.current = crypto.randomUUID();
       }
 
-      const response = await fetch('/api/ozow/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/ozow/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderId: idempotencyKeyRef.current,
           amount: total,
@@ -491,11 +497,11 @@ export function TrayCheckoutClient() {
           buyerPhone: normalisePhone(buyerPhone),
           packs: packs.map((pack, pi) => ({
             learnerName:
-              learnerInputs[pi]?.trim() || pack.learnerName?.trim() || '',
-            schoolSlug: pack.schoolSlug || '',
-            schoolName: pack.schoolName || '',
-            grade: pack.grade || '',
-            gradeSlug: pack.gradeSlug || '',
+              learnerInputs[pi]?.trim() || pack.learnerName?.trim() || "",
+            schoolSlug: pack.schoolSlug || "",
+            schoolName: pack.schoolName || "",
+            grade: pack.grade || "",
+            gradeSlug: pack.gradeSlug || "",
             packName: pack.packName,
             packMode: pack.packMode,
             items: pack.items.map((i) => ({
@@ -507,6 +513,7 @@ export function TrayCheckoutClient() {
             totalPrice: pack.totalPrice,
             modifications: pack.modifications,
             wantsPexcover: pack.wantsPexcover || false,
+            pexcoverPaperStyle: pack.pexcoverPaperStyle,
             pexcoverPrice: pack.wantsPexcover
               ? calculatePexcoverTotal(pack.items).pexcoverTotalRands
               : 0,
@@ -518,52 +525,52 @@ export function TrayCheckoutClient() {
           primarySchoolSlug:
             uniqueSchools.length > 1
               ? multiSchoolDrop
-              : uniqueSchools[0]?.slug || packs[0]?.schoolSlug || '',
+              : uniqueSchools[0]?.slug || packs[0]?.schoolSlug || "",
           notes: notes || undefined,
           idempotencyKey: idempotencyKeyRef.current,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok || !data.url) {
-        console.error("Ozow Checkout Error Response:", response.status, data)
+        console.error("Ozow Checkout Error Response:", response.status, data);
         trackPaymentFailed({
-          checkoutMode: 'tray',
-          failureType: response.ok ? 'invalid_response' : 'api',
+          checkoutMode: "tray",
+          failureType: response.ok ? "invalid_response" : "api",
           statusCode: response.status,
-        })
+        });
         const errorMessage =
           data.error ||
           data.message ||
-          (data.errors && typeof data.errors === 'object'
-            ? Object.values(data.errors).join('. ')
-            : 'Failed to initialize Ozow payment.')
-        setSubmitError(errorMessage)
-        return
+          (data.errors && typeof data.errors === "object"
+            ? Object.values(data.errors).join(". ")
+            : "Failed to initialize Ozow payment.");
+        setSubmitError(errorMessage);
+        return;
       }
 
       if (idempotencyKeyRef.current) {
         trackPaymentInitiated({
           orderId: idempotencyKeyRef.current,
           totalPrice: total,
-        })
+        });
       }
-      window.location.href = data.url
-      return
+      window.location.href = data.url;
+      return;
     } catch (error) {
-      console.error("Ozow Checkout Exception:", error)
+      console.error("Ozow Checkout Exception:", error);
       trackPaymentFailed({
-        checkoutMode: 'tray',
-        failureType: 'network',
-      })
+        checkoutMode: "tray",
+        failureType: "network",
+      });
       setSubmitError(
         error instanceof Error
           ? error.message
-          : 'Failed to initialize Ozow payment.',
-      )
+          : "Failed to initialize Ozow payment.",
+      );
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -578,7 +585,7 @@ export function TrayCheckoutClient() {
           Back to order
         </button>
         <a
-          href={buildWhatsAppHref('Hi Pexpacks, I need help with checkout.')}
+          href={buildWhatsAppHref("Hi Pexpacks, I need help with checkout.")}
           target="_blank"
           rel="noopener noreferrer"
           className={styles.helpLink}
@@ -604,10 +611,13 @@ export function TrayCheckoutClient() {
         >
           <section
             ref={(node) => {
-              sectionRefs.current.details = node
+              sectionRefs.current.details = node;
             }}
             tabIndex={-1}
-            className={clsx(styles.checkoutSection, showDetailsHiddenWarning && styles.checkoutSectionWarning)}
+            className={clsx(
+              styles.checkoutSection,
+              showDetailsHiddenWarning && styles.checkoutSectionWarning,
+            )}
             aria-labelledby="customer-details-heading"
           >
             <div className={styles.sectionHeader}>
@@ -622,32 +632,36 @@ export function TrayCheckoutClient() {
               <button
                 type="button"
                 className={styles.mobileSummaryToggle}
-                onClick={() => toggleMobileSectionSummary('details')}
+                onClick={() => toggleMobileSectionSummary("details")}
                 aria-expanded={mobileSectionSummaryOpen.details}
                 aria-controls="customer-details-summary"
               >
                 {mobileSectionSummaryOpen.details
-                  ? 'Hide Summary'
-                  : 'View Summary'}
+                  ? "Hide Summary"
+                  : "View Summary"}
               </button>
             </div>
             <div
               id="customer-details-summary"
-              className={clsx(styles.mobileCollapsibleSummary, mobileSectionSummaryOpen.details && styles.mobileCollapsibleSummaryOpen)}
+              className={clsx(
+                styles.mobileCollapsibleSummary,
+                mobileSectionSummaryOpen.details &&
+                  styles.mobileCollapsibleSummaryOpen,
+              )}
             >
               <div className={styles.formGrid}>
                 <Input
                   id="fullName"
                   ref={(node) => {
-                    fieldRefs.current.fullName = node
+                    fieldRefs.current.fullName = node;
                   }}
                   label="Full name"
                   helper="We use this to confirm your order and payment updates."
                   type="text"
                   value={fullName}
                   onChange={(e) => {
-                    setFullName(e.target.value)
-                    clearFieldError('fullName')
+                    setFullName(e.target.value);
+                    clearFieldError("fullName");
                   }}
                   placeholder="e.g. Sarah Dlamini"
                   error={errors.fullName}
@@ -656,15 +670,15 @@ export function TrayCheckoutClient() {
                 <Input
                   id="buyerPhone"
                   ref={(node) => {
-                    fieldRefs.current.buyerPhone = node
+                    fieldRefs.current.buyerPhone = node;
                   }}
                   label="Phone number"
                   helper="WhatsApp or call is fastest for support."
                   type="tel"
                   value={buyerPhone}
                   onChange={(e) => {
-                    setBuyerPhone(e.target.value)
-                    clearFieldError('buyerPhone')
+                    setBuyerPhone(e.target.value);
+                    clearFieldError("buyerPhone");
                   }}
                   placeholder="e.g. 078 003 6048"
                   error={errors.buyerPhone}
@@ -673,15 +687,15 @@ export function TrayCheckoutClient() {
                 <Input
                   id="buyerEmail"
                   ref={(node) => {
-                    fieldRefs.current.buyerEmail = node
+                    fieldRefs.current.buyerEmail = node;
                   }}
                   label="Email address"
                   helper="Used for order updates and payment confirmation."
                   type="email"
                   value={buyerEmail}
                   onChange={(e) => {
-                    setBuyerEmail(e.target.value)
-                    clearFieldError('buyerEmail')
+                    setBuyerEmail(e.target.value);
+                    clearFieldError("buyerEmail");
                   }}
                   placeholder="name@example.com"
                   error={errors.buyerEmail}
@@ -697,7 +711,11 @@ export function TrayCheckoutClient() {
                     {contactOptions.map((option) => (
                       <label
                         key={option.value}
-                        className={clsx(styles.segmentedOption, preferredContactMethod === option.value && styles.segmentedOptionActive)}
+                        className={clsx(
+                          styles.segmentedOption,
+                          preferredContactMethod === option.value &&
+                            styles.segmentedOptionActive,
+                        )}
                       >
                         <input
                           type="radio"
@@ -715,12 +733,12 @@ export function TrayCheckoutClient() {
                 </fieldset>
               </div>
               {packs.map((pack, index) => {
-                const errKey = `learner_${index}`
+                const errKey = `learner_${index}`;
                 return errors[errKey] ? (
                   <p key={errKey} className={styles.fieldError}>
                     Learner {index + 1} ({pack.packName}): {errors[errKey]}
                   </p>
-                ) : null
+                ) : null;
               })}
             </div>
             {showDetailsHiddenWarning ? (
@@ -732,7 +750,7 @@ export function TrayCheckoutClient() {
 
           <section
             ref={(node) => {
-              sectionRefs.current.delivery = node
+              sectionRefs.current.delivery = node;
             }}
             tabIndex={-1}
             className={styles.checkoutSection}
@@ -747,19 +765,23 @@ export function TrayCheckoutClient() {
               <button
                 type="button"
                 className={styles.mobileSummaryToggle}
-                onClick={() => toggleMobileSectionSummary('delivery')}
+                onClick={() => toggleMobileSectionSummary("delivery")}
                 aria-expanded={mobileSectionSummaryOpen.delivery}
                 aria-controls="fulfilment-summary"
               >
                 {mobileSectionSummaryOpen.delivery
-                  ? 'Hide Summary'
-                  : 'View Summary'}
+                  ? "Hide Summary"
+                  : "View Summary"}
               </button>
             </div>
 
             <div
               id="fulfilment-summary"
-              className={clsx(styles.mobileCollapsibleSummary, mobileSectionSummaryOpen.delivery && styles.mobileCollapsibleSummaryOpen)}
+              className={clsx(
+                styles.mobileCollapsibleSummary,
+                mobileSectionSummaryOpen.delivery &&
+                  styles.mobileCollapsibleSummaryOpen,
+              )}
             >
               <fieldset className={styles.optionFieldset}>
                 <legend className={styles.srOnly}>
@@ -769,7 +791,11 @@ export function TrayCheckoutClient() {
                   {availableFulfilmentOptions.map((option) => (
                     <label
                       key={option.value}
-                      className={clsx(styles.deliveryOption, fulfilmentOption === option.value && styles.deliveryOptionSelected)}
+                      className={clsx(
+                        styles.deliveryOption,
+                        fulfilmentOption === option.value &&
+                          styles.deliveryOptionSelected,
+                      )}
                     >
                       <input
                         type="radio"
@@ -777,8 +803,8 @@ export function TrayCheckoutClient() {
                         value={option.value}
                         checked={fulfilmentOption === option.value}
                         onChange={() => {
-                          setFulfilmentOption(option.value)
-                          clearFieldError('multiSchoolDrop')
+                          setFulfilmentOption(option.value);
+                          clearFieldError("multiSchoolDrop");
                         }}
                       />
                       <div className={styles.deliveryOptionHeader}>
@@ -798,7 +824,7 @@ export function TrayCheckoutClient() {
                 </div>
               </fieldset>
 
-              {fulfilmentOption === 'school_collection' &&
+              {fulfilmentOption === "school_collection" &&
               uniqueSchools.length > 1 ? (
                 <div className={styles.schoolDropoffGroup}>
                   <p className={styles.schoolDropoffLabel}>
@@ -806,11 +832,14 @@ export function TrayCheckoutClient() {
                   </p>
                   <div className={styles.schoolDropoffRow}>
                     {uniqueSchools.map((school) => {
-                      const isSelected = multiSchoolDrop === school.slug
+                      const isSelected = multiSchoolDrop === school.slug;
                       return (
                         <label
                           key={school.slug}
-                          className={clsx(styles.schoolDropoffCard, isSelected && styles.schoolDropoffCardActive)}
+                          className={clsx(
+                            styles.schoolDropoffCard,
+                            isSelected && styles.schoolDropoffCardActive,
+                          )}
                         >
                           <input
                             type="radio"
@@ -818,8 +847,8 @@ export function TrayCheckoutClient() {
                             value={school.slug}
                             checked={isSelected}
                             onChange={() => {
-                              setMultiSchoolDrop(school.slug)
-                              clearFieldError('multiSchoolDrop')
+                              setMultiSchoolDrop(school.slug);
+                              clearFieldError("multiSchoolDrop");
                             }}
                             className={styles.schoolDropoffRadio}
                           />
@@ -827,7 +856,7 @@ export function TrayCheckoutClient() {
                             {school.name}
                           </span>
                         </label>
-                      )
+                      );
                     })}
                   </div>
                   {errors.multiSchoolDrop ? (
@@ -843,14 +872,14 @@ export function TrayCheckoutClient() {
                   <Input
                     id="address"
                     ref={(node) => {
-                      fieldRefs.current.address = node
+                      fieldRefs.current.address = node;
                     }}
                     label="Address line"
                     type="text"
                     value={address}
                     onChange={(e) => {
-                      setAddress(e.target.value)
-                      clearFieldError('address')
+                      setAddress(e.target.value);
+                      clearFieldError("address");
                     }}
                     placeholder="e.g. 42 Main Road"
                     error={errors.address}
@@ -859,15 +888,15 @@ export function TrayCheckoutClient() {
                   <Input
                     id="suburb"
                     ref={(node) => {
-                      fieldRefs.current.suburb = node
+                      fieldRefs.current.suburb = node;
                     }}
                     label="Suburb"
                     type="text"
                     autoComplete="address-level2"
                     value={suburb}
                     onChange={(e) => {
-                      setSuburb(e.target.value)
-                      clearFieldError('suburb')
+                      setSuburb(e.target.value);
+                      clearFieldError("suburb");
                     }}
                     placeholder="e.g. Gardens"
                     error={errors.suburb}
@@ -875,15 +904,15 @@ export function TrayCheckoutClient() {
                   <Input
                     id="city"
                     ref={(node) => {
-                      fieldRefs.current.city = node
+                      fieldRefs.current.city = node;
                     }}
                     label="City"
                     type="text"
                     autoComplete="address-level2"
                     value={city}
                     onChange={(e) => {
-                      setCity(e.target.value)
-                      clearFieldError('city')
+                      setCity(e.target.value);
+                      clearFieldError("city");
                     }}
                     placeholder="e.g. Cape Town"
                     error={errors.city}
@@ -891,15 +920,15 @@ export function TrayCheckoutClient() {
                   <Input
                     id="province"
                     ref={(node) => {
-                      fieldRefs.current.province = node
+                      fieldRefs.current.province = node;
                     }}
                     label="Province"
                     type="text"
                     autoComplete="address-level1"
                     value={province}
                     onChange={(e) => {
-                      setProvince(e.target.value)
-                      clearFieldError('province')
+                      setProvince(e.target.value);
+                      clearFieldError("province");
                     }}
                     placeholder="e.g. Western Cape"
                     error={errors.province}
@@ -937,37 +966,37 @@ export function TrayCheckoutClient() {
             <label className={styles.consentField}>
               <input
                 ref={(node) => {
-                  fieldRefs.current.consent = node
+                  fieldRefs.current.consent = node;
                 }}
                 type="checkbox"
                 id="consent"
                 checked={consent}
                 onChange={(e) => {
-                  setConsent(e.target.checked)
-                  clearFieldError('consent')
+                  setConsent(e.target.checked);
+                  clearFieldError("consent");
                 }}
                 aria-invalid={!!errors.consent}
               />
               <span>
                 I agree that Pexpacks may process my personal information to
-                complete this order, send order updates, and contact
-                me about delivery or collection. I have read and agree to the{' '}
+                complete this order, send order updates, and contact me about
+                delivery or collection. I have read and agree to the{" "}
                 <a href="/privacy-policy" target="_blank">
                   privacy policy
                 </a>
-                ,{' '}
+                ,{" "}
                 <a href="/terms" target="_blank">
                   terms of use
                 </a>
-                ,{' '}
+                ,{" "}
                 <a href="/delivery-policy" target="_blank">
                   delivery policy
                 </a>
-                ,{' '}
+                ,{" "}
                 <a href="/happy-pay-terms" target="_blank">
                   happy pay terms
                 </a>
-                , and{' '}
+                , and{" "}
                 <a href="/returns-refunds-policy" target="_blank">
                   returns &amp; refunds policy
                 </a>
@@ -999,22 +1028,22 @@ export function TrayCheckoutClient() {
                 <h2 id="order-summary-heading">Order summary</h2>
               </div>
               <span>
-                {packs.length} {packs.length === 1 ? 'pack' : 'packs'}
+                {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>
 
             <div className={styles.orderSummaryList}>
               {packs.map((pack, index) => {
-                const isExpanded = !!expandedPacks[pack.id]
-                const previewItems = getPackItemPreview(pack)
+                const isExpanded = !!expandedPacks[pack.id];
+                const previewItems = getPackItemPreview(pack);
                 const hiddenCount = Math.max(
                   pack.items.length - previewItems.length,
                   0,
-                )
-                const learnerName = learnerInputs[index]?.trim()
+                );
+                const learnerName = learnerInputs[index]?.trim();
                 const learnerLabel = learnerName
                   ? `Learner ${index + 1}: ${learnerName}`
-                  : `Learner ${index + 1}: Add learner name`
+                  : `Learner ${index + 1}: Add learner name`;
                 return (
                   <article key={pack.id} className={styles.orderPackCard}>
                     <div className={styles.orderPackTop}>
@@ -1022,10 +1051,10 @@ export function TrayCheckoutClient() {
                         {editNameIndex === index ? (
                           <Input
                             ref={(node) => {
-                              fieldRefs.current[`learner_${index}`] = node
+                              fieldRefs.current[`learner_${index}`] = node;
                             }}
                             type="text"
-                            value={learnerInputs[index] || ''}
+                            value={learnerInputs[index] || ""}
                             onChange={(e) =>
                               handleLearnerNameChange(index, e.target.value)
                             }
@@ -1040,7 +1069,11 @@ export function TrayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={clsx(styles.orderPackLearnerLabel, errors[`learner_${index}`] && styles.orderPackLearnerLabelError)}
+                            className={clsx(
+                              styles.orderPackLearnerLabel,
+                              errors[`learner_${index}`] &&
+                                styles.orderPackLearnerLabelError,
+                            )}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
                           >
@@ -1056,18 +1089,18 @@ export function TrayCheckoutClient() {
                     <div className={styles.orderPackBody}>
                       <h3>{pack.packName}</h3>
                       <p>
-                        {pack.schoolName || 'School pack'}
-                        {pack.grade ? ` · ${pack.grade}` : ''}
+                        {pack.schoolName || "School pack"}
+                        {pack.grade ? ` · ${pack.grade}` : ""}
                       </p>
                       <div className={styles.orderPackBadges}>
                         <span>
-                          {pack.packMode === 'full'
-                            ? 'Full pack'
-                            : 'Customised'}
+                          {pack.packMode === "full"
+                            ? "Full pack"
+                            : "Customised"}
                         </span>
                         <span>
-                          {pack.items.length}{' '}
-                          {pack.items.length === 1 ? 'item' : 'items'}
+                          {pack.items.length}{" "}
+                          {pack.items.length === 1 ? "item" : "items"}
                         </span>
                         {pack.wantsPexcover ? <span>Pexcover</span> : null}
                       </div>
@@ -1085,8 +1118,8 @@ export function TrayCheckoutClient() {
                         }))
                       }
                     >
-                      <span>{isExpanded ? 'Hide items' : 'View items'}</span>
-                      <span aria-hidden="true">{isExpanded ? '-' : '+'}</span>
+                      <span>{isExpanded ? "Hide items" : "View items"}</span>
+                      <span aria-hidden="true">{isExpanded ? "-" : "+"}</span>
                     </button>
 
                     {isExpanded ? (
@@ -1100,7 +1133,7 @@ export function TrayCheckoutClient() {
                               <span>{item.name}</span>
                               <span>Qty {item.quantity}</span>
                             </li>
-                          )
+                          );
                         })}
                         {pack.wantsPexcover ? (
                           <li className={styles.itemisedPexcover}>
@@ -1117,7 +1150,7 @@ export function TrayCheckoutClient() {
                       </ul>
                     ) : null}
                   </article>
-                )
+                );
               })}
             </div>
 
@@ -1134,7 +1167,7 @@ export function TrayCheckoutClient() {
                   <strong>{formatCurrency(pexcoverTotal)}</strong>
                 </div>
               ) : null}
-              {fulfilmentOption === 'home_delivery' ? (
+              {fulfilmentOption === "home_delivery" ? (
                 <div>
                   <span>Delivery fee</span>
                   <strong>To confirm</strong>
@@ -1142,15 +1175,15 @@ export function TrayCheckoutClient() {
               ) : null}
               <div className={styles.summaryGrandTotal}>
                 <span>
-                  {fulfilmentOption === 'home_delivery'
-                    ? 'Pack total payable now'
-                    : 'Total payable now'}
+                  {fulfilmentOption === "home_delivery"
+                    ? "Pack total payable now"
+                    : "Total payable now"}
                 </span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
             </div>
 
-            {fulfilmentOption === 'home_delivery' ? (
+            {fulfilmentOption === "home_delivery" ? (
               <p className={styles.deliveryFeeNotice}>
                 The home-delivery fee is not included in this payment. We will
                 confirm the fee with you separately before dispatch.
@@ -1173,8 +1206,8 @@ export function TrayCheckoutClient() {
               aria-busy={submitting}
             >
               {submitting
-                ? 'Preparing your order...'
-                : fulfilmentOption === 'home_delivery'
+                ? "Preparing your order..."
+                : fulfilmentOption === "home_delivery"
                   ? `Pay Pack Total ${formatCurrency(total)}`
                   : `Pay Now ${formatCurrency(total)}`}
             </Button>
@@ -1206,12 +1239,12 @@ export function TrayCheckoutClient() {
           aria-busy={submitting}
         >
           {submitting
-            ? 'Preparing...'
-            : fulfilmentOption === 'home_delivery'
+            ? "Preparing..."
+            : fulfilmentOption === "home_delivery"
               ? `Pay Pack Total ${formatCurrency(total)}`
               : `Pay Now ${formatCurrency(total)}`}
         </Button>
       </div>
     </div>
-  )
+  );
 }

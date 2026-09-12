@@ -18,16 +18,19 @@ Scope: Supabase schema, RLS and grants, public read paths, application data adap
 - Deployed `00106_school_packs_autovacuum_tuning.sql`, applying conservative per-table autovacuum thresholds to prevent further `school_packs` bloat without a table rewrite.
 - `admin_letter_templates` now separates read (`orders.view`) from create, update, and delete (`orders.edit`) access. The previous unrestricted authenticated policy was removed.
 - `order_events`, `pack_events`, and `quotation_events` are server-only. Their rows include actor emails and JSON payloads and are not required by a public flow.
+- `00109_secure_public_schema_default_privileges.sql` makes future tables private by default; `00110_revoke_future_function_execute_grants.sql` removes the historic default execute grants from future functions.
 - `00108_revoke_direct_sensitive_access.sql` revokes direct `anon` and `authenticated` SQL grants on pricing, catalogue, order, supplier, payment, audit, and admin-report relations. Internal trigger functions and legacy public-directory functions are not callable through PostgREST.
 - Deployed `00107_create_brands_and_product_variants.sql` with RLS tied to `catalogue.view` and `catalogue.manage`; it does not expose product-variant cost or supplier data to anonymous clients.
 - Verified remote grants after `00108`: sensitive relations have no direct `anon` or `authenticated` table grants, while internal maintenance and legacy directory functions remain service-role only.
 - Raw `website_content` is server-only. The public web application uses the allow-listed CMS reader rather than direct table access.
+- `00114_normalize_payment_and_quotation_contract.sql` restores the tracked money precision and non-null payment completion fields. It validates existing rows first and refuses a deploy that would alter incomplete rows or silently round quotation values.
 - Letter save, delete, email send, and template mutation actions now require `orders.edit`; listing and search remain `orders.view`.
-- Remote migration history is aligned with the repository through `00108`. Migration `00104` was marked applied because its table already existed on remote; `00105` independently recreated its restrictive policies before deployment.
+- Admin session cookies are signed only with `ADMIN_SESSION_SECRET`; they no longer reuse the Supabase service-role key. Run `npm.cmd run security:preflight` before deployment and configure that secret in Vercel for every environment.
+- Remote migration history is aligned with the repository through `00114`. Migration `00104` was marked applied because its table already existed on remote; `00105` independently recreated its restrictive policies before deployment.
 
 ## Performance Observations
 
-- Remote public RPCs are query-efficient. Total client timing was 255-579 ms, so the remaining latency is predominantly API and network overhead. Keep Vercel and Supabase in compatible regions and retain the existing short server cache.
+- Remote public RPCs are query-efficient. Total client timing was 243-928 ms, so the remaining latency is predominantly API and network overhead. Keep Vercel and Supabase in compatible regions and retain the existing short server cache.
 - `school_packs` is the largest relation at about 87 MB for 23,635 rows, including 48 MB of indexes. Remote bloat reporting estimates 26 MB of table waste.
 - Several remote `school_packs` indexes overlap and show no usage since statistics collection. Do not drop them only from a usage counter: capture production query plans and monitor for a full traffic cycle first. Then remove only demonstrably redundant non-constraint indexes and run `REINDEX INDEX CONCURRENTLY` during a maintenance window.
 - No blocked or long-running remote queries were present during this audit.

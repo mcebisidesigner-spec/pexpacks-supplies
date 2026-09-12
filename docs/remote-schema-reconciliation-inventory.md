@@ -13,21 +13,19 @@ The linked database contains historical changes that were made outside the track
 
 ## Stage 1: Compatibility Functions
 
+Captured in `00111_capture_cms_and_bounded_admin_rpc.sql`: the public testimonial `school_name` shape. The stale `get_admin_pack_school_groups` function was retired because it depends on deleted legacy tables.
+
 Review, test against application routes, then capture individually:
 
-- `get_admin_pack_school_groups`: remote uses a larger default page size.
-- `get_public_cms_testimonials`: remote returns `school_name` in addition to the tracked result shape.
-- `update_dashboard_summary_on_order`: remote has an order-summary trigger function not in the tracked schema.
+- `update_dashboard_summary_on_order`: retired in `00112_retire_redundant_dashboard_summary_trigger.sql`; the tracked statement-level recalculation trigger remains authoritative.
 
 ## Stage 2: Data Compatibility
 
-Review existing data before any `ALTER TABLE` migration:
+Captured in `00114_normalize_payment_and_quotation_contract.sql`: payment amount, currency, gateway, status, and creation timestamp are mandatory; payment amount and quotation delivery/discount values use `numeric(12,2)`. The migration validates data first and aborts instead of silently rounding historical money values.
 
-- `payments`: precision/default/nullability and `updated_at` differences.
-- `quotations`: numeric delivery and discount values.
-- `orders`: payment gateway default.
-- `schools`: nullable slug behavior.
-- `cms_testimonials`: `school_name` column.
+Read-only audit results before capture: 0 payment rows, 2 quotations with complete two-decimal fees/discounts, and 6 testimonials with school context.
+
+- `orders`: retain the nullable gateway at order creation. The payment RPC supplies the final gateway only after verified payment.
 
 ## Stage 3: Read Models and Indexes
 

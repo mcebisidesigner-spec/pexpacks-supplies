@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   ADMIN_STANDARD_IDLE_MS,
@@ -11,6 +13,24 @@ beforeAll(() => {
 });
 
 describe("admin session policy", () => {
+  it("keeps admin heartbeat responses out of browser and proxy caches", () => {
+    const route = readFileSync(
+      resolve(process.cwd(), "app/api/admin/session/heartbeat/route.ts"),
+      "utf8",
+    );
+    expect(route).toContain('export const dynamic = "force-dynamic"');
+    expect(route).toContain('"Cache-Control": "no-store, max-age=0"');
+  });
+
+  it("does not reuse the Supabase service-role key for admin cookie signing", () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "lib/admin/session-policy.ts"),
+      "utf8",
+    );
+    expect(source).toContain('process.env.ADMIN_SESSION_SECRET || ""');
+    expect(source).not.toContain("process.env.SUPABASE_SERVICE_ROLE_KEY");
+  });
+
   it("accepts a valid signed session for the matching user", async () => {
     const value = await createAdminSessionValue("user-1", "standard");
 

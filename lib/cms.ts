@@ -332,6 +332,7 @@ export interface PublicCmsTestimonial {
   id: string;
   author_name: string;
   author_role: string;
+  school_name: string | null;
   quote: string;
   rating: number;
   avatar_url: string | null;

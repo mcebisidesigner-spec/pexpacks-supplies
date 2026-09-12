@@ -1,0 +1,381 @@
+/* ==========================================================================
+   Pexcover™ Drawer Card & Paper Selector (Custom CSS Modules)
+   Complies with Pexpacks Brand Theme & Mobile Slide-Out Drawer Anatomy
+   ========================================================================== */
+
+.card {
+  --pexcover-active-bg: #EBF7F5;
+  --pexcover-active-border: #BBE5DE;
+  --pexcover-inactive-bg: #F8FAFC;
+  --pexcover-inactive-border: #E2E8F0;
+  --pexcover-primary: #1E7468;
+  --pexcover-primary-dark: #165A51;
+  --pexcover-text-primary: #0F172A;
+  --pexcover-text-secondary: #64748B;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--pexcover-inactive-border);
+  background-color: var(--pexcover-inactive-bg);
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: background-color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.cardActive {
+  background-color: var(--pexcover-active-bg);
+  border-color: var(--pexcover-active-border);
+  box-shadow: 0 2px 10px rgba(30, 116, 104, 0.08);
+}
+
+.cardDisabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+/* ── Top Row Summary Header ── */
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.topRowDisabled {
+  cursor: not-allowed;
+}
+
+/* Custom Checkbox Toggle */
+.checkboxWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nativeCheckbox {
+  position: absolute;
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  cursor: inherit;
+  margin: 0;
+  z-index: 1;
+}
+
+.customCheckbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1.5px solid #CBD5E1;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+  color: #FFFFFF;
+}
+
+.customCheckboxChecked {
+  background-color: var(--pexcover-primary);
+  border-color: var(--pexcover-primary);
+  box-shadow: 0 2px 6px rgba(30, 116, 104, 0.35);
+}
+
+.nativeCheckbox:focus-visible + .customCheckbox {
+  outline: 2px solid var(--pexcover-primary);
+  outline-offset: 2px;
+}
+
+/* Service Details */
+.serviceDetails {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.serviceHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.serviceTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pexcover-text-primary);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background-color: rgba(30, 116, 104, 0.12);
+  color: var(--pexcover-primary);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.serviceSubtitle {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--pexcover-text-secondary);
+  line-height: 1.3;
+}
+
+/* Price Tag */
+.priceTag {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--pexcover-primary);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.priceTagDisabled {
+  color: #94A3B8;
+  font-weight: 600;
+}
+
+/* ── Accordion Container ── */
+.accordion {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease;
+  opacity: 0;
+}
+
+.accordionOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.accordionContent {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.accordionBody {
+  padding: 4px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px dashed rgba(30, 116, 104, 0.22);
+}
+
+/* Guidance bar inside drawer */
+.selectorGuidance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.selectorLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pexcover-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.selectorNote {
+  font-size: 10.5px;
+  color: var(--pexcover-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── 3-Column Swatch Grid ── */
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Individual Swatch Card */
+.swatchCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 6px 8px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all 180ms ease;
+  text-align: center;
+  user-select: none;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.swatchCard:hover {
+  border-color: #BBE5DE;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 116, 104, 0.09);
+}
+
+.swatchCard:focus-visible {
+  outline: 2px solid var(--pexcover-primary);
+  outline-offset: 2px;
+}
+
+.swatchCardSelected {
+  border-color: var(--pexcover-primary);
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 2px rgba(30, 116, 104, 0.25), 0 4px 12px rgba(30, 116, 104, 0.1);
+}
+
+/* Thumbnail Visual & Clear Protective Plastic Sheen */
+.swatchThumbnail {
+  position: relative;
+  width: 100%;
+  height: 62px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.swatchImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Realistic Clear Sleeve Sheen Layer */
+.swatchThumbnail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 35%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Circular Selection Checkmark Badge */
+.checkmarkBadge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--pexcover-primary);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10.5px;
+  font-weight: 900;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+  animation: popBadge 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popBadge {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Text Meta within Swatch Card */
+.swatchTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pexcover-text-primary);
+  margin: 6px 0 0;
+  line-height: 1.2;
+}
+
+.swatchDesc {
+  font-size: 9px;
+  color: var(--pexcover-text-secondary);
+  line-height: 1.25;
+  margin: 2px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Swatch Selection Confirmation Pill */
+.selectionPill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background-color: rgba(30, 116, 104, 0.08);
+  border-radius: 6px;
+  font-size: 10.5px;
+  color: var(--pexcover-primary-dark);
+}
+
+.selectionPillText {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.selectionPillName {
+  font-weight: 700;
+}
+
+/* Responsive adjustment for narrow devices (<380px) */
+@media (max-width: 380px) {
+  .swatchGrid {
+    gap: 6px;
+  }
+  .swatchCard {
+    padding: 5px 4px 6px;
+  }
+  .swatchThumbnail {
+    height: 54px;
+  }
+  .swatchTitle {
+    font-size: 10px;
+  }
+  .swatchDesc {
+    font-size: 8.5px;
+  }
+}

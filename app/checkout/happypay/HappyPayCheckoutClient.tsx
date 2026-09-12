@@ -64,7 +64,7 @@ export function HappyPayCheckoutClient() {
 
   // Per-pack learner names — inline edit-on-click pattern
   const [learnerInputs, setLearnerInputs] = useState<string[]>(() =>
-    packs.map((p) => p.learnerName || "")
+    packs.map((p) => p.learnerName || ""),
   );
   const [editNameIndex, setEditNameIndex] = useState<number | null>(null);
   const fieldRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -111,7 +111,7 @@ export function HappyPayCheckoutClient() {
         return next;
       });
     },
-    []
+    [],
   );
 
   const handleLearnerNameBlur = useCallback(
@@ -124,7 +124,7 @@ export function HappyPayCheckoutClient() {
       }
       setEditNameIndex(null);
     },
-    [packs, learnerInputs, updatePackDetails]
+    [packs, learnerInputs, updatePackDetails],
   );
 
   const handleLearnerNameKeyDown = useCallback(
@@ -141,7 +141,7 @@ export function HappyPayCheckoutClient() {
         setEditNameIndex(null);
       }
     },
-    [packs]
+    [packs],
   );
 
   function clearFieldError(field: string) {
@@ -158,22 +158,28 @@ export function HappyPayCheckoutClient() {
 
     if (packs.length === 0)
       nextErrors.packs = "Choose a school pack before checkout.";
-    if (total <= 0) nextErrors.total = "Your order total must be greater than zero.";
+    if (total <= 0)
+      nextErrors.total = "Your order total must be greater than zero.";
     if (!fullName.trim() || fullName.trim().length < 2)
       nextErrors.fullName = "Please enter your full name.";
-    if (!buyerPhone.trim()) nextErrors.buyerPhone = "Please enter your phone number.";
+    if (!buyerPhone.trim())
+      nextErrors.buyerPhone = "Please enter your phone number.";
     else if (!isLikelySaPhone(buyerPhone))
-      nextErrors.buyerPhone = "Please enter a valid South African phone number.";
-    if (!buyerEmail.trim()) nextErrors.buyerEmail = "Please enter your email address.";
+      nextErrors.buyerPhone =
+        "Please enter a valid South African phone number.";
+    if (!buyerEmail.trim())
+      nextErrors.buyerEmail = "Please enter your email address.";
     else if (!isValidEmail(buyerEmail.trim()))
       nextErrors.buyerEmail = "Please enter a valid email address.";
-    if (!consent) nextErrors.consent = "Please accept the Happy Pay terms consent.";
+    if (!consent)
+      nextErrors.consent = "Please accept the Happy Pay terms consent.";
 
     // Validate each learner name
     packs.forEach((_, index) => {
       const name = learnerInputs[index]?.trim() || "";
       if (!name || name.length < 2) {
-        nextErrors[`learner_${index}`] = `Please enter learner ${index + 1}'s name.`;
+        nextErrors[`learner_${index}`] =
+          `Please enter learner ${index + 1}'s name.`;
       }
     });
 
@@ -201,7 +207,8 @@ export function HappyPayCheckoutClient() {
           buyerEmail: buyerEmail.trim().toLowerCase(),
           buyerPhone: normalisePhone(buyerPhone),
           packs: packs.map((pack, pi) => ({
-            learnerName: learnerInputs[pi]?.trim() || pack.learnerName?.trim() || "",
+            learnerName:
+              learnerInputs[pi]?.trim() || pack.learnerName?.trim() || "",
             schoolSlug: pack.schoolSlug || "",
             schoolName: pack.schoolName || "",
             grade: pack.grade || "",
@@ -217,6 +224,7 @@ export function HappyPayCheckoutClient() {
             totalPrice: pack.totalPrice,
             modifications: pack.modifications,
             wantsPexcover: pack.wantsPexcover || false,
+            pexcoverPaperStyle: pack.pexcoverPaperStyle,
             pexcoverPrice: pack.wantsPexcover
               ? calculatePexcoverTotal(pack.items).pexcoverTotalRands
               : 0,
@@ -230,7 +238,9 @@ export function HappyPayCheckoutClient() {
           estimatedTotal: total,
           deliveryMethod: "school_collection",
           primarySchoolSlug:
-            uniqueSchools.length > 0 ? uniqueSchools[0].slug : packs[0]?.schoolSlug || "",
+            uniqueSchools.length > 0
+              ? uniqueSchools[0].slug
+              : packs[0]?.schoolSlug || "",
           notes: "Happy Pay split payment (2 x instalments)",
           idempotencyKey: idempotencyKeyRef.current,
         }),
@@ -255,7 +265,7 @@ export function HappyPayCheckoutClient() {
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "Failed to initialize payment."
+          : "Failed to initialize payment.",
       );
     } finally {
       setSubmitting(false);
@@ -268,7 +278,9 @@ export function HappyPayCheckoutClient() {
         <div className={checkoutStyles.emptyCheckout}>
           <p className={checkoutStyles.checkoutKicker}>Happy Pay</p>
           <h1>No packs in your order.</h1>
-          <p>Choose a school pack before splitting your payment with Happy Pay.</p>
+          <p>
+            Choose a school pack before splitting your payment with Happy Pay.
+          </p>
           <Button href="/schools" variant="primary" size="lg">
             Find a school pack
           </Button>
@@ -288,7 +300,9 @@ export function HappyPayCheckoutClient() {
           Back to order
         </button>
         <a
-          href={buildWhatsAppHref("Hi Pexpacks, I need help with Happy Pay checkout.")}
+          href={buildWhatsAppHref(
+            "Hi Pexpacks, I need help with Happy Pay checkout.",
+          )}
           target="_blank"
           rel="noopener noreferrer"
           className={checkoutStyles.helpLink}
@@ -298,7 +312,13 @@ export function HappyPayCheckoutClient() {
       </header>
 
       <div className={checkoutStyles.checkoutGrid}>
-        <section className={clsx(checkoutStyles.stepCard, checkoutStyles.checkoutHero, styles.hero)}>
+        <section
+          className={clsx(
+            checkoutStyles.stepCard,
+            checkoutStyles.checkoutHero,
+            styles.hero,
+          )}
+        >
           <div className={styles.heroTop}>
             <p className={checkoutStyles.checkoutKicker}>Buy Now Pay Later</p>
             <HappyPayLogo tone="dark" className={styles.heroLogo} />
@@ -336,14 +356,18 @@ export function HappyPayCheckoutClient() {
           aria-label="Happy Pay customer details"
           onSubmit={(e) => e.preventDefault()}
         >
-          <section className={styles.detailsSection} aria-labelledby="hp-details-heading">
+          <section
+            className={styles.detailsSection}
+            aria-labelledby="hp-details-heading"
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNumber}>1</span>
               <div>
                 <h2 id="hp-details-heading">Your details</h2>
                 <p>
                   Happy Pay needs these details to set up your split payment.
-                  Your pack is only reserved after you approve the first payment.
+                  Your pack is only reserved after you approve the first
+                  payment.
                 </p>
               </div>
             </div>
@@ -395,12 +419,18 @@ export function HappyPayCheckoutClient() {
           </section>
 
           {/* ── Learner details ─────────────────────────────────────── */}
-          <section className={styles.detailsSection} aria-labelledby="hp-learners-heading">
+          <section
+            className={styles.detailsSection}
+            aria-labelledby="hp-learners-heading"
+          >
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNumber}>2</span>
               <div>
                 <h2 id="hp-learners-heading">Learner details</h2>
-                <p>Add a name for each learner so we know which pack belongs to whom.</p>
+                <p>
+                  Add a name for each learner so we know which pack belongs to
+                  whom.
+                </p>
               </div>
             </div>
 
@@ -434,7 +464,10 @@ export function HappyPayCheckoutClient() {
             </div>
           </section>
 
-          <section className={styles.consentCard} aria-label="Happy Pay consent">
+          <section
+            className={styles.consentCard}
+            aria-label="Happy Pay consent"
+          >
             <label className={styles.consentField}>
               <input
                 type="checkbox"
@@ -447,11 +480,11 @@ export function HappyPayCheckoutClient() {
                 aria-invalid={!!errors.consent}
               />
               <span>
-                I understand that by paying with Happy Pay, I will be split-billed
-                2 equal interest-free instalments (50% today, 50% in 30 days)
-                charged to the payment method I approve with Happy Pay. Happy Pay
-                is an independent company and Pexpacks acts only as a referral
-                consultant. I have read and agree to the{" "}
+                I understand that by paying with Happy Pay, I will be
+                split-billed 2 equal interest-free instalments (50% today, 50%
+                in 30 days) charged to the payment method I approve with Happy
+                Pay. Happy Pay is an independent company and Pexpacks acts only
+                as a referral consultant. I have read and agree to the{" "}
                 <a href="/happy-pay-terms" target="_blank">
                   happy pay terms
                 </a>
@@ -478,7 +511,10 @@ export function HappyPayCheckoutClient() {
           ) : null}
         </form>
 
-        <aside className={checkoutStyles.summaryColumn} aria-labelledby="hp-summary-heading">
+        <aside
+          className={checkoutStyles.summaryColumn}
+          aria-labelledby="hp-summary-heading"
+        >
           <div className={checkoutStyles.summaryCard}>
             <div className={styles.summaryHeader}>
               <div>
@@ -511,7 +547,9 @@ export function HappyPayCheckoutClient() {
                               handleLearnerNameChange(index, e.target.value)
                             }
                             onBlur={() => handleLearnerNameBlur(index)}
-                            onKeyDown={(e) => handleLearnerNameKeyDown(e, index)}
+                            onKeyDown={(e) =>
+                              handleLearnerNameKeyDown(e, index)
+                            }
                             placeholder="Learner name"
                             aria-label={`Learner ${index + 1} name`}
                             autoFocus
@@ -521,7 +559,8 @@ export function HappyPayCheckoutClient() {
                             type="button"
                             className={clsx(
                               styles.learnerLabel,
-                              errors[`learner_${index}`] && styles.learnerLabelError
+                              errors[`learner_${index}`] &&
+                                styles.learnerLabelError,
                             )}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
@@ -563,7 +602,10 @@ export function HappyPayCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={clsx(checkoutStyles.fullWidth, styles.desktopPayButton)}
+              className={clsx(
+                checkoutStyles.fullWidth,
+                styles.desktopPayButton,
+              )}
               onClick={handlePay}
               disabled={!canSubmit}
               aria-busy={submitting}
@@ -583,8 +625,8 @@ export function HappyPayCheckoutClient() {
             </Button>
 
             <p className={checkoutStyles.summarySecurity}>
-              Your details are secure. Happy Pay handles the payment on behalf of
-              Pexpacks.
+              Your details are secure. Happy Pay handles the payment on behalf
+              of Pexpacks.
             </p>
           </div>
         </aside>
