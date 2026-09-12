@@ -36,6 +36,8 @@ const PexpacksSans = localFont({
   ],
   variable: "--font-pexpacks-sans",
   display: "swap",
+  adjustFontFallback: "Arial",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 const PexpacksSansAlt = localFont({
@@ -63,6 +65,8 @@ const PexpacksSansAlt = localFont({
   ],
   variable: "--font-pexpacks-sans-alt",
   display: "swap",
+  adjustFontFallback: "Arial",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const viewport: Viewport = {
@@ -211,7 +215,15 @@ export default async function RootLayout({
         <JsonLd data={organizationSchema()} />
         <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />
-        <div className="site-shell">
+        <div
+          className="site-shell"
+          style={
+            {
+              "--announcement-bar-height":
+                announcement?.enabled && announcement?.text ? "44px" : "0px",
+            } as React.CSSProperties
+          }
+        >
           <SiteChrome announcement={announcement} company={company} footer={footer}>
             {children}
           </SiteChrome>

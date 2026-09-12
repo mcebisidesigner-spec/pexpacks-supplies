@@ -42,15 +42,34 @@ export function ClientRuntimeWidgets() {
       }
     }
 
+    // Run once immediately on mount
     stripInjectedAssistantControls();
 
-    const observer = new MutationObserver(stripInjectedAssistantControls);
+    // Debounce mutation checks and disconnect after 3.5 seconds to avoid main-thread INP contention
+    let scheduled = false;
+    const debouncedCheck = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        stripInjectedAssistantControls();
+        scheduled = false;
+      });
+    };
+
+    const observer = new MutationObserver(debouncedCheck);
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
     });
 
-    return () => observer.disconnect();
+    const cleanupTimer = setTimeout(() => {
+      observer.disconnect();
+    }, 3500);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(cleanupTimer);
+    };
   }, []);
 
   useEffect(() => {

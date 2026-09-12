@@ -194,12 +194,12 @@ async function fetchWebsiteContent(): Promise<WebsiteContentValue> {
     WEBSITE_CONTENT_DEFAULTS,
   ) as WebsiteContentValue;
   const admin = createSupabaseAdminClient();
-  const { data, error } = await admin
-    .from("website_content")
-    .select("key, value");
+  const { data, error } = await admin.rpc(
+    "get_public_website_content" as never,
+  );
   if (error || !data) return result;
 
-  for (const row of data) {
+  for (const row of data as Array<{ key: string; value: unknown }>) {
     const key = row.key as WebsiteContentKey;
     if (!(key in WEBSITE_CONTENT_DEFAULTS)) continue;
     const value = row.value;

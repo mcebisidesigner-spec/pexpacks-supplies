@@ -95,6 +95,7 @@
     linear-gradient(135deg, rgba(26, 42, 64, 0.94), rgba(21, 34, 56, 0.88)),
     var(--pex-navy);
   box-shadow: 0 28px 70px rgba(26, 42, 64, 0.18);
+  will-change: transform;
   animation: floatAnimation 6s ease-in-out infinite;
   transition: transform 0.3s ease;
 }

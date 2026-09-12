@@ -106,6 +106,17 @@ function executionMs(row) {
   if (search.error)
     fail(`search_public_schools failed: ${search.error.message}`);
 
+  const websiteContent = await timed(
+    "get_public_website_content",
+    () => supabase.rpc("get_public_website_content"),
+    packBudgetMs,
+  );
+  if (websiteContent.error) {
+    fail(
+      "get_public_website_content failed: " + websiteContent.error.message,
+    );
+  }
+
   const explain = await supabase.rpc("explain_public_read_paths", {
     school_slug: schoolSlug,
     search_query: searchQuery,

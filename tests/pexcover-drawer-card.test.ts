@@ -180,10 +180,11 @@ describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
     expect(cssContent).toContain("--pexcover-text-primary: #0F172A");
     expect(cssContent).toContain("--pexcover-text-secondary: #64748B");
 
-    // Sheen overlay gradient & circular checkmark badge
+    // Sheen overlay gradient & circular checkmark badge / round checkbox
     expect(cssContent).toContain("linear-gradient");
     expect(cssContent).toContain("rgba(255, 255, 255");
     expect(cssContent).toContain(".checkmarkBadge");
+    expect(cssContent).toContain(".unselectedCheckbox");
     expect(cssContent).toContain("top: 6px");
     expect(cssContent).toContain("right: 6px");
 

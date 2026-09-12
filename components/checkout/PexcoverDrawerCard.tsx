@@ -391,13 +391,18 @@ export function PexcoverDrawerCard({
                     {/* Fixed Height Swatch Thumbnail with Protective Sleeve Sheen */}
                     <div className={styles.swatchThumbnail}>
                       <SwatchThumbnailPreview option={opt} />
-                      {isSelected && (
+                      {isSelected ? (
                         <div
                           className={styles.checkmarkBadge}
                           aria-label="Selected style"
                         >
                           ✓
                         </div>
+                      ) : (
+                        <div
+                          className={styles.unselectedCheckbox}
+                          aria-hidden="true"
+                        />
                       )}
                     </div>
 

@@ -93,7 +93,13 @@ type TrayPack = {
   gradeSlug: string;
   packName: string;
   packMode: string;
-  items: { id?: string; name: string; quantity: number; unitPrice?: number }[];
+  items: {
+    id?: string;
+    name: string;
+    quantity: number;
+    unitPrice?: number;
+    requiresPexcover?: boolean;
+  }[];
   totalPrice: number;
   wantsPexcover: boolean;
   pexcoverPrice: number;

@@ -3030,6 +3030,14 @@ export interface Database {
         Args: Record<string, never>;
         Returns: string;
       };
+      create_pending_order_with_snapshots: {
+        Args: { p_order: Json; p_snapshots: Json };
+        Returns: Json;
+      };
+      get_public_website_content: {
+        Args: Record<string, never>;
+        Returns: { key: string; value: Json }[];
+      };
       complete_order_payment: {
         Args: {
           p_order_reference: string;

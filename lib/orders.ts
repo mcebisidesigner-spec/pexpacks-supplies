@@ -37,15 +37,29 @@ type OrderSnapshotPack = {
   }[];
 };
 
-async function insertOrderSnapshots(
-  orderId: string,
+type OrderSnapshot = {
+  product_id: string | null;
+  pack_id: string | null;
+  sku_snapshot: string;
+  product_name_snapshot: string;
+  quantity: number;
+  unit_selling_price: number;
+  estimated_unit_cost: number | null;
+  expected_margin: number | null;
+  pricing_version: string;
+  school_name_snapshot: string;
+  grade_snapshot: string;
+  requires_pexcover: boolean;
+};
+
+async function buildOrderSnapshots(
   packs: OrderSnapshotPack[],
-) {
+): Promise<OrderSnapshot[]> {
   const supabase = createSupabaseAdminClient();
   const lines = packs.flatMap((pack) =>
     pack.items.map((item) => ({ ...item, pack })),
   );
-  if (!lines.length) return;
+  if (!lines.length) return [];
 
   const names = [
     ...new Set(lines.map((line) => line.name.trim()).filter(Boolean)),
@@ -59,7 +73,7 @@ async function insertOrderSnapshots(
 
   if (productError) {
     throw new Error(
-      `Unable to resolve order products: ${productError.message}`,
+      "Unable to resolve order products: " + productError.message,
     );
   }
 
@@ -75,7 +89,8 @@ async function insertOrderSnapshots(
       }>
     ).map((product) => [product.name.trim().toLowerCase(), product]),
   );
-  const snapshots = lines.map((line) => {
+
+  return lines.map((line) => {
     const product = productByName.get(line.name.trim().toLowerCase());
     const unitPrice = Number(
       line.unitPrice ?? product?.current_selling_price ?? 0,
@@ -85,12 +100,16 @@ async function insertOrderSnapshots(
         ? null
         : Number(product.latest_verified_cost);
     return {
-      order_id: orderId,
       product_id: product?.id ?? null,
       pack_id: line.pack.packId ?? null,
       sku_snapshot:
         product?.sku ??
-        `UNMATCHED-${createHash("sha1").update(line.name.trim().toLowerCase()).digest("hex").slice(0, 10).toUpperCase()}`,
+        ("UNMATCHED-" +
+          createHash("sha1")
+            .update(line.name.trim().toLowerCase())
+            .digest("hex")
+            .slice(0, 10)
+            .toUpperCase()),
       product_name_snapshot: line.name,
       quantity: Math.max(1, Math.trunc(line.quantity)),
       unit_selling_price: unitPrice,
@@ -106,13 +125,65 @@ async function insertOrderSnapshots(
         line.requiresPexcover ?? Boolean(product?.requires_pexcover),
     };
   });
+}
 
-  const { error } = await supabase
-    .from("order_items" as never)
-    .insert(snapshots as never);
+type PendingOrderRecord = {
+  id: string;
+  order_reference: string;
+  unique_customer_id: string;
+  tracking_token: string;
+};
+
+async function persistPendingOrder(
+  order: Record<string, unknown>,
+  packs: OrderSnapshotPack[],
+  idempotencyKey?: string,
+): Promise<{
+  id: string;
+  orderReference: string;
+  uniqueCustomerId: string;
+  trackingToken: string;
+}> {
+  const supabase = createSupabaseAdminClient();
+  const snapshots = await buildOrderSnapshots(packs);
+  const rpc = supabase.rpc.bind(supabase) as unknown as (
+    name: string,
+    args: Record<string, unknown>,
+  ) => Promise<{
+    data: unknown;
+    error: { message: string; code?: string } | null;
+  }>;
+
+  const { data, error } = await rpc("create_pending_order_with_snapshots", {
+    p_order: order,
+    p_snapshots: snapshots,
+  });
+
   if (error) {
-    throw new Error(`Unable to snapshot order items: ${error.message}`);
+    if (error.code === "23505" && idempotencyKey) {
+      const existing = await getOrderByIdempotencyKey(idempotencyKey);
+      if (existing) return existing;
+    }
+    console.error("[orders] Failed to create pending order:", error.message);
+    throw new Error("Failed to create order: " + error.message);
   }
+
+  const created = data as PendingOrderRecord | null;
+  if (
+    !created?.id ||
+    !created.order_reference ||
+    !created.unique_customer_id ||
+    !created.tracking_token
+  ) {
+    throw new Error("Failed to create order: invalid database response.");
+  }
+
+  return {
+    id: created.id,
+    orderReference: created.order_reference,
+    uniqueCustomerId: created.unique_customer_id,
+    trackingToken: created.tracking_token,
+  };
 }
 
 export async function createPendingOrder(input: {
@@ -133,92 +204,65 @@ export async function createPendingOrder(input: {
   gatewayMetadata?: Record<string, string | number | boolean | null>;
   idempotencyKey?: string;
   packId?: string;
-  snapshotItems?: { name: string; quantity: number; unitPrice?: number }[];
+  snapshotItems?: {
+    name: string;
+    quantity: number;
+    unitPrice?: number;
+    requiresPexcover?: boolean;
+  }[];
 }) {
-  const supabase = createSupabaseAdminClient();
-
   const orderId = randomUUID();
   const uniqueCustomerId = generateUniqueCustomerId();
   const trackingToken = generateTrackingToken();
-
   const packItems = Array.isArray(input.items) ? input.items : [];
   const hasPexcover = packItems.some(
     (item) =>
       typeof item === "string" && item.toLowerCase().includes("pexcover"),
   );
-  const metaIdempotency = input.idempotencyKey
-    ? { idempotency_key: input.idempotencyKey }
-    : undefined;
-  const metaNotes = input.notes ? { notes: input.notes } : undefined;
-  const metaGateway = input.gatewayMetadata
-    ? { gateway: input.gatewayMetadata }
-    : undefined;
-  const meta =
-    metaNotes || metaGateway || metaIdempotency
-      ? { ...metaNotes, ...metaGateway, ...metaIdempotency }
-      : undefined;
+  const meta = {
+    ...(input.notes ? { notes: input.notes } : {}),
+    ...(input.gatewayMetadata ? { gateway: input.gatewayMetadata } : {}),
+    ...(input.idempotencyKey ? { idempotency_key: input.idempotencyKey } : {}),
+  };
 
-  const { error } = await supabase.from("orders").insert({
-    id: orderId,
-    order_reference: input.orderReference,
-    unique_customer_id: uniqueCustomerId,
-    tracking_token: trackingToken,
-    buyer_name: input.buyerName,
-    buyer_phone: input.buyerPhone,
-    buyer_email: input.buyerEmail || null,
-    learner_name: input.learnerName || null,
-    school_slug: input.schoolSlug,
-    school_name: input.schoolName,
-    grade: input.grade,
-    pack_type: input.packType,
-    items: packItems.length > 0 ? packItems : null,
-    estimated_total: input.estimatedTotal,
-    fulfilment_option:
-      input.deliveryMethod === "school_collection"
-        ? "School collection"
-        : input.deliveryMethod === "delivery"
-          ? "Home delivery"
-          : "Collection point",
-    metadata: meta,
-    idempotency_key: input.idempotencyKey ?? null,
-    pexcover_requested: hasPexcover,
-    consent: true,
-    payment_gateway: input.paymentGateway ?? null,
-    status: "pending_payment",
-  });
-
-  if (error) {
-    if (error.code === "23505" && input.idempotencyKey) {
-      const existing = await getOrderByIdempotencyKey(input.idempotencyKey);
-      if (existing) return existing;
-    }
-    console.error(
-      "[orders] Failed to create pending order:",
-      JSON.stringify(error),
-    );
-    throw new Error(`Failed to create order: ${error.message}`);
-  }
-
-  try {
-    await insertOrderSnapshots(orderId, [
+  return persistPendingOrder(
+    {
+      id: orderId,
+      order_reference: input.orderReference,
+      unique_customer_id: uniqueCustomerId,
+      tracking_token: trackingToken,
+      buyer_name: input.buyerName,
+      buyer_phone: input.buyerPhone,
+      buyer_email: input.buyerEmail,
+      learner_name: input.learnerName ?? null,
+      school_slug: input.schoolSlug,
+      school_name: input.schoolName,
+      grade: input.grade,
+      pack_type: input.packType,
+      items: packItems,
+      estimated_total: input.estimatedTotal,
+      fulfilment_option:
+        input.deliveryMethod === "school_collection"
+          ? "School collection"
+          : input.deliveryMethod === "delivery"
+            ? "Home delivery"
+            : "Collection point",
+      metadata: meta,
+      payment_gateway: input.paymentGateway ?? null,
+      idempotency_key: input.idempotencyKey ?? null,
+      consent: true,
+      pexcover_requested: hasPexcover,
+    },
+    [
       {
         packId: input.packId,
         schoolName: input.schoolName,
         grade: input.grade,
         items: input.snapshotItems ?? [],
       },
-    ]);
-  } catch (snapshotError) {
-    await supabase.from("orders").delete().eq("id", orderId);
-    throw snapshotError;
-  }
-
-  return {
-    id: orderId,
-    orderReference: input.orderReference,
-    uniqueCustomerId,
-    trackingToken,
-  };
+    ],
+    input.idempotencyKey,
+  );
 }
 
 export async function getOrderByIdempotencyKey(idempotencyKey: string) {
@@ -375,6 +419,7 @@ export async function createMultiPackOrder(input: {
       name: string;
       quantity: number;
       unitPrice?: number;
+      requiresPexcover?: boolean;
     }[];
     totalPrice: number;
     wantsPexcover?: boolean;
@@ -392,104 +437,78 @@ export async function createMultiPackOrder(input: {
   gatewayMetadata?: Record<string, string | number | boolean | null>;
   idempotencyKey?: string;
 }) {
-  const supabase = createSupabaseAdminClient();
   const orderId = randomUUID();
   const uniqueCustomerId = generateUniqueCustomerId();
   const trackingToken = generateTrackingToken();
+  const primaryPack =
+    input.packs.find((pack) => pack.schoolSlug === input.primarySchoolSlug) ??
+    input.packs[0];
 
-  const { error } = await supabase.from("orders").insert({
-    id: orderId,
-    order_reference: input.orderReference,
-    unique_customer_id: uniqueCustomerId,
-    tracking_token: trackingToken,
-    buyer_name: input.buyerName,
-    buyer_phone: input.buyerPhone,
-    buyer_email: input.buyerEmail || null,
-    school_slug: input.primarySchoolSlug || input.packs[0]?.schoolSlug || "",
-    school_name:
-      input.packs.find((p) => p.schoolSlug === input.primarySchoolSlug)
-        ?.schoolName ||
-      input.packs[0]?.schoolName ||
-      "Multiple schools",
-    grade:
-      input.packs
-        .map((p) => p.grade)
-        .filter(Boolean)
-        .join(", ") || "Multiple grades",
-    pack_type: "multi-school",
-    items: input.summaryItems,
-    estimated_total: input.estimatedTotal,
-    fulfilment_option:
-      input.deliveryMethod === "school_collection"
-        ? "School collection"
-        : input.deliveryMethod === "delivery"
-          ? "Home delivery"
-          : "Collection point",
-    metadata: {
-      packs: input.packs.map((p) => ({
-        learner_name: p.learnerName,
-        school_slug: p.schoolSlug,
-        school_name: p.schoolName,
-        grade: p.grade,
-        pack_name: p.packName,
-        pack_mode: p.packMode,
-        items: p.items,
-        total_price:
-          p.totalPrice + (p.wantsPexcover ? p.pexcoverPrice || 0 : 0),
-        wants_pexcover: p.wantsPexcover || false,
-        pexcover_price: p.wantsPexcover ? p.pexcoverPrice || 0 : 0,
-        pexcover_paper_style: p.wantsPexcover
-          ? normalisePexcoverPaperStyle(p.pexcoverPaperStyle)
-          : null,
-        base_pack_price: p.basePackPrice || p.totalPrice,
-      })),
-      pack_count: input.packs.length,
-      primary_school_slug: input.primarySchoolSlug || null,
-      ...(input.idempotencyKey
-        ? { idempotency_key: input.idempotencyKey }
-        : {}),
-      ...(input.notes ? { notes: input.notes } : {}),
-      ...(input.gatewayMetadata ? { gateway: input.gatewayMetadata } : {}),
+  return persistPendingOrder(
+    {
+      id: orderId,
+      order_reference: input.orderReference,
+      unique_customer_id: uniqueCustomerId,
+      tracking_token: trackingToken,
+      buyer_name: input.buyerName,
+      buyer_phone: input.buyerPhone,
+      buyer_email: input.buyerEmail,
+      school_slug: input.primarySchoolSlug || input.packs[0]?.schoolSlug || "",
+      school_name: primaryPack?.schoolName || "Multiple schools",
+      grade:
+        input.packs
+          .map((pack) => pack.grade)
+          .filter(Boolean)
+          .join(", ") || "Multiple grades",
+      pack_type: "multi-school",
+      items: input.summaryItems,
+      estimated_total: input.estimatedTotal,
+      fulfilment_option:
+        input.deliveryMethod === "school_collection"
+          ? "School collection"
+          : input.deliveryMethod === "delivery"
+            ? "Home delivery"
+            : "Collection point",
+      metadata: {
+        packs: input.packs.map((pack) => ({
+          learner_name: pack.learnerName,
+          school_slug: pack.schoolSlug,
+          school_name: pack.schoolName,
+          grade: pack.grade,
+          pack_name: pack.packName,
+          pack_mode: pack.packMode,
+          items: pack.items,
+          total_price:
+            pack.totalPrice +
+            (pack.wantsPexcover ? pack.pexcoverPrice || 0 : 0),
+          wants_pexcover: pack.wantsPexcover || false,
+          pexcover_price: pack.wantsPexcover ? pack.pexcoverPrice || 0 : 0,
+          pexcover_paper_style: pack.wantsPexcover
+            ? normalisePexcoverPaperStyle(pack.pexcoverPaperStyle)
+            : null,
+          base_pack_price: pack.basePackPrice || pack.totalPrice,
+        })),
+        pack_count: input.packs.length,
+        primary_school_slug: input.primarySchoolSlug || null,
+        ...(input.idempotencyKey
+          ? { idempotency_key: input.idempotencyKey }
+          : {}),
+        ...(input.notes ? { notes: input.notes } : {}),
+        ...(input.gatewayMetadata ? { gateway: input.gatewayMetadata } : {}),
+      },
+      payment_gateway: input.paymentGateway ?? null,
+      idempotency_key: input.idempotencyKey ?? null,
+      consent: true,
+      pexcover_requested: input.packs.some((pack) => pack.wantsPexcover),
     },
-    payment_gateway: input.paymentGateway ?? null,
-    idempotency_key: input.idempotencyKey ?? null,
-    consent: true,
-    status: "pending_payment",
-  });
-
-  if (error) {
-    if (error.code === "23505" && input.idempotencyKey) {
-      const existing = await getOrderByIdempotencyKey(input.idempotencyKey);
-      if (existing) return existing;
-    }
-    console.error(
-      "[orders] Failed to create multi-pack order:",
-      JSON.stringify(error),
-    );
-    throw new Error(`Failed to create order: ${error.message}`);
-  }
-
-  try {
-    await insertOrderSnapshots(
-      orderId,
-      input.packs.map((pack) => ({
-        packId: pack.packId,
-        schoolName: pack.schoolName,
-        grade: pack.grade,
-        items: pack.items,
-      })),
-    );
-  } catch (snapshotError) {
-    await supabase.from("orders").delete().eq("id", orderId);
-    throw snapshotError;
-  }
-
-  return {
-    id: orderId,
-    orderReference: input.orderReference,
-    uniqueCustomerId,
-    trackingToken,
-  };
+    input.packs.map((pack) => ({
+      packId: pack.packId,
+      schoolName: pack.schoolName,
+      grade: pack.grade,
+      items: pack.items,
+    })),
+    input.idempotencyKey,
+  );
 }
 
 export async function getOrderForReceipt(reference: string) {

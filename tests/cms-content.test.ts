@@ -154,10 +154,12 @@ describe("Pexpacks Content CMS Module", () => {
     expect(cms).toContain("get_public_cms_testimonials");
     expect(cms).toContain("get_public_cms_announcements");
     expect(cms).toContain("get_public_cms_resources");
+    expect(cms).toContain("get_public_website_content");
     expect(cms).not.toContain('.from("cms_faqs")');
     expect(cms).not.toContain('.from("cms_testimonials")');
     expect(cms).not.toContain('.from("cms_resources")');
     expect(cms).not.toContain('.from("cms_announcements")');
+    expect(cms).not.toContain('.from("website_content")');
     expect(cms).toContain('"/blog"');
     expect(cms).toContain('"/schools"');
     expect(cms).toContain('"/partnership"');
