@@ -97,6 +97,7 @@ type TrayPack = {
   totalPrice: number;
   wantsPexcover: boolean;
   pexcoverPrice: number;
+  pexcoverPaperStyle?: PexcoverPaperStyle;
   basePackPrice: number;
   packId?: string;
 };

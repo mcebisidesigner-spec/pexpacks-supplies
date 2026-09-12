@@ -13,6 +13,19 @@ import {
 import { normalisePexcoverPaperStyle } from "@/lib/pricing/pexcover-paper-style";
 
 describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
+  it("normalizes the style at checkout and records it in order metadata", () => {
+    const ozowRoute = readFileSync(
+      resolve(process.cwd(), "app/api/ozow/checkout/route.ts"),
+      "utf8",
+    );
+    const orders = readFileSync(
+      resolve(process.cwd(), "lib/orders.ts"),
+      "utf8",
+    );
+    expect(ozowRoute).toContain("normalisePexcoverPaperStyle");
+    expect(orders).toContain("pexcover_paper_style");
+  });
+
   it("allow-lists paper styles and defaults invalid input safely", () => {
     expect(normalisePexcoverPaperStyle("MARBLED_PATTERNS")).toBe(
       "MARBLED_PATTERNS",

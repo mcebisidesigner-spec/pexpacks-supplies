@@ -368,6 +368,7 @@ export async function createMultiPackOrder(input: {
     totalPrice: number;
     wantsPexcover?: boolean;
     pexcoverPrice?: number;
+    pexcoverPaperStyle?: PexcoverPaperStyle;
     basePackPrice?: number;
     packId?: string;
   }[];
