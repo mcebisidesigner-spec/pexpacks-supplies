@@ -45,6 +45,13 @@ if (get("OZOW_IS_TEST") !== "true") {
   process.exit(1);
 }
 
+if (get("OZOW_TEST_MODE_APPROVED") !== "true") {
+  console.error(
+    "Payment sandbox preflight failed. Set OZOW_TEST_MODE_APPROVED=true to approve test mode execution in non-production.",
+  );
+  process.exit(1);
+}
+
 console.log(
   "Payment sandbox preflight passed: Ozow test mode, receipt delivery, and Supabase order persistence are configured.",
 );
