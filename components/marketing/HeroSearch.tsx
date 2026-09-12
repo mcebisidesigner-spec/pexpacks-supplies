@@ -172,20 +172,38 @@ export function HeroSearch({
           htmlFor="homeSchoolQuery"
         >
           <span>School Name</span>
-          <input
-            id="homeSchoolQuery"
-            name="schoolQuery"
-            type="search"
-            placeholder="Type your school name..."
-            autoComplete="off"
-            value={query}
-            onFocus={() => {
-              setIsSchoolInputFocused(true);
-              setTrendingVisible(true);
-            }}
-            onBlur={() => setIsSchoolInputFocused(false)}
-            onChange={(event) => updateQuery(event.target.value)}
-          />
+          <div className={styles.inputWrapper}>
+            <input
+              id="homeSchoolQuery"
+              name="schoolQuery"
+              type="search"
+              placeholder="Type your school name..."
+              autoComplete="off"
+              value={query}
+              onFocus={() => {
+                setIsSchoolInputFocused(true);
+                setTrendingVisible(true);
+              }}
+              onBlur={() => setIsSchoolInputFocused(false)}
+              onChange={(event) => updateQuery(event.target.value)}
+            />
+            {query ? (
+              <button
+                type="button"
+                className={styles.searchClearBtn}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  updateQuery("");
+                }}
+                aria-label="Clear school name"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="m6 6 12 12M18 6 6 18" />
+                </svg>
+              </button>
+            ) : null}
+          </div>
         </label>
 
         {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
@@ -311,27 +329,52 @@ export function HeroSearch({
                             </div>
                             <div className={styles.heroResultMeta}>
                               <div className={styles.heroResultGrades}>
-                                {school.grades.slice(0, 4).map((schoolGrade) => (
-                                  <Link
-                                    key={schoolGrade}
-                                    href={`/schools/${school.slug}`}
-                                    className={styles.gradePill}
-                                    onClick={() =>
-                                      handleSchoolSelected(
-                                        school.slug,
-                                        index + 1,
-                                        "result",
-                                      )
-                                    }
-                                  >
-                                    {schoolGrade}
-                                  </Link>
-                                ))}
-                                {school.grades.length > 4 ? (
-                                  <span className={styles.gradePillMore}>
-                                    +{school.grades.length - 4} more
-                                  </span>
-                                ) : null}
+                                <div className={clsx(styles.gradesTrack, styles.gradesDesktop)}>
+                                  {school.grades.slice(0, 4).map((schoolGrade) => (
+                                    <Link
+                                      key={schoolGrade}
+                                      href={`/schools/${school.slug}`}
+                                      className={styles.gradePill}
+                                      onClick={() =>
+                                        handleSchoolSelected(
+                                          school.slug,
+                                          index + 1,
+                                          "result",
+                                        )
+                                      }
+                                    >
+                                      {schoolGrade}
+                                    </Link>
+                                  ))}
+                                  {school.grades.length > 4 ? (
+                                    <span className={styles.gradePillMore}>
+                                      +{school.grades.length - 4} more
+                                    </span>
+                                  ) : null}
+                                </div>
+                                <div className={clsx(styles.gradesTrack, styles.gradesMobile)}>
+                                  {school.grades.slice(0, 3).map((schoolGrade) => (
+                                    <Link
+                                      key={schoolGrade}
+                                      href={`/schools/${school.slug}`}
+                                      className={styles.gradePill}
+                                      onClick={() =>
+                                        handleSchoolSelected(
+                                          school.slug,
+                                          index + 1,
+                                          "result",
+                                        )
+                                      }
+                                    >
+                                      {schoolGrade}
+                                    </Link>
+                                  ))}
+                                  {school.grades.length > 3 ? (
+                                    <span className={styles.gradePillMore}>
+                                      +{school.grades.length - 3} more
+                                    </span>
+                                  ) : null}
+                                </div>
                               </div>
                               <div className={styles.heroResultBadges}>
                                 <span className={styles.yearPillBadge}>

@@ -1,7 +1,10 @@
 import { Resend } from "resend";
 import type { FormSubmission } from "@/lib/forms/types";
 import type { SubmittedFormAttachment } from "@/lib/forms/validation";
-import { emailLegalNoticeHtml } from "@/lib/email/legalNotice";
+import {
+  CUSTOMER_CARE_EMAIL,
+  emailLegalNoticeHtml,
+} from "@/lib/email/legalNotice";
 
 function escapeHtml(value: string): string {
   return value
@@ -48,7 +51,10 @@ function resolveSourceContext(data: FormSubmission): {
   } else if (pathname.includes("/order")) {
     sectionName = "Stationery List Upload & Order Builder";
     sectionBadge = "Direct Order Builder";
-  } else if (pathname.includes("/partner") || pathname.includes("/partnership")) {
+  } else if (
+    pathname.includes("/partner") ||
+    pathname.includes("/partnership")
+  ) {
     sectionName = "School & Supplier Partnership Portal";
     sectionBadge = "Partner Programme";
   } else if (pathname.includes("/add-your-school")) {
@@ -78,20 +84,21 @@ function resolveSourceContext(data: FormSubmission): {
 
 export async function sendFormNotificationEmail(
   data: FormSubmission,
-  attachments: SubmittedFormAttachment[] = []
+  attachments: SubmittedFormAttachment[] = [],
 ): Promise<{ success: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
     console.warn(
       "[email] RESEND_API_KEY is not configured. Skipping form notification for:",
-      data.formType
+      data.formType,
     );
     return { success: false, error: "RESEND_API_KEY not configured" };
   }
 
   const resend = new Resend(apiKey);
-  const officialEmail = process.env.RESEND_REPLY_TO_EMAIL || "helpme@pexpacks.co.za";
+  const officialEmail =
+    process.env.RESEND_REPLY_TO_EMAIL || CUSTOMER_CARE_EMAIL;
   const configuredFrom = "Pexpacks <orders@pexpacks.co.za>";
 
   const formTypeTitles: Record<string, string> = {
@@ -112,7 +119,8 @@ export async function sendFormNotificationEmail(
   const rawPhone = (data.phone || "").replace(/\D/g, "");
   const waUrl = rawPhone ? `https://wa.me/${rawPhone}` : null;
   const mailtoUrl = data.email ? `mailto:${data.email}` : null;
-  const messageContent = data.message || data.notes || "No message content provided.";
+  const messageContent =
+    data.message || data.notes || "No message content provided.";
 
   const formattedDate = new Date().toLocaleString("en-ZA", {
     timeZone: "Africa/Johannesburg",
@@ -217,11 +225,15 @@ export async function sendFormNotificationEmail(
                       WhatsApp Phone
                     </td>
                     <td style="padding: 12px 18px; font-size: 14px; font-weight: 700; border-bottom: 1px solid #f1f5f9;">
-                      ${data.phone ? `
+                      ${
+                        data.phone
+                          ? `
                         <a href="${waUrl || `tel:${data.phone}`}" style="color: #16a34a; text-decoration: none;">
                           ${escapeHtml(data.phone)} ↗
                         </a>
-                      ` : `<span style="color: #94a3b8; font-weight: 500;">Not provided</span>`}
+                      `
+                          : `<span style="color: #94a3b8; font-weight: 500;">Not provided</span>`
+                      }
                     </td>
                   </tr>
                   <tr>
@@ -229,14 +241,20 @@ export async function sendFormNotificationEmail(
                       Email Address
                     </td>
                     <td style="padding: 12px 18px; font-size: 14px; font-weight: 700; border-bottom: 1px solid #f1f5f9;">
-                      ${data.email ? `
+                      ${
+                        data.email
+                          ? `
                         <a href="${mailtoUrl || `mailto:${data.email}`}" style="color: #0284c7; text-decoration: none;">
                           ${escapeHtml(data.email)} ↗
                         </a>
-                      ` : `<span style="color: #94a3b8; font-weight: 500;">Not provided</span>`}
+                      `
+                          : `<span style="color: #94a3b8; font-weight: 500;">Not provided</span>`
+                      }
                     </td>
                   </tr>
-                  ${data.schoolName ? `
+                  ${
+                    data.schoolName
+                      ? `
                   <tr>
                     <td style="padding: 12px 18px; font-size: 13px; color: #64748b; font-weight: 600; border-bottom: 1px solid #f1f5f9;">
                       School Name
@@ -244,8 +262,12 @@ export async function sendFormNotificationEmail(
                     <td style="padding: 12px 18px; font-size: 14px; color: #1a2a40; font-weight: 700; border-bottom: 1px solid #f1f5f9;">
                       ${escapeHtml(data.schoolName)}
                     </td>
-                  </tr>` : ""}
-                  ${data.grade ? `
+                  </tr>`
+                      : ""
+                  }
+                  ${
+                    data.grade
+                      ? `
                   <tr>
                     <td style="padding: 12px 18px; font-size: 13px; color: #64748b; font-weight: 600; border-bottom: 1px solid #f1f5f9;">
                       Target Grade
@@ -253,8 +275,12 @@ export async function sendFormNotificationEmail(
                     <td style="padding: 12px 18px; font-size: 14px; color: #1a2a40; font-weight: 700; border-bottom: 1px solid #f1f5f9;">
                       ${escapeHtml(data.grade)}
                     </td>
-                  </tr>` : ""}
-                  ${data.quoteType || data.packType ? `
+                  </tr>`
+                      : ""
+                  }
+                  ${
+                    data.quoteType || data.packType
+                      ? `
                   <tr>
                     <td style="padding: 12px 18px; font-size: 13px; color: #64748b; font-weight: 600; border-bottom: 1px solid #f1f5f9;">
                       Category / Type
@@ -262,8 +288,12 @@ export async function sendFormNotificationEmail(
                     <td style="padding: 12px 18px; font-size: 14px; color: #1a2a40; font-weight: 600; border-bottom: 1px solid #f1f5f9;">
                       ${escapeHtml(data.quoteType || data.packType || "")}
                     </td>
-                  </tr>` : ""}
-                  ${data.orderQuantity || data.quantity ? `
+                  </tr>`
+                      : ""
+                  }
+                  ${
+                    data.orderQuantity || data.quantity
+                      ? `
                   <tr>
                     <td style="padding: 12px 18px; font-size: 13px; color: #64748b; font-weight: 600;">
                       Order Quantity
@@ -271,7 +301,9 @@ export async function sendFormNotificationEmail(
                     <td style="padding: 12px 18px; font-size: 14px; color: #1a2a40; font-weight: 700;">
                       ${escapeHtml(String(data.orderQuantity || data.quantity))} packs
                     </td>
-                  </tr>` : ""}
+                  </tr>`
+                      : ""
+                  }
                 </table>
               </div>
 
@@ -286,7 +318,9 @@ export async function sendFormNotificationEmail(
               </div>
 
               <!-- Attachments Box (if any) -->
-              ${attachments.length > 0 ? `
+              ${
+                attachments.length > 0
+                  ? `
               <div style="margin-bottom: 24px; padding: 16px 20px; background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 14px;">
                 <span style="display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #0369a1; margin-bottom: 8px;">
                   📎 Attached Files (${attachments.length})
@@ -294,7 +328,9 @@ export async function sendFormNotificationEmail(
                 <div style="font-size: 13.5px; color: #0c4a6e; font-weight: 600; line-height: 1.6;">
                   ${attachments.map((att) => `📄 <strong>${escapeHtml(att.filename)}</strong> (${(att.size / 1024).toFixed(1)} KB)`).join("<br/>")}
                 </div>
-              </div>` : ""}
+              </div>`
+                  : ""
+              }
 
               <!-- Quick Action Buttons for Admin Staff -->
               <div style="padding: 18px 20px; background-color: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; text-align: center;">
@@ -303,18 +339,26 @@ export async function sendFormNotificationEmail(
                 </span>
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   <tr>
-                    ${waUrl ? `
+                    ${
+                      waUrl
+                        ? `
                     <td align="center" style="padding: 4px;">
                       <a href="${waUrl}" target="_blank" style="display: inline-block; width: 100%; max-width: 160px; padding: 10px 14px; background-color: #25d366; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center;">
                         💬 WhatsApp
                       </a>
-                    </td>` : ""}
-                    ${mailtoUrl ? `
+                    </td>`
+                        : ""
+                    }
+                    ${
+                      mailtoUrl
+                        ? `
                     <td align="center" style="padding: 4px;">
                       <a href="${mailtoUrl}" target="_blank" style="display: inline-block; width: 100%; max-width: 160px; padding: 10px 14px; background-color: #1a2a40; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center;">
                         ✉️ Email Reply
                       </a>
-                    </td>` : ""}
+                    </td>`
+                        : ""
+                    }
                     <td align="center" style="padding: 4px;">
                       <a href="${escapeHtml(source.url)}" target="_blank" style="display: inline-block; width: 100%; max-width: 160px; padding: 10px 14px; background-color: #219e9a; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700; text-align: center;">
                         🌐 View Page
@@ -327,7 +371,7 @@ export async function sendFormNotificationEmail(
               <!-- Metadata & POPIA Audit Line -->
               <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: #94a3b8; line-height: 1.6;">
                 Submitted at: <strong>${formattedDate} SAST</strong> &middot; POPIA Consent: <strong>${data.consent ? "Granted" : "Not granted"}</strong><br/>
-                Routed Inboxes: <strong>orders@pexpacks.co.za</strong>, <strong>helpme@pexpacks.co.za</strong>, <strong>pexpacks@gmail.com</strong>
+                Routed Inboxes: <strong>orders@pexpacks.co.za</strong>, <strong>${CUSTOMER_CARE_EMAIL}</strong>, <strong>pexpacks@gmail.com</strong>
               </div>
 
             </td>
@@ -337,7 +381,7 @@ export async function sendFormNotificationEmail(
           <tr>
             <td style="padding: 20px 32px; background-color: #f8fafc; font-size: 11.5px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0;">
               This notification was automatically generated by Pexpacks Supplies in-app portal via Resend API.<br/>
-              Customer care: <a href="mailto:helpme@pexpacks.co.za" style="color: #219e9a; text-decoration: none; font-weight: 600;">helpme@pexpacks.co.za</a> | <a href="mailto:pexpacks@gmail.com" style="color: #219e9a; text-decoration: none; font-weight: 600;">pexpacks@gmail.com</a>
+              Customer care: <a href="mailto:${CUSTOMER_CARE_EMAIL}" style="color: #219e9a; text-decoration: none; font-weight: 600;">${CUSTOMER_CARE_EMAIL}</a> | <a href="mailto:pexpacks@gmail.com" style="color: #219e9a; text-decoration: none; font-weight: 600;">pexpacks@gmail.com</a>
               ${emailLegalNoticeHtml}
             </td>
           </tr>
@@ -351,11 +395,13 @@ export async function sendFormNotificationEmail(
 `;
 
   try {
-    // Quote requests and enquiries route to orders@pexpacks.co.za, helpme@pexpacks.co.za & pexpacks@gmail.com
+    // Quote requests and enquiries route to orders@pexpacks.co.za, ${CUSTOMER_CARE_EMAIL} & pexpacks@gmail.com
     const recipients =
-      data.formType === "quote" || data.formType.includes("enquiry") || data.formType === "bulk-order"
-        ? ["orders@pexpacks.co.za", "helpme@pexpacks.co.za", "pexpacks@gmail.com"]
-        : ["helpme@pexpacks.co.za", "pexpacks@gmail.com"];
+      data.formType === "quote" ||
+      data.formType.includes("enquiry") ||
+      data.formType === "bulk-order"
+        ? ["orders@pexpacks.co.za", CUSTOMER_CARE_EMAIL, "pexpacks@gmail.com"]
+        : [CUSTOMER_CARE_EMAIL, "pexpacks@gmail.com"];
     const uniqueRecipients = [...new Set(recipients.filter(Boolean))];
 
     const resendAttachments = attachments.map((att) => ({
@@ -374,19 +420,26 @@ export async function sendFormNotificationEmail(
     });
 
     // Attempt 2: Fallback to test onboarding sender if domain is unverified on Resend
-    if (sendResult.error && sendResult.error.message.includes("domain is not verified")) {
+    if (
+      sendResult.error &&
+      sendResult.error.message.includes("domain is not verified")
+    ) {
       sendResult = await resend.emails.send({
         from: "onboarding@resend.dev",
         to: ["mcebisidesigner@gmail.com"],
         replyTo: data.email || officialEmail,
         subject,
         html,
-        attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
+        attachments:
+          resendAttachments.length > 0 ? resendAttachments : undefined,
       });
     }
 
     if (sendResult.error) {
-      console.error("[email] Resend form notification failed:", JSON.stringify(sendResult.error));
+      console.error(
+        "[email] Resend form notification failed:",
+        JSON.stringify(sendResult.error),
+      );
       return { success: false, error: sendResult.error.message };
     }
 

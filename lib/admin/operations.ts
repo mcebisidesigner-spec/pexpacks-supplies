@@ -158,7 +158,12 @@ export async function listMasterProducts(
   return {
     products: (data ?? []).map((row: DynamicRow) => ({
       ...row,
-      supplier: (row as { suppliers?: { id: string; name: string; code: string } | null }).suppliers ?? null,
+      supplier:
+        (
+          row as {
+            suppliers?: { id: string; name: string; code: string } | null;
+          }
+        ).suppliers ?? null,
     })) as MasterProductRow[],
     total,
     page,
@@ -336,7 +341,9 @@ export type SupplierDistributionRow = {
   product_count: number;
 };
 
-export async function listSupplierCostDistribution(): Promise<SupplierDistributionRow[]> {
+export async function listSupplierCostDistribution(): Promise<
+  SupplierDistributionRow[]
+> {
   // Fetch all master products with their preferred_supplier_id
   const { data: products, error } = await db()
     .from("master_products")
@@ -350,10 +357,13 @@ export async function listSupplierCostDistribution(): Promise<SupplierDistributi
     .select("id,name,code")
     .eq("active", true);
   const supplierMap = new Map<string, { name: string; code: string | null }>(
-    ((suppliers ?? []) as Array<{ id: string; name: string; code?: string | null }>).map((s) => [
-      s.id,
-      { name: s.name, code: s.code ?? null },
-    ]),
+    (
+      (suppliers ?? []) as Array<{
+        id: string;
+        name: string;
+        code?: string | null;
+      }>
+    ).map((s) => [s.id, { name: s.name, code: s.code ?? null }]),
   );
 
   const countMap = new Map<string | null, number>();
@@ -387,7 +397,10 @@ export type SupplierCostStats = {
 export async function getSupplierCostStats(): Promise<SupplierCostStats> {
   const distribution = await listSupplierCostDistribution();
   const assignedRows = distribution.filter((d) => d.supplier_id != null);
-  const totalAssigned = assignedRows.reduce((sum, r) => sum + r.product_count, 0);
+  const totalAssigned = assignedRows.reduce(
+    (sum, r) => sum + r.product_count,
+    0,
+  );
   const unassignedRow = distribution.find((d) => d.supplier_id == null);
   const totalProducts = totalAssigned + (unassignedRow?.product_count ?? 0);
   const topSupplier = assignedRows[0] ? assignedRows[0].supplier_name : null;
@@ -925,6 +938,45 @@ export async function listFulfilmentRecords() {
   })) as FulfilmentRow[];
 }
 
+export type FulfilmentWorkflow = {
+  packing: { id: string; status: string } | null;
+  fulfilment: { id: string; status: string } | null;
+};
+
+export async function getFulfilmentWorkflow(
+  orderId: string,
+): Promise<FulfilmentWorkflow> {
+  const client = db();
+  const [packingResult, fulfilmentResult] = await Promise.all([
+    client
+      .from("packing_records")
+      .select("id,status")
+      .eq("order_id", orderId)
+      .maybeSingle(),
+    client
+      .from("fulfilment_records")
+      .select("id,status")
+      .eq("order_id", orderId)
+      .maybeSingle(),
+  ]);
+  assertNoError(packingResult.error, "Unable to load packing workflow");
+  assertNoError(fulfilmentResult.error, "Unable to load fulfilment workflow");
+
+  return {
+    packing: packingResult.data
+      ? {
+          id: String(packingResult.data.id),
+          status: String(packingResult.data.status),
+        }
+      : null,
+    fulfilment: fulfilmentResult.data
+      ? {
+          id: String(fulfilmentResult.data.id),
+          status: String(fulfilmentResult.data.status),
+        }
+      : null,
+  };
+}
 export async function updatePackingRecord(
   id: string,
   status: string,
@@ -969,15 +1021,19 @@ export async function updateFulfilmentRecord(
     .eq("id", id)
     .single();
 
+  const values: Record<string, unknown> = {
+    status,
+    completed_at: completed ? new Date().toISOString() : null,
+    updated_at: new Date().toISOString(),
+  };
+  if (courierName !== undefined)
+    values.courier_name = courierName.trim() || null;
+  if (waybillNumber !== undefined)
+    values.waybill_number = waybillNumber.trim() || null;
+
   const { error } = await db()
     .from("fulfilment_records")
-    .update({
-      status,
-      courier_name: courierName?.trim() || null,
-      waybill_number: waybillNumber?.trim() || null,
-      completed_at: completed ? new Date().toISOString() : null,
-      updated_at: new Date().toISOString(),
-    })
+    .update(values)
     .eq("id", id);
   assertNoError(error, "Unable to update fulfilment");
 
@@ -1800,7 +1856,7 @@ export async function listOrderItems(orderIdOrRef: string) {
   const { data, error } = await db()
     .from("order_items")
     .select(
-      "id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,created_at",
+      "id,order_id,product_id,pack_id,sku_snapshot,product_name_snapshot,description_snapshot,quantity,unit_selling_price,line_total,estimated_unit_cost,expected_margin,pricing_version,school_name_snapshot,grade_snapshot,requires_pexcover,created_at",
     )
     .eq("order_id", targetOrderId)
     .order("created_at");

@@ -6,14 +6,23 @@ import {
   normalizeWebsiteUrl,
 } from "@/lib/public-data/mappers";
 import { DEFAULT_PUBLIC_SEASON } from "@/lib/public-data/seasons";
-import { DEFAULT_SITE_SETTINGS, PUBLIC_SITE_SETTING_KEYS } from "@/lib/public-data/settings";
+import {
+  DEFAULT_SITE_SETTINGS,
+  PUBLIC_SITE_SETTING_KEYS,
+} from "@/lib/public-data/settings";
 import type { GradePack, SchoolPackItem } from "@/data/schools";
 
 describe("Public Data Adapter Layer", () => {
   it("normalizes official website URLs cleanly", () => {
-    expect(normalizeWebsiteUrl("dawnviewhigh.co.za")).toBe("https://dawnviewhigh.co.za");
-    expect(normalizeWebsiteUrl("http://example.com")).toBe("http://example.com");
-    expect(normalizeWebsiteUrl("https://example.com")).toBe("https://example.com");
+    expect(normalizeWebsiteUrl("dawnviewhigh.co.za")).toBe(
+      "https://dawnviewhigh.co.za",
+    );
+    expect(normalizeWebsiteUrl("http://example.com")).toBe(
+      "http://example.com",
+    );
+    expect(normalizeWebsiteUrl("https://example.com")).toBe(
+      "https://example.com",
+    );
     expect(normalizeWebsiteUrl(null)).toBeNull();
     expect(normalizeWebsiteUrl("   ")).toBeNull();
   });
@@ -36,8 +45,12 @@ describe("Public Data Adapter Layer", () => {
     expect(publicItem.specification).toBe("HB Lead");
     expect(publicItem.icon).toBe("pencil");
     // Ensure no internal purchase cost or supplier data exists
-    expect((publicItem as unknown as Record<string, unknown>).purchase_cost).toBeUndefined();
-    expect((publicItem as unknown as Record<string, unknown>).supplier).toBeUndefined();
+    expect(
+      (publicItem as unknown as Record<string, unknown>).purchase_cost,
+    ).toBeUndefined();
+    expect(
+      (publicItem as unknown as Record<string, unknown>).supplier,
+    ).toBeUndefined();
   });
 
   it("maps grade pack to public pack card with contents preview", () => {
@@ -106,7 +119,7 @@ describe("Public Data Adapter Layer", () => {
 
   it("provides fallback settings and defaults when database is cold", () => {
     expect(DEFAULT_SITE_SETTINGS.supportPhone).toBeDefined();
-    expect(DEFAULT_SITE_SETTINGS.supportEmail).toBe("helpme@pexpacks.co.za");
+    expect(DEFAULT_SITE_SETTINGS.supportEmail).toBe("care@pexpacks.co.za");
     expect(DEFAULT_SITE_SETTINGS.enabledPaymentMethods).toContain("ozow");
     expect(DEFAULT_SITE_SETTINGS.pexcoverPrice).toBe(350);
   });
@@ -156,9 +169,15 @@ describe("Public Data Adapter Layer", () => {
       stationery_list_status: rawSchoolRecord.stationery_list_status,
     };
 
-    expect((publicDirectoryEntry as Record<string, unknown>).internal_notes).toBeUndefined();
-    expect((publicDirectoryEntry as Record<string, unknown>).commission_rate).toBeUndefined();
-    expect((publicDirectoryEntry as Record<string, unknown>).bank_account_number).toBeUndefined();
+    expect(
+      (publicDirectoryEntry as Record<string, unknown>).internal_notes,
+    ).toBeUndefined();
+    expect(
+      (publicDirectoryEntry as Record<string, unknown>).commission_rate,
+    ).toBeUndefined();
+    expect(
+      (publicDirectoryEntry as Record<string, unknown>).bank_account_number,
+    ).toBeUndefined();
     expect(publicDirectoryEntry.publication_status).toBe("published");
     expect(publicDirectoryEntry.directory_status).toBe("listed");
   });

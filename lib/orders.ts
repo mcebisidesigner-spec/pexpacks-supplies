@@ -28,7 +28,13 @@ type OrderSnapshotPack = {
   packId?: string;
   schoolName: string;
   grade: string;
-  items: { id?: string; name: string; quantity: number; unitPrice?: number }[];
+  items: {
+    id?: string;
+    name: string;
+    quantity: number;
+    unitPrice?: number;
+    requiresPexcover?: boolean;
+  }[];
 };
 
 async function insertOrderSnapshots(
@@ -46,7 +52,9 @@ async function insertOrderSnapshots(
   ];
   const { data: products, error: productError } = await supabase
     .from("master_products" as never)
-    .select("id,sku,name,latest_verified_cost,current_selling_price")
+    .select(
+      "id,sku,name,latest_verified_cost,current_selling_price,requires_pexcover",
+    )
     .in("name", names);
 
   if (productError) {
@@ -63,6 +71,7 @@ async function insertOrderSnapshots(
         name: string;
         latest_verified_cost: number | null;
         current_selling_price: number;
+        requires_pexcover: boolean;
       }>
     ).map((product) => [product.name.trim().toLowerCase(), product]),
   );
@@ -93,6 +102,8 @@ async function insertOrderSnapshots(
       pricing_version: "operations-v1",
       school_name_snapshot: line.pack.schoolName,
       grade_snapshot: line.pack.grade,
+      requires_pexcover:
+        line.requiresPexcover ?? Boolean(product?.requires_pexcover),
     };
   });
 

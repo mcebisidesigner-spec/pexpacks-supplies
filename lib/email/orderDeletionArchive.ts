@@ -1,5 +1,8 @@
 import { Resend } from "resend";
-import { emailLegalNoticeHtml } from "@/lib/email/legalNotice";
+import {
+  CUSTOMER_CARE_EMAIL,
+  emailLegalNoticeHtml,
+} from "@/lib/email/legalNotice";
 
 export interface OrderDeletionArchiveParams {
   order: Record<string, unknown>;
@@ -11,10 +14,16 @@ export async function sendOrderDeletionArchiveEmail({
   order,
   payments,
   deletedBy,
-}: OrderDeletionArchiveParams): Promise<{ ok: boolean; messageId?: string; error?: string }> {
+}: OrderDeletionArchiveParams): Promise<{
+  ok: boolean;
+  messageId?: string;
+  error?: string;
+}> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn("[order-deletion-archive] RESEND_API_KEY not configured. Skipping email.");
+    console.warn(
+      "[order-deletion-archive] RESEND_API_KEY not configured. Skipping email.",
+    );
     return { ok: false, error: "RESEND_API_KEY missing" };
   }
 
@@ -26,9 +35,14 @@ export async function sendOrderDeletionArchiveEmail({
   const buyerPhone = String(order.buyer_phone ?? "N/A");
   const schoolName = String(order.school_name ?? "N/A");
   const grade = String(order.grade ?? "N/A");
-  const total = order.estimated_total != null ? `R ${Number(order.estimated_total).toFixed(2)}` : "R 0.00";
+  const total =
+    order.estimated_total != null
+      ? `R ${Number(order.estimated_total).toFixed(2)}`
+      : "R 0.00";
   const status = String(order.status ?? "unknown");
-  const deletedAt = new Date().toLocaleString("en-ZA", { timeZone: "Africa/Johannesburg" });
+  const deletedAt = new Date().toLocaleString("en-ZA", {
+    timeZone: "Africa/Johannesburg",
+  });
 
   const html = `
 <!DOCTYPE html>
@@ -119,7 +133,7 @@ export async function sendOrderDeletionArchiveEmail({
                         <td style="border-bottom:1px solid #1e293b;">R ${Number(p.amount || p.estimated_total || 0).toFixed(2)}</td>
                         <td style="border-bottom:1px solid #1e293b; color:#34d399;">${String(p.status || "N/A")}</td>
                       </tr>
-                    `
+                    `,
                       )
                       .join("")}
                   </tbody>
@@ -143,8 +157,8 @@ export async function sendOrderDeletionArchiveEmail({
                     deletedAt,
                   },
                   null,
-                  2
-                )
+                  2,
+                ),
               )}</pre>
             </td>
           </tr>
@@ -171,21 +185,27 @@ export async function sendOrderDeletionArchiveEmail({
   try {
     const data = await resend.emails.send({
       from: "Pexpacks Admin <orders@pexpacks.co.za>",
-      to: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
+      to: [CUSTOMER_CARE_EMAIL, "pexpacks@gmail.com"],
       subject: `[ORDER DELETED ARCHIVE] ${orderRef} — ${buyerName}`,
       html,
       text: `Order Deletion Archive Notice:\nOrder ${orderRef} (${buyerName}, ${total}) was deleted by ${deletedBy} on ${deletedAt}.\nAll associated payment and order metadata records have been permanently purged from active tables.`,
     });
 
     if (data.error) {
-      console.error("[order-deletion-archive] Resend dispatch failed:", data.error);
+      console.error(
+        "[order-deletion-archive] Resend dispatch failed:",
+        data.error,
+      );
       return { ok: false, error: data.error.message };
     }
 
     return { ok: true, messageId: data.data?.id };
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err);
-    console.error("[order-deletion-archive] Exception dispatching archive email:", errMsg);
+    console.error(
+      "[order-deletion-archive] Exception dispatching archive email:",
+      errMsg,
+    );
     return { ok: false, error: errMsg };
   }
 }

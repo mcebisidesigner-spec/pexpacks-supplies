@@ -175,20 +175,38 @@ export function SchoolSearchPanel({
         >
           <label className={heroStyles.field} htmlFor="schoolQuery">
             <span>School Name</span>
-            <input
-              id="schoolQuery"
-              name="schoolQuery"
-              type="search"
-              value={query}
-              onFocus={() => {
-                setIsSchoolInputFocused(true);
-                setTrendingVisible(true);
-              }}
-              onBlur={() => setIsSchoolInputFocused(false)}
-              onChange={(event) => updateQuery(event.target.value)}
-              placeholder="Type your school name..."
-              autoComplete="off"
-            />
+            <div className={heroStyles.inputWrapper}>
+              <input
+                id="schoolQuery"
+                name="schoolQuery"
+                type="search"
+                value={query}
+                onFocus={() => {
+                  setIsSchoolInputFocused(true);
+                  setTrendingVisible(true);
+                }}
+                onBlur={() => setIsSchoolInputFocused(false)}
+                onChange={(event) => updateQuery(event.target.value)}
+                placeholder="Type your school name..."
+                autoComplete="off"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  className={heroStyles.searchClearBtn}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    updateQuery("");
+                  }}
+                  aria-label="Clear school name"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="m6 6 12 12M18 6 6 18" />
+                  </svg>
+                </button>
+              ) : null}
+            </div>
           </label>
           {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
             <div className={heroStyles.trendingRow}>
@@ -329,28 +347,54 @@ export function SchoolSearchPanel({
                               </div>
                               <div className={heroStyles.heroResultMeta}>
                                 <div className={heroStyles.heroResultGrades}>
-                                  {school.grades.slice(0, 4).map((g) => (
-                                    <Link
-                                      key={g}
-                                      href={`/schools/${school.slug}`}
-                                      className={heroStyles.gradePill}
-                                      onClick={() =>
-                                        trackSchoolResultSelected({
-                                          source: "schools",
-                                          schoolSlug: school.slug,
-                                          position: index + 1,
-                                          placement: "result",
-                                        })
-                                      }
-                                    >
-                                      {g}
-                                    </Link>
-                                  ))}
-                                  {school.grades.length > 4 ? (
-                                    <span className={heroStyles.gradePillMore}>
-                                      +{school.grades.length - 4} more
-                                    </span>
-                                  ) : null}
+                                  <div className={clsx(heroStyles.gradesTrack, heroStyles.gradesDesktop)}>
+                                    {school.grades.slice(0, 4).map((g) => (
+                                      <Link
+                                        key={g}
+                                        href={`/schools/${school.slug}`}
+                                        className={heroStyles.gradePill}
+                                        onClick={() =>
+                                          trackSchoolResultSelected({
+                                            source: "schools",
+                                            schoolSlug: school.slug,
+                                            position: index + 1,
+                                            placement: "result",
+                                          })
+                                        }
+                                      >
+                                        {g}
+                                      </Link>
+                                    ))}
+                                    {school.grades.length > 4 ? (
+                                      <span className={heroStyles.gradePillMore}>
+                                        +{school.grades.length - 4} more
+                                      </span>
+                                    ) : null}
+                                  </div>
+                                  <div className={clsx(heroStyles.gradesTrack, heroStyles.gradesMobile)}>
+                                    {school.grades.slice(0, 3).map((g) => (
+                                      <Link
+                                        key={g}
+                                        href={`/schools/${school.slug}`}
+                                        className={heroStyles.gradePill}
+                                        onClick={() =>
+                                          trackSchoolResultSelected({
+                                            source: "schools",
+                                            schoolSlug: school.slug,
+                                            position: index + 1,
+                                            placement: "result",
+                                          })
+                                        }
+                                      >
+                                        {g}
+                                      </Link>
+                                    ))}
+                                    {school.grades.length > 3 ? (
+                                      <span className={heroStyles.gradePillMore}>
+                                        +{school.grades.length - 3} more
+                                      </span>
+                                    ) : null}
+                                  </div>
                                 </div>
                                 <div className={heroStyles.heroResultBadges}>
                                   <span className={heroStyles.yearPillBadge}>

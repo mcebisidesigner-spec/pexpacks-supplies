@@ -1,5 +1,8 @@
 import { Resend } from "resend";
-import { emailLegalNoticeHtml } from "@/lib/email/legalNotice";
+import {
+  CUSTOMER_CARE_EMAIL,
+  emailLegalNoticeHtml,
+} from "@/lib/email/legalNotice";
 
 export type StatusUpdateOrder = {
   order_reference: string;
@@ -130,7 +133,7 @@ function buildStatusEmailHtml(order: StatusUpdateOrder): string {
                   </div>
 
                   <p style="margin:24px 0 0;color:#94a3b8;font-size:12px;line-height:1.6;text-align:center;font-family:Arial,Helvetica,sans-serif;">
-                    Need help? Email <a href="mailto:helpme@pexpacks.co.za" style="color:#219e9b;text-decoration:none;font-weight:600;">helpme@pexpacks.co.za</a> or
+                    Need help? Email <a href="mailto:${CUSTOMER_CARE_EMAIL}" style="color:#219e9b;text-decoration:none;font-weight:600;">${CUSTOMER_CARE_EMAIL}</a> or
                     call <a href="tel:0780036048" style="color:#219e9b;text-decoration:none;font-weight:600;">078 003 6048</a>.<br />
                     Pexpacks Supplies &middot; Pexcover book-covering &middot; School stationery packs
                   </p>
@@ -147,11 +150,14 @@ function buildStatusEmailHtml(order: StatusUpdateOrder): string {
 }
 
 export async function sendOrderStatusUpdate(
-  order: StatusUpdateOrder
+  order: StatusUpdateOrder,
 ): Promise<{ success: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn("[email] RESEND_API_KEY not configured. Skipping status update for", order.order_reference);
+    console.warn(
+      "[email] RESEND_API_KEY not configured. Skipping status update for",
+      order.order_reference,
+    );
     return { success: false, error: "RESEND_API_KEY not configured" };
   }
 
@@ -160,20 +166,25 @@ export async function sendOrderStatusUpdate(
   }
 
   const label = STATUS_LABELS[order.status] || order.status;
-  const from = process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
+  const from =
+    process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
   const resend = new Resend(apiKey);
 
   const { error } = await resend.emails.send({
     from,
     to: [order.buyer_email],
-    bcc: ["helpme@pexpacks.co.za", "pexpacks@gmail.com"],
+    bcc: [CUSTOMER_CARE_EMAIL, "pexpacks@gmail.com"],
     subject: `Order ${order.order_reference} — ${label}`,
     html: buildStatusEmailHtml(order),
-    replyTo: process.env.RESEND_REPLY_TO_EMAIL || "helpme@pexpacks.co.za",
+    replyTo: process.env.RESEND_REPLY_TO_EMAIL || CUSTOMER_CARE_EMAIL,
   });
 
   if (error) {
-    console.error("[email] Failed to send status update for", order.order_reference, JSON.stringify(error));
+    console.error(
+      "[email] Failed to send status update for",
+      order.order_reference,
+      JSON.stringify(error),
+    );
     return { success: false, error: error.message };
   }
 

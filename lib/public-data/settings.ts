@@ -25,7 +25,7 @@ export const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
     orderingStatus: "open",
   },
   supportPhone: phoneNumber || "0780036048",
-  supportEmail: generalEmail || "helpme@pexpacks.co.za",
+  supportEmail: generalEmail || "care@pexpacks.co.za",
   whatsappNumber: "0780036048",
   whatsappUrl: "https://wa.me/27780036048",
   pexcoverPrice: PEXCOVER_PRICE,
@@ -48,20 +48,33 @@ export const getPublicSiteSettings = unstable_cache(
         .in("key", PUBLIC_SITE_SETTING_KEYS);
 
       const settingsMap = new Map(
-        (data as Array<{ key: string; value: unknown }> || []).map((s) => [s.key, s.value])
+        ((data as Array<{ key: string; value: unknown }>) || []).map((s) => [
+          s.key,
+          s.value,
+        ]),
       );
 
       const pexcoverVal = Number(settingsMap.get("pricing.pexcover_price"));
-      const pexcoverPrice = Number.isFinite(pexcoverVal) && pexcoverVal > 0 ? pexcoverVal : PEXCOVER_PRICE;
+      const pexcoverPrice =
+        Number.isFinite(pexcoverVal) && pexcoverVal > 0
+          ? pexcoverVal
+          : PEXCOVER_PRICE;
 
       const ozowEnabled = settingsMap.get("payments.ozow_enabled") !== false;
-      const happyPayEnabled = settingsMap.get("payments.happypay_enabled") !== false;
+      const happyPayEnabled =
+        settingsMap.get("payments.happypay_enabled") !== false;
       const enabledPaymentMethods: ("ozow" | "happypay")[] = [];
       if (ozowEnabled) enabledPaymentMethods.push("ozow");
       if (happyPayEnabled) enabledPaymentMethods.push("happypay");
 
-      const phone = String(settingsMap.get("business.support_phone") || DEFAULT_SITE_SETTINGS.supportPhone);
-      const email = String(settingsMap.get("business.support_email") || DEFAULT_SITE_SETTINGS.supportEmail);
+      const phone = String(
+        settingsMap.get("business.support_phone") ||
+          DEFAULT_SITE_SETTINGS.supportPhone,
+      );
+      const email = String(
+        settingsMap.get("business.support_email") ||
+          DEFAULT_SITE_SETTINGS.supportEmail,
+      );
 
       return {
         activeSeason,
@@ -70,7 +83,9 @@ export const getPublicSiteSettings = unstable_cache(
         whatsappNumber: "0780036048",
         whatsappUrl: "https://wa.me/27780036048",
         pexcoverPrice,
-        enabledPaymentMethods: enabledPaymentMethods.length ? enabledPaymentMethods : ["ozow", "happypay"],
+        enabledPaymentMethods: enabledPaymentMethods.length
+          ? enabledPaymentMethods
+          : ["ozow", "happypay"],
       };
     } catch {
       return {
@@ -80,5 +95,5 @@ export const getPublicSiteSettings = unstable_cache(
     }
   },
   ["unified-public-site-settings"],
-  { revalidate: SETTINGS_REVALIDATE_SECONDS, tags: [SETTINGS_CACHE_TAG] }
+  { revalidate: SETTINGS_REVALIDATE_SECONDS, tags: [SETTINGS_CACHE_TAG] },
 );

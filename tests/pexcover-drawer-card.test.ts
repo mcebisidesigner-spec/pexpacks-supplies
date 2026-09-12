@@ -207,3 +207,16 @@ describe("Pexcover fulfilment visibility", () => {
     expect(orderPage).toContain("Pexcover requested");
   });
 });
+describe("Pexcover fulfilment instructions", () => {
+  it("reads only the stored paid pack snapshot on the protected fulfilment page", () => {
+    const fulfilmentPage = readFileSync(
+      resolve(process.cwd(), "app/admin/fulfilment/[orderNumber]/page.tsx"),
+      "utf8",
+    );
+
+    expect(fulfilmentPage).toContain("Pexcover covering instructions");
+    expect(fulfilmentPage).toContain("metadata.packs");
+    expect(fulfilmentPage).toContain("normalisePexcoverPaperStyle");
+    expect(fulfilmentPage).toContain("pexcoverPaperStyleLabel");
+  });
+});

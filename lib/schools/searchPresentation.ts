@@ -16,5 +16,5 @@ export function formatSchoolSearchLocation(school: SchoolSearchRecord) {
       ) === index,
   );
 
-  return uniqueValues.join(" · ") || "Location not listed";
+  return uniqueValues.join(" | ") || "Location not listed";
 }
