@@ -252,7 +252,8 @@ export async function sendPurchaseReceipt(
     return { success: false, error: "No buyer email" };
   }
 
-  const from = "Pexpacks <orders@pexpacks.co.za>";
+  const from =
+    process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
 
   const resend = new Resend(apiKey);
 
@@ -262,7 +263,7 @@ export async function sendPurchaseReceipt(
     bcc: ["orders@pexpacks.co.za", "care@pexpacks.co.za", "pexpacks@gmail.com"],
     subject: `Your Pexpacks receipt ${order.order_reference}`,
     html: buildReceiptHtml(order),
-    replyTo: "orders@pexpacks.co.za",
+    replyTo: process.env.RESEND_REPLY_TO_EMAIL || "orders@pexpacks.co.za",
   });
 
   if (error) {

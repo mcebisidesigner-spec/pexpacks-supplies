@@ -311,7 +311,7 @@ async function runTest() {
         <p style="font-size: 12px; color: #64748b;">Supabase order table sync and Resend transactional delivery verified.</p>
       </div>
     `,
-    replyTo: "helpme@pexpacks.co.za",
+    replyTo: "orders@pexpacks.co.za",
   });
 
   if (emailResult.error) {
