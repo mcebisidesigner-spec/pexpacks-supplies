@@ -67,38 +67,43 @@ export async function verifyAdminSessionValue(
   value: string | undefined,
   userId: string,
 ): Promise<VerifiedAdminSession | null> {
-  if (!value) return null;
+  try {
+    if (!value) return null;
 
-  const [version, rawMode, rawLastActiveAt, rawUserId, signature, ...extra] =
-    value.split(".");
-  if (
-    version !== "v1" ||
-    (rawMode !== "standard" && rawMode !== "trusted") ||
-    !rawUserId ||
-    rawUserId !== userId ||
-    !signature ||
-    extra.length > 0
-  ) {
+    const [version, rawMode, rawLastActiveAt, rawUserId, signature, ...extra] =
+      value.split(".");
+    if (
+      version !== "v1" ||
+      (rawMode !== "standard" && rawMode !== "trusted") ||
+      !rawUserId ||
+      rawUserId !== userId ||
+      !signature ||
+      extra.length > 0
+    ) {
+      return null;
+    }
+
+    const lastActiveAt = Number(rawLastActiveAt);
+    if (
+      !Number.isSafeInteger(lastActiveAt) ||
+      lastActiveAt > Date.now() + 60_000
+    ) {
+      return null;
+    }
+
+    const payload = `${version}.${rawMode}.${lastActiveAt}.${rawUserId}`;
+    const expected = await sign(payload);
+    if (!safeEqual(signature, expected)) return null;
+
+    const maxIdle =
+      rawMode === "trusted" ? ADMIN_TRUSTED_IDLE_MS : ADMIN_STANDARD_IDLE_MS;
+    if (Date.now() - lastActiveAt > maxIdle) return null;
+
+    return { mode: rawMode, lastActiveAt };
+  } catch (err) {
+    console.error("[session-policy] verifyAdminSessionValue error:", err);
     return null;
   }
-
-  const lastActiveAt = Number(rawLastActiveAt);
-  if (
-    !Number.isSafeInteger(lastActiveAt) ||
-    lastActiveAt > Date.now() + 60_000
-  ) {
-    return null;
-  }
-
-  const payload = `${version}.${rawMode}.${lastActiveAt}.${rawUserId}`;
-  const expected = await sign(payload);
-  if (!safeEqual(signature, expected)) return null;
-
-  const maxIdle =
-    rawMode === "trusted" ? ADMIN_TRUSTED_IDLE_MS : ADMIN_STANDARD_IDLE_MS;
-  if (Date.now() - lastActiveAt > maxIdle) return null;
-
-  return { mode: rawMode, lastActiveAt };
 }
 
 export const adminSessionCookieOptions = {

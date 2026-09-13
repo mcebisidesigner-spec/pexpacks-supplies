@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
-import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import { trackSchoolCardClicked, trackSchoolImpression } from "@/lib/analytics";
 import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
 import styles from "./FeaturedSchools.module.css";

@@ -18,6 +18,20 @@ export interface PublicSeason {
   fulfilmentEnd?: string | null;
 }
 
+export const DEFAULT_PUBLIC_SEASON: PublicSeason = {
+  id: "season-2027",
+  name: "2027 Back-to-School",
+  academicYear: 2027,
+  isDefault: true,
+  orderingStatus: "open",
+  orderingOpensAt: "2026-09-01",
+  orderingClosesAt: "2027-02-28",
+  fulfilmentStart: "2026-12-01",
+  fulfilmentEnd: "2027-01-31",
+};
+
+export const DEFAULT_PACKS_BADGE = `${DEFAULT_PUBLIC_SEASON.academicYear} Packs`;
+
 export interface PublicSchoolSearchResult {
   id: string;
   slug: string;

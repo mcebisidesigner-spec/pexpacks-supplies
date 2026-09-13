@@ -5,10 +5,8 @@ import DashboardClient from "@/components/admin/DashboardClient";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  const [session, stats] = await Promise.all([
-    requireAdmin({ permission: "dashboard.view" }),
-    getDashboardStats(),
-  ]);
+  const session = await requireAdmin({ permission: "dashboard.view" });
+  const stats = await getDashboardStats();
 
   const name = displayName(session.user);
 

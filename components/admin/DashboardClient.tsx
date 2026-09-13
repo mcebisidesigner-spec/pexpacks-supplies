@@ -40,8 +40,8 @@ export function DashboardClient({ stats, userName }: DashboardClientProps) {
   const metrics: DashboardMetric[] = [
     {
       label: "Schools",
-      value: stats?.schools.total ?? 0,
-      hint: `${stats?.schools.partner ?? 0} partners / ${stats?.schools.featured ?? 0} featured`,
+      value: stats?.schools?.total ?? 0,
+      hint: `${stats?.schools?.partner ?? 0} partners / ${stats?.schools?.featured ?? 0} featured`,
       icon: School,
       tone: "emerald",
       href: "/admin/schools",
@@ -56,15 +56,15 @@ export function DashboardClient({ stats, userName }: DashboardClientProps) {
     },
     {
       label: "Orders",
-      value: stats?.orders.total ?? 0,
-      hint: `${stats?.orders.thisMonth ?? 0} this month`,
+      value: stats?.orders?.total ?? 0,
+      hint: `${stats?.orders?.thisMonth ?? 0} this month`,
       icon: ShoppingCart,
       tone: "amber",
       href: "/admin/orders",
     },
     {
       label: "Revenue",
-      value: stats?.orders.revenue ?? 0,
+      value: stats?.orders?.revenue ?? 0,
       hint: "Paid order value",
       icon: BarChart3,
       tone: "emerald",
@@ -156,10 +156,10 @@ export function DashboardClient({ stats, userName }: DashboardClientProps) {
             {(stats?.recentOrders ?? []).length > 0 ? (
               stats!.recentOrders.map((order) => (
                 <Link href={`/admin/orders/${order.order_reference || order.id}`} className={styles.activityItem} key={order.id}>
-                  <span className={styles.activityAvatar}>{order.buyer_name.slice(0, 2).toUpperCase()}</span>
+                  <span className={styles.activityAvatar}>{(order.buyer_name || "Customer").slice(0, 2).toUpperCase()}</span>
                   <span className={styles.activityCopy}>
                     <strong>{order.order_reference}</strong>
-                    <small>{order.buyer_name} / {order.school_name}</small>
+                    <small>{order.buyer_name || "Customer"} / {order.school_name || "School"}</small>
                   </span>
                   <span className={`${styles.statusBadge} ${statusClass(order.status)}`}>
                     <i /> {orderStatusLabel(order.status)}
@@ -183,8 +183,8 @@ export function DashboardClient({ stats, userName }: DashboardClientProps) {
           <div className={styles.attentionEmpty}>
             <BarChart3 aria-hidden="true" />
             <div>
-              <strong>{formatDashboardCurrency(stats?.orders.revenue ?? 0)}</strong>
-              <span>{(stats?.users ?? 0).toLocaleString("en-ZA")} admin users / {(stats?.assets.total ?? 0).toLocaleString("en-ZA")} assets</span>
+              <strong>{formatDashboardCurrency(stats?.orders?.revenue ?? 0)}</strong>
+              <span>{(stats?.users ?? 0).toLocaleString("en-ZA")} admin users / {(stats?.assets?.total ?? 0).toLocaleString("en-ZA")} assets</span>
             </div>
           </div>
           <Link href="/admin/payments" className={styles.panelAction}>

@@ -80,36 +80,58 @@ export async function proxy(request: NextRequest) {
 
   // 2. Protect Back-Office /admin and Sub-Routes (/admin/*)
   if (pathname.startsWith("/admin")) {
-    let user = null;
     try {
-      const authResult = await supabase.auth.getUser();
-      user = authResult.data?.user ?? null;
-    } catch (err) {
-      console.error("[proxy] auth check failed:", err);
-    }
-
-    // Require the signed browser-session gate as well as Supabase Auth.
-    // This prevents refresh-token persistence from reopening admin after restart.
-    const adminSession = user
-      ? await verifyAdminSessionValue(
-          request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
-          user.id,
-        )
-      : null;
-
-    // Redirect unauthenticated or expired back-office requests to secure gateway.
-    if (!user || !adminSession) {
-      if (user) {
-        try {
-          await supabase.auth.signOut();
-        } catch {
-          // Cookie clearing below still blocks another admin request.
-        }
+      let user = null;
+      try {
+        const authResult = await supabase.auth.getUser();
+        user = authResult.data?.user ?? null;
+      } catch (err) {
+        console.error("[proxy] auth check failed:", err);
       }
-      response.cookies.set(ADMIN_SESSION_COOKIE, "", {
-        path: "/",
-        expires: new Date(0),
-      });
+
+      // Require the signed browser-session gate as well as Supabase Auth.
+      // This prevents refresh-token persistence from reopening admin after restart.
+      const adminSession = user
+        ? await verifyAdminSessionValue(
+            request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
+            user.id,
+          )
+        : null;
+
+      // Redirect unauthenticated or expired back-office requests to secure gateway.
+      if (!user || !adminSession) {
+        if (user) {
+          try {
+            await supabase.auth.signOut();
+          } catch {
+            // Cookie clearing below still blocks another admin request.
+          }
+        }
+        response.cookies.set(ADMIN_SESSION_COOKIE, "", {
+          path: "/",
+          expires: new Date(0),
+        });
+        return copyCookies(
+          response,
+          applySecurityHeaders(
+            NextResponse.redirect(new URL("/pex-console-secure", request.url), {
+              headers: response.headers,
+            }),
+          ),
+        );
+      }
+
+      response.headers.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+      );
+      response.headers.set("Pragma", "no-cache");
+      response.headers.set("Expires", "0");
+      response.headers.set("Surrogate-Control", "no-store");
+
+      return response;
+    } catch (err) {
+      console.error("[proxy] unexpected admin route error:", err);
       return copyCookies(
         response,
         applySecurityHeaders(
@@ -119,16 +141,6 @@ export async function proxy(request: NextRequest) {
         ),
       );
     }
-
-    response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
-    );
-    response.headers.set("Pragma", "no-cache");
-    response.headers.set("Expires", "0");
-    response.headers.set("Surrogate-Control", "no-store");
-
-    return response;
   }
 
   // 3. Handle Hidden Gateway Route (/pex-console-secure & /pex-console)

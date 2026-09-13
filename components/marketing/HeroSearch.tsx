@@ -14,7 +14,7 @@ import {
   trackSchoolNoResultsRecovery,
   trackSchoolResultSelected,
 } from "@/lib/analytics";
-import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import clsx from "clsx";
 import styles from "./HeroSearch.module.css";
 

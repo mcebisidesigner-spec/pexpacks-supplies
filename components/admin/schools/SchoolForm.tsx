@@ -16,7 +16,7 @@ import { WarningBannerModal } from "@/components/admin/ui/WarningBannerModal";
 import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 // Redundant legacy checkboxes and statuses removed; authoritative constants imported from school-constants
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
-import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import { DateField } from "@/components/admin/DateField";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { FieldError } from "@/components/admin/ui/Form";

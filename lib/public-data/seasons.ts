@@ -5,19 +5,11 @@ import type { PublicSeason } from "./contracts";
 export const SEASON_CACHE_TAG = "public-season-v1";
 export const SEASON_REVALIDATE_SECONDS = 300;
 
-export const DEFAULT_PUBLIC_SEASON: PublicSeason = {
-  id: "season-2027",
-  name: "2027 Back-to-School",
-  academicYear: 2027,
-  isDefault: true,
-  orderingStatus: "open",
-  orderingOpensAt: "2026-09-01",
-  orderingClosesAt: "2027-02-28",
-  fulfilmentStart: "2026-12-01",
-  fulfilmentEnd: "2027-01-31",
-};
-
-export const DEFAULT_PACKS_BADGE = `${DEFAULT_PUBLIC_SEASON.academicYear} Packs`;
+export {
+  DEFAULT_PUBLIC_SEASON,
+  DEFAULT_PACKS_BADGE,
+  type PublicSeason,
+} from "./contracts";
 
 /**
  * Retrieves the authoritative active public commercial season.

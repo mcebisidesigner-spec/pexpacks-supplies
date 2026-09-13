@@ -17,7 +17,7 @@ import {
 import { SchoolLogoPlaceholder } from "./SchoolLogoPlaceholder";
 import { SchoolResultsAutoLoad } from "./SchoolResultsAutoLoad";
 import { SchoolsHowItWorks } from "./SchoolsHowItWorks";
-import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/seasons";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import styles from "./SchoolSearchPanel.module.css";
 
 const resultLimit = 12;
