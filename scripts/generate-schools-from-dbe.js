@@ -14,41 +14,24 @@
  * Schools are mapped to city/area using DMunName (metro) + Town_City + EIDistrict.
  */
 
-const ExcelJS = require("exceljs");
+const readXlsxFile = require("read-excel-file/node");
 const path = require("path");
 const fs = require("fs");
 
 async function parseXlsxToJson(filePath) {
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(filePath);
-  const worksheet = workbook.worksheets[0];
+  const [headerRow = [], ...dataRows] = await readXlsxFile(filePath);
+  const headers = headerRow.map((value) => String(value ?? "").trim());
 
-  const rows = [];
-  let headers = [];
-
-  worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-    if (rowNumber === 1) {
-      headers = row.values.slice(1).map((v) => String(v ?? "").trim());
-    } else {
-      const rowObj = {};
-      row.values.slice(1).forEach((val, colIdx) => {
-        const header = headers[colIdx];
-        if (header) {
-          let cellValue = val;
-          if (cellValue && typeof cellValue === "object") {
-            cellValue = cellValue.result !== undefined ? cellValue.result : cellValue.text ?? "";
-          }
-          rowObj[header] = cellValue !== undefined && cellValue !== null ? cellValue : "";
-        }
-      });
-      rows.push(rowObj);
-    }
-  });
-
-  return rows;
-}
-
-// ── 2. Town → City mapping ──
+  return dataRows
+    .filter((row) => row.some((value) => value !== null && value !== ""))
+    .map((row) =>
+      Object.fromEntries(
+        headers
+          .map((header, index) => [header, row[index] ?? ""])
+          .filter(([header]) => header),
+      ),
+    );
+}// ── 2. Town → City mapping ──
 const townToCity = {
   JOHANNESBURG: "Johannesburg",
   SOWETO: "Soweto",
