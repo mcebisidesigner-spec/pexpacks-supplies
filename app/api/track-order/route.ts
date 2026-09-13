@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   // 1. Rate Limiting: Max 5 attempts per IP per 60 seconds to prevent brute-force enumeration
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "track-order-lookup",
     windowMs: 60 * 1000,
     max: 5,
@@ -16,12 +16,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Too many order tracking attempts. Please wait a minute before trying again.",
+        message:
+          "Too many order tracking attempts. Please wait a minute before trying again.",
       },
       {
         status: 429,
         headers: { "Retry-After": String(limit.retryAfter) },
-      }
+      },
     );
   }
 
@@ -39,9 +40,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Order tracking record not found. Please check your order reference and receipt details.",
+        message:
+          "Order tracking record not found. Please check your order reference and receipt details.",
       },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -50,7 +52,9 @@ export async function GET(request: NextRequest) {
   try {
     let query = supabase
       .from("orders")
-      .select("order_reference, status, estimated_delivery, courier_name, waybill_number, updated_at, created_at");
+      .select(
+        "order_reference, status, estimated_delivery, courier_name, waybill_number, updated_at, created_at",
+      );
 
     if (hasTokenProof) {
       if (ref) {
@@ -72,23 +76,37 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "Order tracking record not found. Please check your order reference and receipt details.",
+          message:
+            "Order tracking record not found. Please check your order reference and receipt details.",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Map order status string to standard tracking enum
-    let normalizedStatus: "placed" | "processing" | "shipped" | "out_for_delivery" | "delivered" = "placed";
+    let normalizedStatus:
+      | "placed"
+      | "processing"
+      | "shipped"
+      | "out_for_delivery"
+      | "delivered" = "placed";
     const rawStatus = (order.status || "").toLowerCase();
 
     if (rawStatus.includes("deliver") || rawStatus === "completed") {
       normalizedStatus = "delivered";
     } else if (rawStatus.includes("out") || rawStatus.includes("dispatch")) {
       normalizedStatus = "out_for_delivery";
-    } else if (rawStatus.includes("ship") || rawStatus.includes("transit") || rawStatus.includes("courier")) {
+    } else if (
+      rawStatus.includes("ship") ||
+      rawStatus.includes("transit") ||
+      rawStatus.includes("courier")
+    ) {
       normalizedStatus = "shipped";
-    } else if (rawStatus.includes("process") || rawStatus.includes("pack") || rawStatus === "paid") {
+    } else if (
+      rawStatus.includes("process") ||
+      rawStatus.includes("pack") ||
+      rawStatus === "paid"
+    ) {
       normalizedStatus = "processing";
     } else {
       normalizedStatus = "placed";
@@ -103,7 +121,8 @@ export async function GET(request: NextRequest) {
         : null,
       courier: order.courier_name || null,
       waybillNumber: order.waybill_number || null,
-      updatedAt: order.updated_at || order.created_at || new Date().toISOString(),
+      updatedAt:
+        order.updated_at || order.created_at || new Date().toISOString(),
     };
 
     return NextResponse.json(sanitizedPayload, {
@@ -115,9 +134,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "Order tracking record not found. Please check your order reference and receipt details.",
+        message:
+          "Order tracking record not found. Please check your order reference and receipt details.",
       },
-      { status: 404 }
+      { status: 404 },
     );
   }
 }

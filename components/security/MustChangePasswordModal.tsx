@@ -2,8 +2,19 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { KeyRound, ShieldCheck, Eye, EyeOff, Check, AlertCircle } from "lucide-react";
+import {
+  KeyRound,
+  ShieldCheck,
+  Eye,
+  EyeOff,
+  Check,
+  AlertCircle,
+} from "lucide-react";
 import { setPermanentPasswordAction } from "@/app/actions/auth";
+import {
+  MIN_ADMIN_PASSWORD_LENGTH,
+  validateAdminPassword,
+} from "@/lib/security/password-policy";
 
 interface MustChangePasswordModalProps {
   userEmail: string;
@@ -26,7 +37,7 @@ export function MustChangePasswordModal({
 
   if (!isOpen) return null;
 
-  const isMinLength = password.length >= 8;
+  const isMinLength = password.length >= MIN_ADMIN_PASSWORD_LENGTH;
   const isMatching = password.length > 0 && password === confirmPassword;
   const canSubmit = isMinLength && isMatching && !isPending;
 
@@ -35,20 +46,18 @@ export function MustChangePasswordModal({
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (!isMinLength) {
-      setErrorMessage("Password must be at least 8 characters long.");
-      return;
-    }
-
-    if (!isMatching) {
-      setErrorMessage("Passwords do not match. Please verify.");
+    const passwordValidation = validateAdminPassword(password, confirmPassword);
+    if (!passwordValidation.ok) {
+      setErrorMessage(passwordValidation.message);
       return;
     }
 
     startTransition(async () => {
       const res = await setPermanentPasswordAction(password, confirmPassword);
       if (res.ok) {
-        setSuccessMessage("Your permanent password has been established! Redirecting you to sign in with your new password...");
+        setSuccessMessage(
+          "Your permanent password has been established! Redirecting you to sign in with your new password...",
+        );
         setTimeout(() => {
           setIsOpen(false);
           router.push("/pex-console-secure?status=password_updated");
@@ -89,7 +98,8 @@ export function MustChangePasswordModal({
         <div
           style={{
             padding: "24px 28px",
-            background: "linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(9, 14, 23, 0.95) 100%)",
+            background:
+              "linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(9, 14, 23, 0.95) 100%)",
             borderBottom: "1px solid rgba(51, 65, 85, 0.5)",
             display: "flex",
             alignItems: "center",
@@ -112,11 +122,21 @@ export function MustChangePasswordModal({
             <KeyRound size={22} />
           </div>
           <div>
-            <h2 style={{ fontSize: "1.125rem", fontWeight: 700, color: "#ffffff", margin: "0 0 2px" }}>
+            <h2
+              style={{
+                fontSize: "1.125rem",
+                fontWeight: 700,
+                color: "#ffffff",
+                margin: "0 0 2px",
+              }}
+            >
               Create Permanent Password
             </h2>
             <p style={{ fontSize: "0.8125rem", color: "#94a3b8", margin: 0 }}>
-              First-time setup for <span style={{ color: "#38bdf8", fontWeight: 600 }}>{userEmail}</span>
+              First-time setup for{" "}
+              <span style={{ color: "#38bdf8", fontWeight: 600 }}>
+                {userEmail}
+              </span>
             </p>
           </div>
         </div>
@@ -163,14 +183,38 @@ export function MustChangePasswordModal({
             </div>
           )}
 
-          <p style={{ fontSize: "0.8125rem", color: "#cbd5e1", lineHeight: 1.5, margin: "0 0 18px" }}>
-            You signed in using a temporary onboarding password. For your security and compliance, please establish your permanent private password.
+          <p
+            style={{
+              fontSize: "0.8125rem",
+              color: "#cbd5e1",
+              lineHeight: 1.5,
+              margin: "0 0 18px",
+            }}
+          >
+            You signed in using a temporary onboarding password. For your
+            security and compliance, please establish your permanent private
+            password.
           </p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              marginBottom: "20px",
+            }}
+          >
             {/* New Password */}
             <div>
-              <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, color: "#94a3b8", marginBottom: "6px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.8125rem",
+                  fontWeight: 600,
+                  color: "#94a3b8",
+                  marginBottom: "6px",
+                }}
+              >
                 New Permanent Password *
               </label>
               <div style={{ position: "relative" }}>
@@ -179,7 +223,7 @@ export function MustChangePasswordModal({
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter at least 8 characters"
+                  placeholder={`Enter at least ${MIN_ADMIN_PASSWORD_LENGTH} characters`}
                   disabled={isPending}
                   style={{
                     width: "100%",
@@ -215,7 +259,15 @@ export function MustChangePasswordModal({
 
             {/* Confirm New Password */}
             <div>
-              <label style={{ display: "block", fontSize: "0.8125rem", fontWeight: 600, color: "#94a3b8", marginBottom: "6px" }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: "0.8125rem",
+                  fontWeight: 600,
+                  color: "#94a3b8",
+                  marginBottom: "6px",
+                }}
+              >
                 Confirm New Password *
               </label>
               <div style={{ position: "relative" }}>
@@ -259,14 +311,60 @@ export function MustChangePasswordModal({
             </div>
 
             {/* Validation Checklist */}
-            <div style={{ backgroundColor: "#040914", borderRadius: "8px", padding: "10px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.75rem", color: isMinLength ? "#34d399" : "#64748b" }}>
-                <Check size={14} style={{ color: isMinLength ? "#10b981" : "#475569" }} />
-                <span>At least 8 characters</span>
+            <div
+              style={{
+                backgroundColor: "#040914",
+                borderRadius: "8px",
+                padding: "10px 14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "6px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "0.75rem",
+                  color: isMinLength ? "#34d399" : "#64748b",
+                }}
+              >
+                <Check
+                  size={14}
+                  style={{ color: isMinLength ? "#10b981" : "#475569" }}
+                />
+                <span>At least {MIN_ADMIN_PASSWORD_LENGTH} characters</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.75rem", color: isMatching ? "#34d399" : "#64748b" }}>
-                <Check size={14} style={{ color: isMatching ? "#10b981" : "#475569" }} />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "0.75rem",
+                  color: isMatching ? "#34d399" : "#64748b",
+                }}
+              >
+                <Check
+                  size={14}
+                  style={{ color: isMatching ? "#10b981" : "#475569" }}
+                />
                 <span>Passwords match</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "0.75rem",
+                  color: "#38bdf8",
+                }}
+              >
+                <ShieldCheck
+                  size={14}
+                  style={{ color: "#38bdf8" }}
+                />
+                <span>Screened against data breaches (HaveIBeenPwned k-Anonymity)</span>
               </div>
             </div>
           </div>
@@ -277,7 +375,9 @@ export function MustChangePasswordModal({
             style={{
               width: "100%",
               height: "44px",
-              backgroundColor: canSubmit ? "#10b981" : "rgba(16, 185, 129, 0.3)",
+              backgroundColor: canSubmit
+                ? "#10b981"
+                : "rgba(16, 185, 129, 0.3)",
               color: "#ffffff",
               border: "none",
               borderRadius: "8px",
@@ -287,7 +387,9 @@ export function MustChangePasswordModal({
               transition: "all 0.15s ease",
             }}
           >
-            {isPending ? "Establishing Password..." : "Set Permanent Password & Continue →"}
+            {isPending
+              ? "Establishing Password..."
+              : "Set Permanent Password & Continue →"}
           </button>
         </form>
       </div>

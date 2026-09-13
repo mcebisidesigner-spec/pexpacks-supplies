@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "admin-stationery-search",
     windowMs: 60 * 1000,
     max: 120,

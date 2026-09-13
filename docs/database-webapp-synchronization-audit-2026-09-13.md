@@ -191,3 +191,69 @@ This removes approximately 17 MB of redundant index storage and avoids maintaini
 - The inspected published school payload contained eight packs, four configured items, and was about 4.2 KB as JSON.
 - The RPC exposes only public school, pack, item, and Pexcover fields; supplier cost, raw settings, and procurement fields are absent.
 - Do not add a materialized JSON cache or further denormalization now. The current payload is small; retain the cached RPC approach and revisit only if real page latency or payload size grows materially.
+## Storage Monitoring Control
+
+Migration `00118_database_storage_metrics_rpc.sql` adds `get_database_storage_metrics()` for recurring operational capacity review.
+
+- The RPC returns only aggregate table, index, and dead-tuple metrics for the 25 largest public-schema tables.
+- It is restricted to `service_role`; `PUBLIC`, `anon`, and `authenticated` execution are explicitly revoked.
+- `npm.cmd run db:storage:report` successfully queried the linked database using server credentials.
+- A separate request using the public Supabase publishable key was denied, confirming that browser clients cannot inspect operational database size or table metrics.
+- The report remains an operator/CI tool, not an application endpoint. It adds no public payload, cache surface, or customer-facing database access.
+
+Use the report monthly and after unusually large catalogue imports or retention/archive operations. Investigate sustained growth, unusual dead-tuple growth, or a material change in the table-to-index size ratio before attempting index removals or table rewrites.
+## Payment Function Reconciliation
+
+Migration `00119_reconcile_complete_order_payment_lint.sql` reconciles a remote-only implementation detail in `complete_order_payment` with the tracked migration history.
+
+- The function continues to validate the order amount, persist the payment event and payment row, transition the order to paid, generate procurement demand, allocate secured stock, create fulfilment records, and enqueue operational notifications/tasks.
+- `allocate_secured_demand(...)` remains called once for each newly linked procurement requirement. Its integer return value is now intentionally discarded with `PERFORM`, because it was never consumed.
+- The remote schema linter is clean after deployment.
+- Focused atomic-order-persistence and order-paid-webhook suites passed: 7 tests across 2 files.
+
+## Remaining Supabase Auth Operator Setting
+
+The linked Supabase security advisor reports `auth_leaked_password_protection` as a warning because native platform-level HaveIBeenPwned integration is restricted by Supabase to the **Pro Plan and above** (current organization is on the Free tier). When upgraded to Pro in approximately one month:
+- Enable **Leaked password protection** in Supabase Dashboard: **Authentication -> Settings -> Password Security**.
+- This will provide secondary infrastructure-level enforcement alongside application-level checks.
+
+## Application-Level Leaked Password Protection (HIBP k-Anonymity)
+
+To safeguard user accounts immediately without waiting for the Pro upgrade, the application implements real-time zero-knowledge breach screening directly in `lib/security/password-policy.ts`:
+
+- **k-Anonymity Privacy Guarantee**: Only the first 5 hexadecimal characters of the SHA-1 password digest are transmitted to `https://api.pwnedpasswords.com/range/{prefix}` with padding enabled. The plaintext password and remainder of the hash never leave the runtime environment.
+- **Server Authority**: The `setPermanentPasswordAction` server action authoritatively executes `validateAdminPasswordWithBreachCheck` before Supabase Auth is invoked, blocking passwords exposed in known public breaches.
+- **Client & Form Integration**: `MustChangePasswordModal` provides instant user feedback and a security trust badge indicating breach screening.
+- **Fail-Open Resilience**: If the external HIBP API suffers temporary downtime or timeout, the check fails open gracefully with diagnostic logging so valid users are never locked out of operational access.
+- **Test Coverage**: Automated test suite in `tests/password-leak-protection.test.ts` validates SHA-1 calculation, prefix anonymity, positive match detection, safe password acceptance, and graceful error handling.
+## Peak-Traffic Capacity Hardening
+
+Measured live review identified the following production safeguards:
+
+- Public route rate limits now use Upstash Redis sliding windows when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are configured. This makes limits consistent across Vercel instances; the memory-only fallback is limited to local development or a temporary Redis outage.
+- The synchronous `orders` dashboard-summary trigger is removed. It previously ran global aggregate scans and rewrote one shared summary row after every order write. The existing `pg_cron` job refreshes summaries every five minutes, and successful payment/admin order transitions retain explicit refreshes.
+- Exact duplicate indexes on `schools`, `orders`, `order_items`, and `dashboard_summaries` are removed. Retained equivalents were verified from the linked database query plans and usage counters before migration.
+- High-churn checkout, OTP, and dashboard summary tables now use lower table-specific autovacuum/analyze thresholds to prevent bloat as traffic grows.
+
+### Deployment Requirement
+
+Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` as encrypted environment variables in every Vercel environment. Without them, application functionality remains available, but request limits are only per instance and cannot provide reliable peak-traffic protection.
+## Performance Advisor Remediation
+
+Migration `00121_performance_advisor_rls_and_index_hardening.sql` addresses the measured low-risk advisor findings:
+
+- Five exact duplicate indexes are removed after verifying they do not back constraints.
+- `has_permission` resolves the authenticated user once per permission check.
+- The six flagged profile, notification, order, and quotation policies retain their existing roles and predicates while evaluating constant Auth/permission checks as init plans.
+- Multiple permissive RLS-policy findings remain intentionally unchanged in this pass because they encode overlapping manager/viewer permissions. Consolidate those only with a role-by-role authorization regression matrix; they are not safe mechanical changes.
+## High-Traffic RLS Policy Consolidation
+
+Migration `00122_consolidate_high_traffic_rls_policies.sql` applies the first role-by-role verified consolidation set:
+
+- CMS announcements, FAQs, resources, and testimonials now use one combined authenticated read policy plus distinct manager-only insert, update, and delete policies.
+- `master_products`, `school_pack_items`, and `school_packs` use the same structure. The public published-pack predicate remains unchanged; it does not expose draft or hidden packs.
+- `orders` retains the existing union of administrator, delegated `orders.view`/`orders.edit`, and staff access, while anonymous order creation and service-role access remain untouched.
+- Remote policy metadata confirms exactly one authenticated policy per action on all eight consolidated tables. Remote schema lint is clean.
+- `db:preflight` passed after deployment. The public RPC smoke reported database execution times of 2.9 ms for `get_public_school_pack` and 1 ms for `search_public_schools`; external wall time includes network and REST overhead.
+
+The remaining `multiple_permissive_policies` advisor findings are now limited to lower-traffic administrative tables. They must be consolidated in small groups only after their reader/manager role matrix has been proved, because a policy warning is not evidence that the policies are redundant.

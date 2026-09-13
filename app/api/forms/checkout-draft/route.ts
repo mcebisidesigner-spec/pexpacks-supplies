@@ -9,11 +9,11 @@ export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json(
       { success: false, message: "Invalid request origin." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "draft-write",
     windowMs: 10 * 60 * 1000,
     max: 5,
@@ -21,8 +21,11 @@ export async function POST(request: NextRequest) {
 
   if (!limit.allowed) {
     return NextResponse.json(
-      { success: false, message: "Too many requests. Please wait and try again." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+      {
+        success: false,
+        message: "Too many requests. Please wait and try again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 
@@ -33,7 +36,7 @@ export async function POST(request: NextRequest) {
     if (!device_id || !state) {
       return NextResponse.json(
         { success: false, message: "Missing device_id or state." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
       console.error("[checkout-draft] Pre-upsert select failed:", selectError);
       return NextResponse.json(
         { success: false, message: "Failed to query existing draft." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -85,7 +88,7 @@ export async function POST(request: NextRequest) {
       console.error("[checkout-draft] Save failed:", dbError);
       return NextResponse.json(
         { success: false, message: "Failed to save draft." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -93,7 +96,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, message: "Invalid request." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }
@@ -102,11 +105,11 @@ export async function GET(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json(
       { success: false, message: "Invalid request origin." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "draft-read",
     windowMs: 10 * 60 * 1000,
     max: 10,
@@ -114,8 +117,11 @@ export async function GET(request: NextRequest) {
 
   if (!limit.allowed) {
     return NextResponse.json(
-      { success: false, message: "Too many requests. Please wait and try again." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+      {
+        success: false,
+        message: "Too many requests. Please wait and try again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 
@@ -125,7 +131,7 @@ export async function GET(request: NextRequest) {
   if (!deviceId) {
     return NextResponse.json(
       { success: false, message: "Missing device_id." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -143,7 +149,7 @@ export async function GET(request: NextRequest) {
       console.error("[checkout-draft] Select failed:", error);
       return NextResponse.json(
         { success: false, message: "Failed to load draft." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -151,7 +157,7 @@ export async function GET(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, message: "Failed to load draft." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -160,11 +166,11 @@ export async function DELETE(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json(
       { success: false, message: "Invalid request origin." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "draft-delete",
     windowMs: 10 * 60 * 1000,
     max: 3,
@@ -172,8 +178,11 @@ export async function DELETE(request: NextRequest) {
 
   if (!limit.allowed) {
     return NextResponse.json(
-      { success: false, message: "Too many requests. Please wait and try again." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+      {
+        success: false,
+        message: "Too many requests. Please wait and try again.",
+      },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }
 
@@ -183,7 +192,7 @@ export async function DELETE(request: NextRequest) {
   if (!deviceId) {
     return NextResponse.json(
       { success: false, message: "Missing device_id." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -200,7 +209,7 @@ export async function DELETE(request: NextRequest) {
       console.error("[checkout-draft] Delete failed:", error);
       return NextResponse.json(
         { success: false, message: "Failed to delete draft." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -208,7 +217,7 @@ export async function DELETE(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, message: "Failed to delete draft." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { sendUserInvitationEmail } from "@/lib/email/sendUserInvitationEmail";
+import {
+  MIN_ADMIN_PASSWORD_LENGTH,
+  validateAdminPassword,
+} from "@/lib/security/password-policy";
 
 describe("Temporary Password Onboarding Architecture", () => {
   it("generates a strong temporary password adhering to format constraints", () => {
@@ -20,25 +24,20 @@ describe("Temporary Password Onboarding Architecture", () => {
     expect(/[0-9]/.test(pwd)).toBe(true);
   });
 
-  it("validates permanent password creation rules (min 8 chars, match confirmation)", () => {
-    function validatePermanentPassword(pwd: string, confirm: string) {
-      if (!pwd || pwd.length < 8) {
-        return { ok: false, message: "Password must be at least 8 characters long." };
-      }
-      if (pwd !== confirm) {
-        return { ok: false, message: "Passwords do not match. Please verify." };
-      }
-      return { ok: true };
-    }
-
-    // Too short
-    expect(validatePermanentPassword("short", "short").ok).toBe(false);
-
-    // Mismatch
-    expect(validatePermanentPassword("ValidPassword123", "DifferentPassword123").ok).toBe(false);
-
-    // Valid
-    expect(validatePermanentPassword("ValidPassword123!", "ValidPassword123!").ok).toBe(true);
+  it("validates permanent password creation rules consistently", () => {
+    expect(validateAdminPassword("short", "short").ok).toBe(false);
+    expect(
+      validateAdminPassword(
+        "A".repeat(MIN_ADMIN_PASSWORD_LENGTH - 1),
+        "A".repeat(MIN_ADMIN_PASSWORD_LENGTH - 1),
+      ).ok,
+    ).toBe(false);
+    expect(
+      validateAdminPassword("ValidPassword123", "DifferentPassword123").ok,
+    ).toBe(false);
+    expect(
+      validateAdminPassword("ValidPassword123!", "ValidPassword123!").ok,
+    ).toBe(true);
   });
 
   it("handles email invitation payload with temporary credentials seamlessly", async () => {
@@ -47,7 +46,13 @@ describe("Temporary Password Onboarding Architecture", () => {
       toEmail: "newstaff@pexpacks.co.za",
       fullName: "Test Staff Member",
       department: "Procurement & Supply Chain",
-      roles: [{ slug: "operations_manager", name: "Operations Manager", description: "Manage school packs" }],
+      roles: [
+        {
+          slug: "operations_manager",
+          name: "Operations Manager",
+          description: "Manage school packs",
+        },
+      ],
       tempPassword: "Pex#xY98kL26!",
     });
 

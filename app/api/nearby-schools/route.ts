@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getSchoolsByCity,
-  getDefaultSchools,
-} from "@/lib/schools/nearby";
+import { getSchoolsByCity, getDefaultSchools } from "@/lib/schools/nearby";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
-  const rl = rateLimitRequest(request, {
+  const rl = await rateLimitRequest(request, {
     keyPrefix: "nearby-schools",
     windowMs: 60_000,
     max: 30,
@@ -17,7 +14,7 @@ export async function GET(request: NextRequest) {
   if (!rl.allowed) {
     return NextResponse.json(
       { schools: [], source: "default", city: null },
-      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } }
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
     );
   }
 
@@ -37,7 +34,7 @@ export async function GET(request: NextRequest) {
         headers: {
           "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
         },
-      }
+      },
     );
   }
 
@@ -49,6 +46,6 @@ export async function GET(request: NextRequest) {
       headers: {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
       },
-    }
+    },
   );
 }

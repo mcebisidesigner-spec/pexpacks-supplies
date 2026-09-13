@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "school-visibility",
     windowMs: 60 * 1000,
     max: 30,
@@ -69,7 +69,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  type VisibilityRow = { slug: string; parent_collection_accepted?: boolean | null };
+  type VisibilityRow = {
+    slug: string;
+    parent_collection_accepted?: boolean | null;
+  };
   const rows = (schoolsData as unknown as VisibilityRow[] | null) ?? [];
   const visibleSlugs = rows.map((s) => s.slug);
 

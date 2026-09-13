@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "checkout",
     windowMs: 10 * 60 * 1000,
     max: 5,

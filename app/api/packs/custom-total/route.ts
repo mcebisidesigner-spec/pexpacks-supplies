@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: "pack-custom-total",
     windowMs: 60 * 1000,
     max: 120,

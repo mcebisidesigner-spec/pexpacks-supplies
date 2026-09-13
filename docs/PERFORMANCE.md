@@ -58,7 +58,7 @@ Cold dominance: search API and `/schools` rebuild a search index on first hit (`
 Schools: `schools_slug_unique`, `idx_schools_slug`, `idx_schools_status`, `schools_city_idx`, `schools_province_idx`, `schools_featured_idx`, `idx_schools_name` (lower), `idx_schools_grades` (GIN), `schools_search_idx` (GIN search*vector), `idx_schools_location`.
 Packs/items: `idx_stationery_packs_school`, `idx_stationery_items_pack`, `idx_stationery_packs_featured`, `idx_stationery_packs_school_visible`, `idx_stationery_items_pack_visible`, `stationery_packs_search_idx` (GIN), `stationery_items_search_idx` (GIN).
 Orders: `idx_orders_status`, `idx_orders_buyer_email`, `idx_orders_paid_at`, `idx_orders_pack_type`, `idx_orders_created_status`, `idx_orders_created_pack_type`, `idx_orders_created_school`.
-Content/other: `idx_testimonials_visible_sort`, `idx_faqs_visible_sort`, `idx_website_content_updated`, `idx_assets_folder`, `idx_assets_created`, `idx_audit_logs*\*`; rate limiting is file-persisted (`lib/security/requestGuards.ts`).
+Content/other: `idx_testimonials_visible_sort`, `idx_faqs_visible_sort`, `idx_website_content_updated`, `idx_assets_folder`, `idx_assets_created`, `idx_audit_logs*\*`; rate limiting uses Upstash Redis sliding windows when configured, with a local development fallback (`lib/security/requestGuards.ts`).
 
 ---
 
@@ -127,3 +127,16 @@ Order = impact / risk:
 - School page HTML: ≤ 100KB.
 - Largest image on page: ≤ 300KB.
 - Full build: < 120s; static pages count recorded per release.
+
+## Peak-Traffic Deployment Gate
+
+Before a production deployment, configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in Vercel, then run:
+
+```bash
+npm.cmd run capacity:preflight
+```
+
+The check verifies only that both variables exist; it never prints secret values. Without Upstash, local development remains usable, but Vercel instances cannot share rate-limit state during a traffic spike.
+## RLS Read-Path Hardening
+
+Migration `00122_consolidate_high_traffic_rls_policies.sql` reduces row-policy evaluation on the primary admin and catalogue paths without changing access rules. CMS, catalogue, pack, and order tables now each use one authenticated read policy and separate explicit mutation policies. Public school-pack visibility remains constrained to published visible rows. The linked database preflight passed after deployment; continue policy consolidation only with a role-by-role regression matrix for each remaining administrative table.

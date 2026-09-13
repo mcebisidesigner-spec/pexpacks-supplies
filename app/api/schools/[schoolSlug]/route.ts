@@ -11,7 +11,7 @@ type RouteContext = {
 };
 
 export async function GET(_request: NextRequest, { params }: RouteContext) {
-  const limitStatus = rateLimitRequest(_request, {
+  const limitStatus = await rateLimitRequest(_request, {
     keyPrefix: "school-detail",
     windowMs: 60 * 1000,
     max: 90,
@@ -26,7 +26,7 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
       {
         status: 429,
         headers: { "Retry-After": String(limitStatus.retryAfter) },
-      }
+      },
     );
   }
 
@@ -36,7 +36,7 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
   if (!school) {
     return NextResponse.json(
       { success: false, message: "School not found." },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
@@ -63,6 +63,6 @@ export async function GET(_request: NextRequest, { params }: RouteContext) {
       headers: {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
       },
-    }
+    },
   );
 }

@@ -23,7 +23,7 @@ function json(body: unknown, status: number) {
 
 function withRequestMetadata(
   request: NextRequest,
-  raw: Record<string, unknown>
+  raw: Record<string, unknown>,
 ) {
   return {
     ...raw,
@@ -38,13 +38,13 @@ function withRequestMetadata(
 
 export async function handlePexpacksFormRequest(
   request: NextRequest,
-  endpoint: FormEndpointKind
+  endpoint: FormEndpointKind,
 ) {
   if (!isSameOriginRequest(request)) {
     return json({ success: false, message: "Invalid request origin." }, 403);
   }
 
-  const limit = rateLimitRequest(request, {
+  const limit = await rateLimitRequest(request, {
     keyPrefix: `forms-${endpoint}`,
     windowMs: 10 * 60 * 1000,
     max: 8,
@@ -60,12 +60,13 @@ export async function handlePexpacksFormRequest(
       {
         status: 429,
         headers: { "Retry-After": String(limit.retryAfter) },
-      }
+      },
     );
   }
 
   let raw: Record<string, unknown>;
-  let attachments: import("@/lib/forms/validation").SubmittedFormAttachment[] = [];
+  let attachments: import("@/lib/forms/validation").SubmittedFormAttachment[] =
+    [];
 
   try {
     const body = await readFormBody(request);
@@ -78,7 +79,7 @@ export async function handlePexpacksFormRequest(
           message: FORM_VALIDATION_MESSAGE,
           errors: { list: body.fileError, brandAssets: body.fileError },
         },
-        400
+        400,
       );
     }
   } catch {
@@ -98,7 +99,7 @@ export async function handlePexpacksFormRequest(
         message: FORM_VALIDATION_MESSAGE,
         errors: validation.errors,
       },
-      400
+      400,
     );
   }
 
@@ -121,7 +122,7 @@ export async function handlePexpacksFormRequest(
         message: FORM_ERROR_MESSAGE,
         error: saved.error,
       },
-      500
+      500,
     );
   }
 
@@ -131,7 +132,7 @@ export async function handlePexpacksFormRequest(
       message: FORM_SUCCESS_MESSAGE,
       submission_id: saved.submission_id,
     },
-    200
+    200,
   );
 }
 

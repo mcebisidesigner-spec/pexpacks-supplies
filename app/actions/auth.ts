@@ -18,6 +18,10 @@ import {
   adminSessionCookieOptions,
   createAdminSessionValue,
 } from "@/lib/admin/session-policy";
+import {
+  validateAdminPassword,
+  validateAdminPasswordWithBreachCheck,
+} from "@/lib/security/password-policy";
 
 export type AuthResponse = {
   ok: boolean;
@@ -378,18 +382,12 @@ export async function setPermanentPasswordAction(
 
     const user = userData.user;
 
-    if (!password || password.length < 8) {
-      return {
-        ok: false,
-        message: "Password must be at least 8 characters long.",
-      };
-    }
-
-    if (password !== confirmPassword) {
-      return {
-        ok: false,
-        message: "Passwords do not match. Please verify and try again.",
-      };
+    const passwordValidation = await validateAdminPasswordWithBreachCheck(
+      password,
+      confirmPassword,
+    );
+    if (!passwordValidation.ok) {
+      return passwordValidation;
     }
 
     // 1. Update user password via server client session

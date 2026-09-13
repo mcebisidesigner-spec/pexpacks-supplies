@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchSchoolRecords, getFeaturedSchoolRecords, getNearbySchoolRecords } from "@/lib/schools/schoolSearchData";
+import {
+  searchSchoolRecords,
+  getFeaturedSchoolRecords,
+  getNearbySchoolRecords,
+} from "@/lib/schools/schoolSearchData";
 import { isSchoolPhase } from "@/lib/schools/schoolPhase";
 import { rateLimitRequest } from "@/lib/security/requestGuards";
 
@@ -11,7 +15,7 @@ function numberParam(value: string | null, fallback: number) {
 }
 
 export async function GET(request: NextRequest) {
-  const limitStatus = rateLimitRequest(request, {
+  const limitStatus = await rateLimitRequest(request, {
     keyPrefix: "schools-search",
     windowMs: 60 * 1000,
     max: 60,
@@ -26,7 +30,7 @@ export async function GET(request: NextRequest) {
       {
         status: 429,
         headers: { "Retry-After": String(limitStatus.retryAfter) },
-      }
+      },
     );
   }
 
@@ -53,7 +57,12 @@ export async function GET(request: NextRequest) {
           limit,
           offset: 0,
         },
-        { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" } }
+        {
+          headers: {
+            "Cache-Control":
+              "public, s-maxage=300, stale-while-revalidate=86400",
+          },
+        },
       );
     }
   }
@@ -70,8 +79,10 @@ export async function GET(request: NextRequest) {
         offset: 0,
       },
       {
-        headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" },
-      }
+        headers: {
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+        },
+      },
     );
   }
 
@@ -83,7 +94,7 @@ export async function GET(request: NextRequest) {
       region: params.get("region") ?? "",
     },
     limit,
-    offset
+    offset,
   );
 
   return NextResponse.json(
@@ -97,6 +108,6 @@ export async function GET(request: NextRequest) {
       headers: {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
       },
-    }
+    },
   );
 }
