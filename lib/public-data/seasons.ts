@@ -1,6 +1,10 @@
 import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { PublicSeason } from "./contracts";
+import {
+  DEFAULT_PUBLIC_SEASON,
+  DEFAULT_PACKS_BADGE,
+  type PublicSeason,
+} from "./contracts";
 
 export const SEASON_CACHE_TAG = "public-season-v1";
 export const SEASON_REVALIDATE_SECONDS = 300;
@@ -9,7 +13,7 @@ export {
   DEFAULT_PUBLIC_SEASON,
   DEFAULT_PACKS_BADGE,
   type PublicSeason,
-} from "./contracts";
+};
 
 /**
  * Retrieves the authoritative active public commercial season.
