@@ -12,6 +12,7 @@
     "db:link": "node scripts/ensure-supabase-linked.cjs",
     "security:preflight": "node scripts/check-admin-session-secret.cjs",
     "payment:sandbox:preflight": "node scripts/check-payment-sandbox-readiness.cjs",
+    "test:checkout:gateway": "node scripts/stage-developer-test-order.cjs",
     "db:lint": "supabase db lint --local --schema public --level warning --fail-on error",
     "check:images": "node scripts/check-image-budget.cjs",
     "format": "prettier --write .",
