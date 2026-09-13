@@ -168,8 +168,10 @@ function buildReceiptHtml(order: ReceiptOrder): string {
                       <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.buyer_email || "N/A")}</td>
                     </tr>
                     <tr>
-                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Unique customer ID</td>
-                      <td style="padding:12px 18px;font-size:14px;color:#334155;font-weight:600;text-align:right;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.unique_customer_id || "CUST-GUEST")}</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Unique customer ID (Tracking)</td>
+                      <td style="padding:12px 18px;font-size:14px;color:#0284c7;font-weight:700;text-align:right;font-family:Consolas,Monaco,monospace;">
+                        <span style="background:#f0f9ff;border:1px solid #bae6fd;padding:3px 8px;border-radius:6px;display:inline-block;letter-spacing:0.5px;">${escapeHtml(order.unique_customer_id || "CUST-GUEST")}</span>
+                      </td>
                     </tr>
                     <tr>
                       <td style="padding:12px 18px;font-size:14px;color:#64748b;font-weight:500;font-family:Arial,Helvetica,sans-serif;">Date</td>
@@ -189,10 +191,33 @@ function buildReceiptHtml(order: ReceiptOrder): string {
                     </tr>
                   </table>
 
-                  <!-- Track Order Magic Link Button -->
-                  <div style="margin:20px 0 28px;text-align:center;">
-                    <a href="${trackingUrl}" target="_blank" style="display:inline-block;padding:14px 28px;background:#219e9b;color:#ffffff;text-decoration:none;border-radius:30px;font-weight:800;font-size:15px;box-shadow:0 4px 12px rgba(33,158,155,0.25);">
-                      <u>Click to track your order</u>
+                  <!-- Package Tracking Box with Unique Customer ID -->
+                  <div style="margin:24px 0 28px;padding:20px 24px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:14px;text-align:center;">
+                    <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:800;color:#0f766e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">
+                      Package Tracking Details
+                    </div>
+                    <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#0f172a;font-weight:800;margin-bottom:8px;">
+                      Track Your Stationery Order
+                    </div>
+                    <p style="margin:0 0 14px;color:#334155;font-size:13px;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
+                      Use your <strong>Order Reference</strong>, <strong>Email</strong>, and <strong>Unique Customer ID</strong> on our website Guest Order Tracker:
+                    </p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 16px;background:#ffffff;border:1px solid #ccfbf1;border-radius:8px;text-align:left;">
+                      <tr>
+                        <td style="padding:8px 14px;font-size:12px;color:#64748b;font-weight:600;font-family:Arial,Helvetica,sans-serif;">Order Reference:</td>
+                        <td style="padding:8px 14px;font-size:13px;color:#0f172a;font-weight:700;font-family:Consolas,Monaco,monospace;">${escapeHtml(order.order_reference)}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:8px 14px;font-size:12px;color:#64748b;font-weight:600;border-top:1px solid #f1f5f9;font-family:Arial,Helvetica,sans-serif;">Customer Email:</td>
+                        <td style="padding:8px 14px;font-size:12px;color:#0f172a;font-weight:600;border-top:1px solid #f1f5f9;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(order.buyer_email || "")}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:8px 14px;font-size:12px;color:#0f766e;font-weight:700;border-top:1px solid #f1f5f9;font-family:Arial,Helvetica,sans-serif;">Unique Customer ID:</td>
+                        <td style="padding:8px 14px;font-size:13px;color:#0284c7;font-weight:800;border-top:1px solid #f1f5f9;font-family:Consolas,Monaco,monospace;background:#f0f9ff;border-radius:0 0 7px 0;">${escapeHtml(order.unique_customer_id || "CUST-GUEST")}</td>
+                      </tr>
+                    </table>
+                    <a href="${trackingUrl}" target="_blank" style="display:inline-block;padding:12px 28px;background:#0d9488;color:#ffffff;text-decoration:none;border-radius:24px;font-weight:800;font-size:14px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 4px 12px rgba(13,148,136,0.25);">
+                      Track Your Package Live &rarr;
                     </a>
                   </div>
 
