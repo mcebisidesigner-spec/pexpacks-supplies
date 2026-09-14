@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
-import { isSameOriginRequest } from "@/lib/security/requestGuards";
+import { isSameOriginRequest, rateLimitRequest } from "@/lib/security/requestGuards";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -26,6 +26,17 @@ const DEFAULT_BRANDS = [
 ];
 
 export async function GET(request: NextRequest) {
+  const limit = await rateLimitRequest(request, {
+    keyPrefix: "brands",
+    windowMs: 60 * 1000,
+    max: 60,
+  });
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again shortly." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
   try {
     const admin = createSupabaseAdminClient();
     // Attempt to fetch from brands table if it exists in Supabase
@@ -104,8 +115,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ brand: newBrand }, { status: 201 });
   } catch (err) {
+    console.error("[brands] creation failed:", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Failed to process brand creation." },
+      { error: "Unable to create the brand right now." },
       { status: 500 },
     );
   }

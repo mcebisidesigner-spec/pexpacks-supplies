@@ -136,7 +136,7 @@ export async function GET(request: Request) {
       }
     );
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : "Failed to generate image";
-    return new Response(`Failed to generate image: ${errorMsg}`, { status: 500 });
+    console.error("[og] image generation failed:", err);
+    return new Response("Unable to generate image.", { status: 500 });
   }
 }

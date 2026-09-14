@@ -65,7 +65,10 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error("[api/stationery/search] Query failed:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Stationery search is temporarily unavailable." },
+        { status: 500 },
+      );
     }
 
     const items = (data || []).map((item) => {

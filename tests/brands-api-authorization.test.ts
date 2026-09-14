@@ -12,5 +12,10 @@ describe("brands API authorization", () => {
     expect(route).toContain('hasPermission(session, "catalogue.manage")');
     expect(route).toContain('error: "Forbidden"');
     expect(route).toContain("isSameOriginRequest(request)");
+    expect(route).toContain("keyPrefix: \"brands\"");
+    expect(route).toContain("max: 60");
+    expect(route).toContain("console.error(\"[brands] creation failed:\", err)");
+    expect(route).toContain("Unable to create the brand right now.");
+    expect(route).not.toContain("err instanceof Error ? err.message");
   });
 });

@@ -1,33 +1,38 @@
 import { Metadata } from "next";
 import styles from "./OrderPage.module.css";
 import heroStyles from "@/components/marketing/HeroBase.module.css";
-import { OrderForm } from "./OrderForm";
+import { AiListDropzone } from "@/components/AiListDropzone";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
-
 import { buildWhatsAppHref } from "@/data/contact";
 
 export const metadata: Metadata = {
-  title: "Order a Custom Pack | Pexpacks",
-  description: "Upload your school stationery list and we will send you a custom quote.",
+  title: "AI School List Converter | Pexpacks Supplies",
+  description:
+    "Upload or snap a photo of your school stationery list. Our instant AI matches your items to verified school stock in seconds.",
 };
 
-const WHATSAPP_URL = buildWhatsAppHref("Hi Pexpacks! I'd like to order a custom stationery pack. Here is my list:");
+const WHATSAPP_URL = buildWhatsAppHref(
+  "Hi Pexpacks! I have a question about my school stationery list:"
+);
 
 export default function OrderPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        
         {/* Left Side: The Pitch */}
         <div className={styles.pitchSection}>
           <p className={heroStyles.eyebrow}>Custom stationery concierge</p>
           <h1>Let us pack it for you.</h1>
-          
+
           <div className={styles.searchPromo}>
             <p>
-              <strong>Wait! Did you check if we already have your school?</strong><br/>
-              We have hundreds of standard packs ready to go. <Link href="/schools" className={styles.searchLink}>Search for your school pack here.</Link>
+              <strong>Wait! Did you check if we already have your school?</strong>
+              <br />
+              We have hundreds of standard packs ready to go.{" "}
+              <Link href="/schools" className={styles.searchLink}>
+                Search for your school pack here.
+              </Link>
             </p>
           </div>
 
@@ -35,39 +40,44 @@ export default function OrderPage() {
             <div className={styles.step}>
               <div className={styles.stepIcon}>1</div>
               <div className={styles.stepContent}>
-                <h3>Upload or Type</h3>
-                <p>Snap a photo of your school list or type it out.</p>
+                <h3>Upload or Snap</h3>
+                <p>Snap a photo of your school list or upload a PDF document.</p>
               </div>
             </div>
-            
+
             <div className={styles.step}>
               <div className={styles.stepIcon}>2</div>
               <div className={styles.stepContent}>
-                <h3>Get a Quote</h3>
-                <p>We review your list and send a custom quote to your WhatsApp within 2 hours.</p>
+                <h3>Instant AI Matching</h3>
+                <p>
+                  Our AI parses your photo or PDF and matches our verified stationery catalog in
+                  seconds.
+                </p>
               </div>
             </div>
-            
+
             <div className={styles.step}>
               <div className={styles.stepIcon}>3</div>
               <div className={styles.stepContent}>
                 <h3>Packed & Delivered</h3>
-                <p>Approve the quote, pay securely, and your custom pack arrives at your door.</p>
+                <p>
+                  Review your matched cart, add optional book covering, and your pack arrives at
+                  your door.
+                </p>
               </div>
             </div>
           </div>
-
         </div>
 
-        {/* Right Side: The Form */}
+        {/* Right Side: The AI Converter Dropzone */}
         <div className={styles.formColumn}>
-          <OrderForm />
+          <AiListDropzone />
 
           <div className={styles.whatsappFallback}>
             <p>In a rush or prefer chatting?</p>
-            <Button 
-              href={WHATSAPP_URL} 
-              variant="outline" 
+            <Button
+              href={WHATSAPP_URL}
+              variant="outline"
               size="md"
               target="_blank"
               rel="noopener noreferrer"
@@ -76,7 +86,6 @@ export default function OrderPage() {
             </Button>
           </div>
         </div>
-        
       </div>
     </main>
   );

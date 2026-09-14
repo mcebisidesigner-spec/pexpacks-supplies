@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAdminUser, hasPermission } from "@/lib/admin/rbac";
+import { rateLimitRequest } from "@/lib/security/requestGuards";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") || "";
 
@@ -15,6 +16,18 @@ export async function GET(request: Request) {
   if (!session) {
     return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
   }
+  const limit = await rateLimitRequest(request, {
+    keyPrefix: "admin-school-search",
+    windowMs: 60 * 1000,
+    max: 120,
+  });
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many searches. Please wait a moment and try again." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   if (!hasPermission(session, "schools.view") && !hasPermission(session, "orders.view")) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -33,7 +46,10 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error("[api/admin/schools/search] Query failed:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "School search is temporarily unavailable." },
+        { status: 500 },
+      );
     }
 
     const schools = (data || []).map((s) => ({

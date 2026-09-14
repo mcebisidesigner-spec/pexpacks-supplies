@@ -4,12 +4,12 @@ import { headers, cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { maskEmail } from "@/lib/security/rate-limit";
 import {
-  checkRateLimit,
-  recordFailedAttempt,
-  resetRateLimit,
-  maskEmail,
-} from "@/lib/security/rate-limit";
+  checkAuthRateLimit,
+  recordAuthFailedAttempt,
+  resetAuthRateLimit,
+} from "@/lib/security/distributed-auth-rate-limit";
 import { logSecurityEvent } from "@/lib/security/audit";
 import { isStaffClaim } from "@/lib/admin/rbac";
 import { generateAndSendOtpEmail } from "@/lib/email/sendOtpEmail";
@@ -65,7 +65,7 @@ export async function authenticatePasswordAction(
     }
 
     // 1. Check Rate Limiter
-    const rateLimit = checkRateLimit(ip);
+    const rateLimit = await checkAuthRateLimit(ip);
     if (!rateLimit.allowed) {
       await logSecurityEvent({
         ipAddress: ip,
@@ -93,7 +93,7 @@ export async function authenticatePasswordAction(
       });
 
     if (authError || !authData.user) {
-      await recordFailedAttempt(ip, userAgent, maskEmail(email));
+      await recordAuthFailedAttempt(ip, userAgent, maskEmail(email));
       await logSecurityEvent({
         ipAddress: ip,
         userAgent,
@@ -116,7 +116,7 @@ export async function authenticatePasswordAction(
         .eq("user_id", user.id);
 
       if (!rolesData || rolesData.length === 0) {
-        await recordFailedAttempt(ip, userAgent, maskEmail(email));
+        await recordAuthFailedAttempt(ip, userAgent, maskEmail(email));
         await logSecurityEvent({
           ipAddress: ip,
           userAgent,
@@ -170,7 +170,7 @@ export async function verifyOtpAction(
     }
 
     // 1. Rate Limiting Check
-    const rateLimit = checkRateLimit(ip);
+    const rateLimit = await checkAuthRateLimit(ip);
     if (!rateLimit.allowed) {
       return {
         ok: false,
@@ -250,7 +250,7 @@ export async function verifyOtpAction(
     }
 
     if (!verifiedSession || !verifiedUserId) {
-      await recordFailedAttempt(ip, userAgent, maskEmail(email));
+      await recordAuthFailedAttempt(ip, userAgent, maskEmail(email));
       await logSecurityEvent({
         ipAddress: ip,
         userAgent,
@@ -273,7 +273,7 @@ export async function verifyOtpAction(
     );
 
     // Reset rate limit & Log Success
-    resetRateLimit(ip);
+    await resetAuthRateLimit(ip);
     await logSecurityEvent({
       ipAddress: ip,
       userAgent,
@@ -302,7 +302,7 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
 
     if (!email) return { ok: false, message: "Email is required." };
 
-    const rateLimit = checkRateLimit(ip);
+    const rateLimit = await checkAuthRateLimit(ip);
     if (!rateLimit.allowed) {
       return {
         ok: false,

@@ -286,7 +286,7 @@ export async function POST(request: NextRequest) {
 
     if (error instanceof OzowCheckoutError) {
       return NextResponse.json(
-        { success: false, error: error.message },
+        { success: false, error: "Payment service is temporarily unavailable. Please try again." },
         { status: 502 },
       );
     }
@@ -298,10 +298,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "An error occurred during checkout.",
+        error: "Checkout is temporarily unavailable. Please try again.",
       },
       { status: 500 },
     );
