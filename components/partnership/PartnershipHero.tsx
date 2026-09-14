@@ -94,7 +94,7 @@ export function PartnershipHero({
           <div className={styles.heroMediaWrapper}>
             <div className={styles.heroMediaContainer}>
               <Image
-                src="/images/hero-school-delivery-packs.webp"
+                src="/images/hero-school-stationery-delivery.webp"
                 alt="Pexpacks stationery delivery packs for partner schools"
                 fill
                 priority

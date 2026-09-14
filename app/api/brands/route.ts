@@ -65,6 +65,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
   }
 
+  if (!hasPermission(session, "catalogue.manage")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
     const name = String(body?.name || "").trim();

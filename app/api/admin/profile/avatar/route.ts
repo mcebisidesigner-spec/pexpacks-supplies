@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAdminUser } from "@/lib/admin/rbac";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { isSameOriginRequest } from "@/lib/security/requestGuards";
 
 const BUCKET = "school-assets";
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
@@ -16,7 +17,11 @@ async function authenticatedUser() {
   return session;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
+  }
+
   const session = await authenticatedUser();
   if (!session) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
@@ -68,7 +73,11 @@ export async function POST(request: Request) {
   );
 }
 
-export async function DELETE() {
+export async function DELETE(request: NextRequest) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
+  }
+
   const session = await authenticatedUser();
   if (!session) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
