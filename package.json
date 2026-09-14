@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:webpack": "next dev --webpack",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build --webpack",
     "build:webpack": "next build --webpack",
     "start": "next start",
@@ -18,12 +19,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "analyze": "cross-env ANALYZE=true next build",
     "db:smoke": "node scripts/db-performance-smoke.cjs",
     "db:storage:report": "node scripts/db-storage-report.cjs",
     "db:security:advisors": "node scripts/db-security-advisor.cjs",
     "db:preflight": "npm run db:link && node scripts/db-schema-preflight.cjs && npm run db:smoke",
     "db:reconcile:audit": "node scripts/db-reconciliation-audit.cjs",
+    "school:verify": "node scripts/verify-school-catalog.cjs",
     "db:archive:dry-run": "node scripts/archive-operational-history.cjs",
     "db:archive": "node scripts/archive-operational-history.cjs --execute",
     "admin:smoke": "node scripts/admin-browser-smoke-test.cjs"

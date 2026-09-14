@@ -35,10 +35,11 @@ function parseBody(raw: string): Record<string, string> {
   return record;
 }
 
-export async function POST(request: NextRequest) {
+async function handleWebhook(request: NextRequest) {
   const config = getOzowConfig();
 
   if (!config) {
+    reportException(new Error("Missing Ozow configuration."), "ozow.webhook.missing-config");
     console.error("[ozow/webhook] Missing Ozow configuration.");
     return NextResponse.json(
       { success: false, error: "Payment configuration is not available." },
@@ -75,7 +76,11 @@ export async function POST(request: NextRequest) {
     HashCheck,
   } = params;
 
-  if (!SiteCode || !TransactionReference || !HashCheck || !IsTest) {
+if (!SiteCode || !TransactionReference || !HashCheck || !IsTest) {
+    reportException(
+      new Error("Missing required webhook fields."),
+      "ozow.webhook.missing-fields",
+    );
     return NextResponse.json(
       { success: false, error: "Missing required webhook fields." },
       { status: 400 },
@@ -107,7 +112,11 @@ export async function POST(request: NextRequest) {
       Buffer.from(providedHash, "hex"),
     );
 
-  if (!hashValid) {
+if (!hashValid) {
+    reportException(
+      new Error("Hash check failed."),
+      "ozow.webhook.hash-check-failed",
+    );
     console.error(
       "[ozow/webhook] Hash check failed for:",
       TransactionReference,
@@ -120,6 +129,10 @@ export async function POST(request: NextRequest) {
 
   const webhookIsTest = IsTest.toLowerCase() === "true";
   if (webhookIsTest !== config.isTest) {
+    reportException(
+      new Error("Payment environment mismatch."),
+      "ozow.webhook.environment-mismatch",
+    );
     console.error("[ozow/webhook] Environment mismatch for:", TransactionReference);
     return NextResponse.json(
       { success: false, error: "Invalid payment environment." },
@@ -127,7 +140,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (SiteCode !== config.siteCode) {
+if (SiteCode !== config.siteCode) {
+    reportException(
+      new Error("SiteCode mismatch."),
+      "ozow.webhook.site-code-mismatch",
+    );
     console.error(
       "[ozow/webhook] SiteCode mismatch for:",
       TransactionReference,
@@ -144,6 +161,10 @@ export async function POST(request: NextRequest) {
       (Optional2 || "").includes("HappyPay");
     const numAmount = Amount ? Number(Amount) : null;
     if (numAmount === null || !Number.isFinite(numAmount) || numAmount < 0) {
+      reportException(
+        new Error("Invalid payment amount received."),
+        "ozow.webhook.invalid-amount",
+      );
       return NextResponse.json(
         { success: false, error: "Invalid payment amount." },
         { status: 400 },
@@ -165,7 +186,15 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!result.success) {
+if (!result.success) {
+      const failureDetail =
+        result.error && typeof result.error === "object"
+          ? (result.error as { message?: string }).message
+          : null;
+      reportException(
+        new Error(failureDetail || "Failed to mark order paid."),
+        "ozow.webhook.mark-order-paid-failed",
+      );
       console.error(
         "[ozow/webhook] Failed to mark order paid for:",
         TransactionReference,
@@ -222,5 +251,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json({ status: "OK" });
+return NextResponse.json({ status: "OK" });
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    return await handleWebhook(request);
+  } catch (err) {
+    reportException(err, "ozow.webhook.unhandled");
+    return NextResponse.json(
+      { success: false, error: "Webhook processing failed." },
+      { status: 500 },
+    );
+  }
 }

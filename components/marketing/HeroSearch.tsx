@@ -157,7 +157,6 @@ export function HeroSearch({
         ref={searchRef}
         className={styles.heroSearch}
         role="search"
-        aria-controls="school-search-results"
         data-mobile-search-active={searchActive ? "true" : "false"}
         onKeyDown={(event) => {
           if (event.key === "Escape") {

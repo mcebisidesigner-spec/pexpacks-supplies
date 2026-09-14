@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { reportException } from "@/lib/observability/sentry";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -101,10 +102,14 @@ export async function GET(request: NextRequest) {
       report.quotations.invalidPrecision === 0 &&
       report.testimonials.missingSchoolContext === 0;
 
-    if (!healthy) console.error("[cron/reconciliation] Integrity discrepancies detected:", report);
+    if (!healthy) {
+      console.error("[cron/reconciliation] Integrity discrepancies detected:", report);
+      reportException(new Error("Reconciliation integrity discrepancies detected: " + JSON.stringify(report)), "cron.reconciliation.discrepancy");
+    }
     return NextResponse.json({ healthy, report }, { status: healthy ? 200 : 500 });
   } catch (error) {
     console.error("[cron/reconciliation] Audit failed:", error);
+    reportException(error, "cron.reconciliation.audit-fail");
     return NextResponse.json({ error: "Reconciliation audit failed." }, { status: 500 });
   }
 }

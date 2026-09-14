@@ -3,6 +3,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  trackCartReviewOpened,
+  trackCartReviewItemEdited,
+  trackProceedToCheckout,
+} from "@/lib/analytics";
 import { usePackTrayStore, type TrayPackItem, type TrayPackLineItem } from "@/store/usePackTrayStore";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import styles from "./CartReview.module.css";
@@ -71,6 +76,13 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
         setDraft(data.draft);
         setItems(data.draft.items || []);
         setWantsPexcover(Boolean(data.draft.wants_pexcover));
+
+        const loadedItems: MatchedItem[] = data.draft.items || [];
+        trackCartReviewOpened({
+          draftId,
+          itemCount: data.draft.item_count ?? loadedItems.length,
+          estimatedCount: loadedItems.filter((it) => !it.productId).length,
+        });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Failed to load cart review.";
         setError(msg);
@@ -125,10 +137,12 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
         })
         .filter((it) => it.quantity > 0)
     );
+    trackCartReviewItemEdited({ action: "qty", estimatedCount: items.filter((it) => !it.productId).length });
   };
 
   const handleRemoveItem = (itemId: string) => {
     setItems((prev) => prev.filter((it) => it.id !== itemId));
+    trackCartReviewItemEdited({ action: "remove", estimatedCount: items.filter((it) => !it.productId).length });
   };
 
   const handleProceedToCheckout = () => {
@@ -170,6 +184,8 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
 
     // Add to global zustand tray store
     usePackTrayStore.getState().addPack(packItem);
+
+    trackProceedToCheckout({ packCount: 1, totalPrice: grandTotal });
 
     // Route to checkout
     router.push("/checkout");

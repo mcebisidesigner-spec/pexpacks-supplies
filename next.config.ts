@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs/config";
 
 const analyze = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -297,4 +298,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default analyze(nextConfig);
+export default withSentryConfig(analyze(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  telemetry: false,
+});

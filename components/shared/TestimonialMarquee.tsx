@@ -216,6 +216,7 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
               <div className={styles.ratingRow}>
                 <div
                   className={styles.stars}
+                  role="img"
                   aria-label={`${item.rating} out of 5 stars`}
                 >
                   {Array.from({ length: 5 }, (_, i) => (

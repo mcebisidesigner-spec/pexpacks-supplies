@@ -2,6 +2,12 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import {
+  trackAiConversionStarted,
+  trackAiConversionSucceeded,
+  trackAiConversionFailed,
+  trackAiConversionRetried,
+} from "@/lib/analytics";
 import styles from "./AiListDropzone.module.css";
 
 const MAX_SIZE_MB = 15;
@@ -65,7 +71,22 @@ export function AiListDropzone() {
     };
   }, [isProcessing, isSuccess, errorMessage]);
 
-  const validateAndProcessFile = (selectedFile: File) => {
+  const isHeic = (file: File) =>
+    /\.(heic|heif)$/i.test(file.name) || /image\/heic|image\/heif/i.test(file.type);
+
+  const convertHeicToJpeg = async (file: File): Promise<File> => {
+    const { default: heic2any } = await import("heic2any");
+    const converted = await heic2any({
+      blob: file,
+      toType: "image/jpeg",
+      quality: 0.9,
+    });
+    const blob = Array.isArray(converted) ? converted[0] : converted;
+    const jpegName = file.name.replace(/\.(heic|heif)$/i, ".jpg");
+    return new File([blob], jpegName, { type: "image/jpeg" });
+  };
+
+  const validateAndProcessFile = async (selectedFile: File) => {
     setErrorMessage(null);
 
     // Validate size (15MB)
@@ -97,25 +118,45 @@ export function AiListDropzone() {
       return;
     }
 
-    setFile(selectedFile);
+    // Transcode HEIC/HEIF to JPEG locally so the backend can parse it
+    let uploadFile = selectedFile;
+    if (isHeic(selectedFile)) {
+      try {
+        uploadFile = await convertHeicToJpeg(selectedFile);
+      } catch {
+        setErrorMessage(
+          "Could not read this HEIC photo. Please convert it to JPG or PNG, or try a different file."
+        );
+        return;
+      }
+    }
+
+    setFile(uploadFile);
 
     // Create preview if image
-    if (selectedFile.type.startsWith("image/")) {
-      const objectUrl = URL.createObjectURL(selectedFile);
+    if (uploadFile.type.startsWith("image/")) {
+      const objectUrl = URL.createObjectURL(uploadFile);
       setFilePreview(objectUrl);
     } else {
       setFilePreview(null);
     }
 
     // Immediately trigger conversion
-    startConversion(selectedFile, "");
+    startConversion(uploadFile, "");
   };
 
   const startConversion = async (fileToUpload: File | null, textContent: string) => {
+    const method: "upload" | "text" = fileToUpload ? "upload" : "text";
     setIsProcessing(true);
     setCurrentStepIndex(0);
     setErrorMessage(null);
     setIsSuccess(false);
+
+    trackAiConversionStarted({
+      method,
+      hasFile: Boolean(fileToUpload),
+      fileKind: fileToUpload?.type ?? null,
+    });
 
     try {
       const formData = new FormData();
@@ -142,6 +183,12 @@ export function AiListDropzone() {
       setDraftId(data.draftId);
       setIsSuccess(true);
 
+      trackAiConversionSucceeded({
+        draftId: data.draftId,
+        itemCount: data.itemCount ?? 0,
+        estimatedCount: data.unmatchedCount ?? 0,
+      });
+
       // Brief delay to showcase completion then redirect
       setTimeout(() => {
         router.push(`/cart/review?draft_id=${encodeURIComponent(data.draftId)}`);
@@ -151,6 +198,7 @@ export function AiListDropzone() {
         err instanceof Error ? err.message : "Something went wrong during conversion. Please try again.";
       setErrorMessage(message);
       setIsProcessing(false);
+      trackAiConversionFailed({ method, reason: message });
     }
   };
 
@@ -166,23 +214,24 @@ export function AiListDropzone() {
     setIsDragging(false);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      validateAndProcessFile(e.dataTransfer.files[0]);
+      await validateAndProcessFile(e.dataTransfer.files[0]);
     }
   };
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      validateAndProcessFile(e.target.files[0]);
+      await validateAndProcessFile(e.target.files[0]);
     }
   };
 
   const handleReset = () => {
+    if (errorMessage) trackAiConversionRetried({ method: activeTab });
     setFile(null);
     setFilePreview(null);
     setPastedText("");

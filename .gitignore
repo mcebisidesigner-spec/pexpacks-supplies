@@ -39,3 +39,8 @@ tmp/
 
 # service credentials (never commit)
 supabase_credentials_temp.env
+
+# generated reports
+eslint-report.json
+.tmp-security-advisors.json
+scratch/

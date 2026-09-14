@@ -28,6 +28,12 @@ export const AnalyticsEvents = {
   quoteStepCompleted: "Quote Step Completed",
   quoteSubmitted: "Quote Submitted",
   quoteSubmissionFailed: "Quote Submission Failed",
+  aiConversionStarted: "AI Conversion Started",
+  aiConversionSucceeded: "AI Conversion Succeeded",
+  aiConversionFailed: "AI Conversion Failed",
+  aiConversionRetried: "AI Conversion Retried",
+  cartReviewOpened: "Cart Review Opened",
+  cartReviewItemEdited: "Cart Review Item Edited",
 } as const;
 
 type SearchSource = "home" | "schools" | "tray";
@@ -337,4 +343,83 @@ export function trackQuoteSubmissionFailed({
   failureType: "validation" | "api" | "network";
 }) {
   track(AnalyticsEvents.quoteSubmissionFailed, { failureType });
+}
+
+export function trackAiConversionStarted({
+  method,
+  hasFile,
+  fileKind,
+}: {
+  method: "upload" | "text";
+  hasFile: boolean;
+  fileKind?: string | null;
+}) {
+  track(AnalyticsEvents.aiConversionStarted, {
+    method,
+    hasFile,
+    fileKind: fileKind ?? null,
+  });
+}
+
+export function trackAiConversionSucceeded({
+  draftId,
+  itemCount,
+  estimatedCount,
+}: {
+  draftId: string;
+  itemCount: number;
+  estimatedCount: number;
+}) {
+  track(AnalyticsEvents.aiConversionSucceeded, {
+    draftId,
+    itemCount,
+    estimatedCount,
+  });
+}
+
+export function trackAiConversionFailed({
+  method,
+  reason,
+}: {
+  method: "upload" | "text";
+  reason: string;
+}) {
+  track(AnalyticsEvents.aiConversionFailed, {
+    method,
+    reason: reason.slice(0, 300),
+  });
+}
+
+export function trackAiConversionRetried({
+  method,
+}: {
+  method: "upload" | "text";
+}) {
+  track(AnalyticsEvents.aiConversionRetried, { method });
+}
+
+export function trackCartReviewOpened({
+  draftId,
+  itemCount,
+  estimatedCount,
+}: {
+  draftId: string;
+  itemCount: number;
+  estimatedCount: number;
+}) {
+  track(AnalyticsEvents.cartReviewOpened, {
+    draftId,
+    itemCount,
+    estimatedCount,
+  });
+}
+
+export function trackCartReviewItemEdited({
+  action,
+  estimatedCount,
+}: {
+  action: "qty" | "remove";
+  estimatedCount: number;
+}) {
+  track(AnalyticsEvents.cartReviewItemEdited, { action, estimatedCount });
 }

@@ -27,7 +27,7 @@
   align-items: center;
   gap: 6px;
   background: rgba(26, 122, 119, 0.1);
-  color: var(--pex-keppel, #1a7a77);
+  color: #1b6f6c;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -512,4 +512,48 @@
   color: var(--pex-muted, #4d5a5d);
   font-size: 14px;
   margin: 0;
+}
+
+/* Accessibility: visible focus rings */
+.browseBtn:focus-visible,
+.cameraBtn:focus-visible,
+.convertBtn:focus-visible,
+.retryBtn:focus-visible,
+.tab:focus-visible {
+  outline: 3px solid var(--pex-keppel, #1a7a77);
+  outline-offset: 2px;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .dropzoneContainer,
+  .dropArea,
+  .iconCircle,
+  .stepRow,
+  .stepActive .stepCircle,
+  .browseBtn,
+  .cameraBtn,
+  .convertBtn,
+  .retryBtn,
+  .badgeDot,
+  .laserLine,
+  .successIcon {
+    animation: none;
+    transition: none;
+  }
+
+  .dropArea:hover,
+  .dropAreaDragging {
+    transform: none;
+  }
+
+  .browseBtn:hover,
+  .cameraBtn:hover,
+  .convertBtn:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .dropzoneContainer:hover {
+    box-shadow: none;
+  }
 }
