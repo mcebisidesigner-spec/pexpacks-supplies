@@ -120,8 +120,8 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
     setCategory(item.category);
     setQuestion(item.question);
     setAnswer(item.answer);
-    setSortOrder(item.sort_order);
-    setIsPublished(item.is_published);
+    setSortOrder(item.sort_order ?? 0);
+    setIsPublished(item.is_published ?? false);
     setErrorMsg(null);
     setIsModalOpen(true);
   };
@@ -197,6 +197,10 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
               is_published: isPublished,
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
+              expires_at: null,
+              published_at: new Date().toISOString(),
+              status: isPublished ? 'published' : 'draft',
+              updated_by: null,
             },
           ]);
         }
@@ -369,7 +373,7 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
                         type="button"
                         className={`${styles.badge} ${item.is_published ? styles.badgeEmerald : styles.badgeSlate}`}
                         onClick={() =>
-                          handleTogglePublished(item.id, item.is_published)
+                          handleTogglePublished(item.id, item.is_published ?? false)
                         }
                         style={{ cursor: "pointer" }}
                       >

@@ -48,10 +48,10 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
     setAuthorName(item.author_name);
     setAuthorRole(item.author_role);
     setQuote(item.quote);
-    setRating(item.rating);
+    setRating(item.rating ?? 5);
     setAvatarUrl(item.avatar_url || "");
-    setIsFeatured(item.is_featured);
-    setSortOrder(item.sort_order);
+    setIsFeatured(item.is_featured ?? false);
+    setSortOrder(item.sort_order ?? 0);
     setErrorMsg(null);
     setIsModalOpen(true);
   };
@@ -126,6 +126,11 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
               sort_order: sortOrder,
               is_featured: isFeatured,
               created_at: new Date().toISOString(),
+              expires_at: null,
+              published_at: new Date().toISOString(),
+              status: isFeatured ? 'published' : 'draft',
+              updated_at: new Date().toISOString(),
+              updated_by: null,
             },
           ]);
         }
@@ -180,7 +185,7 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
                   </td>
                   <td>
                     <div className={styles.stars}>
-                      {Array.from({ length: item.rating }).map((_, i) => (
+                      {Array.from({ length: item.rating ?? 0 }).map((_, i) => (
                         <Star key={i} size={14} fill="#f59e0b" color="#f59e0b" />
                       ))}
                     </div>
@@ -192,7 +197,7 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
                     <button
                       type="button"
                       className={`${styles.badge} ${item.is_featured ? styles.badgeEmerald : styles.badgeSlate}`}
-                      onClick={() => handleToggleFeatured(item.id, item.is_featured)}
+                      onClick={() => handleToggleFeatured(item.id, item.is_featured ?? false)}
                       style={{ cursor: "pointer" }}
                     >
                       {item.is_featured ? <Check size={12} /> : <X size={12} />}

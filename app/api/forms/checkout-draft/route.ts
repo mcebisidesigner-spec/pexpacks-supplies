@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
           status: "draft",
           source_url: device_id,
           data: state,
+          payload: state,
         });
       dbError = insertError;
     }

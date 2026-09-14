@@ -88,7 +88,7 @@ export async function saveOrderRecord(
           : null,
       buyer_name: data.fullName,
       buyer_phone: data.phone || "",
-      buyer_email: data.email || null,
+      buyer_email: data.email || "",
       learner_name: data.learnerName || null,
       consent: data.consent,
       status: "pending",

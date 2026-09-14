@@ -100,13 +100,13 @@ interface ResourceItem {
   category: string;
   file_type: string;
   file_size_label: string;
-  file_url?: string;
+  file_url?: string | null;
   download_count: number;
   is_public: boolean;
   slug?: string;
   author?: string;
   image?: string;
-  content?: string[];
+  content?: unknown[];
 }
 
 export default function ContentCMSPage() {
@@ -294,8 +294,8 @@ export default function ContentCMSPage() {
                 message: a.message,
                 link_url: a.link_url,
                 link_label: a.link_label,
-                is_active: a.is_active,
-                display_location: a.display_location,
+                is_active: a.is_active ?? false,
+                display_location: a.display_location === "hero_banner" || a.display_location === "schools_page" ? a.display_location : "global_top",
               })),
             );
           }
@@ -306,8 +306,8 @@ export default function ContentCMSPage() {
                 category: f.category,
                 question: f.question,
                 answer: f.answer,
-                is_published: f.is_published,
-                sort_order: f.sort_order,
+                is_published: f.is_published ?? false,
+                sort_order: f.sort_order ?? 0,
                 target_page: (f.target_page as FAQItem["target_page"]) || "all",
               })),
             );
@@ -321,8 +321,8 @@ export default function ContentCMSPage() {
                 school_name: t.school_name ?? null,
                 avatar_url: t.avatar_url ?? null,
                 quote: t.quote,
-                rating: t.rating,
-                is_featured: t.is_featured,
+                rating: t.rating ?? 5,
+                is_featured: t.is_featured ?? false,
               })),
             );
           }
@@ -334,11 +334,11 @@ export default function ContentCMSPage() {
                 title: r.title,
                 description: r.description || "",
                 category: r.category,
-                file_type: r.file_type,
+                file_type: r.file_type ?? "File",
                 file_size_label: r.file_size_label || "",
-                file_url: r.file_url,
-                download_count: r.download_count,
-                is_public: r.is_public,
+                file_url: r.file_url ?? undefined,
+                download_count: r.download_count ?? 0,
+                is_public: r.is_public ?? false,
                 slug: r.slug || undefined,
                 author: r.author || undefined,
                 image: r.image || undefined,
@@ -618,8 +618,8 @@ export default function ContentCMSPage() {
               message: a.message,
               link_url: a.link_url,
               link_label: a.link_label,
-              is_active: a.is_active,
-              display_location: a.display_location,
+              is_active: a.is_active ?? false,
+              display_location: a.display_location === "hero_banner" || a.display_location === "schools_page" ? a.display_location : "global_top",
             })),
           );
         } else {
@@ -643,8 +643,8 @@ export default function ContentCMSPage() {
               category: f.category,
               question: f.question,
               answer: f.answer,
-              is_published: f.is_published,
-              sort_order: f.sort_order,
+              is_published: f.is_published ?? false,
+              sort_order: f.sort_order ?? 0,
               target_page: (f.target_page as FAQItem["target_page"]) || "all",
             })),
           );
@@ -672,8 +672,8 @@ export default function ContentCMSPage() {
               school_name: t.school_name ?? null,
               avatar_url: t.avatar_url ?? null,
               quote: t.quote,
-              rating: t.rating,
-              is_featured: t.is_featured,
+              rating: t.rating ?? 5,
+              is_featured: t.is_featured ?? false,
             })),
           );
         } else {
@@ -708,11 +708,11 @@ export default function ContentCMSPage() {
               title: r.title,
               description: r.description || "",
               category: r.category,
-              file_type: r.file_type,
+              file_type: r.file_type ?? "File",
               file_size_label: r.file_size_label || "",
-              file_url: r.file_url,
-              download_count: r.download_count,
-              is_public: r.is_public,
+              file_url: r.file_url ?? undefined,
+              download_count: r.download_count ?? 0,
+              is_public: r.is_public ?? false,
               slug: r.slug || undefined,
               author: r.author || undefined,
               image: r.image || undefined,

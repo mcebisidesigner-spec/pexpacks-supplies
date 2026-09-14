@@ -340,7 +340,7 @@ export async function listSchools(filters: SchoolListFilters = {}): Promise<Scho
   });
 
   return {
-    schools,
+    schools: schools as SchoolListRow[],
     total: count ?? 0,
     page,
     pageCount: Math.max(1, Math.ceil((count ?? 0) / pageSize)),
@@ -369,7 +369,7 @@ export async function getSchool(idOrSlug: string): Promise<SchoolRow | null> {
   const decoded = decodeURIComponent(idOrSlug).trim();
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(decoded);
 
-  let query = admin.from("schools").select("id,name,slug,city,province,logo,is_partner,is_featured,refused_partnership,lowest_price,grades,district,address,email,telephone,principal,parent_collection_accepted,description,status,partner_since,latitude,longitude,published,search_vector,custom_badge,created_at,updated_at,publication_status,directory_status,stationery_list_status,partnership,feature_status");
+  let query = admin.from("schools").select("*");
 
   if (isUuid) {
     query = query.eq("id", decoded);

@@ -50,11 +50,11 @@ export function ResourcesTab({ initialResources }: ResourcesTabProps) {
     setTitle(item.title);
     setDescription(item.description || "");
     setCategory(item.category);
-    setFileUrl(item.file_url);
-    setFileType(item.file_type);
+    setFileUrl(item.file_url ?? "");
+    setFileType(item.file_type ?? "File");
     setFileSizeLabel(item.file_size_label || "");
-    setSortOrder(item.sort_order);
-    setIsPublic(item.is_public);
+    setSortOrder(item.sort_order ?? 0);
+    setIsPublic(item.is_public ?? false);
     setErrorMsg(null);
     setIsModalOpen(true);
   };
@@ -121,7 +121,7 @@ export function ResourcesTab({ initialResources }: ResourcesTabProps) {
             ...prev,
             {
               id: Math.random().toString(),
-              kind: null,
+              kind: "file",
               title,
               description: description || null,
               category,
@@ -137,6 +137,11 @@ export function ResourcesTab({ initialResources }: ResourcesTabProps) {
               is_public: isPublic,
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
+              expires_at: null,
+              featured: false,
+              published_at: new Date().toISOString(),
+              status: isPublic ? 'published' : 'draft',
+              updated_by: null,
             },
           ]);
         }
@@ -213,7 +218,7 @@ export function ResourcesTab({ initialResources }: ResourcesTabProps) {
                     <button
                       type="button"
                       className={`${styles.badge} ${item.is_public ? styles.badgeEmerald : styles.badgeSlate}`}
-                      onClick={() => handleTogglePublic(item.id, item.is_public)}
+                      onClick={() => handleTogglePublic(item.id, item.is_public ?? false)}
                       style={{ cursor: "pointer" }}
                     >
                       {item.is_public ? <Check size={12} /> : <X size={12} />}
@@ -223,7 +228,7 @@ export function ResourcesTab({ initialResources }: ResourcesTabProps) {
                   <td style={{ textAlign: "right" }}>
                     <div className={styles.actionBtnGroup} style={{ justifyContent: "flex-end" }}>
                       <a
-                        href={item.file_url}
+                        href={item.file_url ?? undefined}
                         target="_blank"
                         rel="noreferrer"
                         className={styles.iconBtn}

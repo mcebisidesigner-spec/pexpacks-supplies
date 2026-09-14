@@ -47,8 +47,8 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
     setMessage(item.message);
     setLinkUrl(item.link_url || "");
     setLinkLabel(item.link_label || "");
-    setDisplayLocation(item.display_location);
-    setIsActive(item.is_active);
+    setDisplayLocation(item.display_location === "hero_banner" || item.display_location === "schools_page" ? item.display_location : "global_top");
+    setIsActive(item.is_active ?? false);
     setErrorMsg(null);
     setIsModalOpen(true);
   };
@@ -133,7 +133,7 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
     });
   };
 
-  const activeBanner = items.find((it) => it.is_active && it.display_location === "global_top");
+  const activeBanner = items.find((it) => it.is_active === true && it.display_location === "global_top");
 
   return (
     <div className={styles.sectionCard}>
@@ -209,7 +209,7 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
                     <button
                       type="button"
                       className={`${styles.badge} ${item.is_active ? styles.badgeEmerald : styles.badgeSlate}`}
-                      onClick={() => handleToggleActive(item.id, item.is_active)}
+                      onClick={() => handleToggleActive(item.id, item.is_active ?? false)}
                       style={{ cursor: "pointer" }}
                     >
                       {item.is_active ? <Check size={12} /> : <X size={12} />}
