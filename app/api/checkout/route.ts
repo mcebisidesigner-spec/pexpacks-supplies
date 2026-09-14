@@ -122,6 +122,7 @@ export async function POST(request: NextRequest) {
         gradeSlug: typeof p.gradeSlug === "string" ? p.gradeSlug : "",
         packName: typeof p.packName === "string" ? p.packName : "",
         packMode: typeof p.packMode === "string" ? p.packMode : "full",
+        source: p.source === "ai-list" ? ("ai-list" as const) : undefined,
         items: Array.isArray(p.items)
           ? p.items.map((i: Record<string, unknown>) => ({
               id: typeof i.id === "string" ? i.id : undefined,

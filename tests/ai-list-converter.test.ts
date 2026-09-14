@@ -171,7 +171,8 @@ describe("AI List Converter API (/api/ai-convert-list)", () => {
     delete process.env.GOOGLE_GENERATIVE_AI_API_KEY;
     delete process.env.GOOGLE_AI_API_KEY;
 
-    const file = new File(["test image bytes"], "list.png", { type: "image/png" });
+    const pngHeader = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    const file = new File([pngHeader], "list.png", { type: "image/png" });
     const formData = new FormData();
     formData.append("file", file);
 

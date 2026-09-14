@@ -23,6 +23,8 @@ interface MatchedItem {
   lineTotal: number;
   requiresPexcover: boolean;
   pexcoCode: string | null;
+  pexcoRateCents?: number | null;
+  pexcoRateActive?: boolean;
   similarity: number;
   rawText?: string;
   specifications?: string;
@@ -32,21 +34,10 @@ interface MatchedItem {
 
 interface DraftCart {
   id: string;
-  status: string;
   items: MatchedItem[];
   item_count: number;
   subtotal: number;
   wants_pexcover: boolean;
-  document_name: string;
-  document_type: string;
-  metadata?: {
-    learnerName?: string;
-    grade?: string;
-    extractedCount?: number;
-    matchedCatalogCount?: number;
-    hasEstimatedItems?: boolean;
-    unmatchedCount?: number;
-  };
 }
 
 export function CartReviewClient({ draftId }: { draftId: string }) {
@@ -107,8 +98,9 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
       name: i.name,
       quantity: i.quantity,
       requires_pexcover: i.requiresPexcover,
-      pexco_code: i.pexcoCode || "PEXCO01",
-      pexco_rate_cents: 800, // R8.00 per book standard rate
+      pexco_code: i.pexcoCode ?? null,
+      pexco_rate_cents: i.pexcoRateCents ?? null,
+      pexco_rate_active: i.pexcoRateActive ?? false,
     }));
 
     return calculatePexcoverTotal(coverInputs);
@@ -119,8 +111,8 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
     return Math.round((itemsSubtotal + coveringCost) * 100) / 100;
   }, [itemsSubtotal, wantsPexcover, pexcoverCalc]);
 
-  const hasEstimatedItems = useMemo(() => {
-    return items.some((it) => it.isCustomOrEstimated || !it.productId);
+  const hasUnmatchedItems = useMemo(() => {
+    return items.some((it) => !it.productId);
   }, [items]);
 
   const handleUpdateQty = (itemId: string, delta: number) => {
@@ -159,8 +151,8 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
       lineTotal: it.lineTotal,
       requiresPexcover: it.requiresPexcover,
       pexcoCode: it.pexcoCode,
-      pexcoRateCents: it.requiresPexcover ? 800 : null,
-      pexcoRateActive: it.requiresPexcover,
+      pexcoRateCents: it.pexcoRateCents ?? null,
+      pexcoRateActive: it.pexcoRateActive ?? false,
     }));
 
     const packId = `ai_pack_${draftId || Date.now()}`;
@@ -168,15 +160,12 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
       id: packId,
       packId,
       basePackId: packId,
-      packName: draft?.document_name
-        ? `Custom Pack (${draft.document_name})`
-        : "AI Matched Custom Pack",
-      learnerName: draft?.metadata?.learnerName || undefined,
-      grade: draft?.metadata?.grade || undefined,
+      packName: "AI Matched Custom Pack",
+      source: "ai-list",
       packMode: "customised",
       items: trayItems,
       subtotal: itemsSubtotal,
-      totalPrice: grandTotal,
+      totalPrice: itemsSubtotal,
       wantsPexcover,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -239,9 +228,8 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
           <div className={styles.eyebrow}>AI Stationery Review</div>
           <h1 className={styles.pageTitle}>Review Your Matched Pack</h1>
           <p className={styles.pageSubtitle}>
-            We parsed <strong>{draft.document_name || "your uploaded document"}</strong> and matched items to
-            our verified school catalog. Adjust quantities, toggle optional book covering, and proceed to
-            checkout.
+            Review the catalogue matches below, adjust quantities, and add optional book covering before
+            continuing to checkout.
           </p>
         </div>
 
@@ -249,7 +237,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
         <div className={styles.contentGrid}>
           {/* Left Column: Items */}
           <div className={styles.itemsCard}>
-            {hasEstimatedItems && (
+            {hasUnmatchedItems && (
               <div className={styles.conciergeAlertBanner}>
                 <div className={styles.alertIcon}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -259,9 +247,9 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                   </svg>
                 </div>
                 <div className={styles.alertContent}>
-                  <div className={styles.alertTitle}>Notice: Unverified School Items</div>
+                  <div className={styles.alertTitle}>Items need catalogue confirmation</div>
                   <div>
-                    Some items from your list could not be automatically matched to our verified catalog. These lines are labeled as <strong>Estimated (R25.00 placeholder)</strong> and will be confirmed with our concierge team before final payment and dispatch.
+                    Remove any unmatched line or return to the list converter with clearer item details. Unmatched items are not priced and cannot proceed to payment.
                   </div>
                 </div>
               </div>
@@ -393,7 +381,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
             </div>
 
             <div className={styles.summaryRowStrong}>
-              <span>Estimated Total</span>
+              <span>Current Total</span>
               <span>R{grandTotal.toFixed(2)}</span>
             </div>
 
@@ -401,9 +389,9 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
               type="button"
               className={styles.checkoutBtn}
               onClick={handleProceedToCheckout}
-              disabled={items.length === 0}
+              disabled={items.length === 0 || hasUnmatchedItems}
             >
-              Proceed to Checkout
+              {hasUnmatchedItems ? "Resolve unmatched items" : "Proceed to Checkout"}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />

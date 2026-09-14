@@ -48,6 +48,79 @@ async function getPackPricingColumns(
 // and app/api/packs/custom-total/route.ts:
 //   full selection -> packRow.price
 //   partial/custom  -> (subtotal / (1 - marginRate)) + fixedPackCost
+type CatalogueCheckoutItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  requiresPexcover: boolean;
+  pexcoCode: string | null;
+  pexcoRateCents: number | null;
+  pexcoRateActive: boolean;
+};
+
+async function resolveCatalogueItems(
+  items: TrayPack["items"],
+): Promise<CatalogueCheckoutItem[]> {
+  const requested = new Map<string, number>();
+  for (const item of items) {
+    if (!item.id) {
+      throw new TrayCheckoutError("Every converted item must be matched to an active catalogue product.", 400);
+    }
+    const quantity = Math.max(0, Math.min(99, Math.trunc(item.quantity)));
+    if (quantity > 0) requested.set(item.id, (requested.get(item.id) ?? 0) + quantity);
+  }
+
+  if (requested.size === 0) {
+    throw new TrayCheckoutError("Your converted pack has no valid catalogue items.", 400);
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const productIds = [...requested.keys()];
+  const { data: products, error: productsError } = await supabase
+    .from("master_products")
+    .select("id,name,current_selling_price,requires_pexcover,pexco_code")
+    .in("id", productIds)
+    .eq("active", true);
+
+  if (productsError || !products || products.length !== productIds.length) {
+    throw new TrayCheckoutError("One or more converted items are no longer available. Please review your list again.", 400);
+  }
+
+  const pexcoCodes = products
+    .filter((product) => product.requires_pexcover && product.pexco_code)
+    .map((product) => product.pexco_code as string);
+  const { data: rates, error: ratesError } = pexcoCodes.length
+    ? await supabase
+        .from("pexco_rates")
+        .select("code,covering_price_cents,is_active")
+        .in("code", pexcoCodes)
+    : { data: [], error: null };
+
+  if (ratesError) {
+    throw new TrayCheckoutError("Book-covering pricing is temporarily unavailable. Please try again.", 503);
+  }
+
+  const ratesByCode = new Map((rates ?? []).map((rate) => [rate.code, rate]));
+
+  return products.map((product) => {
+    const unitPrice = Number(product.current_selling_price);
+    if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+      throw new TrayCheckoutError("A converted item does not have an approved selling price.", 400);
+    }
+    const rate = product.pexco_code ? ratesByCode.get(product.pexco_code) : undefined;
+    return {
+      id: product.id,
+      name: product.name,
+      quantity: requested.get(product.id) ?? 0,
+      unitPrice,
+      requiresPexcover: Boolean(product.requires_pexcover),
+      pexcoCode: product.pexco_code,
+      pexcoRateCents: rate?.covering_price_cents ?? null,
+      pexcoRateActive: rate?.is_active === true,
+    };
+  });
+}
 function calculateCustomisedPackTotal(
   selectedSubtotal: number,
   isFullSelection: boolean,
@@ -93,12 +166,16 @@ type TrayPack = {
   gradeSlug: string;
   packName: string;
   packMode: string;
+  source?: "ai-list";
   items: {
     id?: string;
     name: string;
     quantity: number;
     unitPrice?: number;
     requiresPexcover?: boolean;
+    pexcoCode?: string | null;
+    pexcoRateCents?: number | null;
+    pexcoRateActive?: boolean;
   }[];
   totalPrice: number;
   wantsPexcover: boolean;
@@ -200,6 +277,29 @@ export async function handleTrayCheckout(input: {
   let verifiedTotal = 0;
   const verifiedPacks: TrayPack[] = [];
   for (const pack of input.packs) {
+    if (pack.source === "ai-list") {
+      const catalogueItems = await resolveCatalogueItems(pack.items);
+      const itemsTotal = roundMoney(catalogueItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0));
+      const pexcoverResult = calculatePexcoverTotal(catalogueItems);
+      const packPexcoverCost = pack.wantsPexcover && pexcoverResult.hasEligibleBooks
+        ? pexcoverResult.pexcoverTotalRands
+        : 0;
+      const packTotal = roundMoney(itemsTotal);
+
+      verifiedTotal += packTotal + packPexcoverCost;
+      verifiedPacks.push({
+        ...pack,
+        items: catalogueItems,
+        totalPrice: packTotal,
+        basePackPrice: packTotal,
+        pexcoverPrice: packPexcoverCost,
+        pexcoverPaperStyle: pack.wantsPexcover && pexcoverResult.hasEligibleBooks
+          ? normalisePexcoverPaperStyle(pack.pexcoverPaperStyle)
+          : undefined,
+      });
+      continue;
+    }
+
     const serverPack = await getGradeBySlug(pack.schoolSlug, pack.gradeSlug);
     if (!serverPack) {
       throw new TrayCheckoutError(

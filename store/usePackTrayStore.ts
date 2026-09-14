@@ -39,6 +39,7 @@ export type TrayPackItem = {
   totalPrice: number;
   wantsPexcover?: boolean;
   pexcoverPaperStyle?: PexcoverPaperStyle;
+  source?: "school" | "ai-list";
   sourcePath?: string;
   createdAt: string;
   updatedAt: string;
