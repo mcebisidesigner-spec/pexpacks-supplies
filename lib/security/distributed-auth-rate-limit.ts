@@ -10,6 +10,21 @@ const WINDOW_SECONDS = 15 * 60;
 const PREFIX = "pexpacks:auth-fail:";
 let redis: Redis | null | undefined;
 
+type AuthRateLimitResult = {
+  allowed: boolean;
+  remaining: number;
+  resetSeconds: number;
+};
+
+function requiresDistributedRateLimit() {
+  return process.env.VERCEL_ENV === "production";
+}
+
+function unavailableResult(): AuthRateLimitResult {
+  // Never weaken production admin authentication when shared state is absent.
+  return { allowed: false, remaining: 0, resetSeconds: WINDOW_SECONDS };
+}
+
 function client() {
   if (redis !== undefined) return redis;
   const url = process.env.UPSTASH_REDIS_REST_URL;
@@ -18,9 +33,14 @@ function client() {
   return redis;
 }
 
-export async function checkAuthRateLimit(ip: string) {
+export async function checkAuthRateLimit(ip: string): Promise<AuthRateLimitResult> {
   const store = client();
-  if (!store) return checkLocalRateLimit(ip);
+  if (!store) {
+    return requiresDistributedRateLimit()
+      ? unavailableResult()
+      : checkLocalRateLimit(ip);
+  }
+
   try {
     const attempts = Number((await store.get<number>(`${PREFIX}${ip}`)) ?? 0);
     return {
@@ -30,7 +50,9 @@ export async function checkAuthRateLimit(ip: string) {
     };
   } catch (error) {
     console.error("[security] Redis auth rate-limit read failed:", error);
-    return checkLocalRateLimit(ip);
+    return requiresDistributedRateLimit()
+      ? unavailableResult()
+      : checkLocalRateLimit(ip);
   }
 }
 

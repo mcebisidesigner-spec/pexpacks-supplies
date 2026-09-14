@@ -14,6 +14,12 @@ describe("distributed rate-limit deployment preflight", () => {
 
     expect(script).toContain("UPSTASH_REDIS_REST_URL");
     expect(script).toContain("UPSTASH_REDIS_REST_TOKEN");
+    expect(
+      readFileSync(
+        resolve(root, "lib/security/distributed-auth-rate-limit.ts"),
+        "utf8",
+      ),
+    ).toContain("VERCEL_ENV === \"production\"");
     expect(script).not.toContain("console.log(process.env");
     expect(packageJson).toContain('"capacity:preflight"');
   });
