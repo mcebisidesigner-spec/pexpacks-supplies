@@ -17,6 +17,8 @@ import {
   ADMIN_SESSION_COOKIE,
   adminSessionCookieOptions,
   createAdminSessionValue,
+  recordAdminSessionRedis,
+  revokeAdminSessionRedis,
 } from "@/lib/admin/session-policy";
 import {
   validateAdminPassword,
@@ -263,14 +265,16 @@ export async function verifyOtpAction(
     // Create a browser-session-only, signed admin gate. It intentionally has no
     // expiry or max-age, so a normal browser shutdown requires a new MFA login.
     const cookieStore = await cookies();
+    const sessionVal = await createAdminSessionValue(
+      verifiedUserId,
+      trustedDevice ? "trusted" : "standard",
+    );
     cookieStore.set(
       ADMIN_SESSION_COOKIE,
-      await createAdminSessionValue(
-        verifiedUserId,
-        trustedDevice ? "trusted" : "standard",
-      ),
+      sessionVal,
       adminSessionCookieOptions,
     );
+    await recordAdminSessionRedis(sessionVal, verifiedUserId);
 
     // Reset rate limit & Log Success
     await resetAuthRateLimit(ip);
@@ -338,6 +342,10 @@ export async function resendOtpAction(email: string): Promise<AuthResponse> {
  */
 export async function logoutAction(): Promise<never> {
   const cookieStore = await cookies();
+  const sessionVal = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+  if (sessionVal) {
+    await revokeAdminSessionRedis(sessionVal);
+  }
   const supabase = await createSupabaseServerClient();
 
   try {

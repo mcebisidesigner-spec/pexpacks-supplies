@@ -112,3 +112,84 @@ export const adminSessionCookieOptions = {
   secure: process.env.NODE_ENV === "production",
   path: "/",
 };
+
+import { Redis } from "@upstash/redis";
+
+export const ADMIN_SLIDING_SESSION_TTL_SECONDS = 20 * 60; // 20 minutes (1200 seconds)
+
+let upstashSessionClient: Redis | null | undefined;
+
+function getUpstashSessionClient(): Redis | null {
+  if (upstashSessionClient !== undefined) return upstashSessionClient;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  upstashSessionClient = url && token ? new Redis({ url, token }) : null;
+  return upstashSessionClient;
+}
+
+export async function hashSessionToken(value: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(value));
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 32);
+}
+
+export async function recordAdminSessionRedis(
+  sessionValue: string,
+  userId: string,
+  ttlSeconds: number = ADMIN_SLIDING_SESSION_TTL_SECONDS,
+): Promise<void> {
+  const redis = getUpstashSessionClient();
+  if (!redis) return;
+  try {
+    const keyId = await hashSessionToken(sessionValue);
+    await redis.set(
+      `session:admin:${keyId}`,
+      JSON.stringify({ userId, lastActive: Date.now() }),
+      { ex: ttlSeconds },
+    );
+  } catch (err) {
+    console.warn("[session-policy] Failed to write session to Redis:", err);
+  }
+}
+
+export async function touchAdminSessionRedis(
+  sessionValue: string,
+  ttlSeconds: number = ADMIN_SLIDING_SESSION_TTL_SECONDS,
+): Promise<boolean> {
+  const redis = getUpstashSessionClient();
+  if (!redis) return true;
+  try {
+    const keyId = await hashSessionToken(sessionValue);
+    const result = await redis.expire(`session:admin:${keyId}`, ttlSeconds);
+    return result === 1;
+  } catch {
+    return true; // Fail-open to avoid locking out authenticated admins if Redis blips
+  }
+}
+
+export async function revokeAdminSessionRedis(sessionValue: string): Promise<void> {
+  const redis = getUpstashSessionClient();
+  if (!redis) return;
+  try {
+    const keyId = await hashSessionToken(sessionValue);
+    await redis.del(`session:admin:${keyId}`);
+  } catch (err) {
+    console.warn("[session-policy] Failed to revoke session in Redis:", err);
+  }
+}
+
+export async function isSessionActiveInRedis(sessionValue: string): Promise<boolean> {
+  const redis = getUpstashSessionClient();
+  if (!redis) return true; // If Redis unconfigured, rely on HMAC validation
+  try {
+    const keyId = await hashSessionToken(sessionValue);
+    const exists = await redis.exists(`session:admin:${keyId}`);
+    return exists === 1;
+  } catch {
+    return true;
+  }
+}
+

@@ -41,7 +41,7 @@ function createRedisCloudClient(): Redis | null {
   }
 }
 
-async function ensureReady(client: Redis): Promise<boolean> {
+export async function ensureReady(client: Redis): Promise<boolean> {
   if (client.status === "ready") return true;
 
   if (client.status === "wait") {

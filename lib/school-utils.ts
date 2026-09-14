@@ -2,9 +2,11 @@ import { unstable_cache } from "next/cache";
 import type { GradePack, School, SchoolPackItem } from "@/data/schools";
 import { getGradeOrder } from "@/lib/grade-utils";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { getCachedJson, setCachedJson } from "@/lib/cache/redisCloud";
 
 export const SCHOOL_DATA_TAG = "school-data";
 export const SCHOOL_DATA_REVALIDATE_SECONDS = 300;
+export const REDIS_SCHOOL_CACHE_TTL_SECONDS = 86400; // 24 hours in-memory shield
 
 type DbSchool = {
   id: string;
@@ -141,6 +143,18 @@ export async function getSchoolBySlug(
   const normalizedSlug = (slug || "").toLowerCase().trim();
   if (!normalizedSlug) return undefined;
 
+  const cacheKey = `school:bundle:${normalizedSlug}`;
+
+  // 0. High-speed in-memory shield: return from Redis Cloud if cached (< 10ms)
+  try {
+    const inMemory = await getCachedJson<School>(cacheKey);
+    if (inMemory) {
+      return inMemory;
+    }
+  } catch {
+    // Non-blocking: fail-open to primary database
+  }
+
   try {
     const supabase = createSupabaseAdminClient();
     // 1. Direct exact lookup via database RPC
@@ -150,7 +164,10 @@ export async function getSchoolBySlug(
 
     if (!error) {
       const parsed = parseAggregatePayload(data);
-      if (parsed) return parsed;
+      if (parsed) {
+        await setCachedJson(cacheKey, parsed, REDIS_SCHOOL_CACHE_TTL_SECONDS);
+        return parsed;
+      }
     }
 
     // 2. Prefix fallback (e.g. "brakpan-high" -> "brakpan-high-school", "pretoria-high" -> "pretoria-high-school-for-girls")
@@ -173,7 +190,10 @@ export async function getSchoolBySlug(
         },
       );
       const parsedPrefix = parseAggregatePayload(prefixData);
-      if (parsedPrefix) return parsedPrefix;
+      if (parsedPrefix) {
+        await setCachedJson(cacheKey, parsedPrefix, REDIS_SCHOOL_CACHE_TTL_SECONDS);
+        return parsedPrefix;
+      }
     }
 
     // 3. Keyword / distinctive word fallback (e.g. "randhart-high" -> "laerskool-randhart", "langaville-high" -> "langaville-secondary-school")
@@ -210,7 +230,10 @@ export async function getSchoolBySlug(
           },
         );
         const parsedKeyword = parseAggregatePayload(keywordData);
-        if (parsedKeyword) return parsedKeyword;
+        if (parsedKeyword) {
+          await setCachedJson(cacheKey, parsedKeyword, REDIS_SCHOOL_CACHE_TTL_SECONDS);
+          return parsedKeyword;
+        }
       }
     }
 

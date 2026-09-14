@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 import {
   ADMIN_SESSION_COOKIE,
+  ADMIN_SLIDING_SESSION_TTL_SECONDS,
+  isSessionActiveInRedis,
+  touchAdminSessionRedis,
   verifyAdminSessionValue,
 } from "@/lib/admin/session-policy";
 
@@ -26,8 +31,142 @@ function copyCookies(source: NextResponse, target: NextResponse) {
   return target;
 }
 
+// ─── Edge Rate Limiting via Upstash Redis ───
+let edgeRedis: Redis | null | undefined;
+let authLimiter: Ratelimit | null = null;
+let adminLimiter: Ratelimit | null = null;
+
+function getEdgeLimiters() {
+  if (edgeRedis !== undefined) {
+    return { authLimiter, adminLimiter };
+  }
+
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (url && token) {
+    edgeRedis = new Redis({ url, token });
+    // Tier 1: Auth & Stealth Login - Strict 5 attempts per 10 minutes sliding window
+    authLimiter = new Ratelimit({
+      redis: edgeRedis,
+      limiter: Ratelimit.slidingWindow(5, "10 m"),
+      prefix: "pexpacks:edge:auth",
+      analytics: false,
+    });
+    // Tier 2: Back-office Admin Console - Operational 60 requests per 1 minute sliding window
+    adminLimiter = new Ratelimit({
+      redis: edgeRedis,
+      limiter: Ratelimit.slidingWindow(60, "1 m"),
+      prefix: "pexpacks:edge:admin",
+      analytics: false,
+    });
+  } else {
+    edgeRedis = null;
+    authLimiter = null;
+    adminLimiter = null;
+  }
+
+  return { authLimiter, adminLimiter };
+}
+
+function getClientIp(request: NextRequest): string {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const realIp = request.headers.get("x-real-ip");
+  const cfIp = request.headers.get("cf-connecting-ip");
+  return (
+    forwardedFor?.split(",")[0]?.trim() ||
+    realIp?.trim() ||
+    cfIp?.trim() ||
+    "127.0.0.1"
+  );
+}
+
+function createRateLimit429Response(
+  limit: number,
+  remaining: number,
+  reset: number,
+): NextResponse {
+  const retryAfterSeconds = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
+  const rateLimitResponse = new NextResponse(
+    JSON.stringify({
+      error: "Too Many Requests",
+      message: "Rate limit exceeded. Please wait before retrying.",
+      retryAfter: retryAfterSeconds,
+    }),
+    {
+      status: 429,
+      statusText: "Too Many Requests",
+      headers: {
+        "Content-Type": "application/json",
+        "Retry-After": retryAfterSeconds.toString(),
+        "X-RateLimit-Limit": limit.toString(),
+        "X-RateLimit-Remaining": remaining.toString(),
+        "X-RateLimit-Reset": reset.toString(),
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet, nocache",
+      },
+    },
+  );
+
+  return applySecurityHeaders(rateLimitResponse);
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const clientIp = getClientIp(request);
+  const { authLimiter: authGate, adminLimiter: adminGate } = getEdgeLimiters();
+
+  // 1. Terminate legacy /login and /admin/login routes with 404
+  if (pathname === "/login" || pathname === "/admin/login") {
+    const deadRouteResponse = new NextResponse(null, {
+      status: 404,
+      statusText: "Not Found",
+      headers: {
+        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet, nocache",
+      },
+    });
+    return applySecurityHeaders(deadRouteResponse);
+  }
+
+  // 2. Edge Rate Limiting: Strict Auth / Stealth Gateway Tier (5 attempts / 10 min)
+  if (
+    pathname.startsWith("/api/auth") ||
+    pathname === "/pex-console-secure" ||
+    pathname === "/pex-console"
+  ) {
+    if (authGate) {
+      try {
+        const rateResult = await authGate.limit(clientIp);
+        if (!rateResult.success) {
+          return createRateLimit429Response(
+            rateResult.limit,
+            rateResult.remaining,
+            rateResult.reset,
+          );
+        }
+      } catch (err) {
+        console.warn("[proxy] Upstash auth rate limit check failed:", err);
+      }
+    }
+  }
+
+  // 3. Edge Rate Limiting: Back-office Admin Tier (60 req / 1 min)
+  if (pathname.startsWith("/admin")) {
+    if (adminGate) {
+      try {
+        const rateResult = await adminGate.limit(clientIp);
+        if (!rateResult.success) {
+          return createRateLimit429Response(
+            rateResult.limit,
+            rateResult.remaining,
+            rateResult.reset,
+          );
+        }
+      } catch (err) {
+        console.warn("[proxy] Upstash admin rate limit check failed:", err);
+      }
+    }
+  }
+
   let response = applySecurityHeaders(
     NextResponse.next({
       request: {
@@ -36,10 +175,26 @@ export async function proxy(request: NextRequest) {
     }),
   );
 
-  // Initialize Supabase Server Client for Cookie Checks
+  // Return immediately for API routes and non-admin routes once rate limiting checks pass
+  if (
+    !pathname.startsWith("/admin") &&
+    pathname !== "/pex-console-secure" &&
+    pathname !== "/pex-console"
+  ) {
+    return response;
+  }
+
+  // Initialize Supabase Server Client for Cookie Checks on admin/console routes
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return response;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -66,19 +221,7 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  // 1. Terminate legacy /login and /admin/login routes with 404 (do not link or redirect to console login)
-  if (pathname === "/login" || pathname === "/admin/login") {
-    const deadRouteResponse = new NextResponse(null, {
-      status: 404,
-      statusText: "Not Found",
-      headers: {
-        "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet, nocache",
-      },
-    });
-    return applySecurityHeaders(deadRouteResponse);
-  }
-
-  // 2. Protect Back-Office /admin and Sub-Routes (/admin/*)
+  // 4. Protect Back-Office /admin and Sub-Routes (/admin/*)
   if (pathname.startsWith("/admin")) {
     try {
       let user = null;
@@ -89,17 +232,20 @@ export async function proxy(request: NextRequest) {
         console.error("[proxy] auth check failed:", err);
       }
 
-      // Require the signed browser-session gate as well as Supabase Auth.
-      // This prevents refresh-token persistence from reopening admin after restart.
+      const sessionCookieValue = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+
+      // Cryptographic signature check
       const adminSession = user
-        ? await verifyAdminSessionValue(
-            request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
-            user.id,
-          )
+        ? await verifyAdminSessionValue(sessionCookieValue, user.id)
         : null;
 
-      // Redirect unauthenticated or expired back-office requests to secure gateway.
-      if (!user || !adminSession) {
+      // In-Memory Sliding Expiration check in Upstash Redis (auto-eviction past 20 minutes idle)
+      const sessionActiveInRedis = sessionCookieValue
+        ? await isSessionActiveInRedis(sessionCookieValue)
+        : false;
+
+      // Redirect unauthenticated, tampered, or idle-expired requests to secure gateway
+      if (!user || !adminSession || !sessionActiveInRedis) {
         if (user) {
           try {
             await supabase.auth.signOut();
@@ -119,6 +265,14 @@ export async function proxy(request: NextRequest) {
             }),
           ),
         );
+      }
+
+      // Slide session expiration in Redis by 20 minutes on active administrative navigation
+      if (sessionCookieValue) {
+        touchAdminSessionRedis(
+          sessionCookieValue,
+          ADMIN_SLIDING_SESSION_TTL_SECONDS,
+        ).catch(() => {});
       }
 
       response.headers.set(
@@ -143,7 +297,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 3. Handle Hidden Gateway Route (/pex-console-secure & /pex-console)
+  // 5. Handle Hidden Gateway Route (/pex-console-secure & /pex-console)
   if (pathname === "/pex-console-secure" || pathname === "/pex-console") {
     if (pathname === "/pex-console") {
       const targetUrl = new URL("/pex-console-secure", request.url);
@@ -159,16 +313,17 @@ export async function proxy(request: NextRequest) {
       console.error("[proxy] console auth check failed:", err);
     }
 
+    const sessionCookieValue = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
     const adminSession = user
-      ? await verifyAdminSessionValue(
-          request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
-          user.id,
-        )
+      ? await verifyAdminSessionValue(sessionCookieValue, user.id)
       : null;
 
-    // A persisted Supabase refresh token is not sufficient to reopen admin.
-    // Only a fresh OTP-created browser session may bypass the gateway.
-    if (user && adminSession) {
+    const sessionActiveInRedis = sessionCookieValue
+      ? await isSessionActiveInRedis(sessionCookieValue)
+      : false;
+
+    // Only active OTP-created browser session with valid Redis state may bypass gateway
+    if (user && adminSession && sessionActiveInRedis) {
       return copyCookies(
         response,
         applySecurityHeaders(
@@ -215,5 +370,6 @@ export const config = {
     "/login",
     "/pex-console-secure",
     "/pex-console",
+    "/api/auth/:path*",
   ],
 };

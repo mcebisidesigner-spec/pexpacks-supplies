@@ -2,6 +2,7 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { SEASON_CACHE_TAG } from "@/lib/public-data/seasons";
 import { SETTINGS_CACHE_TAG } from "@/lib/public-data/settings";
 import { CMS_TAGS } from "@/lib/cms";
+import { deleteCached } from "@/lib/cache/redisCloud";
 
 /**
  * Shared invalidation for the public catalogue after admin mutations.
@@ -49,6 +50,7 @@ export function revalidateCatalog(options?: {
 
         if (options?.schoolSlug) {
           revalidateTagNow(revalidateTag, `school-${options.schoolSlug}`);
+          deleteCached(`school:bundle:${options.schoolSlug.toLowerCase().trim()}`).catch(() => {});
         }
       } catch (err) {
         console.error("[catalog-revalidate] revalidateTag failed:", err);

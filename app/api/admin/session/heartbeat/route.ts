@@ -4,6 +4,7 @@ import {
   ADMIN_SESSION_COOKIE,
   adminSessionCookieOptions,
   createAdminSessionValue,
+  recordAdminSessionRedis,
   verifyAdminSessionValue,
 } from "@/lib/admin/session-policy";
 
@@ -48,13 +49,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const newSessionVal = await createAdminSessionValue(user.id, session.mode);
+  await recordAdminSessionRedis(newSessionVal, user.id);
+
   const response = NextResponse.json(
     { ok: true, mode: session.mode },
     { headers: noStoreHeaders },
   );
+
   response.cookies.set(
     ADMIN_SESSION_COOKIE,
-    await createAdminSessionValue(user.id, session.mode),
+    newSessionVal,
     adminSessionCookieOptions,
   );
   return response;

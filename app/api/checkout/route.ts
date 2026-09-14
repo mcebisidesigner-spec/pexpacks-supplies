@@ -19,6 +19,7 @@ import {
   TrayCheckoutError,
   trayErrorResponse,
 } from "@/lib/checkout/trayCheckout";
+import { acquireDistributedLock } from "@/lib/cache/distributedLock";
 
 export const runtime = "nodejs";
 
@@ -141,37 +142,57 @@ export async function POST(request: NextRequest) {
           typeof p.basePackPrice === "number" ? p.basePackPrice : 0,
       }));
 
-      const order = await handleTrayCheckout({
-        buyerName,
-        buyerEmail,
-        buyerPhone,
-        estimatedTotal,
-        deliveryMethod,
-        primarySchoolSlug,
-        notes,
-        packs,
-        paymentGateway: "ozow",
-        gatewayMetadata: {
-          method: "Ozow",
-          is_bnpl: false,
-          amount: estimatedTotal,
-        },
-        idempotencyKey,
-      });
+      const lockKey = idempotencyKey
+        ? `checkout:${idempotencyKey}`
+        : `checkout:buyer:${buyerEmail || "anonymous"}`;
+      const lock = await acquireDistributedLock(lockKey, 20);
 
-      const { url } = await initiateOzowPayment({
-        orderReference: order.orderReference,
-        amount: order.estimatedTotal,
-        buyerEmail,
-        isBnpl: false,
-      });
+      if (!lock.acquired) {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              "A checkout operation is already processing for this cart. Please wait a moment.",
+          },
+          { status: 409 },
+        );
+      }
 
-      return NextResponse.json({
-        success: true,
-        orderReference: order.orderReference,
-        reused: order.reused === true,
-        url,
-      });
+      try {
+        const order = await handleTrayCheckout({
+          buyerName,
+          buyerEmail,
+          buyerPhone,
+          estimatedTotal,
+          deliveryMethod,
+          primarySchoolSlug,
+          notes,
+          packs,
+          paymentGateway: "ozow",
+          gatewayMetadata: {
+            method: "Ozow",
+            is_bnpl: false,
+            amount: estimatedTotal,
+          },
+          idempotencyKey,
+        });
+
+        const { url } = await initiateOzowPayment({
+          orderReference: order.orderReference,
+          amount: order.estimatedTotal,
+          buyerEmail,
+          isBnpl: false,
+        });
+
+        return NextResponse.json({
+          success: true,
+          orderReference: order.orderReference,
+          reused: order.reused === true,
+          url,
+        });
+      } finally {
+        await lock.release();
+      }
     }
 
     const validated = validateCheckoutPayload(body);
