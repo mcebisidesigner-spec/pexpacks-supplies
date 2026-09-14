@@ -58,8 +58,8 @@ export default async function HomePage() {
           <div className={heroStyles.heroVisual}>
             <span className={heroStyles.heroVisualImage}>
               <Image
-                src="/images/hero-school-delivery-packs.webp"
-                alt="Pexpacks Stationery Box"
+                src="/images/hero-school-stationery-delivery.webp"
+                alt="Pexpacks Stationery Delivery Packs"
                 fill
                 priority
                 placeholder="blur"

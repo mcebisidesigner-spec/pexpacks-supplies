@@ -257,3 +257,15 @@ Migration `00122_consolidate_high_traffic_rls_policies.sql` applies the first ro
 - `db:preflight` passed after deployment. The public RPC smoke reported database execution times of 2.9 ms for `get_public_school_pack` and 1 ms for `search_public_schools`; external wall time includes network and REST overhead.
 
 The remaining `multiple_permissive_policies` advisor findings are now limited to lower-traffic administrative tables. They must be consolidated in small groups only after their reader/manager role matrix has been proved, because a policy warning is not evidence that the policies are redundant.
+## Complete RLS Policy Consolidation
+
+Migrations `00123_consolidate_administrative_rls_policies.sql` and `00124_consolidate_public_and_archive_rls_policies.sql` complete the reviewed policy consolidation:
+
+- The 22 standard administrative manager/read pairs now use one combined authenticated read policy and explicit manager-only mutation policies.
+- Published blog posts remain public, while drafts remain limited to staff or delegated content viewers. Blog mutations still require staff or `content.edit`.
+- Archived order events remain read-only to authenticated audit/order viewers; service-role write access is unchanged.
+- Public settings remain limited to `is_public = true` and `is_sensitive = false`; staff settings management and service-role access remain unchanged.
+- The linked Supabase performance advisor and schema linter now report no findings. This removes the final `multiple_permissive_policies` warning set without changing public data exposure or mutation permissions.
+- Post-deployment verification passed: 52 test files / 260 tests, TypeScript, migration preflight, public read-model smoke, and no critical sequential scans.
+
+The only deployment gate outside the database remains configuring Upstash credentials in Vercel for distributed cross-instance rate limiting. The application remains functional without them, but peak-traffic rate limits are not globally coordinated until those two encrypted environment variables are set.
