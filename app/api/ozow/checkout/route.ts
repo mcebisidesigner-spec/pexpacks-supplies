@@ -14,6 +14,7 @@ import {
   linkOrderToCustomerAndLearner,
 } from "@/lib/admin/operations";
 import { normalisePexcoverPaperStyle } from "@/lib/pricing/pexcover-paper-style";
+import { reportException } from "@/lib/observability/sentry";
 
 export const runtime = "nodejs";
 

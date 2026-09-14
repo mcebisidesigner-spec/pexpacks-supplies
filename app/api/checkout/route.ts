@@ -7,6 +7,7 @@ import {
 } from "@/lib/orders";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { normalisePexcoverPaperStyle } from "@/lib/pricing/pexcover-paper-style";
+import { reportException } from "@/lib/observability/sentry";
 import { getGradeBySlug } from "@/lib/school-utils";
 import {
   isSameOriginRequest,

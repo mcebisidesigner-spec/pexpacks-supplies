@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { isSameOriginRequest } from "@/lib/security/requestGuards";
+import { isSameOriginRequest, rateLimitRequest } from "@/lib/security/requestGuards";
 import type { Json } from "@/lib/supabase/types";
+import { reportException } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // Allow sufficient duration for vision & OCR inference
 
-const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB budget
+const MAX_TEXT_LENGTH = 10000; // 10,000 character limit to prevent token flood
 
 const ALLOWED_MIME_TYPES = new Set([
   "image/jpeg",
@@ -41,6 +43,8 @@ interface MatchedCartItem {
   similarity: number;
   rawText: string;
   specifications: string;
+  isCustomOrEstimated: boolean;
+  needsReview: boolean;
 }
 
 function normalizeMimeType(originalType: string, filename: string): string {
@@ -51,49 +55,66 @@ function normalizeMimeType(originalType: string, filename: string): string {
     }
     return lower;
   }
+
   const ext = filename.split(".").pop()?.toLowerCase();
-  if (ext === "pdf") return "application/pdf";
-  if (ext === "png") return "image/png";
-  if (ext === "webp") return "image/webp";
-  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
-  return "image/jpeg";
+  switch (ext) {
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "png":
+      return "image/png";
+    case "webp":
+      return "image/webp";
+    case "heic":
+    case "heif":
+      return "image/jpeg";
+    case "bmp":
+      return "image/bmp";
+    case "pdf":
+      return "application/pdf";
+    default:
+      return "image/jpeg";
+  }
 }
 
 function parseTextLinesFallback(text: string): ExtractedItem[] {
   const lines = text
     .split(/\r?\n/)
     .map((l) => l.trim())
-    .filter((l) => l.length > 1 && !/^#|==|--/.test(l));
+    .filter((l) => l.length > 0);
 
   const items: ExtractedItem[] = [];
 
   for (const line of lines) {
-    // Look for quantity patterns like "2x", "2 x", "2 -", "3 of", or trailing "(2)"
-    let qty = 1;
-    let cleanName = line;
+    if (line.startsWith("#") || line.startsWith("//") || line.length < 2) continue;
 
-    const prefixMatch = line.match(/^(\d+)\s*(?:x|×|-|\*|\.)\s*(.+)/i);
-    const trailingMatch = line.match(/^(.+?)\s*\((\d+)\)$/);
-    const countMatch = line.match(/^(\d+)\s+([A-Za-z].+)/);
-
-    if (prefixMatch) {
-      qty = parseInt(prefixMatch[1], 10) || 1;
-      cleanName = prefixMatch[2].trim();
-    } else if (trailingMatch) {
-      qty = parseInt(trailingMatch[2], 10) || 1;
-      cleanName = trailingMatch[1].trim();
-    } else if (countMatch && !/^\d{2,4}\s*(pg|page|ml|g|mm|cm)\b/i.test(line)) {
-      qty = parseInt(countMatch[1], 10) || 1;
-      cleanName = countMatch[2].trim();
-    }
-
-    if (cleanName.length > 2) {
+    const qtyMatch = line.match(/^(\d+)\s*(?:x|\*|\-)?\s*(.+)$/i);
+    if (qtyMatch) {
+      const qty = parseInt(qtyMatch[1], 10) || 1;
+      const itemName = qtyMatch[2].trim();
       items.push({
         raw_text: line,
-        item_name: cleanName,
+        item_name: itemName,
         quantity: Math.max(1, qty),
         specifications: "",
       });
+    } else {
+      const trailingQtyMatch = line.match(/^(.+?)\s*(?:[-–:]|\(qty:?|\bx)\s*(\d+)\s*\)?$/i);
+      if (trailingQtyMatch) {
+        items.push({
+          raw_text: line,
+          item_name: trailingQtyMatch[1].trim(),
+          quantity: parseInt(trailingQtyMatch[2], 10) || 1,
+          specifications: "",
+        });
+      } else {
+        items.push({
+          raw_text: line,
+          item_name: line,
+          quantity: 1,
+          specifications: "",
+        });
+      }
     }
   }
 
@@ -107,9 +128,51 @@ function isBookCoverEligible(itemName: string, category?: string | null): boolea
   );
 }
 
+async function verifyTurnstileToken(token: string | null): Promise<boolean> {
+  const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+  if (!secretKey) return true; // If not configured, pass through (rate-limiting still protects)
+  if (!token) return false;
+
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        secret: secretKey,
+        response: token,
+      }),
+    });
+    const data = (await res.json()) as { success?: boolean };
+    return Boolean(data.success);
+  } catch (err) {
+    console.error("[turnstile] Verification error:", err);
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
+  // 1. Origin check
   if (!isSameOriginRequest(request)) {
     return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
+  }
+
+  // 2. IP sliding-window rate limit (5 requests per 60 seconds)
+  const rateResult = await rateLimitRequest(request, {
+    keyPrefix: "ai-convert-list",
+    windowMs: 60 * 1000,
+    max: 5,
+  });
+
+  if (!rateResult.allowed) {
+    return NextResponse.json(
+      { error: "Too many conversion requests. Please wait a minute before trying again." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateResult.retryAfter),
+        },
+      }
+    );
   }
 
   let formData: FormData;
@@ -117,6 +180,16 @@ export async function POST(request: NextRequest) {
     formData = await request.formData();
   } catch {
     return NextResponse.json({ error: "Invalid form payload." }, { status: 400 });
+  }
+
+  // 3. Turnstile bot validation if token or secret is configured
+  const turnstileToken = formData.get("cf-turnstile-response") as string | null;
+  const isHuman = await verifyTurnstileToken(turnstileToken);
+  if (!isHuman) {
+    return NextResponse.json(
+      { error: "Security check failed. Please refresh the page and try again." },
+      { status: 403 }
+    );
   }
 
   const file = formData.get("file") as File | null;
@@ -131,9 +204,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (rawText.length > MAX_TEXT_LENGTH) {
+    return NextResponse.json(
+      { error: "Text list exceeds the 10,000 character limit. Please shorten your list." },
+      { status: 400 }
+    );
+  }
+
   if (file && file.size > MAX_FILE_SIZE_BYTES) {
     return NextResponse.json(
-      { error: "File exceeds the 15MB limit. Please upload a smaller photo or PDF." },
+      { error: "File exceeds the 10MB limit. Please upload a smaller photo or PDF." },
       { status: 400 }
     );
   }
@@ -220,38 +300,35 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (aiError) {
+      reportException(aiError, "ai-convert-list.inference");
       console.error("[ai-convert-list] Gemini inference warning:", aiError);
-      // If AI parsing hit an exception or rate limit, fall back to text parsing if text exists
+      // Fallback: If AI parsing failed but the user supplied text, parse the text deterministically
       if (rawText.trim()) {
         extractedItems = parseTextLinesFallback(rawText);
+      } else {
+        return NextResponse.json(
+          {
+            error:
+              "We encountered an issue reading your document. Please ensure the image or PDF is clear and well-lit, or paste the items directly as text.",
+          },
+          { status: 502 }
+        );
       }
     }
   } else {
-    // No Gemini key configured; use fallback parser if text provided or dummy sample for local test
-    if (rawText.trim()) {
+    // No Gemini key configured
+    if (file) {
+      // NEVER serve fabricated items for an uploaded document
+      return NextResponse.json(
+        {
+          error:
+            "AI document scanning is temporarily unavailable. Please paste your stationery list text directly into the text tab, or reach out to our concierge team.",
+        },
+        { status: 503 }
+      );
+    } else if (rawText.trim()) {
+      // Deterministic parsing of customer's actual typed text
       extractedItems = parseTextLinesFallback(rawText);
-    } else if (file) {
-      // In dev or test mode without key, provide mock extracted items from filename
-      extractedItems = [
-        {
-          raw_text: "5x 72pg Exercise Books Feint & Margin",
-          item_name: "College Exercise Unruled",
-          quantity: 5,
-          specifications: "72 page A4",
-        },
-        {
-          raw_text: "2x Pritt Glue Stick 43g",
-          item_name: "Pritt Stick",
-          quantity: 2,
-          specifications: "43g adhesive",
-        },
-        {
-          raw_text: "1x Pencil Case Small",
-          item_name: "Pencil Case Small",
-          quantity: 1,
-          specifications: "Stationery pouch",
-        },
-      ];
     }
   }
 
@@ -259,7 +336,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "We could not detect clear stationery items from this document. Please try a clearer, higher-contrast photo or paste the text directly.",
+          "We could not detect clear stationery items from this input. Please try a clearer, higher-contrast photo or paste the items as text.",
       },
       { status: 422 }
     );
@@ -269,12 +346,10 @@ export async function POST(request: NextRequest) {
   let supabase;
   try {
     supabase = createSupabaseAdminClient();
-  } catch (dbErr) {
-    console.error("[ai-convert-list] Supabase client initialization error:", dbErr);
-    return NextResponse.json(
-      { error: "Database connection unavailable. Please try again in a moment." },
-      { status: 500 }
-    );
+  } catch (clientErr) {
+    reportException(clientErr, "ai-convert-list.supabase-init");
+    console.error("[ai-convert-list] Supabase admin init error:", clientErr);
+    return NextResponse.json({ error: "Database service unavailable." }, { status: 503 });
   }
 
   const matchedItems: MatchedCartItem[] = [];
@@ -316,7 +391,7 @@ export async function POST(request: NextRequest) {
 
     if (match) {
       const unitPrice = Number(match.current_selling_price) || 0;
-      const requiresCover = match.requires_pexcover ?? isBookCoverEligible(match.name, match.category);
+      const requiresCover = Boolean(match.requires_pexcover) || isBookCoverEligible(match.name, match.category);
 
       matchedItems.push({
         id: itemId,
@@ -332,10 +407,12 @@ export async function POST(request: NextRequest) {
         similarity: match.similarity || 1,
         rawText: item.raw_text,
         specifications: item.specifications,
+        isCustomOrEstimated: false,
+        needsReview: false,
       });
     } else {
-      // Unmatched custom stationery line
-      const fallbackPrice = 25.0; // Reasonable estimate placeholder
+      // Unmatched custom stationery line: explicitly flagged as estimated placeholder
+      const fallbackPrice = 25.0; // Estimate placeholder
       const requiresCover = isBookCoverEligible(item.item_name);
 
       matchedItems.push({
@@ -343,7 +420,7 @@ export async function POST(request: NextRequest) {
         productId: null,
         sku: null,
         name: item.item_name,
-        category: "Custom Item",
+        category: "Custom Item (Estimated)",
         quantity: item.quantity,
         unitPrice: fallbackPrice,
         lineTotal: Math.round(fallbackPrice * item.quantity * 100) / 100,
@@ -352,6 +429,8 @@ export async function POST(request: NextRequest) {
         similarity: 0,
         rawText: item.raw_text,
         specifications: item.specifications,
+        isCustomOrEstimated: true,
+        needsReview: true,
       });
     }
   }
@@ -360,8 +439,10 @@ export async function POST(request: NextRequest) {
     matchedItems.reduce((acc, it) => acc + it.lineTotal, 0) * 100
   ) / 100;
   const totalItemCount = matchedItems.reduce((acc, it) => acc + it.quantity, 0);
+  const unmatchedCount = matchedItems.filter((it) => it.isCustomOrEstimated).length;
+  const hasEstimatedItems = unmatchedCount > 0;
 
-  // Store in draft_carts table
+  // Store only the non-sensitive cart summary; source documents and learner data are not retained.
   let draftId: string;
   try {
     const { data: draft, error: insertError } = await supabase
@@ -376,6 +457,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError || !draft) {
+      reportException(insertError, "ai-convert-list.draft-insert");
       console.error("[ai-convert-list] draft_carts insert error:", insertError);
       return NextResponse.json(
         { error: "Could not create your cart draft. Please try again." },
@@ -385,6 +467,7 @@ export async function POST(request: NextRequest) {
 
     draftId = draft.id;
   } catch (cartErr) {
+    reportException(cartErr, "ai-convert-list.draft-insert");
     console.error("[ai-convert-list] draft_carts exception:", cartErr);
     return NextResponse.json(
       { error: "Failed to persist draft cart." },
@@ -396,5 +479,7 @@ export async function POST(request: NextRequest) {
     success: true,
     draftId,
     itemCount: totalItemCount,
+    hasEstimatedItems,
+    unmatchedCount,
   });
 }

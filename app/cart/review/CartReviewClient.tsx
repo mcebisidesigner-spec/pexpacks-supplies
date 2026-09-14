@@ -21,6 +21,8 @@ interface MatchedItem {
   similarity: number;
   rawText?: string;
   specifications?: string;
+  isCustomOrEstimated?: boolean;
+  needsReview?: boolean;
 }
 
 interface DraftCart {
@@ -37,6 +39,8 @@ interface DraftCart {
     grade?: string;
     extractedCount?: number;
     matchedCatalogCount?: number;
+    hasEstimatedItems?: boolean;
+    unmatchedCount?: number;
   };
 }
 
@@ -102,6 +106,10 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
     const coveringCost = wantsPexcover ? pexcoverCalc.pexcoverTotalRands : 0;
     return Math.round((itemsSubtotal + coveringCost) * 100) / 100;
   }, [itemsSubtotal, wantsPexcover, pexcoverCalc]);
+
+  const hasEstimatedItems = useMemo(() => {
+    return items.some((it) => it.isCustomOrEstimated || !it.productId);
+  }, [items]);
 
   const handleUpdateQty = (itemId: string, delta: number) => {
     setItems((prev) =>
@@ -225,6 +233,24 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
         <div className={styles.contentGrid}>
           {/* Left Column: Items */}
           <div className={styles.itemsCard}>
+            {hasEstimatedItems && (
+              <div className={styles.conciergeAlertBanner}>
+                <div className={styles.alertIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                </div>
+                <div className={styles.alertContent}>
+                  <div className={styles.alertTitle}>Notice: Unverified School Items</div>
+                  <div>
+                    Some items from your list could not be automatically matched to our verified catalog. These lines are labeled as <strong>Estimated (R25.00 placeholder)</strong> and will be confirmed with our concierge team before final payment and dispatch.
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className={styles.itemsHeader}>
               <h3>Stationery Line Items</h3>
               <span className={styles.itemCountBadge}>
@@ -244,7 +270,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                         {item.productId ? (
                           <span className={styles.catalogBadge}>Catalog Verified</span>
                         ) : (
-                          <span className={styles.catalogBadge}>Custom Item</span>
+                          <span className={styles.estimatedBadge}>Estimated • Concierge Review</span>
                         )}
                         {item.requiresPexcover && (
                           <span className={styles.coverBadge}>Cover Eligible</span>
@@ -277,7 +303,10 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                     {/* Price */}
                     <div className={styles.itemPrice}>
                       <div className={styles.lineTotal}>R{item.lineTotal.toFixed(2)}</div>
-                      <div className={styles.unitPrice}>R{item.unitPrice.toFixed(2)} ea</div>
+                      <div className={styles.unitPrice}>
+                        R{item.unitPrice.toFixed(2)} ea
+                        {!item.productId && <span className={styles.estNotice}> (est.)</span>}
+                      </div>
                     </div>
 
                     {/* Remove */}

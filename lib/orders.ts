@@ -1,5 +1,6 @@
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { revalidateTag } from "next/cache";
+import { reportException } from "@/lib/observability/sentry";
 import { createSupabaseAdminClient } from "./supabase/admin";
 import { DASHBOARD_STATS_TAG, DASHBOARD_SUMMARY_TAG } from "./admin/dashboard";
 import {

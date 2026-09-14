@@ -3,9 +3,11 @@ import { NextRequest } from "next/server";
 import { POST as convertListPost } from "@/app/api/ai-convert-list/route";
 import { GET as draftCartGet, PATCH as draftCartPatch } from "@/app/api/draft-cart/route";
 
-// Mock requestGuards so tests pass same-origin check
+// Mock requestGuards so tests pass same-origin check and rate limiting
+const mockRateLimit = vi.fn().mockResolvedValue({ allowed: true, remaining: 4, retryAfter: 0 });
 vi.mock("@/lib/security/requestGuards", () => ({
   isSameOriginRequest: vi.fn(() => true),
+  rateLimitRequest: (...args: unknown[]) => mockRateLimit(...args),
 }));
 
 // Mock Supabase admin client
@@ -123,8 +125,8 @@ describe("AI List Converter API (/api/ai-convert-list)", () => {
     expect(body.error).toContain("Please upload a photo, PDF document, or enter your stationery list");
   });
 
-  it("returns 400 when file exceeds 15MB", async () => {
-    const hugeBlob = new Uint8Array(16 * 1024 * 1024); // 16MB
+  it("returns 400 when file exceeds 10MB", async () => {
+    const hugeBlob = new Uint8Array(11 * 1024 * 1024); // 11MB
     const file = new File([hugeBlob], "huge-list.pdf", { type: "application/pdf" });
 
     const formData = new FormData();
@@ -141,7 +143,73 @@ describe("AI List Converter API (/api/ai-convert-list)", () => {
     const res = await convertListPost(req);
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toContain("exceeds the 15MB limit");
+    expect(body.error).toContain("exceeds the 10MB limit");
+  });
+
+  it("returns 400 when text exceeds 10,000 characters", async () => {
+    const longText = "a".repeat(10001);
+    const formData = new FormData();
+    formData.append("text", longText);
+
+    const req = new NextRequest("https://pexpacks.co.za/api/ai-convert-list", {
+      method: "POST",
+      body: formData,
+      headers: {
+        origin: "https://pexpacks.co.za",
+      },
+    });
+
+    const res = await convertListPost(req);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toContain("10,000 character limit");
+  });
+
+  it("returns 503 when document is uploaded without Gemini API key configured", async () => {
+    const origKey = process.env.GEMINI_API_KEY;
+    delete process.env.GEMINI_API_KEY;
+    delete process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    delete process.env.GOOGLE_AI_API_KEY;
+
+    const file = new File(["test image bytes"], "list.png", { type: "image/png" });
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const req = new NextRequest("https://pexpacks.co.za/api/ai-convert-list", {
+      method: "POST",
+      body: formData,
+      headers: {
+        origin: "https://pexpacks.co.za",
+      },
+    });
+
+    const res = await convertListPost(req);
+    expect(res.status).toBe(503);
+    const body = await res.json();
+    expect(body.error).toContain("AI document scanning is temporarily unavailable");
+
+    if (origKey) process.env.GEMINI_API_KEY = origKey;
+  });
+
+  it("returns 429 when rate limit is exceeded", async () => {
+    mockRateLimit.mockResolvedValueOnce({ allowed: false, remaining: 0, retryAfter: 45 });
+
+    const formData = new FormData();
+    formData.append("text", "1x 72pg Exercise Book");
+
+    const req = new NextRequest("https://pexpacks.co.za/api/ai-convert-list", {
+      method: "POST",
+      body: formData,
+      headers: {
+        origin: "https://pexpacks.co.za",
+      },
+    });
+
+    const res = await convertListPost(req);
+    expect(res.status).toBe(429);
+    expect(res.headers.get("Retry-After")).toBe("45");
+    const body = await res.json();
+    expect(body.error).toContain("Too many conversion requests");
   });
 
   it("successfully parses text list and creates draft cart", async () => {

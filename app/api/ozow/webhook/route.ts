@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse, after } from "next/server";
 import { track } from "@vercel/analytics/server";
 import {
@@ -7,6 +8,7 @@ import {
 } from "@/lib/orders";
 import { getOzowConfig, ozowWebhookHash } from "@/lib/ozow/signature";
 import { dispatchPurchaseReceipt } from "@/lib/email/deliverPurchaseReceipt";
+import { reportException } from "@/lib/observability/sentry";
 
 export const runtime = "nodejs";
 
@@ -73,7 +75,7 @@ export async function POST(request: NextRequest) {
     HashCheck,
   } = params;
 
-  if (!SiteCode || !TransactionReference || !HashCheck) {
+  if (!SiteCode || !TransactionReference || !HashCheck || !IsTest) {
     return NextResponse.json(
       { success: false, error: "Missing required webhook fields." },
       { status: 400 },
@@ -99,8 +101,11 @@ export async function POST(request: NextRequest) {
 
   const providedHash = HashCheck.toLowerCase();
   const hashValid =
-    expectedHash.length === providedHash.length &&
-    expectedHash === providedHash;
+    /^[a-f0-9]{128}$/.test(providedHash) &&
+    timingSafeEqual(
+      Buffer.from(expectedHash, "hex"),
+      Buffer.from(providedHash, "hex"),
+    );
 
   if (!hashValid) {
     console.error(
@@ -109,6 +114,15 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json(
       { success: false, error: "Invalid signature." },
+      { status: 400 },
+    );
+  }
+
+  const webhookIsTest = IsTest.toLowerCase() === "true";
+  if (webhookIsTest !== config.isTest) {
+    console.error("[ozow/webhook] Environment mismatch for:", TransactionReference);
+    return NextResponse.json(
+      { success: false, error: "Invalid payment environment." },
       { status: 400 },
     );
   }
@@ -128,7 +142,13 @@ export async function POST(request: NextRequest) {
     const isHappyPay =
       (Optional1 || "").includes("HappyPay") ||
       (Optional2 || "").includes("HappyPay");
-    const numAmount = Amount ? parseFloat(Amount) : null;
+    const numAmount = Amount ? Number(Amount) : null;
+    if (numAmount === null || !Number.isFinite(numAmount) || numAmount < 0) {
+      return NextResponse.json(
+        { success: false, error: "Invalid payment amount." },
+        { status: 400 },
+      );
+    }
 
     const result = await markOrderPaid({
       orderReference: TransactionReference,
@@ -164,6 +184,10 @@ export async function POST(request: NextRequest) {
       "statusMessage",
       StatusMessage,
     );
+
+    if (result.alreadyPaid) {
+      return NextResponse.json({ status: "OK", replay: true });
+    }
 
     track("Pre-Order Completed", {
       orderReference: TransactionReference,
