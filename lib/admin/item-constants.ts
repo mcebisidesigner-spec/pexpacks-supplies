@@ -7,3 +7,31 @@ export const INVENTORY_ITEM_FILTER =
 export function inventoryItemNameKey(name: string): string {
   return name.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-ZA");
 }
+
+export const MASTER_PRODUCT_CATEGORIES = [
+  "Adhesives",
+  "Art Supplies",
+  "Book Covering",
+  "Calculators",
+  "Colouring",
+  "Cutting",
+  "Digital",
+  "Erasers",
+  "Exercise Books",
+  "Filing",
+  "Fineliners",
+  "Hardcover Books",
+  "Highlighters",
+  "Markers",
+  "Mathematics",
+  "Measurement",
+  "Packaging",
+  "Paper",
+  "Pencil Cases",
+  "Pencils",
+  "Pens",
+  "Sharpeners",
+  "Stationery",
+] as const;
+
+export type MasterProductCategory = (typeof MASTER_PRODUCT_CATEGORIES)[number];

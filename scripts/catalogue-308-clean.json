@@ -1,0 +1,2466 @@
+[
+  {
+    "id": "SA-0001",
+    "name": "A5 Soft Cover Exercise Book - 48 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 48 pages and feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R6-R12",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0002",
+    "name": "A5 Soft Cover Exercise Book - 48 pages - 17 mm Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 48 pages and 17 mm feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R6-R14",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0003",
+    "name": "A5 Soft Cover Exercise Book - 48 pages - Feint Speckled & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 48 pages and feint speckled & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R6-R14",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0004",
+    "name": "A5 Soft Cover Exercise Book - 48 pages - Unruled",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 48 pages and unruled ruling; suitable for daily classwork and homework.",
+    "cost": "R6-R12",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0005",
+    "name": "A5 Soft Cover Exercise Book - 72 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 72 pages and feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R8-R16",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0006",
+    "name": "A5 Soft Cover Exercise Book - 72 pages - Quad & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 72 pages and quad & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R8-R18",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0007",
+    "name": "A5 Soft Cover Exercise Book - 72 pages - Irish Ruled",
+    "description": "Lightweight stitched or stapled school exercise book in A5 format with 72 pages and irish ruled ruling; suitable for daily classwork and homework.",
+    "cost": "R8-R18",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0008",
+    "name": "A5L Soft Cover Exercise Book - 48 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5L format with 48 pages and feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R6-R14",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0009",
+    "name": "A5L Soft Cover Exercise Book - 48 pages - 17 mm Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A5L format with 48 pages and 17 mm feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R6-R14",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0010",
+    "name": "A4 Soft Cover Exercise Book - 32 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 32 pages and feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R7-R13",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0011",
+    "name": "A4 Soft Cover Exercise Book - 32 pages - 17 mm Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 32 pages and 17 mm feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R7-R14",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0012",
+    "name": "A4 Soft Cover Exercise Book - 48 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 48 pages and feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R9-R17",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0013",
+    "name": "A4 Soft Cover Exercise Book - 72 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 72 pages and feint & margin ruling; suitable for daily classwork and",
+    "cost": "R10-R20",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline R-12 (ruling dependent) homework.",
+    "typicalGrades": ""
+  },
+  {
+    "id": "SA-0014",
+    "name": "A4 Soft Cover Exercise Book - 72 pages - 17 mm Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 72 pages and 17 mm feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R13-R25",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0015",
+    "name": "A4 Soft Cover Exercise Book - 72 pages - Feint Speckled & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 72 pages and feint speckled & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R12-R25",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0016",
+    "name": "A4 Soft Cover Exercise Book - 72 pages - Quad & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 72 pages and quad & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R12-R24",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0017",
+    "name": "A4 Soft Cover Exercise Book - 72 pages - Irish Ruled",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 72 pages and irish ruled ruling; suitable for daily classwork and homework.",
+    "cost": "R12-R24",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0018",
+    "name": "A4 Soft Cover Exercise Book - 72 pages - Unruled",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 72 pages and unruled ruling; suitable for daily classwork and homework.",
+    "cost": "R12-R22",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0019",
+    "name": "A4 Soft Cover Exercise Book - 96 pages - Feint & Margin",
+    "description": "Lightweight stitched or stapled school exercise book in A4 format with 96 pages and feint & margin ruling; suitable for daily classwork and homework.",
+    "cost": "R15-R28",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "R-12 (ruling\ndependent)"
+  },
+  {
+    "id": "SA-0020",
+    "name": "A5 Hard Cover / Counter Book - 96 pages - Feint & Margin",
+    "description": "Durable hard-cover school notebook with 96 pages in A5; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R10-R22",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0021",
+    "name": "A5 Hard Cover / Counter Book - 192 pages - Feint & Margin",
+    "description": "Durable hard-cover school notebook with 192 pages in A5; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R22-R38",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0022",
+    "name": "A4 Hard Cover / Counter Book - 96 pages - 1 Quire Feint & Margin",
+    "description": "Durable hard-cover school notebook with 96 pages in A4; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R20-R35",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0023",
+    "name": "A4 Hard Cover / Counter Book - 192 pages - 2 Quire Feint & Margin",
+    "description": "Durable hard-cover school notebook with 192 pages in A4; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R30-R50",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0024",
+    "name": "A4 Hard Cover / Counter Book - 192 pages - 2 Quire Quad & Margin",
+    "description": "Durable hard-cover school notebook with 192 pages in A4; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R35-R55",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0025",
+    "name": "A4 Hard Cover / Counter Book - 288 pages - 3 Quire Feint & Margin",
+    "description": "Durable hard-cover school notebook with 288 pages in A4; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R45-R70",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0026",
+    "name": "A4 Hard Cover / Counter Book - 288 pages - 3 Quire Quad & Margin",
+    "description": "Durable hard-cover school notebook with 288 pages in A4; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R48-R75",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0027",
+    "name": "A4 Hard Cover / Counter Book - 384 pages - 4 Quire Feint & Margin",
+    "description": "Durable hard-cover school notebook with 384 pages in A4; designed for subjects requiring a full-year record of notes, exercises or calculations.",
+    "cost": "R60-R90",
+    "brands": "Croxley / Freedom / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0028",
+    "name": "A4 Graph Book - 36 pages - 2/10/20 mm grid",
+    "description": "Grid-ruled graph book for Mathematics, Physical Sciences, Geography graphs and data plotting.",
+    "cost": "R22-R35",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0029",
+    "name": "A4 Graph Book - 72 pages - 5 mm grid",
+    "description": "Longer graph book with square grid for extended graphing, statistics and scientific work.",
+    "cost": "R25-R45",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0030",
+    "name": "A4 Calculation Pad - 40 pages - 5 mm squares",
+    "description": "Disposable calculation pad with square grid, useful for Mathematics rough work, calculations and technical subjects.",
+    "cost": "R45-R70",
+    "brands": "Croxley / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0031",
+    "name": "A4 Exam Pad - 80 pages - punched",
+    "description": "Ruled loose-leaf examination pad, punched for filing; commonly requested for tests, essays and senior-phase subjects.",
+    "cost": "R25-R45",
+    "brands": "Freedom / Marlin / Croxley / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0032",
+    "name": "A4 Exam Pad - 100 pages - punched",
+    "description": "Thicker ruled exam pad with punched margin for filing; suitable for tests, assignments and examination preparation.",
+    "cost": "R30-R50",
+    "brands": "Freedom / Marlin / Croxley / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0033",
+    "name": "A4 Ruled Refill Paper - 200-240 sheets",
+    "description": "Loose A4 feint-and-margin paper for ring binders and lever-arch files; typically punched.",
+    "cost": "R80-R130",
+    "brands": "Croxley / Treeline / Freedom / Bantex",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0034",
+    "name": "A4 Nature Study Book - 72 pages - Feint & Margin",
+    "description": "Primary-school nature study book combining writing space with areas suited to illustrations and observations.",
+    "cost": "R20-R35",
+    "brands": "Primeline / Freedom / Treeline",
+    "typicalGrades": "1-7"
+  },
+  {
+    "id": "SA-0035",
+    "name": "A4 Nature Study Book - 72 pages - Irish Ruled",
+    "description": "Nature study format with Irish ruling, useful for language and life-skills activities requiring written and illustrated work.",
+    "cost": "R20-R35",
+    "brands": "Primeline / Freedom / Treeline",
+    "typicalGrades": "1-7"
+  },
+  {
+    "id": "SA-0036",
+    "name": "A4 Drawing Book - 24 pages - unruled",
+    "description": "Unruled drawing book for Foundation and Intermediate Phase art, diagrams, projects and creative work.",
+    "cost": "R18-R35",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0037",
+    "name": "A4 Sketch Pad - 20-40 sheets - 120 gsm",
+    "description": "Cartridge-paper sketch pad for pencil, crayon, pastel and light paint applications.",
+    "cost": "R30-R90",
+    "brands": "Artboard / Croxley / Rexel / Dala",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0038",
+    "name": "A3 Sketch Pad - 20-40 sheets - 120 gsm",
+    "description": "Large-format cartridge-paper pad for Visual Arts, Design and EGD preparatory work.",
+    "cost": "R80-R170",
+    "brands": "Artboard / Rexel / Dala",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0039",
+    "name": "A3 Visual Diary - hard cover",
+    "description": "Hard-cover A3 visual diary/sketchbook for Design and Visual Arts process work, research, sketches and concept development.",
+    "cost": "R120-R260",
+    "brands": "Artboard / Croxley / generic art brands",
+    "typicalGrades": "10-12"
+  },
+  {
+    "id": "SA-0040",
+    "name": "A4 Tracing Pad - 30 sheets",
+    "description": "Translucent tracing paper pad for Design, EGD, Geography and art applications.",
+    "cost": "R90-R140",
+    "brands": "Croxley / Artboard / TechnoArt",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0041",
+    "name": "A5 Tracing Book - 72 pages",
+    "description": "Compact bound tracing book for drawing, handwriting and creative activities.",
+    "cost": "R80-R120",
+    "brands": "Croxley / Freedom",
+    "typicalGrades": "R-6"
+  },
+  {
+    "id": "SA-0042",
+    "name": "A4 Scrapbook - 40-60 pages",
+    "description": "Stitched scrapbook with heavy or coloured pages for projects, Life Skills, art and classroom portfolios.",
+    "cost": "R30-R160",
+    "brands": "Croxley / Freedom / Treeline / Butterfly",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0043",
+    "name": "A4 Wirobound Notebook - 100-160 pages",
+    "description": "Spiral-bound ruled notebook that opens flat; useful for subject notes, study summaries and projects.",
+    "cost": "R45-R130",
+    "brands": "Croxley / Primeline / Bantex / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0044",
+    "name": "A5 Wirobound Notebook - 100-160 pages",
+    "description": "Compact spiral-bound notebook for homework notes, vocabulary, reminders and subject summaries.",
+    "cost": "R25-R80",
+    "brands": "Croxley / Primeline / Bantex",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0045",
+    "name": "A6 Memo / Note Book - 72-144 pages",
+    "description": "Small notebook for spelling, vocabulary, homework notes, reading records or teacher communication.",
+    "cost": "R10-R40",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0046",
+    "name": "A5 Homework Diary / School Diary",
+    "description": "Dated or undated school diary for homework, assessment dates, parent communication and learner planning.",
+    "cost": "R25-R90",
+    "brands": "Treeline / Freedom / Croxley / Hortors",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0047",
+    "name": "A5 Spelling / Vocabulary Book",
+    "description": "Ruled notebook used for weekly spelling, vocabulary lists and language development.",
+    "cost": "R10-R30",
+    "brands": "Freedom / Treeline / Croxley",
+    "typicalGrades": "1-7"
+  },
+  {
+    "id": "SA-0048",
+    "name": "A4 Handwriting Book - broad double ruling",
+    "description": "Specialised handwriting book with broad double lines and guides for early handwriting formation.",
+    "cost": "R12-R35",
+    "brands": "Freedom / Treeline / Croxley / Primeline",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0049",
+    "name": "A4 Handwriting Book - narrow double ruling / single guide",
+    "description": "Handwriting exercise book with narrower guide lines for developing consistent letter size and spacing.",
+    "cost": "R20-R40",
+    "brands": "Primeline / Freedom / Croxley",
+    "typicalGrades": "1-4"
+  },
+  {
+    "id": "SA-0050",
+    "name": "A5 Handwriting Book - 17 mm ruling",
+    "description": "Compact early-learning handwriting book with wider line spacing for beginner writers.",
+    "cost": "R8-R22",
+    "brands": "Freedom / Treeline / Croxley",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0051",
+    "name": "Music Manuscript Book - A4 - 32 pages",
+    "description": "Notebook printed with musical staves for theory, notation, composition and practical music exercises.",
+    "cost": "R25-R70",
+    "brands": "Croxley / Freedom / local music suppliers",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0052",
+    "name": "Accounting Exercise Book - Journal",
+    "description": "A4 bookkeeping exercise book pre-printed for journal entries; used in EMS and Accounting.",
+    "cost": "R15-R30",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0053",
+    "name": "Accounting Exercise Book - Double Ledger",
+    "description": "A4 bookkeeping book with double-ledger ruling for accounting practice and record keeping.",
+    "cost": "R15-R30",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0054",
+    "name": "Accounting Exercise Book - 8-column Cash Journal",
+    "description": "A4 pre-ruled cash-journal book for accounting exercises and classroom practice.",
+    "cost": "R15-R30",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0055",
+    "name": "Accounting Exercise Book - Creditors Journal",
+    "description": "A4 pre-ruled creditors-journal book for Accounting and EMS exercises.",
+    "cost": "R15-R30",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0056",
+    "name": "Accounting Exercise Book - Debtors Journal",
+    "description": "A4 pre-ruled debtors-journal book for Accounting and EMS exercises.",
+    "cost": "R15-R30",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0057",
+    "name": "Accounting / Analysis Pad - multi-column",
+    "description": "Loose-leaf or pad-style multi-column paper for Accounting calculations, ledgers and analysis work.",
+    "cost": "R35-R90",
+    "brands": "Croxley / Treeline / Freedom",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0058",
+    "name": "A4 Project Book / Portfolio Book",
+    "description": "Bound or wirobound project book for research tasks, projects, practical portfolios and subject evidence.",
+    "cost": "R35-R120",
+    "brands": "Croxley / Treeline / Freedom / Bantex",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0059",
+    "name": "A4 Index Book - A-Z",
+    "description": "Hard-cover indexed notebook for vocabulary, definitions, formulas, contacts or subject reference notes.",
+    "cost": "R70-R170",
+    "brands": "Croxley / Bantex",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0060",
+    "name": "HB Graphite Pencil - standard",
+    "description": "General-purpose wooden HB pencil for writing, drawing and schoolwork; hexagonal or triangular barrel.",
+    "cost": "R3-R20 each",
+    "brands": "Staedtler / Faber-Castell / Bic / Treeline / Marlin / Primeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0061",
+    "name": "Jumbo Triangular HB Beginner Pencil",
+    "description": "Thick triangular graphite pencil that promotes a stable beginner grip and is easier for small hands to control.",
+    "cost": "R8-R25 each",
+    "brands": "Treeline / Marlin Kids / Staedtler / Faber- Castell",
+    "typicalGrades": "R-2"
+  },
+  {
+    "id": "SA-0062",
+    "name": "2B Graphite Pencil",
+    "description": "Softer graphite pencil for darker writing, shading, sketching and selected Design/Art tasks.",
+    "cost": "R8-R25 each",
+    "brands": "Staedtler / Faber-Castell / Croxley / Koh- I-Noor",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0063",
+    "name": "B Graphite Pencil",
+    "description": "Soft graphite grade used for sketching, Design and Visual Arts.",
+    "cost": "R8-R25 each",
+    "brands": "Staedtler / Faber-Castell / Croxley / Koh- I-Noor",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0064",
+    "name": "3B Graphite Pencil",
+    "description": "Soft drawing pencil for tonal work and Visual Arts.",
+    "cost": "R10-R30 each",
+    "brands": "Staedtler / Faber-Castell / Koh-I-Noor / Croxley",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0065",
+    "name": "4B Graphite Pencil",
+    "description": "Soft artist pencil for dark tonal drawing and expressive sketch work.",
+    "cost": "R10-R30 each",
+    "brands": "Staedtler / Faber-Castell / Koh-I-Noor",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0066",
+    "name": "6B Graphite Pencil",
+    "description": "Very soft drawing pencil for deep shading and expressive art work.",
+    "cost": "R12-R35 each",
+    "brands": "Staedtler / Faber-Castell / Koh-I-Noor",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0067",
+    "name": "8B Graphite Pencil",
+    "description": "Very soft artist-grade graphite pencil for the darkest tones in Visual Arts.",
+    "cost": "R15-R40 each",
+    "brands": "Staedtler / Faber-Castell / Koh-I-Noor",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0068",
+    "name": "H Graphite Pencil",
+    "description": "Hard graphite pencil producing fine light lines, useful for technical drawing.",
+    "cost": "R10-R30 each",
+    "brands": "Staedtler / Faber-Castell / Koh-I-Noor",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0069",
+    "name": "2H Graphite Pencil",
+    "description": "Hard-grade pencil commonly required for EGD and technical drawing construction lines.",
+    "cost": "R10-R30 each",
+    "brands": "Staedtler / Faber-Castell / Koh-I-Noor / Croxley",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0070",
+    "name": "Artist Sketch Pencil Set - 8B to 2H",
+    "description": "Graded graphite set covering hard to very soft leads for Visual Arts, Design and advanced sketching.",
+    "cost": "R50-R450 set",
+    "brands": "Croxley / Staedtler / Faber-Castell / Koh- I-Noor",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0071",
+    "name": "Mechanical Pencil - 0.5 mm",
+    "description": "Refillable precision pencil for Mathematics, EGD, Design and neat note- taking.",
+    "cost": "R15-R80",
+    "brands": "Pentel / Staedtler / Pilot / Marlin / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0072",
+    "name": "Mechanical Pencil - 0.7 mm",
+    "description": "Refillable pencil with slightly thicker lead, suitable for writing and technical work.",
+    "cost": "R15-R80",
+    "brands": "Pentel / Staedtler / Pilot / Marlin",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0073",
+    "name": "Mechanical Pencil Leads - 0.5 mm HB",
+    "description": "Replacement graphite leads in tube for 0.5 mm mechanical pencils.",
+    "cost": "R12-R45",
+    "brands": "Pentel / Staedtler / Pilot / Rotring",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0074",
+    "name": "Mechanical Pencil Leads - 0.7 mm HB",
+    "description": "Replacement graphite leads in tube for 0.7 mm mechanical pencils.",
+    "cost": "R12-R45",
+    "brands": "Pentel / Staedtler / Pilot",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0075",
+    "name": "Ballpoint Pen - Blue",
+    "description": "Everyday blue-ink school pen, typically medium or fine point with capped or retractable barrel.",
+    "cost": "R6-R20 each",
+    "brands": "Bic / Pilot / Pentel / Marlin / Treeline / Primeline",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0076",
+    "name": "Ballpoint Pen - Black",
+    "description": "Everyday black-ink school pen for notes, tests and assignments.",
+    "cost": "R6-R20 each",
+    "brands": "Bic / Pilot / Pentel / Marlin / Treeline / Primeline",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0077",
+    "name": "Ballpoint Pen - Red",
+    "description": "Red-ink pen commonly used for corrections, marking and self-assessment.",
+    "cost": "R6-R20 each",
+    "brands": "Bic / Pilot / Pentel / Marlin / Treeline",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0078",
+    "name": "Ballpoint Pen - Green",
+    "description": "Green-ink pen used by some schools for peer/self marking or language work.",
+    "cost": "R6-R20 each",
+    "brands": "Bic / Pilot / Pentel / Marlin / Treeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0079",
+    "name": "Retractable Ballpoint Pen - 0.7 mm",
+    "description": "Click-action fine-point pen with comfortable grip for extended note-taking.",
+    "cost": "R10-R35 each",
+    "brands": "Pilot / Pentel / Bic / Marlin",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0080",
+    "name": "Gel Pen - Black - 0.7 mm",
+    "description": "Smooth-flow black gel pen for neat notes, projects and study work.",
+    "cost": "R25-R45 each",
+    "brands": "Pilot G-2 / Pentel / Uni-ball",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0081",
+    "name": "Gel Pen - Blue - 0.7 mm",
+    "description": "Smooth-flow blue gel pen for note-taking and assignments.",
+    "cost": "R25-R45 each",
+    "brands": "Pilot G-2 / Pentel / Uni-ball",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0082",
+    "name": "Coloured Fineliner Set - 6-12 colours",
+    "description": "Fine fibre-tip pens for colour coding, diagrams, study notes, maps and creative tasks.",
+    "cost": "R60-R220 set",
+    "brands": "Staedtler / Stabilo / Monami / Marlin",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0083",
+    "name": "Fineliner - Black - 0.4/0.5 mm",
+    "description": "Fine black fibre-tip pen for diagrams, technical outlines, maps and Design work.",
+    "cost": "R15-R45 each",
+    "brands": "Staedtler / Artline / Marlin / Stabilo",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0084",
+    "name": "Highlighter - Single",
+    "description": "Chisel-tip fluorescent marker for emphasising key text in notes and study material.",
+    "cost": "R10-R35 each",
+    "brands": "Stabilo / Monami / Pentel / Primeline / Bic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0085",
+    "name": "Highlighter Set - 4 colours",
+    "description": "Pack of four fluorescent highlighters for colour-coded study and revision.",
+    "cost": "R40-R100 set",
+    "brands": "Stabilo / Monami / Pentel / Primeline / Bic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0086",
+    "name": "Highlighter Set - 6 colours",
+    "description": "Expanded colour set for study systems, summaries and revision.",
+    "cost": "R70-R180 set",
+    "brands": "Stabilo / Monami / Pentel",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0087",
+    "name": "Permanent Marker - Black - fine point",
+    "description": "Quick-drying permanent marker for labels, project boards, plastic folders and classroom materials.",
+    "cost": "R25-R50 each",
+    "brands": "Artline / Sharpie / Yoken / Pentel / Marlin",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0088",
+    "name": "Permanent Marker - Black - chisel point",
+    "description": "Broad/chisel permanent marker for posters, project headings and labels.",
+    "cost": "R25-R50 each",
+    "brands": "Artline / Sharpie / Yoken / Pentel",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0089",
+    "name": "Permanent Marker - Assorted Set",
+    "description": "Multi-colour permanent marker set for projects and labelling.",
+    "cost": "R70-R180 set",
+    "brands": "Artline / Sharpie / Pentel",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0090",
+    "name": "Whiteboard Marker - Black",
+    "description": "Dry-erase marker for individual learner whiteboards and classroom activities.",
+    "cost": "R20-R40 each",
+    "brands": "Pentel / Monami / Artline / Parrot / Marlin",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0091",
+    "name": "Whiteboard Marker - Blue",
+    "description": "Blue dry-erase marker for learner whiteboards and classroom work.",
+    "cost": "R20-R40 each",
+    "brands": "Pentel / Monami / Artline / Parrot",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0092",
+    "name": "Whiteboard Marker - Red",
+    "description": "Red dry-erase marker for learner whiteboards and classroom work.",
+    "cost": "R20-R40 each",
+    "brands": "Pentel / Monami / Artline / Parrot",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0093",
+    "name": "Whiteboard Marker Set - 4 colours",
+    "description": "Assorted dry-erase marker pack for individual boards, diagrams and classroom activities.",
+    "cost": "R70-R160 set",
+    "brands": "Pentel / Monami / Artline / Parrot / Marlin",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0094",
+    "name": "Jumbo Fibre-tip Marker Set - 12",
+    "description": "Thick washable fibre-tip markers with broad barrels suited to young learners and creative work.",
+    "cost": "R50-R160 set",
+    "brands": "Carioca / Marlin Kids / Faber-Castell / Giotto",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0095",
+    "name": "Felt-tip / Koki Pen Set - 12",
+    "description": "Assorted felt-tip markers for colouring, posters, diagrams and project work.",
+    "cost": "R35-R120 set",
+    "brands": "Monami / Staedtler / Faber-Castell / Marlin / Treeline",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0096",
+    "name": "Colouring Pencils - 12 full-length",
+    "description": "Standard 12-colour wooden pencil-crayon set for school art, diagrams, maps and projects.",
+    "cost": "R30-R120 set",
+    "brands": "Staedtler / Faber-Castell / Croxley / Colleen / Marlin / Treeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0097",
+    "name": "Colouring Pencils - 24 full-length",
+    "description": "Expanded colour pencil set for Art, Design, Geography and detailed projects.",
+    "cost": "R70-R220 set",
+    "brands": "Staedtler / Faber-Castell / Croxley / Colleen",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0098",
+    "name": "Jumbo Triangular Colour Pencils - 12",
+    "description": "Thick triangular colour pencils designed for easier grip and early fine-motor development.",
+    "cost": "R45-R150 set",
+    "brands": "Marlin Kids / Staedtler / Faber-Castell / Treeline",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0099",
+    "name": "Watercolour Pencils - 12",
+    "description": "Water-soluble coloured pencils used dry or activated with water for art and Design work.",
+    "cost": "R80-R250 set",
+    "brands": "Faber-Castell / Staedtler / Croxley / Marlin Kids",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0100",
+    "name": "Wax Crayons - 12 standard",
+    "description": "Traditional wax crayons in assorted colours for early learning, colouring and art activities.",
+    "cost": "R20-R60 set",
+    "brands": "Bic / Staedtler / Pritt / Croxley / Marlin / Dala",
+    "typicalGrades": "R-6"
+  },
+  {
+    "id": "SA-0101",
+    "name": "Jumbo Wax Crayons - 8-12",
+    "description": "Extra-thick wax crayons for young learners; easier to grip and more resistant to breakage.",
+    "cost": "R25-R90 set",
+    "brands": "Staedtler / Pritt / Marlin Kids / Dala / Teddy",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0102",
+    "name": "Retractable / Twist Wax Crayons - 12",
+    "description": "Plastic-barrel twist-up crayons that reduce breakage and keep hands cleaner.",
+    "cost": "R35-R120 set",
+    "brands": "Croxley Create / Monami / Marlin Kids / Faber-Castell / Treeline",
+    "typicalGrades": "R-6"
+  },
+  {
+    "id": "SA-0103",
+    "name": "Oil Pastels - 12",
+    "description": "Soft oil pastel set for school art, blending and expressive colour work.",
+    "cost": "R30-R80 set",
+    "brands": "Pentel / Butterfly / Monami / Dala / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0104",
+    "name": "Oil Pastels - 16",
+    "description": "Medium-size oil pastel set offering broader colour range for art tasks.",
+    "cost": "R40-R100 set",
+    "brands": "Pentel / Staedtler / Primeline / Monami",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0105",
+    "name": "Oil Pastels - 24/25",
+    "description": "Expanded oil pastel set for Visual Arts, Design and advanced creative work.",
+    "cost": "R70-R140 set",
+    "brands": "Pentel / Monami / Dala",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0106",
+    "name": "Soft / Chalk Pastels - 12",
+    "description": "Dry pastel sticks for blending, tonal work and Visual Arts projects.",
+    "cost": "R60-R130 set",
+    "brands": "Croxley / Koh-I-Noor / Dala / Rolfes",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0107",
+    "name": "Charcoal Sticks - assorted thickness",
+    "description": "Drawing charcoal in fine, medium and thick sticks for tonal sketching and Visual Arts.",
+    "cost": "R60-R110 pack",
+    "brands": "Croxley / Koh-I-Noor / Dala",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0108",
+    "name": "Paint Marker - white",
+    "description": "Opaque permanent paint marker for dark paper, boards, model work and Design projects.",
+    "cost": "R55-R90 each",
+    "brands": "Artline / Yoken / Sharpie",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0109",
+    "name": "Chalk - white - box",
+    "description": "White classroom chalk for chalkboards, outdoor marking and art activities.",
+    "cost": "R30-R70 box",
+    "brands": "Penguin / Rolfes / Freedom",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0110",
+    "name": "Chalk - assorted colours - box",
+    "description": "Coloured chalk for classroom, playground and art activities.",
+    "cost": "R40-R110 box",
+    "brands": "Dala / Rolfes / Penguin",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0111",
+    "name": "White Eraser - standard",
+    "description": "Clean-rubbing white PVC or polymer eraser for graphite pencil work.",
+    "cost": "R5-R20",
+    "brands": "Staedtler / Faber-Castell / Maped / Marlin / Treeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0112",
+    "name": "Large White Eraser",
+    "description": "Oversized school eraser for frequent classroom use and young learners.",
+    "cost": "R8-R25",
+    "brands": "Staedtler / Faber-Castell / Maped / Marlin",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0113",
+    "name": "Kneadable Eraser",
+    "description": "Soft mouldable eraser for charcoal, graphite and fine-art highlights without abrasive rubbing.",
+    "cost": "R20-R60",
+    "brands": "Faber-Castell / Koh-I-Noor / Dala",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0114",
+    "name": "Pencil Eraser / Eraser Pen",
+    "description": "Precision pen-style eraser for detailed drawing, technical work and corrections.",
+    "cost": "R20-R70",
+    "brands": "Tombow / Faber-Castell / Staedtler",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0115",
+    "name": "1-hole Metal Sharpener",
+    "description": "Durable metal single-hole sharpener for standard graphite and colour pencils.",
+    "cost": "R8-R25",
+    "brands": "Staedtler / Maped / Marlin / Treeline",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0116",
+    "name": "1-hole Sharpener with Container",
+    "description": "Plastic sharpener with shavings container for classroom cleanliness.",
+    "cost": "R10-R35",
+    "brands": "Maped / Marlin Kids / Treeline / Staedtler",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0117",
+    "name": "2-hole Sharpener with Container",
+    "description": "Dual-size sharpener for standard and jumbo pencils with enclosed shavings container.",
+    "cost": "R15-R45",
+    "brands": "Staedtler / Maped / Marlin Kids / Treeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0118",
+    "name": "Jumbo Pencil Sharpener",
+    "description": "Wide-bore sharpener for jumbo triangular pencils and thick colouring pencils.",
+    "cost": "R15-R45",
+    "brands": "Maped / Marlin Kids / Staedtler",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0119",
+    "name": "Correction Fluid - 20 ml",
+    "description": "Fast-drying white correction fluid for ink errors on paper.",
+    "cost": "R15-R35",
+    "brands": "Tipp-Ex / Pentel / Primeline / Marlin",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0120",
+    "name": "Correction Pen",
+    "description": "Fine-tip liquid correction pen for controlled corrections in written work.",
+    "cost": "R20-R45",
+    "brands": "Tipp-Ex / Pentel / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0121",
+    "name": "Correction Tape - 5 mm x 6-8 m",
+    "description": "Dry correction tape for immediate rewriting with no drying time.",
+    "cost": "R20-R60",
+    "brands": "Tipp-Ex / Pentel / Tombow / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0122",
+    "name": "Erasing Shield",
+    "description": "Thin metal template with small openings for precision erasing in technical drawing.",
+    "cost": "R12-R25",
+    "brands": "Primeline / TechnoArt / Staedtler",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0123",
+    "name": "Whiteboard Eraser / Duster - small",
+    "description": "Compact felt or foam eraser for A4 learner whiteboards and classroom use.",
+    "cost": "R15-R45",
+    "brands": "Parrot / Pentel / Treeline / Freedom",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0124",
+    "name": "Glue Stick - 20 g",
+    "description": "Non-toxic solid adhesive for paper, worksheets, craft and projects; compact school size.",
+    "cost": "R12-R30",
+    "brands": "Pritt / Bostik / Marlin / Treeline / Amos",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0125",
+    "name": "Glue Stick - 35-43 g",
+    "description": "Large non-toxic glue stick for frequent classroom and project use.",
+    "cost": "R25-R70",
+    "brands": "Pritt / Bostik / Marlin / Treeline / Amos",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0126",
+    "name": "PVA / Craft Glue - 100-125 ml",
+    "description": "Water-based white craft adhesive for paper, cardboard and general classroom craft.",
+    "cost": "R20-R55",
+    "brands": "Dala / Alcolin / Bostik / RGS / Marlin",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0127",
+    "name": "Wood Glue - 100-125 ml",
+    "description": "Strong PVA wood adhesive for Technology, Design, models and craft projects.",
+    "cost": "R35-R95",
+    "brands": "Alcolin / Dala / Deli / Bostik",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0128",
+    "name": "Clear School Glue - 100-120 ml",
+    "description": "Clear-drying liquid adhesive for paper, card and light craft applications.",
+    "cost": "R20-R60",
+    "brands": "Bostik / Dala / Amos / Marlin",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0129",
+    "name": "Prestik / Reusable Adhesive - 50-100 g",
+    "description": "Reusable putty adhesive for posters, notices, displays and lightweight classroom mounting.",
+    "cost": "R40-R160",
+    "brands": "Bostik Prestik / generic reusable adhesive",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0130",
+    "name": "Clear Adhesive Tape - 12 mm",
+    "description": "Narrow transparent tape for repairs, paper craft and wrapping.",
+    "cost": "R10-R30",
+    "brands": "Sellotape / Scotch / Treeline / Freedom",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0131",
+    "name": "Clear Adhesive Tape - 18/24 mm",
+    "description": "Standard-width transparent tape for projects, repairs and general classroom use.",
+    "cost": "R15-R45",
+    "brands": "Sellotape / Scotch / Treeline / Freedom",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0132",
+    "name": "Tape Dispenser - small",
+    "description": "Desktop or handheld dispenser for standard transparent tape rolls.",
+    "cost": "R20-R80",
+    "brands": "Treeline / Primeline / Scotch / generic",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0133",
+    "name": "Masking Tape - 18/24 mm",
+    "description": "Low-tack paper tape for art, Design, labelling, model making and temporary fixing.",
+    "cost": "R25-R65",
+    "brands": "3M / Sellotape / Dala / generic",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0134",
+    "name": "Masking Tape - 48 mm",
+    "description": "Wide masking tape for Visual Arts, Design, mounting and project work.",
+    "cost": "R45-R100",
+    "brands": "3M / Sellotape / Dala / generic",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0135",
+    "name": "Double-sided Tape - 12/18 mm",
+    "description": "Double-sided adhesive tape for neat mounting, Design, presentations and craft.",
+    "cost": "R25-R70",
+    "brands": "Scotch / Sellotape / Dala / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0136",
+    "name": "Glitter Glue Set",
+    "description": "Small tubes of coloured glitter adhesive for Foundation Phase and creative craft.",
+    "cost": "R35-R100 set",
+    "brands": "Dala / Teddy / Deli / Marlin Kids",
+    "typicalGrades": "R-6"
+  },
+  {
+    "id": "SA-0137",
+    "name": "Glue Dots / Adhesive Dots",
+    "description": "Pre-cut double-sided adhesive dots for card, craft, posters and model work.",
+    "cost": "R30-R90 pack",
+    "brands": "Dala / generic craft brands",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0138",
+    "name": "Plastic Ruler - 15 cm",
+    "description": "Short metric ruler for pencil cases, early measurement and compact geometry work.",
+    "cost": "R5-R20",
+    "brands": "Maped / Staedtler / Marlin / Treeline / Primeline",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0139",
+    "name": "Shatterproof Ruler - 30 cm",
+    "description": "Transparent or opaque 30 cm metric ruler designed to resist cracking in school use.",
+    "cost": "R10-R35",
+    "brands": "Croxley / Treeline / Maped / Staedtler / Primeline",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0140",
+    "name": "Flexible Ruler - 30 cm",
+    "description": "Flexible plastic ruler that bends without snapping; useful for younger learners.",
+    "cost": "R30-R70",
+    "brands": "Maped / Staedtler",
+    "typicalGrades": "1-7"
+  },
+  {
+    "id": "SA-0141",
+    "name": "Metal Ruler - 30 cm",
+    "description": "Durable stainless-steel metric ruler for Technology, Design, art and cutting guidance.",
+    "cost": "R30-R60",
+    "brands": "Primeline / generic metal rulers",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0142",
+    "name": "Ruler - 50 cm",
+    "description": "Long metric ruler for poster work, art, Design and classroom measurement.",
+    "cost": "R25-R50",
+    "brands": "Treeline / Primeline / Replica",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0143",
+    "name": "Ruler - 60 cm",
+    "description": "Long metric ruler for Design, Technology, Visual Arts and project work.",
+    "cost": "R70-R110",
+    "brands": "Primeline / generic metal/plastic rulers",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0144",
+    "name": "Metre Ruler - 1 m",
+    "description": "Long classroom measuring ruler, usually wood or metal, for practical measurement and technical work.",
+    "cost": "R120-R190",
+    "brands": "Primeline / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0145",
+    "name": "Scale Ruler - triangular/flat",
+    "description": "Multi-scale ruler for EGD, Design, maps and technical drawings.",
+    "cost": "R30-R90",
+    "brands": "Staedtler / Primeline / TechnoArt",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0146",
+    "name": "Protractor - 180 degree - 10-15 cm",
+    "description": "Transparent semicircular angle-measuring tool for Mathematics and geometry.",
+    "cost": "R8-R30",
+    "brands": "Maped / Staedtler / Primeline / Oxford",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0147",
+    "name": "Protractor - 360 degree",
+    "description": "Full-circle protractor for Geography, Mathematics and technical drawing.",
+    "cost": "R25-R50",
+    "brands": "Maped / Staedtler / TechnoArt",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0148",
+    "name": "Set Square - 45 degree",
+    "description": "Transparent 45-degree set square for geometry and technical drawing.",
+    "cost": "R30-R65",
+    "brands": "Primeline / Staedtler / Maped / TechnoArt",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0149",
+    "name": "Set Square - 30/60 degree",
+    "description": "Transparent 30/60-degree set square for geometry and technical drawing.",
+    "cost": "R30-R65",
+    "brands": "Primeline / Staedtler / Maped / TechnoArt",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0150",
+    "name": "Geometry / Maths Set - basic 8-11 piece",
+    "description": "School geometry set typically including compass, divider, ruler, set squares, protractor, pencil and eraser.",
+    "cost": "R40-R150",
+    "brands": "Staedtler / Oxford / Helix / Maped / Croxley / Primeline",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0151",
+    "name": "Compass - school",
+    "description": "Pencil compass for drawing circles and arcs in Mathematics and technical subjects.",
+    "cost": "R35-R140",
+    "brands": "Maped / Staedtler / Oxford / Helix",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0152",
+    "name": "Divider - drawing",
+    "description": "Two-point divider for transferring measurements and technical drawing construction.",
+    "cost": "R30-R100",
+    "brands": "Staedtler / Maped / TechnoArt",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0153",
+    "name": "French Curve Set - 3 piece",
+    "description": "Curved templates for smooth irregular curves in EGD, Design and drafting.",
+    "cost": "R35-R80",
+    "brands": "TechnoArt / Koh-I-Noor / Primeline",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0154",
+    "name": "Circle Template",
+    "description": "Plastic template with multiple circle diameters for technical drawing and Design.",
+    "cost": "R35-R80",
+    "brands": "Sati / TechnoArt / Staedtler",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0155",
+    "name": "Lettering Stencil Set",
+    "description": "Reusable plastic lettering templates for technical drawing, Design and neat project headings.",
+    "cost": "R60-R110",
+    "brands": "TechnoArt / Staedtler / Primeline",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0156",
+    "name": "T-Square - 45 cm",
+    "description": "Straightedge with perpendicular head for EGD and technical drawing on A3",
+    "cost": "R90-R140",
+    "brands": "Primeline / TechnoArt / Staedtler 9-12 boards.",
+    "typicalGrades": ""
+  },
+  {
+    "id": "SA-0157",
+    "name": "A3 Drawing Board - basic",
+    "description": "Rigid board for A3 technical drawings, Visual Arts and Design work.",
+    "cost": "R250-R500",
+    "brands": "TechnoArt / Primeline / generic",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0158",
+    "name": "A3 Drawing Board - parallel motion / double-lock",
+    "description": "Precision drawing board with sliding rule or locking mechanism for EGD and advanced technical drawing.",
+    "cost": "R650-R950",
+    "brands": "Primeline / Rotring / TechnoArt",
+    "typicalGrades": "10-12"
+  },
+  {
+    "id": "SA-0159",
+    "name": "Drawing Board Carry Cover - A3",
+    "description": "Padded or durable carry cover protecting an A3 drawing board and technical drawing tools.",
+    "cost": "R300-R450",
+    "brands": "Primeline / TechnoArt",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0160",
+    "name": "Technical Drawing Pad - A3 - 80 gsm - 50 sheets",
+    "description": "A3 white bond drawing paper for EGD, drafting, orthographic and design exercises.",
+    "cost": "R90-R140",
+    "brands": "Artboard / TechnoArt / Croxley",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0161",
+    "name": "Basic Calculator - 8 digit",
+    "description": "Compact four-function calculator for arithmetic, percentages and basic school calculations.",
+    "cost": "R55-R140",
+    "brands": "Casio / Sharp / Primeline / Croxley",
+    "typicalGrades": "4-9"
+  },
+  {
+    "id": "SA-0162",
+    "name": "Junior Calculator - 8-10 digit",
+    "description": "Learner-friendly calculator with large keys/display for primary and lower secondary use.",
+    "cost": "R90-R230",
+    "brands": "Sharp / Casio / Primeline",
+    "typicalGrades": "4-9"
+  },
+  {
+    "id": "SA-0163",
+    "name": "Scientific Calculator - Casio FX-82ZA Plus II class",
+    "description": "Non-programmable scientific calculator commonly requested by South African schools for Mathematics and Sciences.",
+    "cost": "R350-R450",
+    "brands": "Casio",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0164",
+    "name": "Scientific Calculator - Casio FX-82MS class",
+    "description": "Entry scientific calculator with standard scientific and statistical functions.",
+    "cost": "R250-R330",
+    "brands": "Casio",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0165",
+    "name": "Scientific Calculator - Sharp EL-531 class",
+    "description": "Non-programmable scientific calculator suitable for Mathematics, Maths Literacy and Sciences.",
+    "cost": "R150-R230",
+    "brands": "Sharp",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0166",
+    "name": "Advanced Scientific Calculator - Casio FX-991ZA+ class",
+    "description": "Advanced non-programmable scientific calculator with expanded functions, natural/textbook display and scientific capabilities.",
+    "cost": "R700-R900",
+    "brands": "Casio",
+    "typicalGrades": "10-12"
+  },
+  {
+    "id": "SA-0167",
+    "name": "Advanced Scientific Calculator - Sharp WriteView class",
+    "description": "Scientific calculator with textbook-style display and advanced maths/statistics functions.",
+    "cost": "R450-R550",
+    "brands": "Sharp",
+    "typicalGrades": "10-12"
+  },
+  {
+    "id": "SA-0168",
+    "name": "Financial Calculator - school Accounting/Business elective",
+    "description": "Financial calculator for specialised finance/business calculations where specifically requested by a school.",
+    "cost": "R850-R1,050",
+    "brands": "Sharp EL-738 / HP",
+    "typicalGrades": "10-12 specialised"
+  },
+  {
+    "id": "SA-0169",
+    "name": "Pencil Case - 20-22 cm canvas",
+    "description": "Small zip pencil case for daily writing instruments and basic tools.",
+    "cost": "R25-R100",
+    "brands": "Treeline / Freedom / Marlin / Primeline / Butterfly",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0170",
+    "name": "Pencil Bag - 30-33 cm",
+    "description": "Long canvas or nylon pencil bag accommodating 30 cm rulers and larger stationery.",
+    "cost": "R40-R120",
+    "brands": "Treeline / Freedom / Marlin / Primeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0171",
+    "name": "Double-Zip Pencil Case",
+    "description": "Two-compartment pencil case for separating writing, geometry and colouring tools.",
+    "cost": "R80-R180",
+    "brands": "Butterfly / Marlin / Treeline / generic school brands",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0172",
+    "name": "PVC Book Bag with Zip - A4+",
+    "description": "Clear or coloured zippered PVC book bag for worksheets, readers and homework materials.",
+    "cost": "R25-R80",
+    "brands": "Marlin / Freedom / Treeline / Bantex",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0173",
+    "name": "Canvas Book Bag - A4+",
+    "description": "Durable fabric book bag for carrying homework books and worksheets.",
+    "cost": "R35-R100",
+    "brands": "Treeline / Freedom / Marlin",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0174",
+    "name": "PVC Carry Folder - A4",
+    "description": "Slim clear/coloured plastic folder for loose worksheets and subject documents.",
+    "cost": "R10-R35",
+    "brands": "Marlin / Freedom / Treeline / Bantex",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0175",
+    "name": "Press-Stud Document Wallet - A4",
+    "description": "Plastic envelope-style folder with press-stud closure for projects, handouts and subject papers.",
+    "cost": "R15-R45",
+    "brands": "Bantex / Marlin / Treeline / Butterfly",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0176",
+    "name": "Zip Document Wallet - A4",
+    "description": "Zippered plastic document pouch for secure storage of papers, art materials or assessment tasks.",
+    "cost": "R20-R60",
+    "brands": "Bantex / Marlin / Treeline",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0177",
+    "name": "Quotation Folder - A4",
+    "description": "Two-prong presentation folder, often colour-coded by subject, for punched worksheets and projects.",
+    "cost": "R8-R30",
+    "brands": "Marlin / Freedom / Meeco / Treeline / Bantex",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0178",
+    "name": "Portfolio File - A4",
+    "description": "Durable subject file, often colour-coded, with fastener or pockets for portfolio work.",
+    "cost": "R20-R70",
+    "brands": "Croxley / Bantex / Marlin / Treeline",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0179",
+    "name": "Ring Binder - A4 - 2 ring",
+    "description": "Rigid binder for punched notes, worksheets and portfolios.",
+    "cost": "R35-R90",
+    "brands": "Bantex / Croxley / Treeline / Primeline",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0180",
+    "name": "Ring Binder - A4 - 4 ring",
+    "description": "Four-ring binder providing more secure page alignment for senior-phase portfolios.",
+    "cost": "R50-R120",
+    "brands": "Bantex / Croxley / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0181",
+    "name": "Lever Arch File - A4",
+    "description": "Large-capacity rigid file with lever arch mechanism for subject notes, portfolios and exam preparation.",
+    "cost": "R45-R120",
+    "brands": "Bantex / Croxley / Treeline / Marlin / Primeline",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0182",
+    "name": "Display / Flip File - 10 pockets",
+    "description": "A4 presentation book with 10 clear fixed pockets for worksheets, projects and reading material.",
+    "cost": "R15-R40",
+    "brands": "Butterfly / Marlin / Freedom / Flip File / Treeline",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0183",
+    "name": "Display / Flip File - 20 pockets",
+    "description": "A4 display book with 20 clear fixed pockets, commonly used for subject portfolios.",
+    "cost": "R20-R60",
+    "brands": "Butterfly / Marlin / Freedom / Flip File / Treeline",
+    "typicalGrades": "1-12"
+  },
+  {
+    "id": "SA-0184",
+    "name": "Display / Flip File - 30 pockets",
+    "description": "A4 display book with 30 pockets for projects, notes and subject resources.",
+    "cost": "R25-R70",
+    "brands": "Butterfly / Marlin / Freedom / Flip File / Treeline",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0185",
+    "name": "Display / Flip File - 50 pockets",
+    "description": "A4 display file with 50 pockets for larger subject portfolios and senior-phase notes.",
+    "cost": "R40-R100",
+    "brands": "Butterfly / Marlin / Freedom / Flip File / Bantex",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0186",
+    "name": "Display / Flip File - 100 pockets High-capacity",
+    "description": "A4 display file for extensive portfolios and subject",
+    "cost": "R80-R180",
+    "brands": "Bantex / Butterfly / Flip File / Croxley 7-12 documentation.",
+    "typicalGrades": ""
+  },
+  {
+    "id": "SA-0187",
+    "name": "Plastic Filing Sleeves - A4 - pack 10",
+    "description": "Clear punched sleeves protecting worksheets, certificates and portfolio pages.",
+    "cost": "R10-R30",
+    "brands": "Marlin / Bantex / Treeline / Freedom",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0188",
+    "name": "Plastic Filing Sleeves - A4 - pack 20",
+    "description": "Clear punched pockets for ring binders and lever arch files.",
+    "cost": "R20-R45",
+    "brands": "Marlin / Bantex / Treeline / Freedom",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0189",
+    "name": "Plastic Filing Sleeves - A4 - pack 50",
+    "description": "Bulk clear pockets for subject files and year-long portfolios.",
+    "cost": "R45-R90",
+    "brands": "Bantex / Treeline / Freedom / Croxley",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0190",
+    "name": "Plastic Filing Sleeves - A4 - pack 100",
+    "description": "Bulk pack of clear punched sleeves for extensive filing needs.",
+    "cost": "R80-R160",
+    "brands": "Bantex / Treeline / Freedom / Croxley",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0191",
+    "name": "File Dividers - 5 tab",
+    "description": "A4 divider set with five tabs for organising a subject file by section or term.",
+    "cost": "R15-R45",
+    "brands": "Bantex / Marlin / Treeline / Croxley",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0192",
+    "name": "File Dividers - 10 tab",
+    "description": "A4 divider set with ten tabs for larger subject files and portfolios.",
+    "cost": "R20-R55",
+    "brands": "Bantex / Marlin / Treeline / Croxley",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0193",
+    "name": "File Dividers - 12 position",
+    "description": "A4 dividers numbered 1-12 for monthly or topic organisation.",
+    "cost": "R25-R60",
+    "brands": "Marlin / Bantex / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0194",
+    "name": "File Dividers - A-Z",
+    "description": "Alphabetical A4 divider index for reference files, vocabulary and records.",
+    "cost": "R35-R80",
+    "brands": "Marlin / Bantex / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0195",
+    "name": "Concertina / Expanding File - A4",
+    "description": "Multi-pocket expanding organiser for worksheets, assessment papers and multiple subjects.",
+    "cost": "R100-R500",
+    "brands": "Bantex / Treeline / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0196",
+    "name": "Clipboard - A4",
+    "description": "Rigid board with spring clip for fieldwork, practical tasks, surveys and outdoor work.",
+    "cost": "R35-R100",
+    "brands": "Treeline / Bantex / Primeline / Freedom",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0197",
+    "name": "Document Box / Archive Box - A4",
+    "description": "Rigid storage box for portfolios, project work, art or year-end learner records.",
+    "cost": "R50-R160",
+    "brands": "Bantex / Treeline / Freedom / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0198",
+    "name": "Clear Plastic Book Cover Roll - 450 mm x 1.5 m",
+    "description": "Clear polypropylene roll cut to fit exercise books and textbooks; protects covers from wear.",
+    "cost": "R15-R35",
+    "brands": "Marlin / Freedom / Treeline / Croxley",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0199",
+    "name": "Clear Plastic Book Cover Roll - 450 mm x 3 m",
+    "description": "Longer clear polypropylene roll for covering multiple books and textbooks.",
+    "cost": "R25-R60",
+    "brands": "Marlin / Freedom / Treeline / Croxley",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0200",
+    "name": "Pre-cut Clear Book Covers - A4 - pack 5",
+    "description": "Ready-cut clear covers sized for A4 school books, simplifying covering and reducing waste.",
+    "cost": "R25-R60",
+    "brands": "Marlin / Freedom / Treeline / Croxley",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0201",
+    "name": "Pre-cut Clear Book Covers - A5 - pack 5",
+    "description": "Ready-cut clear covers for A5 school books and notebooks.",
+    "cost": "R20-R50",
+    "brands": "Marlin / Freedom / Treeline / Croxley",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0202",
+    "name": "Slip-on Plastic Book Cover - A4",
+    "description": "Reusable transparent slip-on cover for standard A4 exercise/counter books.",
+    "cost": "R5-R20 each",
+    "brands": "Marlin / Freedom / Treeline / generic",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0203",
+    "name": "Slip-on Plastic Book Cover - A5",
+    "description": "Reusable transparent slip-on cover for standard A5 exercise books.",
+    "cost": "R5-R18 each",
+    "brands": "Marlin / Freedom / Treeline / generic",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0204",
+    "name": "Self-Adhesive Clear Book Cover - A4 - pack",
+    "description": "Pre-cut adhesive clear film for durable protection of books and textbooks.",
+    "cost": "R35-R80",
+    "brands": "Marlin / Freedom / Croxley / DC Fix-type",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0205",
+    "name": "Brown Kraft Book Cover Paper",
+    "description": "Brown paper sheet/roll used beneath clear plastic for traditional school book covering.",
+    "cost": "R10-R40",
+    "brands": "Treeline / Freedom / Butterfly / generic",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0206",
+    "name": "Decorative / Colour Kraft Book Covers - A4",
+    "description": "Pre-cut coloured or patterned paper covers for subject colour coding and book protection.",
+    "cost": "R20-R60 pack",
+    "brands": "Marlin / Freedom / Treeline",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0207",
+    "name": "School Name Labels - self-adhesive",
+    "description": "Writable self-adhesive labels for learner name, subject, grade and class identification.",
+    "cost": "R10-R40 pack",
+    "brands": "Tower / Marlin / Treeline / Avery / Freedom",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0208",
+    "name": "Colour Border School Labels",
+    "description": "School labels with coloured borders for subject coding and learner identification.",
+    "cost": "R15-R45 pack",
+    "brands": "Marlin / Tower / Treeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0209",
+    "name": "Round / Dot Stickers - assorted",
+    "description": "Small coloured adhesive dots for coding books, files, classroom systems and reward activities.",
+    "cost": "R15-R45 pack",
+    "brands": "Tower / Avery / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0210",
+    "name": "Reward Stickers - assorted",
+    "description": "Motivational stickers commonly used in Foundation Phase homework and classroom activities.",
+    "cost": "R15-R60 pack",
+    "brands": "Tower / generic educational brands",
+    "typicalGrades": "R-4"
+  },
+  {
+    "id": "SA-0211",
+    "name": "Sticky Notes - 76 x 76 mm",
+    "description": "Reusable repositionable note paper for reminders, study notes and page marking.",
+    "cost": "R15-R60 pad",
+    "brands": "Post-it / Primeline / Treeline / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0212",
+    "name": "Page Flags / Index Tabs",
+    "description": "Small repositionable adhesive tabs for marking textbook pages, sections and study references.",
+    "cost": "R20-R70 pack",
+    "brands": "Post-it / Primeline / Treeline / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0213",
+    "name": "Laminating Pouches - A4 - pack",
+    "description": "Clear heat-seal pouches for protecting classroom cards, projects and reusable Foundation Phase resources.",
+    "cost": "R80-R250 pack",
+    "brands": "Treeline / Fellowes / Primeline / generic",
+    "typicalGrades": "R-7 / classroom"
+  },
+  {
+    "id": "SA-0214",
+    "name": "A4 Copier Paper - white - 80 gsm - 500 sheets",
+    "description": "Standard white printer/copy paper ream for projects, printing, drawing and classroom worksheets.",
+    "cost": "R80-R130 ream",
+    "brands": "Typek / Rotatrim / Mondi / Freedom / generic",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0215",
+    "name": "A4 Coloured Paper - 80 gsm - 100 sheets",
+    "description": "Assorted coloured paper for projects, craft, posters and classroom activities.",
+    "cost": "R50-R100 pack",
+    "brands": "Butterfly / Grafton / Treeline / Freedom",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0216",
+    "name": "A4 Bright Paper - 80 gsm - 50-100 sheets",
+    "description": "Vivid assorted paper for posters, projects, notices and creative work.",
+    "cost": "R50-R100 pack",
+    "brands": "Grafton / Butterfly / Treeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0217",
+    "name": "A4 Pastel Paper - 80 gsm - 100 sheets",
+    "description": "Assorted light-colour paper for projects, printing and presentation work.",
+    "cost": "R55-R90 pack",
+    "brands": "Butterfly / Grafton / Treeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0218",
+    "name": "A4 Fluorescent Paper - 80 gsm - 50 sheets",
+    "description": "High-visibility neon paper for posters, headings and project displays.",
+    "cost": "R45-R80 pack",
+    "brands": "Grafton / Butterfly",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0219",
+    "name": "A4 Bright Board - 160 gsm - assorted",
+    "description": "Heavy coloured board/card for project covers, craft, flashcards and models.",
+    "cost": "R35-R100 pack",
+    "brands": "Butterfly / Grafton / Treeline / Freedom",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0220",
+    "name": "A3 Project Board Pad - 160 gsm - 20 sheets",
+    "description": "Heavy A3 board pad in bright/pastel colours for projects, posters and Design work.",
+    "cost": "R100-R140 pad",
+    "brands": "Grafton / Butterfly",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0221",
+    "name": "A2 Project Board - 160 gsm - pack",
+    "description": "Large heavy board sheets for posters, presentations, models and school projects.",
+    "cost": "R60-R120 pack",
+    "brands": "Butterfly / Grafton / Treeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0222",
+    "name": "A4 Black Paper Pad - 50 sheets",
+    "description": "Black paper for art, chalk/pastel work, contrast projects and creative presentations.",
+    "cost": "R55-R90 pad",
+    "brands": "Butterfly / Artboard / Dala",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0223",
+    "name": "A4 Cartridge Paper - 120-160 gsm",
+    "description": "White drawing paper for pencil, pastel, crayon and light wet-media work.",
+    "cost": "R35-R100 pad",
+    "brands": "Artboard / Dala / Croxley / Butterfly",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0224",
+    "name": "A3 Cartridge Paper - 120-160 gsm",
+    "description": "Large-format drawing paper for Visual Arts, Design and projects.",
+    "cost": "R70-R160 pad",
+    "brands": "Artboard / Dala / Croxley",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0225",
+    "name": "Tracing Paper - A4 - loose sheets/pad",
+    "description": "Translucent paper for technical drawing, Design, maps and art tracing.",
+    "cost": "R70-R140 pad",
+    "brands": "Croxley / Artboard / TechnoArt",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0226",
+    "name": "Graph Paper - A4 - loose sheets/pad",
+    "description": "Square-grid paper for Mathematics, Sciences, Geography and data graphs.",
+    "cost": "R30-R80 pad",
+    "brands": "Croxley / Freedom / Treeline",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0227",
+    "name": "Gummed Paper - A4 - assorted colours",
+    "description": "Coloured paper with moisture-activated adhesive backing for Foundation Phase craft and projects.",
+    "cost": "R45-R80 pack",
+    "brands": "Grafton / Butterfly / generic",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0228",
+    "name": "Tissue Paper - assorted colours",
+    "description": "Lightweight craft tissue for collage, papier-mache, decoration and creative activities.",
+    "cost": "R15-R50 pack",
+    "brands": "Dala / Butterfly / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0229",
+    "name": "Crepe Paper - assorted colours",
+    "description": "Textured stretch paper for crafts, displays and Foundation Phase creative work.",
+    "cost": "R10-R35 roll",
+    "brands": "Dala / Butterfly / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0230",
+    "name": "Cellophane Sheets - assorted/clear",
+    "description": "Transparent coloured film for craft, projects, light experiments and decoration.",
+    "cost": "R15-R50 pack",
+    "brands": "Dala / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0231",
+    "name": "Craft Foam Sheets - A4 - assorted",
+    "description": "Flexible foam sheets used for models, shapes, collage and early-learning craft.",
+    "cost": "R30-R90 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0232",
+    "name": "Felt Sheets - assorted colours",
+    "description": "Soft fabric craft sheets for cutting, collage, puppets and project work.",
+    "cost": "R30-R100 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0233",
+    "name": "Glitter Paper / Card - assorted",
+    "description": "Decorative glitter-finish paper/card for art, projects, cards and display work.",
+    "cost": "R30-R90 pack",
+    "brands": "Dala / Butterfly / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0234",
+    "name": "Poster Board / Card - white",
+    "description": "Large-format stiff card for posters, presentations, models and exhibitions.",
+    "cost": "R10-R35 sheet",
+    "brands": "Butterfly / Grafton / generic",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0235",
+    "name": "Poster Board / Card - coloured",
+    "description": "Large coloured card for projects, presentation boards and classroom",
+    "cost": "R12-R40 sheet",
+    "brands": "Butterfly / Grafton / generic 4-12 displays.",
+    "typicalGrades": ""
+  },
+  {
+    "id": "SA-0236",
+    "name": "Newsprint / Drawing Paper Pad",
+    "description": "Low-cost large paper pad for practice drawing, charcoal, paint and classroom creative work.",
+    "cost": "R50-R150 pad",
+    "brands": "Artboard / Dala / generic",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0237",
+    "name": "Watercolour Paint Set - 12 colours",
+    "description": "School watercolour palette with 12 dry colour pans and often a small brush.",
+    "cost": "R35-R130 set",
+    "brands": "Primeline / Monami / Faber-Castell / Dala / Art Ranger",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0238",
+    "name": "Watercolour Paint Set - 21 colours",
+    "description": "Expanded watercolour set for creative work and Visual Arts.",
+    "cost": "R90-R140 set",
+    "brands": "Monami / Dala / Art Ranger",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0239",
+    "name": "Poster Paint - 6 x 50 ml assorted",
+    "description": "Opaque water-based poster paint set for school art, projects and Foundation Phase activities.",
+    "cost": "R100-R150 set",
+    "brands": "Dala / Marlin Kids / Teddy",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0240",
+    "name": "Acrylic Student Paint - 5-colour set",
+    "description": "Student-grade acrylic paint set for Visual Arts and Design; water-resistant once dry.",
+    "cost": "R200-R280 set",
+    "brands": "Dala / Monami / Art Ranger",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0241",
+    "name": "Acrylic Paint - 12 x 12 ml set",
+    "description": "Compact multicolour acrylic set for senior art and Design projects.",
+    "cost": "R120-R180 set",
+    "brands": "Monami / Dala / Art Ranger",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0242",
+    "name": "Finger Paint Set",
+    "description": "Washable non-toxic paint designed for direct hand/finger painting and early sensory art.",
+    "cost": "R50-R150 set",
+    "brands": "Dala / Teddy / Marlin Kids / Pritt",
+    "typicalGrades": "R-2"
+  },
+  {
+    "id": "SA-0243",
+    "name": "Powder / Tempera Paint - assorted",
+    "description": "Mix-with-water school paint for large-format art, posters and classroom craft.",
+    "cost": "R20-R70 each/set",
+    "brands": "Marlin Kids / Dala / Teddy / Rolfes",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0244",
+    "name": "Paint Brush - round - size 4/5",
+    "description": "Small round brush for controlled school painting, detail and early art tasks.",
+    "cost": "R10-R30 each",
+    "brands": "Primeline / Maped / Dala / Jovi",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0245",
+    "name": "Paint Brush - round - size 8",
+    "description": "Medium round brush for general painting and watercolour use.",
+    "cost": "R10-R35 each",
+    "brands": "Primeline / Maped / Dala / Jovi",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0246",
+    "name": "Paint Brush - flat - size 6",
+    "description": "Medium flat bristle brush for acrylic, poster paint and broad strokes.",
+    "cost": "R10-R30 each",
+    "brands": "Primeline / Dala / Maped",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0247",
+    "name": "Paint Brush - flat - size 10",
+    "description": "Larger flat brush for broad coverage, acrylic and poster paint.",
+    "cost": "R12-R35 each",
+    "brands": "Primeline / Dala / Maped",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0248",
+    "name": "Paint Brush Set - 3 piece",
+    "description": "Basic mixed brush set for school art and projects.",
+    "cost": "R40-R70 set",
+    "brands": "Primeline / Maped / Dala",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0249",
+    "name": "Paint Brush Set - 4 piece synthetic",
+    "description": "Synthetic brush assortment for watercolour, poster paint and acrylic.",
+    "cost": "R80-R120 set",
+    "brands": "Maped / Faber-Castell / Dala",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0250",
+    "name": "Paint Brush Set - 10-14 piece",
+    "description": "Larger mixed brush kit for Visual Arts and Design learners.",
+    "cost": "R150-R220 set",
+    "brands": "Primeline / Faber-Castell / Dala",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0251",
+    "name": "Paint Palette - 6-8 wells",
+    "description": "Plastic mixing palette with wells for watercolour, poster paint and acrylic.",
+    "cost": "R20-R70",
+    "brands": "Dala / generic / Primeline",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0252",
+    "name": "Water Pot / Brush Washer",
+    "description": "Plastic container for rinsing brushes and holding water during art activities.",
+    "cost": "R15-R60",
+    "brands": "Dala / Maped / generic",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0253",
+    "name": "Art Apron - child size",
+    "description": "Protective school art apron or smock, washable and easy to fit over uniform.",
+    "cost": "R50-R100",
+    "brands": "Primeline / Meeco / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0254",
+    "name": "Modelling Clay - 350-500 g",
+    "description": "Malleable modelling material for sculpture, models, Technology and creative projects.",
+    "cost": "R50-R160",
+    "brands": "Dala / Jovi / DAS / Teddy",
+    "typicalGrades": "R-12"
+  },
+  {
+    "id": "SA-0255",
+    "name": "Air-dry Modelling Clay - 500 g",
+    "description": "Air-hardening modelling paste for sculpture, Design and craft without kiln firing.",
+    "cost": "R80-R130",
+    "brands": "Jovi / DAS / Dala",
+    "typicalGrades": "5-12"
+  },
+  {
+    "id": "SA-0256",
+    "name": "Play Dough - 4 tubs",
+    "description": "Non-toxic coloured dough for Foundation Phase fine-motor and creative activities.",
+    "cost": "R50-R100 set",
+    "brands": "Teddy / Pritt / Dala / Marlin Kids",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0257",
+    "name": "Play Dough - 500 g / 5-colour set",
+    "description": "Larger school play-dough set for repeated classroom creative use.",
+    "cost": "R60-R150 set",
+    "brands": "Teddy / Pritt / Dala / Marlin Kids",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0258",
+    "name": "Canvas Panel - A4/A3 approximate",
+    "description": "Prepared artist canvas board for painting tasks and Visual Arts practical work.",
+    "cost": "R40-R140 each",
+    "brands": "Dala / generic art brands",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0259",
+    "name": "Stretch Canvas - small/medium",
+    "description": "Pre-stretched primed canvas for senior Visual Arts painting and practical assessment work.",
+    "cost": "R80-R250 each",
+    "brands": "Dala / Artboard / generic",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0260",
+    "name": "Craft Knife / Utility Knife",
+    "description": "Retractable cutting knife for senior Design and Visual Arts model-making; adult/school supervision required.",
+    "cost": "R25-R100",
+    "brands": "Olfa / Stanley / Dala / generic 9-12 specialised",
+    "typicalGrades": ""
+  },
+  {
+    "id": "SA-0261",
+    "name": "Self-healing Cutting Mat - A3",
+    "description": "Protective gridded cutting surface for Design, model-making and precise craft cutting.",
+    "cost": "R180-R450",
+    "brands": "Dala / Olfa / generic 9-12 specialised",
+    "typicalGrades": ""
+  },
+  {
+    "id": "SA-0262",
+    "name": "Craft Scissors - decorative edge",
+    "description": "Pattern-edge scissors for creative paper craft and Foundation/Intermediate projects.",
+    "cost": "R20-R70",
+    "brands": "Maped / Dala / Marlin Kids",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0263",
+    "name": "Palette Knife - plastic/metal",
+    "description": "Flat art tool for mixing and applying paint, texture paste or modelling media.",
+    "cost": "R20-R80",
+    "brands": "Dala / generic art brands",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0264",
+    "name": "Sketching / Drawing Ink - black",
+    "description": "Black drawing ink for pen-and-ink, Design and Visual Arts techniques.",
+    "cost": "R40-R100 bottle",
+    "brands": "Dala / Winsor & Newton / generic",
+    "typicalGrades": "9-12"
+  },
+  {
+    "id": "SA-0265",
+    "name": "Pipe Cleaners - assorted - pack 20",
+    "description": "Flexible chenille stems for Foundation Phase craft, models, threading and fine-motor activities.",
+    "cost": "R12-R30 pack",
+    "brands": "Dala / Teddy / Marlin Kids",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0266",
+    "name": "Pom Poms - assorted - pack 30-40",
+    "description": "Soft craft pom poms in mixed sizes and colours for collage and early- learning activities.",
+    "cost": "R20-R40 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0267",
+    "name": "Craft Feathers - assorted - pack 50",
+    "description": "Coloured feathers for collage, masks, art and themed craft.",
+    "cost": "R20-R40 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0268",
+    "name": "Googly Eyes - assorted - pack 50",
+    "description": "Self-adhesive or glue-on craft eyes for puppets, models and Foundation Phase art.",
+    "cost": "R10-R30 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0269",
+    "name": "Craft / Sucker Sticks - pack 50",
+    "description": "Wooden craft sticks used for models, counting aids, construction and art.",
+    "cost": "R15-R35 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-6"
+  },
+  {
+    "id": "SA-0270",
+    "name": "Cotton Wool / Cotton Balls - craft pack",
+    "description": "Soft cotton material for collage, texture, clouds, models and sensory craft.",
+    "cost": "R20-R60 pack",
+    "brands": "Clicks/private label / generic",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0271",
+    "name": "Wool / Yarn - small ball",
+    "description": "Coloured yarn for threading, weaving, collage and fine-motor craft activities.",
+    "cost": "R20-R50",
+    "brands": "Dala / generic craft suppliers",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0272",
+    "name": "String / Twine - small roll",
+    "description": "General craft string for construction, tying, threading and project work.",
+    "cost": "R20-R60",
+    "brands": "Dala / generic",
+    "typicalGrades": "R-9"
+  },
+  {
+    "id": "SA-0273",
+    "name": "Buttons - assorted craft pack",
+    "description": "Mixed craft buttons for collage, counting, sorting and fine-motor activities.",
+    "cost": "R20-R60 pack",
+    "brands": "Dala / generic craft suppliers",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0274",
+    "name": "Sequins - assorted pack",
+    "description": "Decorative sequins for collage, cards and creative project work.",
+    "cost": "R15-R45 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0275",
+    "name": "Glitter - assorted shaker set",
+    "description": "Small glitter shakers for art, projects, cards and classroom craft.",
+    "cost": "R40-R80 set",
+    "brands": "Teddy / Dala / generic",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0276",
+    "name": "Foam Shapes / Craft Shapes - assorted",
+    "description": "Pre-cut foam shapes used for collage, patterning and early-learning craft.",
+    "cost": "R25-R80 pack",
+    "brands": "Dala / Teddy / generic",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0277",
+    "name": "Stickers - letters/numbers/shapes",
+    "description": "Educational adhesive sticker sets for literacy, numeracy, projects and rewards.",
+    "cost": "R15-R70 pack",
+    "brands": "Tower / Dala / generic educational brands",
+    "typicalGrades": "R-5"
+  },
+  {
+    "id": "SA-0278",
+    "name": "Colouring Book - 32-48 pages",
+    "description": "Age-appropriate colouring book for early fine-motor, creative and quiet- time activities.",
+    "cost": "R20-R50",
+    "brands": "Coloroo / Marlin Kids / local publishers",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0279",
+    "name": "A4 Learner Whiteboard / Writing Slate",
+    "description": "Reusable A4 dry-erase board for handwriting, phonics, numeracy and quick classroom responses.",
+    "cost": "R30-R80",
+    "brands": "Parrot / Freedom / Treeline / Marlin",
+    "typicalGrades": "R-6"
+  },
+  {
+    "id": "SA-0280",
+    "name": "Blunt Nose Scissors - 130-135 mm",
+    "description": "Rounded-tip child-safe scissors sized for Foundation Phase cutting and craft.",
+    "cost": "R15-R50",
+    "brands": "Marlin Kids / Treeline / Maped / Staedtler",
+    "typicalGrades": "R-3"
+  },
+  {
+    "id": "SA-0281",
+    "name": "Training Scissors - spring assisted",
+    "description": "Beginner scissors with training spring or assisted opening for developing cutting skills.",
+    "cost": "R25-R70",
+    "brands": "Marlin Kids / Maped / Faber-Castell",
+    "typicalGrades": "R-2"
+  },
+  {
+    "id": "SA-0282",
+    "name": "Left-Handed School Scissors",
+    "description": "School scissors with blade orientation and handles designed for left-handed learners.",
+    "cost": "R30-R90",
+    "brands": "Maped / Staedtler / Marlin Kids",
+    "typicalGrades": "R-7"
+  },
+  {
+    "id": "SA-0283",
+    "name": "School Scissors - 165 mm",
+    "description": "General-purpose pointed/rounded school scissors for paper, card and craft.",
+    "cost": "R20-R60",
+    "brands": "Croxley / Maped / Marlin / Treeline / Primeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0284",
+    "name": "Student Scissors - 180-210 mm",
+    "description": "Larger scissors for senior projects, Design, fabric/light craft and general school use.",
+    "cost": "R35-R100",
+    "brands": "Maped / Staedtler / Primeline / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0285",
+    "name": "Safety Craft Cutter",
+    "description": "Guarded or retractable craft cutter for supervised model and Design work.",
+    "cost": "R25-R90",
+    "brands": "Maped / Dala / Olfa / generic",
+    "typicalGrades": "8-12 specialised"
+  },
+  {
+    "id": "SA-0286",
+    "name": "Mini Stapler - No.10",
+    "description": "Compact stapler for learner assignments and project pages; uses No.10 staples.",
+    "cost": "R30-R90",
+    "brands": "Rexel / Kangaro / Primeline / Marlin",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0287",
+    "name": "Full-strip Stapler - 26/6",
+    "description": "Standard school/office stapler for projects and portfolios; accepts common 26/6 staples.",
+    "cost": "R70-R180",
+    "brands": "Rexel / Kangaro / Treeline / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0288",
+    "name": "Staples - No.10 - box",
+    "description": "Replacement staples for mini staplers.",
+    "cost": "R10-R35 box",
+    "brands": "Rexel / Kangaro / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0289",
+    "name": "Staples - 26/6 - box 1000",
+    "description": "Standard staples for full-strip/half-strip staplers.",
+    "cost": "R15-R40 box",
+    "brands": "Rexel / Kangaro / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0290",
+    "name": "Staple Remover",
+    "description": "Small claw-style remover for safely removing staples from papers and projects.",
+    "cost": "R15-R45",
+    "brands": "Rexel / Primeline / Treeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0291",
+    "name": "2-hole Punch - learner/desk",
+    "description": "Compact two-hole punch for filing worksheets into ring binders and lever arch files.",
+    "cost": "R60-R180",
+    "brands": "Rexel / Kangaro / Treeline / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0292",
+    "name": "Paper Clips - 28-33 mm - box",
+    "description": "Reusable metal clips for holding worksheets and notes without punching or stapling.",
+    "cost": "R15-R40 box",
+    "brands": "Treeline / Primeline / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0293",
+    "name": "Binder Clips - assorted/small",
+    "description": "Spring metal clips for grouping notes, projects and portfolio papers.",
+    "cost": "R20-R60 pack",
+    "brands": "Treeline / Primeline / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0294",
+    "name": "Rubber Bands - assorted - pack",
+    "description": "Elastic bands for organising cards, rolled posters and classroom materials.",
+    "cost": "R15-R45 pack",
+    "brands": "Treeline / Primeline / generic",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0295",
+    "name": "Drawing Pins / Push Pins - pack",
+    "description": "Pins for mounting notices and project work on suitable boards; classroom- supervised use.",
+    "cost": "R15-R45 pack",
+    "brands": "Treeline / Primeline / generic",
+    "typicalGrades": "7-12 / classroom"
+  },
+  {
+    "id": "SA-0296",
+    "name": "Paper Fasteners / Split Pins - pack",
+    "description": "Brass split pins used in files, movable paper models and school craft.",
+    "cost": "R15-R50 pack",
+    "brands": "Treeline / Primeline / Dala",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0297",
+    "name": "Brown Envelope - A4/C4",
+    "description": "Large kraft envelope for projects, assessment submissions, reports and document storage.",
+    "cost": "R5-R15 each",
+    "brands": "Croxley / Treeline / Freedom / generic",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0298",
+    "name": "Brown Envelope - A5/C5",
+    "description": "Medium kraft envelope for smaller documents, letters and projects.",
+    "cost": "R3-R10 each",
+    "brands": "Croxley / Treeline / Freedom / generic",
+    "typicalGrades": "3-12"
+  },
+  {
+    "id": "SA-0299",
+    "name": "White Envelope - DL",
+    "description": "Standard letter envelope for formal correspondence and school administration tasks.",
+    "cost": "R1-R5 each",
+    "brands": "Croxley / Treeline / Freedom / generic",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0300",
+    "name": "Plastic Envelope - A4",
+    "description": "Clear/coloured reusable plastic envelope for documents and subject material.",
+    "cost": "R10-R35",
+    "brands": "Bantex / Marlin / Treeline",
+    "typicalGrades": "4-12"
+  },
+  {
+    "id": "SA-0301",
+    "name": "Presentation Folder - A4",
+    "description": "Professional pocket folder for projects, oral presentations and portfolios.",
+    "cost": "R20-R70",
+    "brands": "Bantex / Croxley / Treeline / Meeco",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0302",
+    "name": "Report Cover / Slide Binder - A4",
+    "description": "Clear-front report cover with slide binding bar for assignments and presentations.",
+    "cost": "R10-R35",
+    "brands": "Bantex / Treeline / Primeline",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0303",
+    "name": "USB Flash Drive - 8 GB",
+    "description": "Portable USB storage for CAT/IT files, presentations and schoolwork where cloud storage is not used.",
+    "cost": "R60-R120",
+    "brands": "SanDisk / Kingston / Hiksemi / Verbatim",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0304",
+    "name": "USB Flash Drive - 16 GB",
+    "description": "Portable storage with enough capacity for documents, videos and practical subject files.",
+    "cost": "R70-R150",
+    "brands": "SanDisk / Kingston / Hiksemi / Verbatim",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0305",
+    "name": "USB Flash Drive - 32 GB",
+    "description": "Higher-capacity portable storage for CAT/IT, Design, media and project files.",
+    "cost": "R80-R180",
+    "brands": "SanDisk / Kingston / Hiksemi / Verbatim",
+    "typicalGrades": "8-12"
+  },
+  {
+    "id": "SA-0306",
+    "name": "Wired Earphones - 3.5 mm",
+    "description": "Basic wired in-ear earphones for language labs, CAT/IT, multimedia and online learning.",
+    "cost": "R50-R200",
+    "brands": "Volkano / JBL entry range / Philips / generic",
+    "typicalGrades": "6-12"
+  },
+  {
+    "id": "SA-0307",
+    "name": "Wired Headphones with Mic",
+    "description": "Over-ear/on-ear headset for computer labs, online learning and multimedia tasks where permitted.",
+    "cost": "R150-R500",
+    "brands": "Logitech / Volkano / Redragon entry range / generic",
+    "typicalGrades": "7-12"
+  },
+  {
+    "id": "SA-0308",
+    "name": "USB Wired Mouse",
+    "description": "Basic optical mouse for CAT/IT and computer lab work where learners are asked to supply one.",
+    "cost": "R80-R250",
+    "brands": "Logitech / HP / Volkano / Genius",
+    "typicalGrades": "7-12"
+  }
+]

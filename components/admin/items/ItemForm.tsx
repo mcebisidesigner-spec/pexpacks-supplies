@@ -18,13 +18,7 @@ import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 import adminStyles from "@/app/admin/admin.module.css";
 import styles from "./ItemForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-
-const PRODUCT_CATEGORIES = [
-  "Stationery",
-  "Books",
-  "Art & Craft",
-  "Packaging",
-] as const;
+import { MASTER_PRODUCT_CATEGORIES } from "@/lib/admin/item-constants";
 
 interface ItemFormProps {
   item: ItemRow | null;
@@ -369,7 +363,6 @@ export function ItemForm({
         name="pack_id"
         value={item?.pack_id ?? packs[0]?.id ?? ""}
       />
-      <input type="hidden" name="category" value={category} />
       {!masterMode && <input type="hidden" name="brand" value={brand} />}
 
       <div className={adminStyles.detailLayout}>
@@ -421,32 +414,37 @@ export function ItemForm({
                   <span className={styles.fieldError}>{state.errors.sku}</span>
                 )}
               </div>
-              {!masterMode && (
-                <div>
-                  <label className={adminStyles.formLabel} htmlFor="category">
-                    Category
-                  </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={category}
-                    onChange={handleCategoryChange}
-                    className={adminStyles.selectField}
-                    aria-label="Category"
-                  >
-                    {PRODUCT_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                  {state?.errors?.category && (
-                    <span className={styles.fieldError}>
-                      {state.errors.category}
-                    </span>
-                  )}
-                </div>
-              )}
+              <div>
+                <label className={adminStyles.formLabel} htmlFor="category">
+                  Category <span className={adminStyles.muted}>*</span>
+                </label>
+                <AdminDropdown<string>
+                  id="category"
+                  name="category"
+                  value={category}
+                  placeholder="— Select Category —"
+                  searchable={true}
+                  searchPlaceholder="Search category..."
+                  options={MASTER_PRODUCT_CATEGORIES.map((cat) => ({
+                    value: cat,
+                    label: cat,
+                  }))}
+                  onChange={(val) => {
+                    setCategory(val);
+                    onCategoryChange?.(val);
+                    if (!isCustomSku && productName.trim()) {
+                      const newSku = generateSkuFromName(productName, val, brand);
+                      setSku(newSku);
+                      onSkuChange?.(newSku);
+                    }
+                  }}
+                />
+                {state?.errors?.category && (
+                  <span className={styles.fieldError}>
+                    {state.errors.category}
+                  </span>
+                )}
+              </div>
             </div>
 
             {masterMode ? (

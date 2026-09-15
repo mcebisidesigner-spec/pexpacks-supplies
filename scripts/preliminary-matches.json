@@ -1,0 +1,164 @@
+[
+  {
+    "pdfId": "SA-0005",
+    "pdfName": "A5 Soft Cover Exercise Book - 72 pages - Feint & Margin",
+    "matchedId": "124e774b-0942-48e1-9fd4-4286157ef894",
+    "matchedSku": "PEX-EX-A5-72FM",
+    "matchedName": "A5 Exercise Book 72 Page Feint & Margin",
+    "score": 0.8888888888888888,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0013",
+    "pdfName": "A4 Soft Cover Exercise Book - 72 pages - Feint & Margin",
+    "matchedId": "b8fb4828-7906-4558-9fee-5352ed7825e0",
+    "matchedSku": "PEX-EX-A4-72FM",
+    "matchedName": "A4 Exercise Book 72 Page Feint & Margin",
+    "score": 0.8888888888888888,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0014",
+    "pdfName": "A4 Soft Cover Exercise Book - 72 pages - 17 mm Feint & Margin",
+    "matchedId": "b8fb4828-7906-4558-9fee-5352ed7825e0",
+    "matchedSku": "PEX-EX-A4-72FM",
+    "matchedName": "A4 Exercise Book 72 Page Feint & Margin",
+    "score": 0.7272727272727273,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0015",
+    "pdfName": "A4 Soft Cover Exercise Book - 72 pages - Feint Speckled & Margin",
+    "matchedId": "b8fb4828-7906-4558-9fee-5352ed7825e0",
+    "matchedSku": "PEX-EX-A4-72FM",
+    "matchedName": "A4 Exercise Book 72 Page Feint & Margin",
+    "score": 0.8,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0016",
+    "pdfName": "A4 Soft Cover Exercise Book - 72 pages - Quad & Margin",
+    "matchedId": "bc5a83d9-959e-424d-af13-c3680898febf",
+    "matchedSku": "PEX-EX-A4-72QM",
+    "matchedName": "A4 Exercise Book 72 Page Quad & Margin",
+    "score": 0.8888888888888888,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0017",
+    "pdfName": "A4 Soft Cover Exercise Book - 72 pages - Irish Ruled",
+    "matchedId": "fddf4f7d-658a-41da-bcdb-a94b85b0c686",
+    "matchedSku": "PEX-EX-A4-72IM",
+    "matchedName": "A4 Exercise Book 72 Page Irish & Margin",
+    "score": 0.75,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0018",
+    "pdfName": "A4 Soft Cover Exercise Book - 72 pages - Unruled",
+    "matchedId": "2ba8239e-695b-49fb-8a22-4442978709b8",
+    "matchedSku": "PEX-EX-A4-72UN",
+    "matchedName": "A4 Exercise Book 72 Page Unruled",
+    "score": 0.8571428571428571,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0019",
+    "pdfName": "A4 Soft Cover Exercise Book - 96 pages - Feint & Margin",
+    "matchedId": "88fbc495-4e0b-453c-abc1-c8438eb3f152",
+    "matchedSku": "PEX-EX-A4-96HC",
+    "matchedName": "A4 Hardcover Book 96 Page Feint & Margin",
+    "score": 0.7777777777777778,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0022",
+    "pdfName": "A4 Hard Cover / Counter Book - 96 pages - 1 Quire Feint & Margin",
+    "matchedId": "88fbc495-4e0b-453c-abc1-c8438eb3f152",
+    "matchedSku": "PEX-EX-A4-96HC",
+    "matchedName": "A4 Hardcover Book 96 Page Feint & Margin",
+    "score": 1,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0023",
+    "pdfName": "A4 Hard Cover / Counter Book - 192 pages - 2 Quire Feint & Margin",
+    "matchedId": "fb659156-9298-4c76-a41e-ac8422006d0b",
+    "matchedSku": "PEX-EX-A4-192HC",
+    "matchedName": "A4 Hardcover Book 192 Page Feint & Margin",
+    "score": 1,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0025",
+    "pdfName": "A4 Hard Cover / Counter Book - 288 pages - 3 Quire Feint & Margin",
+    "matchedId": "60fd2d9f-2f38-4f4f-aca6-cda869e388c0",
+    "matchedSku": "PEX-EX-A4-288HC",
+    "matchedName": "A4 Hardcover Book 288 Page Feint & Margin",
+    "score": 1,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0034",
+    "pdfName": "A4 Nature Study Book - 72 pages - Feint & Margin",
+    "matchedId": "b8fb4828-7906-4558-9fee-5352ed7825e0",
+    "matchedSku": "PEX-EX-A4-72FM",
+    "matchedName": "A4 Exercise Book 72 Page Feint & Margin",
+    "score": 0.7777777777777778,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0051",
+    "pdfName": "Music Manuscript Book - A4 - 32 pages",
+    "matchedId": "61d93423-b144-4785-bc52-766c29c5acd2",
+    "matchedSku": "PEX-EX-A4-MUS",
+    "matchedName": "A4 Music Manuscript Book 32 Page",
+    "score": 1,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0087",
+    "pdfName": "Permanent Marker - Black - fine point",
+    "matchedId": "0419c798-41a8-43b4-a857-14c4acb68afa",
+    "matchedSku": "PEX-MK-PM-BLK",
+    "matchedName": "Sharpie Fine Point Permanent Marker Black",
+    "score": 0.8333333333333334,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0088",
+    "pdfName": "Permanent Marker - Black - chisel point",
+    "matchedId": "0419c798-41a8-43b4-a857-14c4acb68afa",
+    "matchedSku": "PEX-MK-PM-BLK",
+    "matchedName": "Sharpie Fine Point Permanent Marker Black",
+    "score": 0.6666666666666666,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0163",
+    "pdfName": "Scientific Calculator - Casio FX-82ZA Plus II class",
+    "matchedId": "970cc963-6d61-423e-bbb5-ce5241f3f3fa",
+    "matchedSku": "PEX-CALC-CASIO",
+    "matchedName": "Casio FX-82ZA Plus II Scientific Calculator",
+    "score": 0.875,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0165",
+    "pdfName": "Scientific Calculator - Sharp EL-531 class",
+    "matchedId": "cca5c346-d744-4fc4-86e5-cf2f50980380",
+    "matchedSku": "PEX-CALC-SHARP",
+    "matchedName": "Sharp Scientific Calculator EL-W535SA WriteView",
+    "score": 0.6666666666666666,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  },
+  {
+    "pdfId": "SA-0167",
+    "pdfName": "Advanced Scientific Calculator - Sharp WriteView class",
+    "matchedId": "cca5c346-d744-4fc4-86e5-cf2f50980380",
+    "matchedSku": "PEX-CALC-SHARP",
+    "matchedName": "Sharp Scientific Calculator EL-W535SA WriteView",
+    "score": 0.6666666666666666,
+    "action": "KEEP_EXISTING / ENRICH_EXISTING"
+  }
+]

@@ -29,6 +29,7 @@ import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImpor
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
+import { MASTER_PRODUCT_CATEGORIES } from "@/lib/admin/item-constants";
 
 interface MasterProductsPageViewProps {
   initialData: {
@@ -112,9 +113,29 @@ export function MasterProductsPageView({
             >
               {row.name}
             </Link>
-            {row.brand && (
-              <span className={styles.productBrand}>{row.brand}</span>
-            )}
+            <div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap", marginTop: "3px" }}>
+              {row.brand && (
+                <span className={styles.productBrand}>{row.brand}</span>
+              )}
+              {row.packaging && (
+                <span className={styles.productBrand} style={{ opacity: 0.85 }}>
+                  {row.packaging}
+                </span>
+              )}
+              {row.requires_pexcover && (
+                <span
+                  className={styles.productBrand}
+                  style={{
+                    color: "var(--db-brand, #10b981)",
+                    borderColor: "rgba(16, 185, 129, 0.35)",
+                    backgroundColor: "rgba(16, 185, 129, 0.08)",
+                  }}
+                  title="Requires Pexcover Book Covering"
+                >
+                  📚 Pexcover
+                </span>
+              )}
+            </div>
           </div>
         );
       },
@@ -142,9 +163,23 @@ export function MasterProductsPageView({
           }}
         >
           <span className={styles.costPrice}>
-            {row.latest_verified_cost != null
+            {row.latest_verified_cost != null && Number(row.latest_verified_cost) > 0
               ? `R ${Number(row.latest_verified_cost).toFixed(2)}`
-              : "—"}
+              : (
+                <span
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 500,
+                    color: "var(--db-muted, #94a3b8)",
+                    backgroundColor: "rgba(148, 163, 184, 0.1)",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                  }}
+                  title="Placeholder product awaiting supplier quotation"
+                >
+                  Unquoted
+                </span>
+              )}
           </span>
           {row.supplier?.name ? (
             <span
@@ -170,7 +205,9 @@ export function MasterProductsPageView({
       width: "130px",
       render: (row) => (
         <span className={styles.priceHighlight}>
-          R {(row.current_selling_price || 0).toFixed(2)}
+          {row.current_selling_price && Number(row.current_selling_price) > 0
+            ? `R ${Number(row.current_selling_price).toFixed(2)}`
+            : <span style={{ color: "var(--db-muted, #94a3b8)", fontSize: "11px", fontWeight: 400 }}>—</span>}
         </span>
       ),
     },
@@ -305,10 +342,11 @@ export function MasterProductsPageView({
               className={styles.toolbarSelect}
             >
               <option value="all">Category: All</option>
-              <option value="Stationery">Stationery</option>
-              <option value="Books">Books</option>
-              <option value="Art & Craft">Art &amp; Craft</option>
-              <option value="Packaging">Packaging</option>
+              {MASTER_PRODUCT_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </AdminSelect>
           </div>
         }

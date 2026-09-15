@@ -109,6 +109,8 @@ export type MasterProductRow = {
   last_verified_at: string | null;
   active: boolean;
   preferred_supplier_id: string | null;
+  requires_pexcover?: boolean;
+  icon?: string | null;
   supplier?: { id: string; name: string; code: string } | null;
 };
 
@@ -135,7 +137,7 @@ export async function listMasterProducts(
   let request = db()
     .from("master_products")
     .select(
-      "id,sku,name,description,category,brand,unit,packaging,availability,current_selling_price,latest_verified_cost,pricing_status,last_verified_at,active,preferred_supplier_id,suppliers:preferred_supplier_id(id,name,code)",
+      "id,sku,name,description,category,brand,unit,packaging,availability,current_selling_price,latest_verified_cost,pricing_status,last_verified_at,active,preferred_supplier_id,requires_pexcover,icon,suppliers:preferred_supplier_id(id,name,code)",
       { count: "exact" },
     );
 
