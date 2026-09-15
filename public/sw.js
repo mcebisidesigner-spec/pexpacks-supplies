@@ -9,19 +9,17 @@ if (IS_LOCAL_DEV_HOST) {
     event.waitUntil(
       Promise.all([
         self.registration.unregister(),
-        caches.keys().then((keys) =>
-          Promise.all(
-            keys
-              .filter((key) => key.startsWith("pexpacks-pwa-"))
-              .map((key) => caches.delete(key)),
+        caches
+          .keys()
+          .then((keys) =>
+            Promise.all(
+              keys
+                .filter((key) => key.startsWith("pexpacks-pwa-"))
+                .map((key) => caches.delete(key)),
+            ),
           ),
-        ),
         self.clients.claim(),
-      ]).then(() =>
-        self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) =>
-          clients.forEach((client) => client.navigate(client.url)),
-        ),
-      ),
+      ]),
     );
   });
 } else {

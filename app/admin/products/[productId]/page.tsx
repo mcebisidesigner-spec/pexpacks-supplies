@@ -5,6 +5,7 @@ import {
   getItem,
   computeMasterSellingPrice,
   getMasterPricingConfig,
+  getProductSlug,
 } from "@/lib/admin/items";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
@@ -24,28 +25,6 @@ interface ProductDetailPageProps {
 
 function money(v: number): string {
   return `R ${v.toFixed(2)}`;
-}
-
-function getProductSlug(item: {
-  slug?: string | null;
-  name?: string | null;
-  sku?: string | null;
-  id?: string;
-}): string {
-  if (item.slug) return item.slug;
-  if (item.name) {
-    return item.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  if (item.sku) {
-    return item.sku
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  return item.id || "";
 }
 
 function formatProductNameFromSlug(slug: string): string {

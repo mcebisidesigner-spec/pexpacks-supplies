@@ -93,6 +93,27 @@ export function ItemForm({
   );
   const defaultBrand = item?.brand?.trim() ? item.brand : "Add-Brand-Name";
   const [brand, setBrand] = useState<string>(defaultBrand);
+  const originalBrand = item?.brand?.trim() || "Add-Brand-Name";
+  const isOriginalBrandReal =
+    originalBrand && originalBrand.toLowerCase() !== "add-brand-name";
+  const isNewBrandReal =
+    brand.trim() && brand.toLowerCase() !== "add-brand-name";
+  const isBrandChanged = Boolean(
+    masterMode &&
+      item &&
+      isOriginalBrandReal &&
+      isNewBrandReal &&
+      originalBrand.toLowerCase() !== brand.trim().toLowerCase(),
+  );
+  const [saveMode, setSaveMode] = useState<"new_variant" | "update_existing">(
+    "new_variant",
+  );
+  const effectiveSubmitLabel =
+    masterMode && isBrandChanged
+      ? saveMode === "new_variant"
+        ? `Save as ${brand} product`
+        : "Update product"
+      : submitLabel;
   const [sku, setSku] = useState<string>(() => {
     if (!item?.name) return item?.sku ?? "";
     const oldAutoSku = generateSkuFromName(item.name, item.category);
@@ -363,6 +384,11 @@ export function ItemForm({
         name="pack_id"
         value={item?.pack_id ?? packs[0]?.id ?? ""}
       />
+      <input
+        type="hidden"
+        name="save_mode"
+        value={isBrandChanged ? saveMode : "auto"}
+      />
       {!masterMode && <input type="hidden" name="brand" value={brand} />}
 
       <div className={adminStyles.detailLayout}>
@@ -496,6 +522,11 @@ export function ItemForm({
                   {state?.errors?.brand && (
                     <span className={styles.fieldError}>{state.errors.brand}</span>
                   )}
+                  {!item && (
+                    <span className={styles.fieldHint}>
+                      Products with the same name across different brands are stored as separate catalogue products.
+                    </span>
+                  )}
                 </div>
               </div>
             ) : (
@@ -516,6 +547,50 @@ export function ItemForm({
                   {state?.errors?.name && (
                     <span className={styles.fieldError}>{state.errors.name}</span>
                   )}
+                </div>
+              </div>
+            )}
+
+            {isBrandChanged && (
+              <div className={styles.brandVariantNotice}>
+                <div className={styles.brandVariantHeader}>
+                  <span className={styles.brandVariantBadge}>Brand Changed</span>
+                  <span className={styles.brandVariantArrow}>
+                    <strong>{originalBrand}</strong> &rarr; <strong>{brand}</strong>
+                  </span>
+                </div>
+                <div className={styles.brandVariantText}>
+                  {saveMode === "new_variant" ? (
+                    <span>
+                      Saving will create a separate <strong>{brand}</strong> product with these details &amp; pricing. The original <strong>{originalBrand}</strong> product will not be overridden.
+                    </span>
+                  ) : (
+                    <span>
+                      This will rename the brand on the existing <strong>{originalBrand}</strong> product to <strong>{brand}</strong>.
+                    </span>
+                  )}
+                </div>
+                <div className={styles.brandVariantOptions}>
+                  <label className={styles.brandVariantOption}>
+                    <input
+                      type="radio"
+                      name="save_mode_selector"
+                      value="new_variant"
+                      checked={saveMode === "new_variant"}
+                      onChange={() => setSaveMode("new_variant")}
+                    />
+                    <span>Save as new {brand} product (Preserve {originalBrand})</span>
+                  </label>
+                  <label className={styles.brandVariantOption}>
+                    <input
+                      type="radio"
+                      name="save_mode_selector"
+                      value="update_existing"
+                      checked={saveMode === "update_existing"}
+                      onChange={() => setSaveMode("update_existing")}
+                    />
+                    <span>Rename brand on current product</span>
+                  </label>
                 </div>
               </div>
             )}
@@ -798,7 +873,15 @@ export function ItemForm({
               <AdminButton href={returnTo} variant="secondary" size="md">
                 Cancel
               </AdminButton>
-              <SubmitButton label={submitLabel} />
+              <SubmitButton
+                label={
+                  masterMode && isBrandChanged
+                    ? saveMode === "new_variant"
+                      ? `Save as ${brand} product`
+                      : "Update product"
+                    : submitLabel
+                }
+              />
             </div>
           </div>
 

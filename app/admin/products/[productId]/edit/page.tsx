@@ -1,34 +1,12 @@
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
-import { getItem, getMasterPricingConfig } from "@/lib/admin/items";
+import { getItem, getMasterPricingConfig, getProductSlug } from "@/lib/admin/items";
 import { listSuppliersSimple } from "@/lib/admin/operations";
 import { EditProductClient } from "@/components/admin/items/EditProductClient";
 import styles from "@/components/admin/views/CorePagesView.module.css";
 
 interface EditProductPageProps {
   params: Promise<{ productId: string }>;
-}
-
-function getProductSlug(item: {
-  slug?: string | null;
-  name?: string | null;
-  sku?: string | null;
-  id?: string;
-}): string {
-  if (item.slug) return item.slug;
-  if (item.name) {
-    return item.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  if (item.sku) {
-    return item.sku
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  return item.id || "";
 }
 
 function formatProductNameFromSlug(slug: string): string {

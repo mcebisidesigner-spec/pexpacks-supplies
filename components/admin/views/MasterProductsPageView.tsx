@@ -30,6 +30,7 @@ import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
 import { MASTER_PRODUCT_CATEGORIES } from "@/lib/admin/item-constants";
+import { getProductSlug } from "@/lib/admin/items";
 
 interface MasterProductsPageViewProps {
   initialData: {
@@ -38,22 +39,6 @@ interface MasterProductsPageViewProps {
     page: number;
   };
   supplierStats?: SupplierCostStats;
-}
-
-function getProductSlug(row: MasterProductRow): string {
-  if (row.name) {
-    return row.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  if (row.sku) {
-    return row.sku
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  return row.id;
 }
 
 export function MasterProductsPageView({

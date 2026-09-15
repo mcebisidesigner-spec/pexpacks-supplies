@@ -50,6 +50,42 @@ export type ItemRow = {
   supplier_id?: string | null;
 };
 
+export function getProductSlug(item: {
+  slug?: string | null;
+  name?: string | null;
+  brand?: string | null;
+  sku?: string | null;
+  id?: string;
+}): string {
+  if (item.slug) return item.slug;
+  if (item.name) {
+    const nameSlug = item.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const brandSlug = (item.brand || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    if (
+      brandSlug &&
+      brandSlug !== "add-brand-name" &&
+      !nameSlug.includes(brandSlug)
+    ) {
+      return `${nameSlug}-${brandSlug}`;
+    }
+    return nameSlug;
+  }
+  if (item.sku) {
+    return item.sku
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+  return item.id || "";
+}
+
 const optString = (max: number, label: string) =>
   z
     .union([z.literal(""), z.string().trim().max(max, `${label} is too long`)])
@@ -306,23 +342,55 @@ async function ensureMasterProduct(
     return updated as MasterProductRow;
   }
 
-  const { data: existingByName } = await masterProductsTable(admin)
+  const newBrandTrimmed = (data.brand || "").trim();
+  const isNewBrandReal =
+    newBrandTrimmed && newBrandTrimmed.toLowerCase() !== "add-brand-name";
+
+  const { data: existingList } = await masterProductsTable(admin)
     .select("*")
     .ilike("name", escapeIlikeLiteral(data.name.trim()))
+    .limit(10);
+
+  if (existingList && existingList.length > 0) {
+    const matched = existingList.find((p) => {
+      const pBrand = (p.brand || "").trim();
+      const isPBrandReal =
+        pBrand && pBrand.toLowerCase() !== "add-brand-name";
+
+      if (isNewBrandReal && isPBrandReal) {
+        return pBrand.toLowerCase() === newBrandTrimmed.toLowerCase();
+      }
+      if (!isNewBrandReal && !isPBrandReal) {
+        return true;
+      }
+      return false;
+    });
+
+    if (matched) {
+      const { data: updated, error } = await masterProductsTable(admin)
+        .update(productPatch as never)
+        .eq("id", matched.id)
+        .select("*")
+        .single();
+      if (error) throw error;
+      return updated as MasterProductRow;
+    }
+  }
+
+  // Ensure SKU is unique before insert to prevent collision
+  let insertSku = sku;
+  const { data: skuCollision } = await masterProductsTable(admin)
+    .select("id")
+    .eq("sku", insertSku)
     .maybeSingle();
 
-  if (existingByName) {
-    const { data: updated, error } = await masterProductsTable(admin)
-      .update(productPatch as never)
-      .eq("id", existingByName.id)
-      .select("*")
-      .single();
-    if (error) throw error;
-    return updated as MasterProductRow;
+  if (skuCollision) {
+    const randSeq = Math.floor(100 + Math.random() * 899);
+    insertSku = `${insertSku}-${randSeq}`;
   }
 
   const { data: created, error } = await masterProductsTable(admin)
-    .insert({ ...productPatch, created_by: actorId } as never)
+    .insert({ ...productPatch, sku: insertSku, created_by: actorId } as never)
     .select("*")
     .single();
   if (error) throw error;
@@ -600,29 +668,33 @@ export async function getItem(idOrSlug: string): Promise<ItemRow | null> {
     let finalMasterList = masterList;
     if (!isUuid && (!masterList || masterList.length === 0)) {
       const nameSearch = decoded.replace(/-/g, " ");
+      const nameParts = decoded.split("-");
+      const possibleBrand = nameParts[nameParts.length - 1];
+      const possibleName = nameParts.slice(0, -1).join(" ");
+
       const { data: ilikeList } = await admin
         .from("master_products")
         .select(
           "id,sku,name,description,specification,category,brand,unit,packaging,current_selling_price,latest_verified_cost,active,icon,requires_pexcover,pexco_code,preferred_supplier_id",
         )
-        .ilike("name", `%${nameSearch}%`)
-        .limit(10);
+        .or(
+          `name.ilike.%${escapeIlikeLiteral(nameSearch)}%,name.ilike.%${escapeIlikeLiteral(possibleName)}%,brand.ilike.%${escapeIlikeLiteral(possibleBrand)}%`,
+        )
+        .limit(25);
       finalMasterList = ilikeList;
     }
 
     if (finalMasterList && finalMasterList.length > 0) {
       const matchedMaster =
         finalMasterList.find((m) => {
-          const mSlug = m.name
-            ?.toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-+|-+$/g, "");
+          const mSlug = getProductSlug(m);
           return (
             mSlug === slugified ||
             m.sku?.toLowerCase() === slugified ||
             m.sku?.toLowerCase() === decoded.toLowerCase() ||
             m.id === decoded ||
-            m.name.toLowerCase() === decoded.toLowerCase()
+            m.name.toLowerCase() === decoded.toLowerCase() ||
+            m.name.toLowerCase() === decoded.replace(/-/g, " ").toLowerCase()
           );
         }) || finalMasterList[0];
 
@@ -918,6 +990,108 @@ export async function updateItem(
     const skuVal = sanitizeSku(rawSku);
 
     if (targetMaster) {
+      const saveMode = (formData.get("save_mode") as string | null) || "auto";
+      const targetBrandTrimmed = (targetMaster.brand || "").trim();
+      const newBrandTrimmed = (parsed.data.brand || "").trim();
+      const isTargetBrandReal =
+        targetBrandTrimmed &&
+        targetBrandTrimmed.toLowerCase() !== "add-brand-name";
+      const isNewBrandReal =
+        newBrandTrimmed &&
+        newBrandTrimmed.toLowerCase() !== "add-brand-name";
+      const isBrandChanged = Boolean(
+        isTargetBrandReal &&
+          isNewBrandReal &&
+          targetBrandTrimmed.toLowerCase() !== newBrandTrimmed.toLowerCase(),
+      );
+
+      const shouldCreateNewVariant =
+        saveMode === "new_variant" ||
+        (isBrandChanged && saveMode !== "update_existing");
+
+      const costPrice = parsed.data.price ?? null;
+      const sellingPrice = await computeMasterSellingPrice(costPrice);
+
+      if (shouldCreateNewVariant) {
+        let variantSku = skuVal;
+        const { data: skuCheck } = await admin
+          .from("master_products")
+          .select("id, name")
+          .eq("sku", variantSku)
+          .maybeSingle();
+
+        if (skuCheck) {
+          const randSeq = Math.floor(100 + Math.random() * 899);
+          variantSku = `${variantSku}-${randSeq}`;
+        }
+
+        const { data: created, error } = await admin
+          .from("master_products")
+          .insert({
+            sku: variantSku,
+            name: parsed.data.name.trim(),
+            category: parsed.data.category,
+            brand: parsed.data.brand || null,
+            description: parsed.data.description,
+            specification: parsed.data.specification,
+            icon: parsed.data.icon || null,
+            latest_verified_cost: costPrice,
+            current_selling_price: sellingPrice,
+            calculated_selling_price: sellingPrice,
+            pricing_status: costPrice != null ? "review" : "unpriced",
+            active: parsed.data.visible,
+            created_by: actor.user.id,
+            requires_pexcover: parsed.data.requires_pexcover ?? false,
+            pexco_code: parsed.data.requires_pexcover
+              ? (parsed.data.pexco_code ?? null)
+              : null,
+            preferred_supplier_id: parsed.data.supplier_id || null,
+          })
+          .select("*")
+          .single();
+
+        if (error) throw error;
+        product = created as MasterProductRow;
+
+        void writeAuditLog({
+          actorId: actor.user.id,
+          actorName: actor.user.email,
+          action: "items.create",
+          entityType: "product",
+          entityId: product.id,
+          summary: `Created product variant "${product.name}" (${parsed.data.brand}) from existing "${targetMaster.name}" (${targetMaster.brand})`,
+        });
+
+        revalidateCatalog();
+        revalidatePath("/admin/products");
+        revalidatePath("/admin/items");
+
+        return {
+          ok: true,
+          message: `Created new ${parsed.data.brand} product "${product.name}". Original ${targetMaster.brand} product was preserved.`,
+          item: {
+            id: product.id,
+            pack_id: "",
+            product_id: product.id,
+            name: product.name,
+            sku: product.sku,
+            category: product.category || "Stationery",
+            brand: product.brand || null,
+            description: product.description || null,
+            specification: product.specification || null,
+            quantity: 1,
+            unit_price: product.current_selling_price ?? 0,
+            unit_cost:
+              (product as unknown as { latest_verified_cost?: number })
+                .latest_verified_cost ?? 0,
+            icon: product.icon || inferIcon(product.name) || "folder",
+            visible: product.active,
+            sort_order: 0,
+            slug: getProductSlug(product),
+          } as unknown as ItemRow,
+        };
+      }
+
       const { data: duplicate } = await admin
         .from("master_products")
         .select("id, name")
@@ -934,9 +1108,6 @@ export async function updateItem(
           message: `SKU "${skuVal}" is already assigned to "${duplicate.name}".`,
         };
       }
-
-      const costPrice = parsed.data.price ?? null;
-      const sellingPrice = await computeMasterSellingPrice(costPrice);
 
       const { data: updated, error } = await admin
         .from("master_products")
@@ -1000,10 +1171,7 @@ export async function updateItem(
       summary: `Updated master product "${product.name}"`,
     });
 
-    const newSlug = product.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+    const newSlug = getProductSlug(product);
 
     revalidateCatalog();
     revalidatePath("/admin/products");

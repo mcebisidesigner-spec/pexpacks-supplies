@@ -331,3 +331,76 @@
   font-weight: 600;
   color: rgba(148, 163, 184, 1);
 }
+
+.fieldHint {
+  font-size: 11px;
+  color: var(--db-muted, #94a3b8);
+  margin-top: 4px;
+  display: block;
+  line-height: 1.4;
+}
+
+.brandVariantNotice {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brandVariantHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.brandVariantBadge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.brandVariantArrow {
+  font-size: 13px;
+  color: #f1f5f9;
+}
+
+.brandVariantText {
+  font-size: 12px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.brandVariantOptions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.brandVariantOption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f1f5f9;
+  cursor: pointer;
+}
+
+.brandVariantOption input[type="radio"] {
+  accent-color: #10b981;
+  cursor: pointer;
+}
