@@ -131,9 +131,8 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: 12px;
-  background-color: #ffffff;
-  padding: 1px;
+  border-radius: 9999px;
+  background-color: #147f78;
   flex-shrink: 0;
 }
 
