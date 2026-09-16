@@ -32,6 +32,8 @@
     "admin:smoke": "node scripts/admin-browser-smoke-test.cjs"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.72",
+    "@ai-sdk/react": "^4.0.105",
     "@google/generative-ai": "^0.24.1",
     "@react-pdf/renderer": "^4.8.1",
     "@sentry/nextjs": "^10.74.0",
@@ -41,6 +43,7 @@
     "@upstash/redis": "^1.38.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^1.2.0",
+    "ai": "^7.0.102",
     "clsx": "^2.1.1",
     "heic2any": "^0.0.4",
     "ioredis": "^6.0.0",

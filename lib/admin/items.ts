@@ -11,7 +11,7 @@ import {
 } from "@/lib/admin/rbac";
 import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 import { getSystemSettings } from "@/lib/admin/system-settings";
-import { inventoryItemNameKey } from "@/lib/admin/item-constants";
+import { inventoryItemNameKey, getProductSlug } from "@/lib/admin/item-constants";
 import { generateSkuFromName, sanitizeSku } from "@/lib/sku-generator";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 
@@ -50,41 +50,7 @@ export type ItemRow = {
   supplier_id?: string | null;
 };
 
-export function getProductSlug(item: {
-  slug?: string | null;
-  name?: string | null;
-  brand?: string | null;
-  sku?: string | null;
-  id?: string;
-}): string {
-  if (item.slug) return item.slug;
-  if (item.name) {
-    const nameSlug = item.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-    const brandSlug = (item.brand || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
-    if (
-      brandSlug &&
-      brandSlug !== "add-brand-name" &&
-      !nameSlug.includes(brandSlug)
-    ) {
-      return `${nameSlug}-${brandSlug}`;
-    }
-    return nameSlug;
-  }
-  if (item.sku) {
-    return item.sku
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-  return item.id || "";
-}
+export { getProductSlug };
 
 const optString = (max: number, label: string) =>
   z

@@ -49,7 +49,7 @@ export default async function HomePage() {
         <div className={heroStyles.heroInner}>
           <div>
             <p className={heroStyles.eyebrow}>{heroEyebrow}</p>
-            <h1 className={heroStyles.heroTitle}>{heroTitle}</h1>
+            <h1 className={heroStyles.heroTitle}>Stationery sorted. Time saved.</h1>
             <p className={heroStyles.heroLead}>{heroLead}</p>
             <HeroSearch />
           </div>

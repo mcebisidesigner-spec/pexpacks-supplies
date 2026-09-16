@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 import { trackCtaClicked } from "@/lib/analytics";
 import { initDomRemovalGuard } from "@/lib/dom-guard";
 
-const DynamicWhatsAppWidget = dynamic(
-  () => import("@/components/shared/WhatsAppWidget").then((m) => m.WhatsAppWidget),
+const DynamicChatWidget = dynamic(
+  () => import("@/components/chat/ChatWidget").then((m) => m.ChatWidget),
   { ssr: false }
 );
 const DynamicPwaLifecycle = dynamic(
@@ -112,7 +112,7 @@ export function ClientRuntimeWidgets() {
 
   return (
     <>
-      {idleReady && !hideWhatsApp ? <DynamicWhatsAppWidget /> : null}
+      {idleReady && !hideWhatsApp ? <DynamicChatWidget /> : null}
       {idleReady ? <DynamicPwaLifecycle /> : null}
     </>
   );

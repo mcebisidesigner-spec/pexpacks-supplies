@@ -2,20 +2,30 @@
 
 import { useEffect } from "react";
 
+function isLocalDevHost() {
+  return ["localhost", "127.0.0.1", "::1"].includes(
+    typeof window !== "undefined" ? window.location.hostname : "",
+  );
+}
+
 function canUseServiceWorker() {
   return (
     process.env.NODE_ENV === "production" &&
     typeof window !== "undefined" &&
     "serviceWorker" in navigator &&
-    (window.location.protocol === "https:" ||
-      window.location.hostname === "localhost")
+    window.location.protocol === "https:" &&
+    !isLocalDevHost()
   );
 }
 
 export function PwaLifecycle() {
   useEffect(() => {
-    if (!canUseServiceWorker()) {
-      if (process.env.NODE_ENV !== "production" && "serviceWorker" in navigator) {
+    // A service worker must never run on a local dev host (localhost /
+    // 127.0.0.1 / ::1), regardless of NODE_ENV. This permanently clears any
+    // stale registration — including the old reload-loop service worker — and
+    // prevents it ever being re-registered again.
+    if (isLocalDevHost()) {
+      if ("serviceWorker" in navigator) {
         void Promise.all([
           navigator.serviceWorker.getRegistrations().then((registrations) =>
             Promise.all(registrations.map((registration) => registration.unregister())),
@@ -31,6 +41,10 @@ export function PwaLifecycle() {
             : Promise.resolve([]),
         ]);
       }
+      return;
+    }
+
+    if (!canUseServiceWorker()) {
       return;
     }
 

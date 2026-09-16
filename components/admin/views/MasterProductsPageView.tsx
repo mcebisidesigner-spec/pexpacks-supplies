@@ -29,8 +29,10 @@ import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImpor
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
-import { MASTER_PRODUCT_CATEGORIES } from "@/lib/admin/item-constants";
-import { getProductSlug } from "@/lib/admin/items";
+import {
+  MASTER_PRODUCT_CATEGORIES,
+  getProductSlug,
+} from "@/lib/admin/item-constants";
 
 interface MasterProductsPageViewProps {
   initialData: {
