@@ -95,4 +95,28 @@ describe("Chat API Route Handler", () => {
     const res = await POST(req);
     expect(res.status).toBe(400);
   });
+
+  it("emits valid text-start and text-delta chunks for school inquiry", async () => {
+    const req = new Request("http://localhost:3000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [
+          {
+            id: "msg-2",
+            role: "user",
+            parts: [{ type: "text", text: "Primrose hill grade1" }],
+          },
+        ],
+      }),
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+
+    const body = await res.text();
+    expect(body).toContain("text-start");
+    expect(body).toContain("text-delta");
+    expect(body).toContain("Primrose Hill Primary");
+  });
 });

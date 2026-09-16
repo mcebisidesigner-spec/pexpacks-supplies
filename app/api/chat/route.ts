@@ -37,9 +37,9 @@ function getFallbackResponse(query: string): string {
     );
   }
 
-  if (/find|pack|grade|school|search/i.test(q)) {
+  if (/find|pack|grade|school|search|primrose/i.test(q)) {
     return (
-      "To find your child's stationery pack, head over to the **Packs Finder** on our homepage or navigation menu. You can filter by school and grade. Every pack is teacher-approved and allows you to untick items you already own at home."
+      "To find your child's stationery pack, head over to the **Packs Finder** in our Schools directory. You can search by school name (like Primrose Hill Primary) and select your grade. Every pack is teacher-approved and lets you untick items you already have at home to save."
     );
   }
 
@@ -52,6 +52,42 @@ function getFallbackResponse(query: string): string {
   return (
     "Hi there! I'm Pex your assistant, at your service. How can I help you today?"
   );
+}
+
+function createFallbackStreamResponse(query: string) {
+  const fallbackText = getFallbackResponse(query);
+
+  const stream = createUIMessageStream({
+    execute: async ({ writer }) => {
+      writer.write({ type: "start" });
+      writer.write({ type: "text-start", id: "part-1" });
+      writer.write({
+        type: "text-delta",
+        id: "part-1",
+        delta: fallbackText,
+      });
+      writer.write({ type: "text-end", id: "part-1" });
+      writer.write({ type: "finish" });
+    },
+  });
+
+  return createUIMessageStreamResponse({ stream });
+}
+
+function extractLastQuery(messages: unknown[]): string {
+  if (!Array.isArray(messages) || messages.length === 0) return "";
+  const last = messages[messages.length - 1] as {
+    content?: string;
+    parts?: Array<{ type: string; text?: string }>;
+  };
+  if (typeof last?.content === "string") return last.content;
+  if (Array.isArray(last?.parts)) {
+    return last.parts
+      .filter((p) => p.type === "text" && typeof p.text === "string")
+      .map((p) => p.text)
+      .join("");
+  }
+  return "";
 }
 
 export async function POST(req: Request) {
@@ -70,55 +106,31 @@ export async function POST(req: Request) {
       process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
       process.env.GOOGLE_AI_API_KEY;
 
-    // If no API key is configured in this environment, provide an intelligent instant fallback
+    // If no API key is configured in this environment, provide an intelligent instant stream
     if (!apiKey) {
-      const lastMessage = messages[messages.length - 1];
-      const query =
-        typeof lastMessage?.content === "string"
-          ? lastMessage.content
-          : Array.isArray(lastMessage?.parts)
-            ? lastMessage.parts
-                .filter((p: { type: string; text?: string }) => p.type === "text")
-                .map((p: { text: string }) => p.text)
-                .join("")
-            : "";
-
-      const fallbackText = getFallbackResponse(query);
-
-      const stream = createUIMessageStream({
-        execute: async ({ writer }) => {
-          writer.write({
-            type: "text-delta",
-            delta: fallbackText,
-            id: "fallback-part-1",
-          });
-        },
-      });
-
-      return createUIMessageStreamResponse({ stream });
+      const query = extractLastQuery(messages);
+      return createFallbackStreamResponse(query);
     }
 
-    // Official Vercel AI SDK Google Generative AI Provider
-    const google = createGoogleGenerativeAI({ apiKey });
-    const modelMessages = await convertToModelMessages(messages);
+    try {
+      // Official Vercel AI SDK Google Generative AI Provider
+      const google = createGoogleGenerativeAI({ apiKey });
+      const modelMessages = await convertToModelMessages(messages);
 
-    const result = streamText({
-      model: google("gemini-2.5-flash"),
-      system: PEXPACKS_SYSTEM_PROMPT,
-      messages: modelMessages,
-    });
+      const result = streamText({
+        model: google("gemini-2.5-flash"),
+        system: PEXPACKS_SYSTEM_PROMPT,
+        messages: modelMessages,
+      });
 
-    return result.toUIMessageStreamResponse();
+      return result.toUIMessageStreamResponse();
+    } catch (modelError) {
+      console.warn("[ChatAPI Model Fallback]:", modelError);
+      const query = extractLastQuery(messages);
+      return createFallbackStreamResponse(query);
+    }
   } catch (error) {
     console.error("[ChatAPI Error]:", error);
-    return new Response(
-      JSON.stringify({
-        error: "Unable to process chat message at this time.",
-      }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return createFallbackStreamResponse("");
   }
 }

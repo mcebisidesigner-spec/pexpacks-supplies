@@ -168,7 +168,7 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status, error } = useChat();
   const isLoading = status === "streaming" || status === "submitted";
 
   // Hide over footer for both Desktop and Mobile devices
@@ -309,16 +309,15 @@ export function ChatWidget() {
 
           {/* Conversation */}
           <div className={styles.conversationBody}>
-            {messages.length === 0 && (
-              <div className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
-                <AssistantAvatar />
+            {/* Always show welcome greeting as the opening message */}
+            <div className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
+              <AssistantAvatar />
 
-                <div className={styles.assistantBubble}>
-                  <p className={styles.welcomeHeading}>Hi there 👋</p>
-                  <p>I&apos;m Pex your assistant, at your service.</p>
-                </div>
+              <div className={styles.assistantBubble}>
+                <p className={styles.welcomeHeading}>Hi there 👋</p>
+                <p>I&apos;m Pex your assistant, at your service.</p>
               </div>
-            )}
+            </div>
 
             {messages.map((message) => {
               const isUser = message.role === "user";
@@ -392,6 +391,23 @@ export function ChatWidget() {
                   <span className={styles.typingDot} />
                   <span className={styles.typingDot} />
                   <span className={styles.typingDot} />
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <div className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
+                <AssistantAvatar />
+                <div
+                  className={styles.assistantBubble}
+                  style={{
+                    borderColor: "#fecaca",
+                    backgroundColor: "#fef2f2",
+                  }}
+                >
+                  <p style={{ color: "#991b1b", margin: 0 }}>
+                    I&apos;m having trouble connecting right now. Please feel free to tap below to chat with our team on WhatsApp!
+                  </p>
                 </div>
               </div>
             )}
