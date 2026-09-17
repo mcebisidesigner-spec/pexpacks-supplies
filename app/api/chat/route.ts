@@ -12,7 +12,21 @@ export const runtime = "nodejs";
 function getFallbackResponse(query: string): string {
   const q = query.toLowerCase();
 
-  if (/delivery|how long|courier|paxi|pep|shipping|arrive/i.test(q)) {
+  // 1. Pricing, Quotations, Cost, "How much / How mush / How must" (Checked first!)
+  if (
+    /how\s+mu(?:ch|sh|st)|price|pricing|cost|costs|expensive|cheap|quote|quotation|rate|rates|amount|rands|zar|discount|bulk/i.test(
+      q,
+    )
+  ) {
+    return (
+      "Pexpacks stationery packs vary by grade and school requirements (typically ranging between R450 to R890).\n\n" +
+      "Because you can untick items you already own at home with our **Customise & Save** feature, you only pay for what you need! " +
+      "To see exact grade prices, browse your school in our directory, or tap below to chat with our team on WhatsApp for an exact custom quote."
+    );
+  }
+
+  // 2. Delivery & Courier Timelines
+  if (/delivery|how long|courier|paxi|pep|shipping|arrive|when will/i.test(q)) {
     return (
       "Pexpacks offers two fulfillment streams:\n\n" +
       "• **Year-Round Orders**: 24–48h processing. Doorstep courier takes 2–4 business days nationwide, while Paxi / PEP collection takes 3–5 business days at over 2,800 points.\n" +
@@ -21,7 +35,8 @@ function getFallbackResponse(query: string): string {
     );
   }
 
-  if (/happy\s*pay|pay\s*later|instalment|split|deposit/i.test(q)) {
+  // 3. Happy Pay (Buy Now, Pay Later) & Payment Methods
+  if (/happy\s*pay|pay\s*later|instalment|split|deposit|eft|card/i.test(q)) {
     return (
       "Happy Pay lets you split your stationery total across 2 payments with **0% interest** and no fees:\n\n" +
       "• Pay 50% today at checkout to secure your pack immediately.\n" +
@@ -30,22 +45,30 @@ function getFallbackResponse(query: string): string {
     );
   }
 
-  if (/custom|unlisted|not listed|upload|list|photo|whatsapp/i.test(q)) {
+  // 4. Custom Stationery Lists & Unlisted Schools
+  if (/custom|unlisted|not listed|upload|list|photo|send list/i.test(q)) {
     return (
       "If your child's school is not yet listed, you don't have to run from store to store!\n\n" +
       "You can upload your school stationery list or send a photo of it via WhatsApp. Our team will pack every item with our **100% list match guarantee** and send you a direct checkout link."
     );
   }
 
-  if (/find|pack|grade|school|search|primrose/i.test(q)) {
+  // 5. Pack Contents & Included Items
+  if (
+    /what(?:'s|\s+is)\s+in|contents|what\s+do\s+we\s+get|items|pens|pencils|books|stationery\s+inside/i.test(
+      q,
+    )
+  ) {
     return (
-      "To find your child's stationery pack, head over to the **Packs Finder** in our Schools directory. You can search by school name (like Primrose Hill Primary) and select your grade. Every pack is teacher-approved and lets you untick items you already have at home to save."
+      "Each school pack contains 100% grade-exact items requested by your child's teachers — including required exercise books, pens, pencils, math sets, book coverings, and art supplies.\n\n" +
+      "You can view the full itemized list and untick items you already have before checkout."
     );
   }
 
-  if (/price|pricing|cost|quote|quotation|discount|bulk/i.test(q)) {
+  // 6. School & Pack Search (e.g. "Primrose Hill", "Grade 1")
+  if (/find|search|where|browse|primrose|school|schools|grade/i.test(q)) {
     return (
-      "Pexpacks stationery packs are competitively priced and customized by grade. For specific quotations, bulk quantities, or custom lists, please use the WhatsApp option below to connect directly with our team for an exact breakdown."
+      "To find your child's stationery pack, head over to the **Packs Finder** in our Schools directory. You can search by school name (like Primrose Hill Primary) and select your grade. Every pack is teacher-approved and lets you untick items you already have at home to save."
     );
   }
 

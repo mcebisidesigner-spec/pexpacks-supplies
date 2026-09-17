@@ -11,11 +11,16 @@ const SUPPORT_PHONE = "27780036048";
 const CHATBOT_LOGO = "/images/chatbot.webp";
 
 const ESCALATION_PATTERNS = [
+  /how\s+mu(?:ch|sh|st)/i,
+  /\bhow\s+expensive\b/i,
   /\bprice\b/i,
   /\bpricing\b/i,
   /\bcost\b/i,
+  /\bcosts\b/i,
   /\bquote\b/i,
   /\bquotation\b/i,
+  /\brate\b/i,
+  /\bamount\b/i,
   /\bdiscount\b/i,
   /\bbulk\b/i,
   /\bcustom list\b/i,
