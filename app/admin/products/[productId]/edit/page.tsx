@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { getItem, getMasterPricingConfig, getProductSlug } from "@/lib/admin/items";
 import { listSuppliersSimple } from "@/lib/admin/operations";
 import { EditProductClient } from "@/components/admin/items/EditProductClient";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface EditProductPageProps {
   params: Promise<{ productId: string }>;

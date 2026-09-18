@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Plus, Eye, Package, CheckCircle2, Truck, Trash2 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { corePages as styles } from "./CorePagesView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";

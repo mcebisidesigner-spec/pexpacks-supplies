@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {
   title: "New Task | Admin | Pexpacks",

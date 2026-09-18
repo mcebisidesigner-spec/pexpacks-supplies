@@ -16,7 +16,6 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import type { ItemRow } from "@/lib/admin/items";
 import { PACK_LINE_INVENTORY_MARKER } from "@/lib/admin/item-constants";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
-import styles from "./ItemsManager.module.css";
 
 interface PackItemsSectionProps {
   packId: string;
@@ -123,10 +122,10 @@ export function PackItemsSection({
         </>
       ) : mode !== "list" ? (
         <section
-          className={styles.searchTotalRow}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-slate-900/60 border border-slate-800 rounded-lg"
           aria-label="Quick item editor"
         >
-          <div className={styles.searchSlot}>
+          <div className="flex-1 min-w-0">
             <GradePackItemSelector
               key={signature}
               initialItems={initialItems}
@@ -141,8 +140,8 @@ export function PackItemsSection({
               onSave={handleSave}
             />
           </div>
-          <div className={styles.totalChip} aria-label="Total price">
-            <span>Total</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-sm whitespace-nowrap self-start sm:self-center" aria-label="Total price">
+            <span className="text-xs font-semibold text-slate-400 uppercase">Total</span>
             {formatCurrency(subtotal)}
           </div>
         </section>
@@ -152,7 +151,7 @@ export function PackItemsSection({
           <ItemsManager items={items} />
           {showImporter ? (
             <section
-              className={styles.csvBannerTiles}
+              className="mt-4"
               aria-label="Bulk CSV stationery import"
             >
               <CSVStationeryImporter

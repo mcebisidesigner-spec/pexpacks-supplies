@@ -15,10 +15,8 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
-import coreStyles from "@/components/admin/views/CorePagesView.module.css";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
-import styles from "./ItemsManager.module.css";
 
 interface ItemsManagerProps {
   items: ItemRow[];
@@ -141,7 +139,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
       width: "150px",
       render: (row) => {
         const sku = row.sku?.trim() || "—";
-        return <span className={coreStyles.itemSkuBadge}>{sku}</span>;
+        return <span className="inline-flex px-2 py-0.5 rounded font-mono text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300">{sku}</span>;
       },
     },
     {
@@ -150,18 +148,10 @@ export function ItemsManager({ items }: ItemsManagerProps) {
       sortable: true,
       render: (row) => {
         return (
-          <div
-            className={coreStyles.productCell}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "2px",
-              minWidth: 0,
-            }}
-          >
-            <span className={coreStyles.schoolNameTitle}>{row.name}</span>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="font-semibold text-slate-100 text-sm">{row.name}</span>
             {row.specification && (
-              <span className={coreStyles.productBrand}>
+              <span className="text-xs text-slate-400">
                 {row.specification}
               </span>
             )}
@@ -174,7 +164,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
       header: "DESCRIPTION",
       sortable: true,
       render: (row) => (
-        <span className={coreStyles.textMuted}>
+        <span className="text-xs text-slate-400">
           {row.description?.trim() || "—"}
         </span>
       ),
@@ -191,12 +181,12 @@ export function ItemsManager({ items }: ItemsManagerProps) {
 
         return (
           <div
-            className={`${styles.qtyControl} ${isSaving ? styles.qtySaving : ""}`}
+            className={`inline-flex items-center rounded-lg border border-slate-700 bg-slate-900/80 ${isSaving ? "opacity-60 pointer-events-none" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className={styles.qtyBtn}
+              className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded-l-lg transition-colors disabled:opacity-40"
               onClick={() => handleQtyChange(row.id, currentQty - 1)}
               disabled={currentQty <= 1 || isSaving}
               aria-label={`Decrease quantity of ${row.name}`}
@@ -208,7 +198,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
               type="number"
               min="1"
               max="999"
-              className={styles.qtyInput}
+              className="w-10 h-7 text-center bg-transparent border-x border-slate-700 text-xs font-semibold text-white outline-none"
               value={currentQty}
               onChange={(e) => {
                 const val = parseInt(e.target.value, 10);
@@ -232,7 +222,7 @@ export function ItemsManager({ items }: ItemsManagerProps) {
             />
             <button
               type="button"
-              className={styles.qtyBtn}
+              className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded-r-lg transition-colors disabled:opacity-40"
               onClick={() => handleQtyChange(row.id, currentQty + 1)}
               disabled={isSaving}
               aria-label={`Increase quantity of ${row.name}`}
@@ -278,13 +268,12 @@ export function ItemsManager({ items }: ItemsManagerProps) {
       width: "90px",
       render: (row) => (
         <div
-          className={coreStyles.actionsCell}
-          style={{ justifyContent: "flex-end" }}
+          className="flex items-center justify-end"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             type="button"
-            className={coreStyles.actionDeleteBtn}
+            className="w-7 h-7 rounded-md flex items-center justify-center text-rose-400 hover:bg-rose-500/15 hover:text-rose-300 border border-transparent hover:border-rose-500/30 transition-colors"
             data-db-tooltip={`Delete ${row.name}`}
             aria-label={`Delete ${row.name}`}
             onClick={async (e) => {
@@ -312,8 +301,8 @@ export function ItemsManager({ items }: ItemsManagerProps) {
   ];
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.scrollableWrapper}>
+    <div className="w-full">
+      <div className="w-full overflow-x-auto">
         <DataTable
           data={visibleItems}
           columns={columns}

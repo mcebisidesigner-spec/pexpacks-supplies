@@ -4,7 +4,7 @@ import { getSchool, slugify } from "@/lib/admin/schools";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { updateSchoolAction } from "../actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface EditSchoolPageProps {
   params: Promise<{ id: string }>;

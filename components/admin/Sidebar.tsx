@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
 import {
   Package,
   School,
@@ -22,7 +21,7 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
-import styles from "./AdminShell.module.css";
+import { cn } from "@/lib/utils";
 
 export interface NavSubItemConfig {
   label: string;
@@ -74,15 +73,16 @@ export function isActiveRoute(href: string, pathname: string, exact?: boolean) {
 
 export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
-    const isDocActive =
-      pathname.startsWith("/admin/documents") ||
-      pathname.startsWith("/admin/quotations") ||
-      pathname.startsWith("/admin/letters");
-    return { Documents: isDocActive };
-  });
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
+    () => {
+      const isDocActive =
+        pathname.startsWith("/admin/documents") ||
+        pathname.startsWith("/admin/quotations") ||
+        pathname.startsWith("/admin/letters");
+      return { Documents: isDocActive };
+    },
+  );
 
-  // Automatically expand group when navigating into one of its child routes
   useEffect(() => {
     if (
       pathname.startsWith("/admin/documents") ||
@@ -101,36 +101,42 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <nav className={styles.nav}>
+    <nav className="flex-1 overflow-y-auto px-3 py-2 pb-4 flex flex-col gap-0.5">
       {ORDERED_NAV_ITEMS.map((item) => {
         const Icon = item.icon;
         const hasChildren = item.children && item.children.length > 0;
         const isChildActive = hasChildren
-          ? item.children!.some((child) => isActiveRoute(child.href, pathname, child.exact))
+          ? item.children!.some((child) =>
+              isActiveRoute(child.href, pathname, child.exact),
+            )
           : false;
-        const active = isActiveRoute(item.href, pathname, item.exact) || isChildActive;
+        const active =
+          isActiveRoute(item.href, pathname, item.exact) || isChildActive;
         const isExpanded = expandedGroups[item.label] ?? false;
 
         if (hasChildren) {
           return (
-            <div key={item.label} className={styles.navGroup}>
+            <div key={item.label} className="flex flex-col gap-0.5">
               <button
                 type="button"
                 onClick={() => toggleGroup(item.label)}
-                className={clsx(
-                  styles.navItem,
-                  active && styles.navItemActive
+                className={cn(
+                  "relative flex items-center gap-3 w-full min-h-[42px] px-3.5 rounded-lg text-slate-300 font-inherit text-[13px] font-semibold cursor-pointer outline-none transition-colors select-none hover:bg-slate-800/60 hover:text-white",
+                  active &&
+                    "bg-emerald-500/16 text-emerald-400 font-bold hover:bg-emerald-500/22 hover:text-emerald-300",
                 )}
                 aria-expanded={isExpanded}
               >
-                <span className={styles.navItemIcon}>
+                <span className="flex items-center justify-center shrink-0">
                   <Icon size={18} />
                 </span>
-                <span className={styles.navItemLabel}>{item.label}</span>
+                <span className="flex-1 text-left whitespace-nowrap overflow-hidden text-ellipsis">
+                  {item.label}
+                </span>
                 <span
-                  className={clsx(
-                    styles.navItemChevron,
-                    isExpanded && styles.navItemChevronOpen
+                  className={cn(
+                    "text-slate-400 shrink-0 transition-transform duration-160",
+                    isExpanded && "rotate-180 text-emerald-400",
                   )}
                 >
                   <ChevronDown size={14} />
@@ -138,18 +144,23 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               </button>
 
               {isExpanded && (
-                <div className={styles.navSubmenu}>
+                <div className="flex flex-col gap-0.5 pl-7 pr-1 py-1">
                   {item.children!.map((subItem) => {
                     const SubIcon = subItem.icon;
-                    const subActive = isActiveRoute(subItem.href, pathname, subItem.exact);
+                    const subActive = isActiveRoute(
+                      subItem.href,
+                      pathname,
+                      subItem.exact,
+                    );
                     return (
                       <Link
                         key={subItem.href}
                         href={subItem.href}
                         onClick={onClose}
-                        className={clsx(
-                          styles.navSubItem,
-                          subActive && styles.navSubItemActive
+                        className={cn(
+                          "flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium text-slate-400 no-underline transition-colors hover:bg-slate-800/50 hover:text-white",
+                          subActive &&
+                            "bg-emerald-500/12 text-emerald-400 font-bold hover:bg-emerald-500/18 hover:text-emerald-300",
                         )}
                       >
                         <SubIcon size={15} />
@@ -168,12 +179,18 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             key={item.href}
             href={item.href}
             onClick={onClose}
-            className={clsx(styles.navItem, active && styles.navItemActive)}
+            className={cn(
+              "relative flex items-center gap-3 w-full min-h-[42px] px-3.5 rounded-lg text-slate-300 font-inherit text-[13px] font-semibold cursor-pointer outline-none transition-colors select-none hover:bg-slate-800/60 hover:text-white",
+              active &&
+                "bg-emerald-500/16 text-emerald-400 font-bold hover:bg-emerald-500/22 hover:text-emerald-300",
+            )}
           >
-            <span className={styles.navItemIcon}>
+            <span className="flex items-center justify-center shrink-0">
               <Icon size={18} />
             </span>
-            <span className={styles.navItemLabel}>{item.label}</span>
+            <span className="flex-1 text-left whitespace-nowrap overflow-hidden text-ellipsis">
+              {item.label}
+            </span>
           </Link>
         );
       })}

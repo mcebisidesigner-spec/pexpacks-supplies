@@ -2,15 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import clsx from "clsx";
-import pageStyles from "@/styles/Page.module.css";
-import heroStyles from "@/components/marketing/HeroSearch.module.css";
 import {
   RECENT_SCHOOL_VISITS_EVENT,
   STORAGE_KEY,
   type LastVisit,
 } from "./schoolVisitTracker";
-import styles from "./RecentlyViewedSchools.module.css";
 
 const RECENT_VISIT_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 
@@ -75,44 +71,61 @@ export function RecentlyViewedSchools() {
 
   return (
     <section
-      className={pageStyles.section}
+      className="py-[var(--section-padding-y-mobile)] sm:py-[var(--section-padding-y-tablet)] lg:py-[var(--section-padding-y-desktop)]"
       aria-labelledby="recent-schools-heading"
     >
-      <div className={pageStyles.sectionInner}>
-        <div className={styles.recentHeader}>
-          <h2 id="recent-schools-heading">Recently viewed</h2>
-          <p>Pick up where you left off</p>
+      <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
+        <div className="mb-5">
+          <h2
+            id="recent-schools-heading"
+            className="m-0 text-[var(--pex-primary)] text-xl leading-[1.1] font-[family-name:var(--font-heading)] font-extrabold"
+          >
+            Recently viewed
+          </h2>
+          <p className="mt-1 mb-0 text-[var(--pex-text-muted)] text-sm font-bold">
+            Pick up where you left off
+          </p>
         </div>
 
-        <div className={styles.recentGrid}>
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-3">
           {recentVisits.map((visit) => (
             <article
-              className={clsx(heroStyles.heroResultCard, styles.recentCard)}
+              className="relative pr-14 sm:pr-[58px] p-4 bg-white border border-[var(--pex-border)] rounded-2xl shadow-sm hover:border-[#1a7a77] hover:shadow-md transition-all flex flex-col justify-between"
               key={`${visit.schoolSlug}-${visit.gradeSlug}`}
             >
               <button
                 type="button"
-                className={styles.removeButton}
+                className="absolute top-3 right-3 w-[34px] h-[34px] border border-[var(--pex-border)] rounded-full bg-[var(--pex-bg)] text-[var(--pex-text-muted)] grid place-items-center cursor-pointer hover:bg-[var(--pex-bg-soft)] hover:text-[var(--pex-coral)] hover:-translate-y-px hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all"
                 onClick={() => removeRecentVisit(visit)}
                 aria-label={`Remove ${visit.schoolName} ${visit.grade} from recently viewed`}
               >
-                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  focusable="false"
+                  aria-hidden="true"
+                  className="w-[17px] h-[17px] fill-none stroke-current stroke-2 stroke-linecap-round"
+                >
                   <path d="M6 6l12 12M18 6 6 18" />
                 </svg>
               </button>
-              <div className={heroStyles.heroResultContent}>
-                <div className={heroStyles.heroResultSummary}>
-                  <h3 className={styles.recentTitle}>
-                    <Link href={`/schools/${visit.schoolSlug}`}>
+              <div>
+                <div className="mb-2.5">
+                  <h3 className="m-0 text-base sm:text-lg font-bold text-[#102a43] leading-snug">
+                    <Link
+                      href={`/schools/${visit.schoolSlug}`}
+                      className="hover:text-[var(--pex-keppel)] transition-colors"
+                    >
                       {visit.schoolName}
                     </Link>
                   </h3>
-                  <p>{visit.grade}</p>
+                  <p className="m-0 mt-0.5 text-xs sm:text-sm text-muted-foreground font-semibold">
+                    {visit.grade}
+                  </p>
                 </div>
               </div>
               <Link
                 href={`/schools/${visit.schoolSlug}`}
-                className={heroStyles.heroResultLink}
+                className="inline-flex items-center justify-center w-full min-h-[38px] px-4 rounded-full bg-primary hover:bg-primary/90 text-white font-heading text-xs sm:text-sm font-extrabold no-underline transition-all mt-2"
               >
                 View pack
               </Link>
@@ -123,3 +136,4 @@ export function RecentlyViewedSchools() {
     </section>
   );
 }
+

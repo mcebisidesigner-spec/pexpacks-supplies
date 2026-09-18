@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { duplicatePackAction } from "@/app/admin/packs/actions";
-import styles from "./rowActions.module.css";
 
 export function DuplicateButton({ id, title }: { id: string; title: string }) {
   const router = useRouter();
@@ -27,7 +26,7 @@ export function DuplicateButton({ id, title }: { id: string; title: string }) {
       type="button"
       onClick={handleClick}
       disabled={busy}
-      className={styles.button}
+      className="bg-transparent border-0 p-0 text-xs font-bold text-slate-400 hover:text-emerald-400 hover:underline cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-default"
       data-db-tooltip={`Duplicate ${title}`}
     >
       {busy ? "Duplicating…" : "Duplicate"}

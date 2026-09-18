@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import clsx from "clsx";
 import { Backpack } from "lucide-react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Tooltip } from "@/components/ui/Tooltip";
-import styles from "./HeaderOrderIcon.module.css";
+import { cn } from "@/lib/utils";
 
 export function HeaderOrderIcon() {
   const hasMounted = useHasMounted();
@@ -32,10 +31,9 @@ export function HeaderOrderIcon() {
     return (
       <button
         type="button"
-        className={styles.iconButton}
+        className="relative w-10 h-10 min-w-10 min-h-10 border-0 rounded-full bg-transparent text-[var(--pex-navy,#1a2a40)] cursor-pointer inline-grid place-items-center opacity-0 pointer-events-none"
         aria-label="Fill up your Backpack"
         disabled
-        style={{ opacity: 0, pointerEvents: "none" }}
       >
         <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
       </button>
@@ -46,12 +44,18 @@ export function HeaderOrderIcon() {
     <Tooltip content="Fill up your Backpack" position="bottom">
       <button
         type="button"
-        className={clsx(styles.iconButton, animate && styles.iconPop)}
+        className={cn(
+          "relative w-10 h-10 min-w-10 min-h-10 border-0 rounded-full bg-transparent text-[var(--pex-navy,#1a2a40)] cursor-pointer inline-grid place-items-center transition-colors duration-200 hover:text-[var(--pex-keppel,#1a7a77)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-coral,#ff6f59)] focus-visible:ring-offset-2",
+          animate && "animate-[iconPop_0.5s_cubic-bezier(0.16,1,0.3,1)] motion-reduce:animate-none"
+        )}
         onClick={handleClick}
         aria-label={`Fill up your Backpack (${packCount} pack${packCount === 1 ? "" : "s"})`}
       >
         <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
-        <span className={styles.badge} aria-hidden="true">
+        <span
+          className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 rounded-full bg-[var(--pex-coral,#ff6f59)] text-white text-[10px] font-extrabold leading-4 text-center flex items-center justify-center pointer-events-none shadow-[0_1px_3px_rgba(0,0,0,0.15)] select-none"
+          aria-hidden="true"
+        >
           {packCount > 9 ? "9+" : packCount}
         </span>
       </button>

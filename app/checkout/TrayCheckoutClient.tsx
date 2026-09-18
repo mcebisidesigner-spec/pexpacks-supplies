@@ -17,7 +17,6 @@ import {
   trackPaymentFailed,
   trackPaymentInitiated,
 } from "@/lib/analytics";
-import styles from "@/app/checkout/Checkout.module.css";
 
 type FulfilmentOption =
   | "school_collection"
@@ -576,37 +575,37 @@ export function TrayCheckoutClient() {
   }
 
   return (
-    <div className={styles.checkoutShell}>
-      <header className={styles.checkoutHeader}>
+    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] font-[family-name:var(--font-body)] text-[var(--pex-navy)] pb-24 lg:pb-12">
+      <header className="flex justify-between items-center max-w-[var(--layout-max-width)] mx-auto mb-8">
         <button
           type="button"
-          className={styles.backToOrder}
+          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pex-keppel)] hover:text-[var(--pex-navy)] transition-colors cursor-pointer bg-transparent border-0 p-0"
           onClick={handleBackToOrder}
         >
-          Back to order
+          ← Back to order
         </button>
         <a
           href={buildWhatsAppHref("Hi Pexpacks, I need help with checkout.")}
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.helpLink}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-keppel)] transition-colors"
         >
           Need help?
         </a>
       </header>
 
-      <div className={styles.checkoutGrid}>
-        <section className={clsx(styles.stepCard, styles.checkoutHero)}>
-          <p className={styles.checkoutKicker}>Checkout</p>
-          <h1>Review your packs and confirm your order.</h1>
-          <p>
+      <div className="max-w-[var(--layout-max-width)] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
+        <section className="col-span-1 lg:col-span-2 bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
+          <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Checkout</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-2 leading-tight">Review your packs and confirm your order.</h1>
+          <p className="text-sm sm:text-base text-[var(--pex-muted)] m-0 max-w-2xl leading-relaxed">
             Add your details, choose delivery or collection, and submit your
             order. We will be in touch with payment details.
           </p>
         </section>
 
         <form
-          className={styles.mainColumn}
+          className="flex flex-col gap-8"
           aria-label="Checkout details"
           onSubmit={(e) => e.preventDefault()}
         >
@@ -616,23 +615,23 @@ export function TrayCheckoutClient() {
             }}
             tabIndex={-1}
             className={clsx(
-              styles.checkoutSection,
-              showDetailsHiddenWarning && styles.checkoutSectionWarning,
+              "bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none transition-shadow",
+              showDetailsHiddenWarning && "ring-2 ring-[var(--pex-coral)] ring-offset-2",
             )}
             aria-labelledby="customer-details-heading"
           >
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionNumber}>1</span>
+            <div className="flex items-start gap-4 mb-6 relative">
+              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
               <div>
-                <h2 id="customer-details-heading">Your details</h2>
-                <p>
+                <h2 id="customer-details-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Your details</h2>
+                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
                   We use these details for order updates and delivery or
                   collection support.
                 </p>
               </div>
               <button
                 type="button"
-                className={styles.mobileSummaryToggle}
+                className="ml-auto text-xs font-bold text-[var(--pex-keppel)] hover:underline md:hidden shrink-0"
                 onClick={() => toggleMobileSectionSummary("details")}
                 aria-expanded={mobileSectionSummaryOpen.details}
                 aria-controls="customer-details-summary"
@@ -645,12 +644,11 @@ export function TrayCheckoutClient() {
             <div
               id="customer-details-summary"
               className={clsx(
-                styles.mobileCollapsibleSummary,
-                mobileSectionSummaryOpen.details &&
-                  styles.mobileCollapsibleSummaryOpen,
+                "hidden md:block",
+                mobileSectionSummaryOpen.details && "!block",
               )}
             >
-              <div className={styles.formGrid}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <Input
                   id="fullName"
                   ref={(node) => {
@@ -702,20 +700,20 @@ export function TrayCheckoutClient() {
                   error={errors.buyerEmail}
                   autoComplete="email"
                 />
-                <fieldset className={styles.contactMethodGroup}>
-                  <legend>Preferred contact method</legend>
-                  <p>
+                <fieldset className="col-span-1 md:col-span-2 border-0 p-0 m-0 mt-2">
+                  <legend className="text-sm font-bold text-[var(--pex-navy)] mb-1">Preferred contact method</legend>
+                  <p className="text-xs text-[var(--pex-muted)] mb-3">
                     Choose how we should reach you if the order needs a quick
                     check.
                   </p>
-                  <div className={styles.segmentedOptions}>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-[var(--pex-bg-soft)] p-1.5 rounded-[var(--radius-sm)] border border-[var(--pex-border)]">
                     {contactOptions.map((option) => (
                       <label
                         key={option.value}
                         className={clsx(
-                          styles.segmentedOption,
+                          "flex items-center justify-center gap-2 py-2.5 px-3 rounded-[var(--radius-sm)] text-xs sm:text-sm font-semibold text-[var(--pex-muted)] cursor-pointer transition-all hover:text-[var(--pex-navy)] select-none",
                           preferredContactMethod === option.value &&
-                            styles.segmentedOptionActive,
+                            "bg-white text-[var(--pex-keppel)] shadow-sm font-bold",
                         )}
                       >
                         <input
@@ -726,6 +724,7 @@ export function TrayCheckoutClient() {
                           onChange={() =>
                             setPreferredContactMethod(option.value)
                           }
+                          className="sr-only"
                         />
                         <span>{option.label}</span>
                       </label>
@@ -736,14 +735,14 @@ export function TrayCheckoutClient() {
               {packs.map((pack, index) => {
                 const errKey = `learner_${index}`;
                 return errors[errKey] ? (
-                  <p key={errKey} className={styles.fieldError}>
+                  <p key={errKey} className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">
                     Learner {index + 1} ({pack.packName}): {errors[errKey]}
                   </p>
                 ) : null;
               })}
             </div>
             {showDetailsHiddenWarning ? (
-              <p className={styles.mobileHiddenSummaryWarning} role="alert">
+              <p className="mt-4 p-3 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs text-[var(--pex-coral)] font-semibold md:hidden" role="alert">
                 Fill in your details (Click "View Summary")
               </p>
             ) : null}
@@ -754,18 +753,18 @@ export function TrayCheckoutClient() {
               sectionRefs.current.delivery = node;
             }}
             tabIndex={-1}
-            className={styles.checkoutSection}
+            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-labelledby="fulfilment-heading"
           >
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionNumber}>2</span>
+            <div className="flex items-start gap-4 mb-6 relative">
+              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
               <div>
-                <h2 id="fulfilment-heading">Delivery or collection</h2>
-                <p>Choose how you want to receive this order.</p>
+                <h2 id="fulfilment-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Delivery or collection</h2>
+                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">Choose how you want to receive this order.</p>
               </div>
               <button
                 type="button"
-                className={styles.mobileSummaryToggle}
+                className="ml-auto text-xs font-bold text-[var(--pex-keppel)] hover:underline md:hidden shrink-0"
                 onClick={() => toggleMobileSectionSummary("delivery")}
                 aria-expanded={mobileSectionSummaryOpen.delivery}
                 aria-controls="fulfilment-summary"
@@ -779,23 +778,22 @@ export function TrayCheckoutClient() {
             <div
               id="fulfilment-summary"
               className={clsx(
-                styles.mobileCollapsibleSummary,
-                mobileSectionSummaryOpen.delivery &&
-                  styles.mobileCollapsibleSummaryOpen,
+                "hidden md:block",
+                mobileSectionSummaryOpen.delivery && "!block",
               )}
             >
-              <fieldset className={styles.optionFieldset}>
-                <legend className={styles.srOnly}>
+              <fieldset className="border-0 p-0 m-0">
+                <legend className="sr-only">
                   Delivery or collection method
                 </legend>
-                <div className={styles.deliveryOptions}>
+                <div className="grid grid-cols-1 gap-3 sm:gap-4">
                   {availableFulfilmentOptions.map((option) => (
                     <label
                       key={option.value}
                       className={clsx(
-                        styles.deliveryOption,
+                        "flex flex-col p-4 sm:p-5 rounded-[var(--radius-md)] border-2 border-[var(--pex-border)] bg-white cursor-pointer transition-all hover:border-[rgba(33,158,154,0.4)] relative",
                         fulfilmentOption === option.value &&
-                          styles.deliveryOptionSelected,
+                          "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.03)] shadow-sm",
                       )}
                     >
                       <input
@@ -807,17 +805,18 @@ export function TrayCheckoutClient() {
                           setFulfilmentOption(option.value);
                           clearFieldError("multiSchoolDrop");
                         }}
+                        className="sr-only"
                       />
-                      <div className={styles.deliveryOptionHeader}>
-                        <span className={styles.deliveryIcon}>
+                      <div className="flex items-center gap-3 mb-1.5 text-sm sm:text-base font-bold text-[var(--pex-navy)]">
+                        <span className="w-8 h-8 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] flex items-center justify-center shrink-0">
                           <FulfilmentIcon option={option.value} />
                         </span>
                         <strong>{option.title}</strong>
                       </div>
-                      <p className={styles.deliveryDescription}>
+                      <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0 leading-relaxed pl-11">
                         {option.description}
                       </p>
-                      <span className={styles.deliveryBadge}>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] self-start mt-2 ml-11">
                         {option.note}
                       </span>
                     </label>
@@ -827,19 +826,19 @@ export function TrayCheckoutClient() {
 
               {fulfilmentOption === "school_collection" &&
               uniqueSchools.length > 1 ? (
-                <div className={styles.schoolDropoffGroup}>
-                  <p className={styles.schoolDropoffLabel}>
+                <div className="mt-6 pt-6 border-t border-[var(--pex-border)]">
+                  <p className="text-xs sm:text-sm font-bold text-[var(--pex-navy)] mb-3">
                     Which school should the main box be dropped at?
                   </p>
-                  <div className={styles.schoolDropoffRow}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {uniqueSchools.map((school) => {
                       const isSelected = multiSchoolDrop === school.slug;
                       return (
                         <label
                           key={school.slug}
                           className={clsx(
-                            styles.schoolDropoffCard,
-                            isSelected && styles.schoolDropoffCardActive,
+                            "flex items-center gap-3 p-3 rounded-[var(--radius-sm)] border border-[var(--pex-border)] bg-white hover:border-[var(--pex-keppel)] cursor-pointer transition-all",
+                            isSelected && "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] shadow-xs",
                           )}
                         >
                           <input
@@ -851,9 +850,9 @@ export function TrayCheckoutClient() {
                               setMultiSchoolDrop(school.slug);
                               clearFieldError("multiSchoolDrop");
                             }}
-                            className={styles.schoolDropoffRadio}
+                            className="accent-[var(--pex-keppel)] w-4 h-4 cursor-pointer"
                           />
-                          <span className={styles.schoolDropoffText}>
+                          <span className="text-xs sm:text-sm font-semibold text-[var(--pex-navy)]">
                             {school.name}
                           </span>
                         </label>
@@ -861,7 +860,7 @@ export function TrayCheckoutClient() {
                     })}
                   </div>
                   {errors.multiSchoolDrop ? (
-                    <p className={styles.fieldError}>
+                    <p className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">
                       {errors.multiSchoolDrop}
                     </p>
                   ) : null}
@@ -869,7 +868,7 @@ export function TrayCheckoutClient() {
               ) : null}
 
               {deliveryExpanded ? (
-                <div className={styles.addressPanel}>
+                <div className="mt-6 pt-6 border-t border-[var(--pex-border)] grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     id="address"
                     ref={(node) => {
@@ -953,7 +952,7 @@ export function TrayCheckoutClient() {
                 value={deliveryNotes}
                 onChange={(e) => setDeliveryNotes(e.target.value)}
                 rows={4}
-                className={styles.deliveryNotesField}
+                className="mt-4 w-full"
               />
             </div>
           </section>
@@ -961,10 +960,10 @@ export function TrayCheckoutClient() {
           <section
             ref={consentRef}
             tabIndex={-1}
-            className={styles.consentCard}
+            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-label="Consent"
           >
-            <label className={styles.consentField}>
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel)] [&_a]:underline [&_a]:font-medium hover:[&_a]:text-[var(--pex-primary)]">
               <input
                 ref={(node) => {
                   fieldRefs.current.consent = node;
@@ -977,6 +976,7 @@ export function TrayCheckoutClient() {
                   clearFieldError("consent");
                 }}
                 aria-invalid={!!errors.consent}
+                className="mt-1 w-4 h-4 accent-[var(--pex-keppel)] rounded shrink-0 cursor-pointer"
               />
               <span>
                 I agree that Pexpacks may process my personal information to
@@ -1005,12 +1005,12 @@ export function TrayCheckoutClient() {
               </span>
             </label>
             {errors.consent ? (
-              <p className={styles.fieldError}>{errors.consent}</p>
+              <p className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.consent}</p>
             ) : null}
           </section>
 
           {submitError ? (
-            <p className={styles.formStatusError} role="alert">
+            <p className="p-4 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs sm:text-sm text-[var(--pex-coral)] font-semibold leading-relaxed" role="alert">
               {submitError}
             </p>
           ) : null}
@@ -1019,21 +1019,21 @@ export function TrayCheckoutClient() {
         <aside
           ref={summaryRef}
           tabIndex={-1}
-          className={styles.summaryColumn}
+          className="w-full lg:sticky lg:top-24"
           aria-labelledby="order-summary-heading"
         >
-          <div className={styles.summaryCard}>
-            <div className={styles.summaryHeader}>
+          <div className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
+            <div className="flex justify-between items-start pb-4 border-b border-[var(--pex-border)] mb-5">
               <div>
-                <p className={styles.checkoutKicker}>Your order</p>
-                <h2 id="order-summary-heading">Order summary</h2>
+                <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Your order</p>
+                <h2 id="order-summary-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0">Order summary</h2>
               </div>
-              <span>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">
                 {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>
 
-            <div className={styles.orderSummaryList}>
+            <div className="flex flex-col gap-4 mb-6 divide-y divide-[var(--pex-border)]">
               {packs.map((pack, index) => {
                 const isExpanded = !!expandedPacks[pack.id];
                 const previewItems = getPackItemPreview(pack);
@@ -1046,8 +1046,8 @@ export function TrayCheckoutClient() {
                   ? `Learner ${index + 1}: ${learnerName}`
                   : `Learner ${index + 1}: Add learner name`;
                 return (
-                  <article key={pack.id} className={styles.orderPackCard}>
-                    <div className={styles.orderPackTop}>
+                  <article key={pack.id} className="pt-4 first:pt-0">
+                    <div className="flex justify-between items-start gap-4 mb-2">
                       <div>
                         {editNameIndex === index ? (
                           <Input
@@ -1071,9 +1071,9 @@ export function TrayCheckoutClient() {
                           <button
                             type="button"
                             className={clsx(
-                              styles.orderPackLearnerLabel,
+                              "text-xs font-bold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
                               errors[`learner_${index}`] &&
-                                styles.orderPackLearnerLabelError,
+                                "text-[var(--pex-coral)] underline",
                             )}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
@@ -1082,34 +1082,38 @@ export function TrayCheckoutClient() {
                           </button>
                         )}
                       </div>
-                      <strong className={styles.orderPackPrice}>
+                      <strong className="text-sm font-bold text-[var(--pex-navy)] shrink-0">
                         {formatCurrency(getPackTotal(pack))}
                       </strong>
                     </div>
 
-                    <div className={styles.orderPackBody}>
-                      <h3>{pack.packName}</h3>
-                      <p>
+                    <div className="mb-2">
+                      <h3 className="text-sm sm:text-base font-bold text-[var(--pex-navy)] m-0 mb-1">{pack.packName}</h3>
+                      <p className="text-xs text-[var(--pex-muted)] m-0 mb-2">
                         {pack.schoolName || "School pack"}
                         {pack.grade ? ` · ${pack.grade}` : ""}
                       </p>
-                      <div className={styles.orderPackBadges}>
-                        <span>
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--pex-bg-soft)] text-[var(--pex-muted)] border border-[var(--pex-border)]">
                           {pack.packMode === "full"
                             ? "Full pack"
                             : "Customised"}
                         </span>
-                        <span>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--pex-bg-soft)] text-[var(--pex-muted)] border border-[var(--pex-border)]">
                           {pack.items.length}{" "}
                           {pack.items.length === 1 ? "item" : "items"}
                         </span>
-                        {pack.wantsPexcover ? <span>Pexcover</span> : null}
+                        {pack.wantsPexcover ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] border border-[rgba(33,158,154,0.2)]">
+                            Pexcover
+                          </span>
+                        ) : null}
                       </div>
                     </div>
 
                     <button
                       type="button"
-                      className={styles.itemsToggle}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0"
                       aria-expanded={isExpanded}
                       aria-controls={`pack-items-${pack.id}`}
                       onClick={() =>
@@ -1126,25 +1130,25 @@ export function TrayCheckoutClient() {
                     {isExpanded ? (
                       <ul
                         id={`pack-items-${pack.id}`}
-                        className={styles.itemisedList}
+                        className="mt-3 p-3 rounded-[var(--radius-sm)] bg-[var(--pex-bg-soft)] text-xs text-[var(--pex-muted)] space-y-1.5 list-none m-0"
                       >
                         {previewItems.map((item, itemIndex) => {
                           return (
-                            <li key={`${pack.id}-${item.name}-${itemIndex}`}>
+                            <li key={`${pack.id}-${item.name}-${itemIndex}`} className="flex justify-between items-center">
                               <span>{item.name}</span>
-                              <span>Qty {item.quantity}</span>
+                              <span className="font-medium text-[var(--pex-navy)]">Qty {item.quantity}</span>
                             </li>
                           );
                         })}
                         {pack.wantsPexcover ? (
-                          <li className={styles.itemisedPexcover}>
+                          <li className="text-[var(--pex-keppel)] font-medium">
                             <span>
                               Pexcover <em>(Book covering)</em>
                             </span>
                           </li>
                         ) : null}
                         {hiddenCount > 0 ? (
-                          <li className={styles.itemisedMore}>
+                          <li className="text-[11px] text-[var(--pex-muted)] italic pt-1 border-t border-[var(--pex-border)]">
                             + {hiddenCount} more items in this pack
                           </li>
                         ) : null}
@@ -1155,13 +1159,13 @@ export function TrayCheckoutClient() {
               })}
             </div>
 
-            <div className={styles.summaryTotals}>
+            <div className="space-y-2.5 py-4 border-t border-b border-[var(--pex-border)] mb-4 text-xs sm:text-sm text-[var(--pex-muted)] [&>div]:flex [&>div]:justify-between [&>div]:items-center [&>div>strong]:text-[var(--pex-navy)] [&>div>strong]:font-semibold">
               <div>
                 <span>Pack subtotal</span>
                 <strong>{formatCurrency(itemsTotal)}</strong>
               </div>
               {pexcoverCount > 0 ? (
-                <div className={styles.pexcoverSummary}>
+                <div className="text-[var(--pex-keppel)]">
                   <span>
                     Pexcover <em>(Book covering)</em> x{pexcoverCount}
                   </span>
@@ -1174,7 +1178,7 @@ export function TrayCheckoutClient() {
                   <strong>To confirm</strong>
                 </div>
               ) : null}
-              <div className={styles.summaryGrandTotal}>
+              <div className="!text-base !font-bold !text-[var(--pex-navy)] pt-2 border-t border-dashed border-[var(--pex-border)]">
                 <span>
                   {fulfilmentOption === "home_delivery"
                     ? "Pack total payable now"
@@ -1185,14 +1189,14 @@ export function TrayCheckoutClient() {
             </div>
 
             {fulfilmentOption === "home_delivery" ? (
-              <p className={styles.deliveryFeeNotice}>
+              <p className="text-xs text-[var(--pex-muted)] italic leading-relaxed mb-4">
                 The home-delivery fee is not included in this payment. We will
                 confirm the fee with you separately before dispatch.
               </p>
             ) : null}
 
             {errors.packs || errors.total ? (
-              <p className={styles.formStatusError} role="alert">
+              <p className="p-4 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs sm:text-sm text-[var(--pex-coral)] font-semibold leading-relaxed mb-4" role="alert">
                 {errors.packs || errors.total}
               </p>
             ) : null}
@@ -1201,7 +1205,7 @@ export function TrayCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={clsx(styles.fullWidth, styles.desktopPayButton)}
+              className="w-full mb-3 hidden lg:flex"
               onClick={handlePay}
               disabled={!canSubmit}
               aria-busy={submitting}
@@ -1216,13 +1220,13 @@ export function TrayCheckoutClient() {
             <Button
               type="button"
               variant="outline"
-              className={styles.fullWidth}
+              className="w-full"
               onClick={handleBackToOrder}
             >
               Edit order
             </Button>
 
-            <p className={styles.summarySecurity}>
+            <p className="text-[11px] text-[var(--pex-muted)] text-center mt-3 leading-relaxed">
               Your order details are secure. Pexpacks will never share your
               information.
             </p>
@@ -1230,11 +1234,11 @@ export function TrayCheckoutClient() {
         </aside>
       </div>
 
-      <div className={styles.mobileStickyCta}>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[var(--pex-border)] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40 lg:hidden">
         <Button
           type="button"
           variant="primary"
-          className={styles.fullWidth}
+          className="w-full min-h-[48px] text-base font-bold shadow-md"
           onClick={handlePay}
           disabled={!canSubmit}
           aria-busy={submitting}

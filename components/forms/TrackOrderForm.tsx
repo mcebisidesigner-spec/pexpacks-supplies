@@ -3,8 +3,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import clsx from "clsx";
-import page from "@/styles/Page.module.css";
 
 type TrackingResult = {
   orderReference: string;
@@ -134,8 +132,8 @@ export function TrackOrderForm() {
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", display: "grid", gap: 32 }}>
       {/* Manual Search Form */}
-      <form className={clsx(page.formCard, page.formStack)} onSubmit={handleSubmit}>
-        <p className={page.kicker}>Guest Order Tracker</p>
+      <form className="rounded-[24px] sm:rounded-[28px] border border-slate-200 bg-white p-6 sm:p-8 shadow-xs grid gap-4.5" onSubmit={handleSubmit}>
+        <p className="text-xs font-extrabold uppercase tracking-wider text-teal-600 m-0 mb-1">Guest Order Tracker</p>
         <h2>Track your stationery order</h2>
         <p style={{ fontSize: 14, color: "var(--pex-text-muted)", marginTop: -4 }}>
           Enter your receipt proof details below to check live order status without logging in.

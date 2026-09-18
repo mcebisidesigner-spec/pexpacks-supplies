@@ -50,7 +50,7 @@ import {
 } from "@/actions/cms";
 import { PAGE_HERO_SECTIONS } from "@/lib/admin/content-constants";
 import styles from "./content.module.css";
-import coreStyles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as coreStyles } from "@/components/admin/views/CorePagesView";
 
 type ContentTab = "eyebrows" | "faqs" | "testimonials" | "resources";
 

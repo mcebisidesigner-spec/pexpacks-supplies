@@ -3,7 +3,7 @@
 import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { isActivePath } from "@/lib/isActivePath";
-import styles from "./Header.module.css";
+import { cn } from "@/lib/utils";
 
 type HeaderActiveLinkProps = {
   href: string;
@@ -12,7 +12,12 @@ type HeaderActiveLinkProps = {
 
 function LinkPendingStatus() {
   const { pending } = useLinkStatus();
-  return pending ? <span className={styles.navLinkPending} aria-hidden="true" /> : null;
+  return pending ? (
+    <span
+      className="absolute left-0 right-0 -bottom-[2px] h-[2px] bg-[var(--pex-coral,#ff6f59)] origin-left animate-[navPending_0.8s_ease-in-out_infinite_alternate]"
+      aria-hidden="true"
+    />
+  ) : null;
 }
 
 export function HeaderActiveLink({ href, label }: HeaderActiveLinkProps) {
@@ -21,9 +26,10 @@ export function HeaderActiveLink({ href, label }: HeaderActiveLinkProps) {
 
   return (
     <Link
-      className={[styles.navLink, active ? styles.navLinkActive : ""]
-        .filter(Boolean)
-        .join(" ")}
+      className={cn(
+        "relative text-[var(--pex-navy,#1a2a40)] border-b-2 border-transparent py-1.5 font-sans text-base xl:text-[17px] font-extrabold leading-none tracking-[0.02em] whitespace-nowrap transition-colors duration-200 hover:text-[var(--pex-keppel,#1a7a77)] hover:border-[var(--pex-keppel,#1a7a77)]",
+        active && "text-[var(--pex-keppel,#1a7a77)] border-[var(--pex-keppel,#1a7a77)]"
+      )}
       href={href}
       aria-current={active ? "page" : undefined}
       data-conversion-event={`header_${label.toLowerCase().replaceAll(" ", "_")}`}
@@ -33,3 +39,4 @@ export function HeaderActiveLink({ href, label }: HeaderActiveLinkProps) {
     </Link>
   );
 }
+

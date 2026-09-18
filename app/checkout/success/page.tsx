@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/Button";
 import { buildMetadata } from "@/lib/seo";
 import { getOrderByReference } from "@/lib/orders";
 import { CheckoutSuccessTracker } from "./CheckoutSuccessTracker";
-import styles from "@/app/checkout/Checkout.module.css";
 
 export const metadata: Metadata = {
   ...buildMetadata(
@@ -26,16 +25,16 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
   if (!ref) {
     return (
-      <div className={styles.checkoutShell}>
+      <div className="w-full min-h-screen py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] flex items-center justify-center font-[family-name:var(--font-body)]">
         <CheckoutSuccessTracker orderReference="unknown" />
-        <div className={styles.emptyCheckout}>
-          <p className={styles.checkoutKicker}>Payment Confirmed</p>
-          <h1>Order placed</h1>
-          <p>
+        <div className="max-w-md w-full mx-auto text-center bg-white p-6 sm:p-8 rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Payment Confirmed</p>
+          <h1 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-3">Order placed</h1>
+          <p className="text-sm text-[var(--pex-muted)] leading-relaxed mb-6">
             Your payment has been received. We will be in touch shortly with your
             order updates and delivery details.
           </p>
-          <Button href="/schools" variant="primary" size="lg">
+          <Button href="/schools" variant="primary" size="lg" className="w-full sm:w-auto">
             Browse more packs
           </Button>
         </div>
@@ -46,26 +45,26 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
   const order = await getOrderByReference(ref);
 
   return (
-    <div className={styles.checkoutShell}>
+    <div className="w-full min-h-screen py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] flex items-center justify-center font-[family-name:var(--font-body)]">
       <CheckoutSuccessTracker
         orderReference={ref}
         school={order?.school_name}
         grade={order?.grade}
         amount={typeof order?.estimated_total === "number" ? order.estimated_total : undefined}
       />
-      <div className={styles.emptyCheckout}>
-        <p className={styles.checkoutKicker}>Payment Confirmed</p>
-        <h1>Thank you for your order!</h1>
-        <p>
+      <div className="max-w-md w-full mx-auto text-center bg-white p-6 sm:p-8 rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm">
+        <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Payment Confirmed</p>
+        <h1 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-3">Thank you for your order!</h1>
+        <p className="text-sm text-[var(--pex-muted)] leading-relaxed mb-2">
           Your payment has been received{order ? ` for ${order.school_name} ${order.grade}` : ""}.
         </p>
-        <p>
-          Your order reference is <strong>{ref}</strong>.
+        <p className="text-sm text-[var(--pex-navy)] font-medium mb-2">
+          Your order reference is <strong className="font-bold text-[var(--pex-keppel)]">{ref}</strong>.
         </p>
-        <p>
+        <p className="text-sm text-[var(--pex-muted)] leading-relaxed mb-6">
           We will be in touch shortly with order updates and delivery details.
         </p>
-        <Button href="/schools" variant="primary" size="lg">
+        <Button href="/schools" variant="primary" size="lg" className="w-full sm:w-auto">
           Browse more packs
         </Button>
       </div>

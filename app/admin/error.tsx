@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import adminStyles from "./admin.module.css";
+import Link from "next/link";
+import { AlertTriangle, RotateCcw, Home } from "lucide-react";
 
 export default function AdminError({
   error,
@@ -15,28 +16,38 @@ export default function AdminError({
   }, [error]);
 
   return (
-    <div className={adminStyles.adminContainer}>
-      <div className={adminStyles.headerSection}>
-        <h1 className={adminStyles.title}>Something went wrong</h1>
-        <p className={adminStyles.subtitle}>
+    <div className="flex flex-col gap-6 max-w-2xl mx-auto py-12 px-4">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-3 text-rose-400">
+          <AlertTriangle size={28} />
+          <h1 className="text-2xl font-bold text-slate-100">Something went wrong</h1>
+        </div>
+        <p className="text-sm text-slate-400">
           The dashboard hit an unexpected error. Your data is safe — try again.
         </p>
       </div>
-      <div className={adminStyles.stack}>
-        <div className={adminStyles.stackRow}>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
-            className={adminStyles.primaryButton}
             onClick={() => reset()}
+            className="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-colors cursor-pointer"
           >
+            <RotateCcw size={16} />
             Try again
           </button>
-          <a href="/admin" className={adminStyles.secondaryButton}>
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-colors no-underline"
+          >
+            <Home size={16} />
             Go to dashboard home
-          </a>
+          </Link>
         </div>
         {error.digest ? (
-          <p className={adminStyles.mutedText}>Error reference: {error.digest}</p>
+          <p className="text-xs text-slate-500 font-mono">
+            Error reference: {error.digest}
+          </p>
         ) : null}
       </div>
     </div>

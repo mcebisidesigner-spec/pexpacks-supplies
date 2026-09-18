@@ -17,7 +17,7 @@ import {
   Upload,
   Zap,
 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { corePages as styles } from "./CorePagesView";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";

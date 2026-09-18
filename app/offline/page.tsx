@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
-import page from "@/styles/Page.module.css";
 
 export const metadata: Metadata = {
   ...buildMetadata(
@@ -22,9 +21,9 @@ export default function OfflinePage() {
       eyebrow="Connection offline"
       title="Connection needed"
     >
-      <div className={page.notFoundActions}>
-        <Button href="/">Go to homepage</Button>
-        <Button href="/schools" variant="white">
+      <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+        <Button href="/" className="min-h-[44px]">Go to homepage</Button>
+        <Button href="/schools" variant="white" className="min-h-[44px]">
           Find your school pack
         </Button>
       </div>

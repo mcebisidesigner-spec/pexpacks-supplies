@@ -5,7 +5,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { trackCtaClicked, trackWhatsAppClicked } from "@/lib/analytics";
-import styles from "./ChatWidget.module.css";
+import { cn } from "@/lib/utils";
 
 const SUPPORT_PHONE = "27780036048";
 const CHATBOT_LOGO = "/images/chatbot.webp";
@@ -250,9 +250,10 @@ export function ChatWidget() {
 
   return (
     <div
-      className={`${styles.widgetContainer} ${
-        isFooterVisible ? styles.hiddenOverFooter : ""
-      }`}
+      className={cn(
+        "fixed bottom-5 right-5 z-[1000] font-sans transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+        isFooterVisible && "opacity-0 translate-y-6 pointer-events-none invisible !opacity-0 !translate-y-6 !pointer-events-none !invisible"
+      )}
       aria-hidden={isFooterVisible}
     >
       {!isOpen ? (
@@ -260,44 +261,44 @@ export function ChatWidget() {
           type="button"
           onClick={() => setIsOpen(true)}
           aria-label="Open Ask Pex Assistant"
-          className={styles.launcherBtn}
+          className="flex items-center gap-3 rounded-full bg-[#17324d] py-2 pr-5 pl-2 text-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] border-0 cursor-pointer text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_45px_rgba(15,23,42,0.32)] active:translate-y-0"
         >
-          <span className={styles.launcherIconBadge}>
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#147f78] text-white shrink-0 overflow-hidden">
             <Image
               src={CHATBOT_LOGO}
               alt="Pex"
               width={44}
               height={44}
-              className={styles.chatbotAvatarImg}
+              className="w-full h-full object-cover rounded-full block"
               priority
             />
           </span>
 
-          <span className={styles.launcherText}>
-            <span className={styles.launcherTitle}>Ask Pex</span>
-            <span className={styles.launcherSubtitle}>I&apos;m here to help</span>
+          <span className="flex flex-col">
+            <span className="text-sm font-semibold leading-[1.25] text-white">Ask Pex</span>
+            <span className="text-[11px] text-slate-300 leading-[1.2]">I&apos;m here to help</span>
           </span>
         </button>
       ) : (
-        <section className={styles.chatWindow} aria-label="Pex Assistant">
+        <section className="flex flex-col w-[390px] max-w-[calc(100vw-24px)] h-[600px] max-h-[calc(100vh-36px)] overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.24)] animate-[chatSlideUp_0.25s_cubic-bezier(0.16,1,0.3,1)]" aria-label="Pex Assistant">
           {/* Header */}
-          <header className={styles.chatHeader}>
-            <div className={styles.headerLeft}>
-              <div className={styles.logoWrapper}>
+          <header className="flex items-center justify-between bg-[#17324d] py-3.5 px-4 text-white shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="flex h-[38px] w-[38px] items-center justify-center overflow-hidden rounded-full bg-[#147f78] shrink-0">
                 <Image
                   src={CHATBOT_LOGO}
                   alt="Pex"
                   width={36}
                   height={36}
-                  className={styles.chatbotAvatarImg}
+                  className="w-full h-full object-cover rounded-full block"
                 />
               </div>
 
               <div>
-                <h3 className={styles.headerTitle}>Ask Pex</h3>
-                <div className={styles.statusIndicator}>
-                  <span className={styles.statusDot} />
-                  <span className={styles.statusText}>Online · replies instantly</span>
+                <h3 className="m-0 text-sm font-semibold text-white leading-tight">Ask Pex</h3>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+                  <span className="text-[11px] text-slate-300">Online · replies instantly</span>
                 </div>
               </div>
             </div>
@@ -306,20 +307,20 @@ export function ChatWidget() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Close Ask Pex Assistant"
-              className={styles.closeBtn}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-transparent border-0 text-slate-300 cursor-pointer transition-colors hover:bg-white/12 hover:text-white"
             >
               <CloseIcon size={18} />
             </button>
           </header>
 
           {/* Conversation */}
-          <div className={styles.conversationBody}>
+          <div className="flex-1 overflow-y-auto bg-slate-50 p-4 flex flex-col gap-3.5 [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]">
             {/* Always show welcome greeting as the opening message */}
-            <div className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
+            <div className="flex w-full justify-start items-start gap-2.5">
               <AssistantAvatar />
 
-              <div className={styles.assistantBubble}>
-                <p className={styles.welcomeHeading}>Hi there 👋</p>
+              <div className="max-w-[82%] py-2.5 px-3.5 text-[13.5px] leading-[1.45] rounded-[18px_18px_18px_4px] border border-slate-200 bg-white text-slate-700 shadow-[0_1px_3px_rgba(0,0,0,0.04)] break-words [&_p]:m-0 [&_p]:mb-2 [&_p:last-child]:mb-0">
+                <p className="font-semibold text-slate-900 mb-1">Hi there 👋</p>
                 <p>I&apos;m Pex your assistant, at your service.</p>
               </div>
             </div>
@@ -335,18 +336,19 @@ export function ChatWidget() {
               return (
                 <div
                   key={message.id}
-                  className={`${styles.messageRow} ${
-                    isUser ? styles.messageRowUser : styles.messageRowAssistant
-                  }`}
+                  className={cn(
+                    "flex w-full",
+                    isUser ? "justify-end" : "justify-start items-start gap-2.5"
+                  )}
                 >
                   {!isUser && <AssistantAvatar />}
 
-                  <div className={isUser ? styles.userBubble : styles.assistantBubble}>
+                  <div className={isUser ? "max-w-[82%] py-2.5 px-3.5 text-[13.5px] leading-[1.45] rounded-[18px_18px_4px_18px] bg-[#147f78] text-white shadow-[0_1px_3px_rgba(0,0,0,0.08)] break-words whitespace-pre-wrap" : "max-w-[82%] py-2.5 px-3.5 text-[13.5px] leading-[1.45] rounded-[18px_18px_18px_4px] border border-slate-200 bg-white text-slate-700 shadow-[0_1px_3px_rgba(0,0,0,0.04)] break-words [&_p]:m-0 [&_p]:mb-2 [&_p:last-child]:mb-0"}>
                     {isUser ? text : renderFormattedContent(text)}
 
                     {/* Contextual Commerce Action Cards */}
                     {commerceActions.length > 0 && (
-                      <div className={styles.commerceCardContainer}>
+                      <div className="mt-2 flex flex-col gap-2">
                         {commerceActions.map((act) => (
                           <Link
                             key={act.id}
@@ -362,22 +364,22 @@ export function ChatWidget() {
                               });
                               setIsOpen(false);
                             }}
-                            className={styles.commerceCard}
+                            className="flex items-center justify-between gap-2.5 rounded-[14px] border border-slate-200 bg-slate-50 py-2.5 px-3 transition-all duration-150 no-underline cursor-pointer hover:border-[#147f78] hover:bg-teal-50/50 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(20,127,120,0.08)]"
                           >
-                            <div className={styles.commerceCardLeft}>
-                              <div className={styles.commerceCardIcon}>
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#147f78] text-white">
                                 <ActionIcon type={act.icon} size={16} />
                               </div>
-                              <div className={styles.commerceCardTexts}>
-                                <span className={styles.commerceCardTitle}>
+                              <div className="flex flex-col min-w-0">
+                                <span className="text-[12.5px] font-semibold text-slate-900 leading-snug">
                                   {act.title}
                                 </span>
-                                <span className={styles.commerceCardDesc}>
+                                <span className="text-[11px] text-slate-500 leading-tight">
                                   {act.desc}
                                 </span>
                               </div>
                             </div>
-                            <span className={styles.commerceCardAction}>
+                            <span className="flex items-center gap-1 text-[11.5px] font-semibold text-[#147f78] shrink-0">
                               {act.badge} &rarr;
                             </span>
                           </Link>
@@ -390,27 +392,23 @@ export function ChatWidget() {
             })}
 
             {isLoading && (
-              <div className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
+              <div className="flex w-full justify-start items-start gap-2.5">
                 <AssistantAvatar />
-                <div className={styles.typingContainer}>
-                  <span className={styles.typingDot} />
-                  <span className={styles.typingDot} />
-                  <span className={styles.typingDot} />
+                <div className="flex items-center gap-1 py-2.5 px-3.5 rounded-[18px_18px_18px_4px] border border-slate-200 bg-white">
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-[typingPulse_1.2s_infinite_ease-in-out]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-[typingPulse_1.2s_infinite_ease-in-out] [animation-delay:0.2s]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-[typingPulse_1.2s_infinite_ease-in-out] [animation-delay:0.4s]" />
                 </div>
               </div>
             )}
 
             {error && (
-              <div className={`${styles.messageRow} ${styles.messageRowAssistant}`}>
+              <div className="flex w-full justify-start items-start gap-2.5">
                 <AssistantAvatar />
                 <div
-                  className={styles.assistantBubble}
-                  style={{
-                    borderColor: "#fecaca",
-                    backgroundColor: "#fef2f2",
-                  }}
+                  className="max-w-[82%] py-2.5 px-3.5 text-[13.5px] leading-[1.45] rounded-[18px_18px_18px_4px] border border-red-200 bg-red-50 text-red-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)] break-words"
                 >
-                  <p style={{ color: "#991b1b", margin: 0 }}>
+                  <p className="m-0 text-red-800">
                     I&apos;m having trouble connecting right now. Please feel free to tap below to chat with our team on WhatsApp!
                   </p>
                 </div>
@@ -419,15 +417,15 @@ export function ChatWidget() {
 
             {/* Smart human-support escalation card */}
             {needsHumanHelp && (
-              <div className={styles.escalationCard}>
-                <div className={styles.escalationHeader}>
-                  <div className={styles.whatsappBadge}>
+              <div className="ml-[42px] rounded-[18px] border border-green-200 bg-green-50/70 p-3.5 flex flex-col gap-2.5 shadow-[0_1px_3px_rgba(34,197,94,0.08)]">
+                <div className="flex items-start gap-2.5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#25D366] text-white">
                     <WhatsAppIcon size={18} />
                   </div>
 
                   <div>
-                    <p className={styles.escalationTitle}>Need pricing or custom help?</p>
-                    <p className={styles.escalationSubtitle}>
+                    <p className="m-0 text-[13.5px] font-semibold text-slate-900">Need pricing or custom help?</p>
+                    <p className="m-0 mt-1 text-[11.5px] leading-relaxed text-slate-600">
                       Our team can help with quotations, special pricing, custom lists, and
                       requests that need human care.
                     </p>
@@ -447,7 +445,7 @@ export function ChatWidget() {
                       label: "chat_assistant_escalation_card",
                     });
                   }}
-                  className={styles.escalationBtn}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-2.5 px-3.5 text-[12.5px] font-semibold text-white no-underline transition-all hover:brightness-95 hover:-translate-y-0.5"
                 >
                   <WhatsAppIcon size={18} />
                   Chat with us on WhatsApp
@@ -459,21 +457,21 @@ export function ChatWidget() {
           </div>
 
           {/* Input */}
-          <form onSubmit={handleFormSubmit} className={styles.chatInputForm}>
-            <div className={styles.inputWrapper}>
+          <form onSubmit={handleFormSubmit} className="border-t border-slate-200 bg-white py-2.5 px-3 shrink-0">
+            <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 py-1 pr-1.5 pl-3 transition-all focus-within:border-[#147f78] focus-within:ring-2 focus-within:ring-[#147f78]/20">
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask Pex anything..."
-                className={styles.chatInput}
+                className="flex-1 min-w-0 border-0 bg-transparent py-2 text-[13.5px] text-slate-900 outline-none placeholder:text-slate-400"
               />
 
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
                 aria-label="Send message"
-                className={styles.sendBtn}
+                className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px] bg-[#ff6b57] text-white border-0 cursor-pointer transition-all hover:not-disabled:brightness-95 hover:not-disabled:scale-105 disabled:opacity-45 disabled:cursor-not-allowed"
               >
                 <SendIcon size={16} />
               </button>
@@ -481,8 +479,8 @@ export function ChatWidget() {
           </form>
 
           {/* Permanent WhatsApp fallback */}
-          <footer className={styles.chatFooter}>
-            <span className={styles.footerPrompt}>Prefer a real person?</span>
+          <footer className="flex items-center justify-between border-t border-slate-200 bg-white py-2 px-4 text-[11.5px] shrink-0">
+            <span className="text-slate-500">Prefer a real person?</span>
 
             <a
               href={getWhatsAppUrl(
@@ -497,7 +495,7 @@ export function ChatWidget() {
                   label: "chat_assistant_footer",
                 });
               }}
-              className={styles.footerWhatsAppLink}
+              className="flex items-center gap-1.5 font-semibold text-emerald-700 no-underline hover:underline transition-all"
             >
               <WhatsAppIcon size={14} />
               Chat with us on WhatsApp
@@ -511,13 +509,13 @@ export function ChatWidget() {
 
 function AssistantAvatar() {
   return (
-    <div className={styles.assistantAvatar}>
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#147f78] overflow-hidden mt-0.5">
       <Image
         src={CHATBOT_LOGO}
         alt="Pex"
         width={32}
         height={32}
-        className={styles.chatbotAvatarImg}
+        className="w-full h-full object-cover rounded-full block"
       />
     </div>
   );
@@ -643,3 +641,4 @@ function CloseIcon({ size = 18 }: { size?: number }) {
     </svg>
   );
 }
+

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { FeaturedSchoolsBanner } from "@/components/schools/FeaturedSchoolsBanner";
-
 import { RecentlyViewedSchools } from "@/components/schools/RecentlyViewedSchools";
 import { SchoolSearchPanel } from "@/components/schools/SchoolSearchPanel";
 import { SchoolsFaqAccordion } from "@/components/schools/SchoolsFaqAccordion";
@@ -12,15 +11,12 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { buildMetadata } from "@/lib/seo";
 import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import {
   getFeaturedSchoolRecords,
   getAllPublicSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
 import { getWebsiteContent, getFaqs, getTestimonials } from "@/lib/cms";
 import { getActivePublicSeason } from "@/lib/public-data/seasons";
-import heroStyles from "@/components/marketing/HeroBase.module.css";
-import homeStyles from "@/components/marketing/MarketingHome.module.css";
 
 export const metadata: Metadata = buildMetadata(
   "Find Your School Stationery Pack | Pexpacks",
@@ -64,7 +60,7 @@ export default async function SchoolsPage() {
           title={heroTitle}
           panelTitle="Your school&rsquo;s exact list, packed for you"
           panelText={`Packed to your school&rsquo;s official list and delivered for ${season.academicYear}.`}
-          panelClassName={heroStyles.heroPanelSearchAligned}
+          panelClassName="self-start mt-0 lg:mt-[clamp(112px,9vw,132px)]"
         >
           <SchoolSearchPanel readQueryFromUrl />
         </PageHero>
@@ -72,7 +68,7 @@ export default async function SchoolsPage() {
 
       <RecentlyViewedSchools />
 
-      <SchoolsHowItWorks className={homeStyles.schoolsHowItWorksDesktop} />
+      <SchoolsHowItWorks className="hidden lg:block" />
 
       {featuredSchools.length > 0 && (
         <FeaturedSchoolsBanner schools={featuredSchools} />
@@ -84,10 +80,10 @@ export default async function SchoolsPage() {
 
       <ConciergeSection />
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
+      <section className="py-8 bg-transparent">
+        <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
           <HappyPayBanner variant="schoolPage" />
-          <div style={{ marginTop: 20 }}>
+          <div className="mt-5">
             <HappyPaySteps />
           </div>
         </div>
@@ -95,8 +91,9 @@ export default async function SchoolsPage() {
 
       <SchoolsFaqAccordion
         faqs={schoolsFaqs}
-        className={homeStyles.schoolsAccordionBeforeRating}
+        className="pb-[clamp(32px,6vw,64px)]"
       />
     </>
   );
 }
+

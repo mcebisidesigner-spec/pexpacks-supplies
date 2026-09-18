@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import clsx from "clsx";
 import { ArrowDown, ArrowUp, ArrowUpDown, Inbox } from "lucide-react";
-import styles from "./DataTable.module.css";
+import { cn } from "@/lib/utils";
 import { useTableParams } from "./useTableParams";
 
 export interface ColumnDef<T> {
@@ -17,14 +16,14 @@ export interface ColumnDef<T> {
 }
 
 const WIDTH_CLASS: Record<string, string> = {
-  "80px": styles.col80,
-  "90px": styles.col90,
-  "110px": styles.col110,
-  "120px": styles.col120,
-  "130px": styles.col130,
-  "140px": styles.col140,
-  "150px": styles.col150,
-  "160px": styles.col160,
+  "80px": "w-20 min-w-20 max-w-20",
+  "90px": "w-[90px] min-w-[90px] max-w-[90px]",
+  "110px": "w-[110px] min-w-[110px] max-w-[110px]",
+  "120px": "w-[120px] min-w-[120px] max-w-[120px]",
+  "130px": "w-[130px] min-w-[130px] max-w-[130px]",
+  "140px": "w-[140px] min-w-[140px] max-w-[140px]",
+  "150px": "w-[150px] min-w-[150px] max-w-[150px]",
+  "160px": "w-40 min-w-40 max-w-40",
 };
 
 export interface DataTableProps<T> {
@@ -66,43 +65,52 @@ export function DataTable<T>({
   };
 
   return (
-    <div className={clsx(styles.tableCard, className)}>
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
+    <div
+      className={cn(
+        "bg-[var(--db-surface)] border border-[var(--db-border)] rounded-xl overflow-hidden flex flex-col shadow-sm",
+        className,
+      )}
+    >
+      <div className="w-full overflow-auto max-h-[70vh] relative">
+        <table className="w-full border-collapse border-spacing-0 text-left text-[13px]">
+          <thead className="sticky top-0 z-10">
             <tr>
               {columns.map((col) => {
                 const isCurrentSort = params.sort === col.key;
                 const alignClass =
                   col.align === "center"
-                    ? styles.alignCenter
+                    ? "text-center"
                     : col.align === "right"
-                      ? styles.alignRight
-                      : styles.alignLeft;
-                const widthClass = col.width ? WIDTH_CLASS[col.width] : undefined;
+                      ? "text-right"
+                      : "text-left";
+                const widthClass = col.width
+                  ? WIDTH_CLASS[col.width] || `w-[${col.width}]`
+                  : undefined;
                 const stickyClass =
                   col.sticky === "right"
-                    ? styles.stickyRightHeader
+                    ? "sticky right-0 bg-[var(--db-surface-elevated,#0f172a)] shadow-[-12px_0_12px_-4px_rgba(0,0,0,0.5)] z-20"
                     : col.sticky === "left"
-                      ? styles.stickyLeftHeader
+                      ? "sticky left-0 bg-[var(--db-surface-elevated,#0f172a)] shadow-[12px_0_12px_-4px_rgba(0,0,0,0.5)] z-20"
                       : undefined;
 
                 return (
                   <th
                     key={col.key}
                     scope="col"
-                    className={clsx(
+                    className={cn(
+                      "bg-[var(--db-surface-elevated,#0f172a)] border-b border-[var(--db-border)] px-4.5 py-3.5 text-xs font-bold text-emerald-500 uppercase tracking-wider whitespace-nowrap select-none",
                       alignClass,
                       widthClass,
                       stickyClass,
-                      { [styles.sortableHeader]: col.sortable }
+                      col.sortable &&
+                        "cursor-pointer transition-colors hover:text-emerald-400",
                     )}
                     onClick={() => handleSort(col.key, col.sortable)}
                   >
-                    <div className={styles.headerContent}>
+                    <div className="inline-flex items-center gap-1.5">
                       <span>{col.header}</span>
                       {col.sortable && (
-                        <span className={styles.sortIcon}>
+                        <span className="inline-flex items-center text-emerald-500">
                           {isCurrentSort ? (
                             params.order === "asc" ? (
                               <ArrowUp size={13} />
@@ -110,7 +118,10 @@ export function DataTable<T>({
                               <ArrowDown size={13} />
                             )
                           ) : (
-                            <ArrowUpDown size={12} className={styles.mutedSortIcon} />
+                            <ArrowUpDown
+                              size={12}
+                              className="text-emerald-500/70"
+                            />
                           )}
                         </span>
                       )}
@@ -124,8 +135,8 @@ export function DataTable<T>({
             {isLoading ? (
               <tr>
                 <td colSpan={columns.length}>
-                  <div className={styles.stateContainer}>
-                    <div className={styles.loadingSpinner} />
+                  <div className="p-12 flex flex-col items-center justify-center gap-3 text-center text-slate-400">
+                    <div className="w-6 h-6 border-2 border-emerald-500 border-r-transparent rounded-full animate-spin" />
                     <span>Loading data...</span>
                   </div>
                 </td>
@@ -133,10 +144,14 @@ export function DataTable<T>({
             ) : data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length}>
-                  <div className={styles.stateContainer}>
+                  <div className="p-12 flex flex-col items-center justify-center gap-3 text-center text-slate-400">
                     <Inbox size={32} />
-                    <div className={styles.stateTitle}>{emptyTitle}</div>
-                    <div className={styles.stateSubtitle}>{emptySubtitle}</div>
+                    <div className="text-base font-bold text-slate-200">
+                      {emptyTitle}
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      {emptySubtitle}
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -146,26 +161,39 @@ export function DataTable<T>({
                 return (
                   <tr
                     key={rowKey}
-                    className={clsx({ [styles.clickableRow]: Boolean(onRowClick) })}
+                    className={cn(
+                      "border-b border-[var(--db-border-muted)] transition-colors hover:bg-[var(--db-surface-hover)]",
+                      Boolean(onRowClick) && "cursor-pointer",
+                    )}
                     onClick={() => onRowClick?.(row)}
                   >
                     {columns.map((col) => {
                       const alignClass =
                         col.align === "center"
-                          ? styles.alignCenter
+                          ? "text-center"
                           : col.align === "right"
-                            ? styles.alignRight
-                            : styles.alignLeft;
-                      const widthClass = col.width ? WIDTH_CLASS[col.width] : undefined;
+                            ? "text-right"
+                            : "text-left";
+                      const widthClass = col.width
+                        ? WIDTH_CLASS[col.width] || `w-[${col.width}]`
+                        : undefined;
                       const stickyClass =
                         col.sticky === "right"
-                          ? styles.stickyRight
+                          ? "sticky right-0 bg-[var(--db-surface)] shadow-[-12px_0_12px_-4px_rgba(0,0,0,0.5)] z-10"
                           : col.sticky === "left"
-                            ? styles.stickyLeft
+                            ? "sticky left-0 bg-[var(--db-surface)] shadow-[12px_0_12px_-4px_rgba(0,0,0,0.5)] z-10"
                             : undefined;
 
                       return (
-                        <td key={col.key} className={clsx(alignClass, widthClass, stickyClass)}>
+                        <td
+                          key={col.key}
+                          className={cn(
+                            "px-4.5 py-4 text-[var(--db-text-secondary)] align-middle",
+                            alignClass,
+                            widthClass,
+                            stickyClass,
+                          )}
+                        >
                           {col.render(row, idx)}
                         </td>
                       );

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setPackVisibleAction } from "@/app/admin/packs/actions";
-import styles from "./rowActions.module.css";
 
 export function VisibleToggle({ id, visible }: { id: string; visible: boolean }) {
   const router = useRouter();
@@ -22,7 +21,7 @@ export function VisibleToggle({ id, visible }: { id: string; visible: boolean })
       type="button"
       onClick={handleClick}
       disabled={busy}
-      className={styles.toggle}
+      className="bg-transparent border border-slate-700 hover:border-emerald-500 rounded-md px-2 py-0.5 text-xs font-bold text-slate-300 hover:text-emerald-400 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-default"
       aria-pressed={visible}
     >
       {busy ? "…" : visible ? "Hide" : "Show"}

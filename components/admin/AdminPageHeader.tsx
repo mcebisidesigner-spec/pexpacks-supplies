@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import styles from "./ui/AdminPageHeader.module.css";
 
 export type AdminPageHeaderProps = {
   title: string;
@@ -24,35 +23,51 @@ export function AdminPageHeader({
   backLabel,
   actions,
 }: AdminPageHeaderProps) {
-  const formattedCount = count !== undefined ? `(${count.toLocaleString("en-US")})` : undefined;
+  const formattedCount =
+    count !== undefined ? `(${count.toLocaleString("en-US")})` : undefined;
 
   return (
-    <div className={styles.headerWrapper}>
+    <div className="flex flex-col gap-2.5 mb-6 w-full">
       {backHref && (
-        <div className={styles.backContainer}>
-          <Link href={backHref} className={styles.backBtn}>
+        <div className="flex items-center">
+          <Link
+            href={backHref}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,rgba(30,41,59,0.8))] rounded-lg text-[13px] font-semibold text-[var(--db-text-secondary,#94a3b8)] no-underline transition-colors hover:bg-[var(--db-surface,#0f172a)] hover:border-slate-700 hover:text-emerald-500"
+          >
             <ArrowLeft size={14} />
             <span>{backLabel || "Back"}</span>
           </Link>
         </div>
       )}
-      <div className={styles.headerRow}>
-        <div className={styles.headerTitleGroup}>
-          <h1 className={styles.headerTitle}>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-5 flex-wrap">
+        <div className="flex flex-col gap-1">
+          <h1 className="m-0 text-2xl sm:text-[1.85rem] font-extrabold text-white tracking-tight leading-tight flex items-baseline flex-wrap gap-2">
             <span>{title}</span>
             {titleHighlight && (
-              <span className={styles.headerTitleHighlight}>{titleHighlight}</span>
+              <span className="text-emerald-500 font-extrabold">
+                {titleHighlight}
+              </span>
             )}
             {badge && (
-              <span className={styles.headerBadgeWrapper}>{badge}</span>
+              <span className="inline-flex items-center align-middle">
+                {badge}
+              </span>
             )}
             {formattedCount && (
-              <span className={styles.headerCount}>{formattedCount}</span>
+              <span className="text-2xl sm:text-[1.85rem] font-extrabold text-slate-400 tracking-tight">
+                {formattedCount}
+              </span>
             )}
           </h1>
-          {subtitle && <p className={styles.headerSubtitle}>{subtitle}</p>}
+          {subtitle && (
+            <p className="m-0 text-sm font-normal text-slate-400 leading-relaxed">
+              {subtitle}
+            </p>
+          )}
         </div>
-        {actions && <div className={styles.headerActions}>{actions}</div>}
+        {actions && (
+          <div className="flex items-center gap-3 flex-wrap">{actions}</div>
+        )}
       </div>
     </div>
   );

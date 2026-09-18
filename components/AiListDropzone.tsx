@@ -8,7 +8,7 @@ import {
   trackAiConversionFailed,
   trackAiConversionRetried,
 } from "@/lib/analytics";
-import styles from "./AiListDropzone.module.css";
+import { cn } from "@/lib/utils";
 
 const MAX_SIZE_MB = 15;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
@@ -245,15 +245,20 @@ export function AiListDropzone() {
   };
 
   return (
-    <div className={styles.dropzoneContainer} id="ai-list-converter">
+    <div
+      className="bg-background rounded-3xl p-5 sm:p-7 md:p-9 shadow-md hover:shadow-xl border border-[#219e9a]/20 relative overflow-hidden transition-shadow duration-300"
+      id="ai-list-converter"
+    >
       {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.badge}>
-          <span className={styles.badgeDot} />
+      <div className="mb-6 text-left">
+        <div className="inline-flex items-center gap-1.5 bg-[#1a7a77]/10 text-[#1b6f6c] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2.5">
+          <span className="w-2 h-2 rounded-full bg-[#1a7a77] [animation:pulseDot_2s_infinite_ease-in-out]" />
           <span>Instant AI Vision</span>
         </div>
-        <h2 className={styles.title}>AI School List Converter</h2>
-        <p className={styles.subtitle}>
+        <h2 className="text-[#1a2a40] font-heading text-xl sm:text-2xl font-extrabold m-0 mb-1.5 leading-tight">
+          AI School List Converter
+        </h2>
+        <p className="text-muted-foreground text-sm m-0 leading-relaxed">
           Drop your stationery list or snap a photo. Our AI matches your school requirements to our verified
           stock catalog in seconds.
         </p>
@@ -261,10 +266,14 @@ export function AiListDropzone() {
 
       {/* Success State */}
       {isSuccess && (
-        <div className={styles.successBox}>
-          <div className={styles.successIcon}>✓</div>
-          <h3 className={styles.successTitle}>Catalog Matched!</h3>
-          <p className={styles.successText}>
+        <div className="text-center py-6 px-2.5">
+          <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 grid place-items-center text-2xl mx-auto mb-4 border-2 border-emerald-200 [animation:scaleSuccess_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)]">
+            ✓
+          </div>
+          <h3 className="text-[#1a2a40] text-xl font-extrabold m-0 mb-1.5">
+            Catalog Matched!
+          </h3>
+          <p className="text-muted-foreground text-sm m-0">
             Generating your personalized cart and opening your review page...
           </p>
         </div>
@@ -272,54 +281,87 @@ export function AiListDropzone() {
 
       {/* Processing State with Laser Scan & Stepper */}
       {isProcessing && !isSuccess && (
-        <div className={styles.processingState}>
+        <div className="py-2.5 flex flex-col gap-6">
           {/* Document Preview with Laser Scan */}
-          <div className={styles.previewContainer}>
+          <div className="relative w-full max-w-[320px] h-[180px] mx-auto rounded-xl overflow-hidden border border-border bg-[#0f172a] flex items-center justify-center">
             {filePreview ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={filePreview} alt="Uploaded stationery list" className={styles.previewImage} />
+              <img
+                src={filePreview}
+                alt="Uploaded stationery list"
+                className="w-full h-full object-cover opacity-85"
+              />
             ) : (
-              <div className={styles.pdfPlaceholder}>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <div className="flex flex-col items-center justify-center text-white gap-2 p-4 text-center">
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                   <line x1="16" y1="13" x2="8" y2="13" />
                   <line x1="16" y1="17" x2="8" y2="17" />
                   <polyline points="10 9 9 9 8 9" />
                 </svg>
-                <span>{file ? file.name : "Stationery Text Document"}</span>
+                <span className="text-xs font-semibold max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+                  {file ? file.name : "Stationery Text Document"}
+                </span>
               </div>
             )}
-            <div className={styles.laserLine} />
-            <div className={styles.laserOverlay} />
+            <div className="absolute inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#2dd4bf] to-transparent shadow-[0_0_16px_3px_rgba(45,212,191,0.85)] [animation:scanLaser_2.2s_infinite_ease-in-out] z-[5]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.15),transparent_70%)] pointer-events-none" />
           </div>
 
           {/* Stepper Indicators */}
-          <div className={styles.stepper}>
+          <div className="flex flex-col gap-3.5">
             {CONVERSION_STEPS.map((step, idx) => {
               const isCompleted = idx < currentStepIndex;
               const isActive = idx === currentStepIndex;
-              const isUpcoming = idx > currentStepIndex;
 
               return (
                 <div
                   key={step.id}
-                  className={`${styles.stepRow} ${
-                    isCompleted ? styles.stepCompleted : isActive ? styles.stepActive : styles.stepUpcoming
-                  }`}
+                  className={cn(
+                    "flex items-center gap-3.5 text-sm transition-all duration-300",
+                    isCompleted && "text-[#1a2a40] font-semibold",
+                    isActive && "text-[#1a7a77] font-bold",
+                    !isCompleted && !isActive && "text-muted-foreground opacity-55"
+                  )}
                 >
-                  <div className={styles.stepCircle}>{isCompleted ? "✓" : step.id}</div>
-                  <span className={styles.stepLabel}>{step.label}</span>
+                  <div
+                    className={cn(
+                      "w-7 h-7 rounded-full grid place-items-center text-xs font-bold shrink-0 border transition-all duration-300",
+                      isCompleted && "bg-[#1a7a77] text-white border-[#1a7a77]",
+                      isActive &&
+                        "bg-white text-[#1a7a77] border-2 border-[#1a7a77] shadow-[0_0_0_3px_rgba(26,122,119,0.2)] [animation:pulseActive_1.5s_infinite_ease-in-out]",
+                      !isCompleted && !isActive && "bg-slate-100 text-muted-foreground border-border"
+                    )}
+                  >
+                    {isCompleted ? "✓" : step.id}
+                  </div>
+                  <span>{step.label}</span>
                 </div>
               );
             })}
           </div>
 
           {errorMessage && (
-            <div className={styles.errorBox}>
-              <h4 className={styles.errorTitle}>Conversion Interrupted</h4>
-              <p className={styles.errorMessage}>{errorMessage}</p>
-              <button type="button" onClick={handleReset} className={styles.retryBtn}>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-4.5 text-center mt-4">
+              <h4 className="text-red-700 text-sm sm:text-base font-bold m-0 mb-1.5">
+                Conversion Interrupted
+              </h4>
+              <p className="text-red-900 text-xs sm:text-sm leading-relaxed m-0 mb-3.5">
+                {errorMessage}
+              </p>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="bg-white text-red-700 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-red-500"
+              >
                 Try Again with Clearer Photo
               </button>
             </div>
@@ -331,10 +373,13 @@ export function AiListDropzone() {
       {!isProcessing && !isSuccess && (
         <>
           {/* Method Tabs */}
-          <div className={styles.tabs}>
+          <div className="flex bg-slate-100 rounded-xl p-1 gap-1 mb-5">
             <button
               type="button"
-              className={`${styles.tab} ${activeTab === "upload" ? styles.tabActive : ""}`}
+              className={cn(
+                "flex-1 border-0 bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground rounded-lg cursor-pointer transition-all flex items-center justify-center gap-2 hover:text-[#1a2a40]",
+                activeTab === "upload" && "bg-white text-[#1a7a77] shadow-sm font-bold"
+              )}
               onClick={() => {
                 setActiveTab("upload");
                 setErrorMessage(null);
@@ -349,7 +394,10 @@ export function AiListDropzone() {
             </button>
             <button
               type="button"
-              className={`${styles.tab} ${activeTab === "text" ? styles.tabActive : ""}`}
+              className={cn(
+                "flex-1 border-0 bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground rounded-lg cursor-pointer transition-all flex items-center justify-center gap-2 hover:text-[#1a2a40]",
+                activeTab === "text" && "bg-white text-[#1a7a77] shadow-sm font-bold"
+              )}
               onClick={() => {
                 setActiveTab("text");
                 setErrorMessage(null);
@@ -368,28 +416,33 @@ export function AiListDropzone() {
           {activeTab === "upload" ? (
             <div>
               <div
-                className={`${styles.dropArea} ${isDragging ? styles.dropAreaDragging : ""}`}
+                className={cn(
+                  "border-2 border-dashed border-[#219e9a]/30 hover:border-[#1a7a77] rounded-2xl p-6 sm:p-8 text-center cursor-pointer bg-[#219e9a]/[0.02] hover:bg-[#219e9a]/[0.06] transition-all flex flex-col items-center justify-center relative hover:-translate-y-0.5",
+                  isDragging && "border-solid border-[#1a7a77] bg-[#219e9a]/[0.06] shadow-[0_0_0_4px_rgba(26,122,119,0.15)]"
+                )}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <div className={styles.iconCircle}>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#1a7a77]/10 text-[#1a7a77] grid place-items-center mb-4 transition-transform duration-200">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
                     <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
                     <path d="M12 12v9" />
                     <path d="m16 16-4-4-4 4" />
                   </svg>
                 </div>
-                <span className={styles.primaryLabel}>Click to browse or drag & drop</span>
-                <span className={styles.secondaryLabel}>
+                <span className="block text-sm sm:text-base font-bold text-[#1a2a40] mb-1.5">
+                  Click to browse or drag & drop
+                </span>
+                <span className="block text-xs sm:text-sm text-muted-foreground max-w-[320px] leading-relaxed mb-4.5">
                   Takes photos, printed PDFs, or handwritten school booklists (Max 15MB)
                 </span>
 
-                <div className={styles.buttonGroup} onClick={(e) => e.stopPropagation()}>
+                <div className="flex gap-2.5 flex-wrap justify-center" onClick={(e) => e.stopPropagation()}>
                   <button
                     type="button"
-                    className={styles.browseBtn}
+                    className="bg-[#1a7a77] hover:bg-[#156966] active:scale-[0.98] text-white border-0 py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -402,7 +455,7 @@ export function AiListDropzone() {
 
                   <button
                     type="button"
-                    className={styles.cameraBtn}
+                    className="bg-white hover:bg-[#1a7a77]/5 active:scale-[0.98] text-[#1a2a40] hover:text-[#1a7a77] border border-border hover:border-[#1a7a77] py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => cameraInputRef.current?.click()}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -418,7 +471,7 @@ export function AiListDropzone() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*,application/pdf"
-                  className={styles.hiddenInput}
+                  className="hidden"
                   onChange={handleFileInputChange}
                 />
 
@@ -428,25 +481,33 @@ export function AiListDropzone() {
                   type="file"
                   accept="image/*"
                   capture="environment"
-                  className={styles.hiddenInput}
+                  className="hidden"
                   onChange={handleFileInputChange}
                 />
               </div>
 
               {errorMessage && (
-                <div className={styles.errorBox}>
-                  <h4 className={styles.errorTitle}>Could not process document</h4>
-                  <p className={styles.errorMessage}>{errorMessage}</p>
-                  <button type="button" onClick={handleReset} className={styles.retryBtn}>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-4.5 text-center mt-4">
+                  <h4 className="text-red-700 text-sm sm:text-base font-bold m-0 mb-1.5">
+                    Could not process document
+                  </h4>
+                  <p className="text-red-900 text-xs sm:text-sm leading-relaxed m-0 mb-3.5">
+                    {errorMessage}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="bg-white text-red-700 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-red-500"
+                  >
                     Try Another File
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <div className={styles.textSection}>
+            <div className="flex flex-col gap-4">
               <textarea
-                className={styles.textArea}
+                className="w-full border-2 border-border focus:border-[#1a7a77] rounded-xl p-3.5 text-sm text-foreground resize-y min-h-[140px] outline-none transition-all shadow-[inset_0_2px_4px_rgba(26,42,64,0.04)] focus:ring-4 focus:ring-[#1a7a77]/15 placeholder:text-muted-foreground/50"
                 rows={6}
                 placeholder="Paste or type your stationery list here...&#10;e.g.&#10;5x 72pg Exercise Books Feint & Margin&#10;2x Pritt Glue Sticks 43g&#10;1x Staedtler Noris 2B Pencils Pack of 12&#10;1x 30cm Shatterproof Ruler"
                 value={pastedText}
@@ -457,15 +518,15 @@ export function AiListDropzone() {
               />
 
               {errorMessage && (
-                <div className={styles.errorBox}>
-                  <h4 className={styles.errorTitle}>Error</h4>
-                  <p className={styles.errorMessage}>{errorMessage}</p>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 sm:p-4.5 text-center mt-4">
+                  <h4 className="text-red-700 text-sm sm:text-base font-bold m-0 mb-1.5">Error</h4>
+                  <p className="text-red-900 text-xs sm:text-sm leading-relaxed m-0 mb-3.5">{errorMessage}</p>
                 </div>
               )}
 
               <button
                 type="button"
-                className={styles.convertBtn}
+                className="bg-[#1a7a77] hover:bg-[#156966] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white border-0 py-3.5 px-6 rounded-full text-sm sm:text-base font-bold cursor-pointer transition-all flex items-center justify-center gap-2 w-full shadow-md"
                 disabled={!pastedText.trim()}
                 onClick={() => startConversion(null, pastedText)}
               >

@@ -35,7 +35,7 @@ import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { deleteLetterAction } from "@/app/admin/letters/actions";
 import type { AdminLetterRecord, ListLettersResult } from "@/lib/admin/letters";
 import type { BadgeTone } from "@/components/admin/ui";
-import styles from "../views/CorePagesView.module.css";
+import { corePages as styles } from "../views/CorePagesView";;
 
 const STATUS_CONFIG: Record<string, { label: string; tone: BadgeTone }> = {
   draft: { label: "Draft", tone: "slate" },

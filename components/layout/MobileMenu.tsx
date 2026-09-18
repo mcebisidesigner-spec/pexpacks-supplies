@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { mainNavLinks } from "@/data/navigation";
 import { isActivePath } from "@/lib/isActivePath";
 import { TrackPackIcon } from "@/components/ui/icons";
-import styles from "./Header.module.css";
+import { cn } from "@/lib/utils";
 
 type MobileMenuProps = {
   open: boolean;
@@ -87,16 +87,17 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
       role="dialog"
       aria-modal={open ? "true" : "false"}
       aria-label="Navigation menu"
-      className={[styles.mobileMenu, open ? styles.mobileMenuOpen : ""]
-        .filter(Boolean)
-        .join(" ")}
+      className={cn(
+        "fixed z-[1] top-[68px] sm:top-[70px] left-0 right-0 h-[calc(100vh-68px)] sm:h-[calc(100vh-70px)] h-[calc(100dvh-68px)] sm:h-[calc(100dvh-70px)] bottom-0 bg-white text-[var(--pex-navy,#1a2a40)] translate-x-full opacity-100 invisible pointer-events-none overflow-y-auto overscroll-contain transition-[transform,visibility] duration-260 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden",
+        open && "translate-x-0 visible pointer-events-auto"
+      )}
       inert={!open}
       aria-hidden={!open ? "true" : undefined}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className={styles.mobileMenuInner}>
-        <nav className={styles.mobileMenuNav} aria-label="Mobile navigation">
+      <div className="p-4 sm:p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] flex flex-col min-h-full gap-0">
+        <nav className="grid gap-1.5 sm:gap-2" aria-label="Mobile navigation">
           {mainNavLinks.map((link) => {
             const active = isActivePath(link.href, pathname);
 
@@ -105,12 +106,10 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
                 href={link.href}
                 key={link.href}
                 onClick={onClose}
-                className={[
-                  styles.mobileMenuLink,
-                  active ? styles.mobileMenuLinkActive : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                className={cn(
+                  "w-full text-[var(--pex-navy,#1a2a40)] py-3 sm:py-3.5 px-4 rounded-xl font-sans text-base sm:text-lg font-bold leading-none min-h-[48px] sm:min-h-[52px] flex items-center bg-[#fbfdfd] border border-[#e2e8f0] transition-all hover:border-[#219e9a] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
+                  active && "text-[var(--pex-keppel,#1a7a77)] bg-[#219e9a]/10 border-[var(--pex-keppel,#1a7a77)] font-bold"
+                )}
                 aria-current={active ? "page" : undefined}
                 data-conversion-event={`mobile_nav_${link.label.toLowerCase().replaceAll(" ", "_")}`}
               >
@@ -120,17 +119,17 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
           })}
         </nav>
 
-        <div className={styles.mobileMenuDivider} role="separator" />
+        <div className="h-[1px] bg-[#e2e8f0] my-3 sm:my-4 shrink-0" role="separator" />
 
-        <div className={styles.mobileMenuSecondary}>
+        <div className="flex flex-col gap-2.5 sm:gap-3 mt-auto pt-1">
           <Link
             href="/track-order"
-            className={styles.mobileMenuCta}
+            className="min-h-[48px] sm:min-h-[52px] py-1.5 pr-2 pl-5 rounded-full flex items-center justify-center gap-2.5 bg-[var(--pex-navy,#1a2a40)] text-white font-sans text-base font-bold leading-none shadow-[0_10px_20px_rgba(26,42,64,0.12)] transition-all hover:brightness-110 active:brightness-100 group"
             onClick={onClose}
             data-conversion-event="mobile_track_pack"
           >
             <span>Track Your Pack</span>
-            <span className={styles.mobileMenuCtaIcon}>
+            <span className="w-7 h-7 rounded-full bg-[var(--pex-coral,#ff6f59)] text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]">
               <TrackPackIcon aria-hidden="true" />
             </span>
           </Link>
@@ -139,3 +138,4 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
     </div>
   );
 }
+

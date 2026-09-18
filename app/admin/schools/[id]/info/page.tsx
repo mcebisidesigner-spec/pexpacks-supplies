@@ -10,7 +10,7 @@ import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface SchoolInfoPageProps {
   params: Promise<{ id: string }>;

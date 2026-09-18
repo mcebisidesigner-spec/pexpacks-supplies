@@ -2,7 +2,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { getMasterPricingConfig } from "@/lib/admin/items";
 import { listSuppliersSimple } from "@/lib/admin/operations";
 import { AddItemClient } from "@/components/admin/items/AddItemClient";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {
   title: "Add Product | Admin | Pexpacks",

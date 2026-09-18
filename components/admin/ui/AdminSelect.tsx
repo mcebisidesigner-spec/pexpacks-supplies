@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import clsx from "clsx";
 import { Check, ChevronDown } from "lucide-react";
-import styles from "./AdminSelect.module.css";
+import { cn } from "@/lib/utils";
 
-export interface AdminSelectProps extends Omit<
-  React.SelectHTMLAttributes<HTMLSelectElement>,
-  "value" | "onChange"
-> {
+export interface AdminSelectProps
+  extends Omit<
+    React.SelectHTMLAttributes<HTMLSelectElement>,
+    "value" | "onChange"
+  > {
   label?: string;
   error?: string;
   value?: string | number;
@@ -86,37 +86,50 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
     };
 
     return (
-      <div className={styles.wrapper} ref={ref}>
+      <div className="flex flex-col gap-1.5 w-full" ref={ref}>
         {label && (
-          <label htmlFor={selectId} className={styles.label}>
+          <label
+            htmlFor={selectId}
+            className="text-xs font-semibold text-[var(--db-text-muted)] select-none"
+          >
             {label}
           </label>
         )}
-        <div className={styles.selectContainer} ref={rootRef}>
+        <div className="relative flex items-center w-full" ref={rootRef}>
           <button
             type="button"
             id={selectId}
             disabled={disabled}
             aria-haspopup="listbox"
             aria-expanded={open}
-            className={clsx(
-              styles.select,
-              styles.selectButton,
-              { [styles.hasError]: Boolean(error), [styles.open]: open },
+            className={cn(
+              "flex items-center justify-between gap-2 w-full h-[42px] bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,rgba(51,65,85,0.85))] rounded-lg px-3 text-left cursor-pointer outline-none transition-colors transition-shadow text-[var(--db-text-primary,#ffffff)] hover:border-slate-400/60 hover:bg-slate-800/50 focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/25 focus-visible:bg-[#0b121e] disabled:opacity-50 disabled:cursor-not-allowed",
+              open &&
+                "border-emerald-500 ring-2 ring-emerald-500/25 bg-[#0b121e]",
+              error &&
+                "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/25",
               className,
             )}
             onClick={() => setOpen((prev) => !prev)}
           >
-            <span className={styles.selectedLabel}>
+            <span className="flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[13px] font-medium text-inherit">
               {current ? current.label : "Select..."}
             </span>
-            <span className={styles.arrowIcon}>
+            <span
+              className={cn(
+                "flex items-center justify-center text-slate-400 pointer-events-none transition-transform transition-colors duration-150 shrink-0",
+                open && "text-emerald-500 rotate-180",
+              )}
+            >
               <ChevronDown size={14} />
             </span>
           </button>
 
           {open ? (
-            <ul className={styles.menu} role="listbox">
+            <ul
+              className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 m-0 p-1.5 list-none bg-[#090e17] border border-slate-700/90 rounded-lg shadow-[0_12px_36px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.05)] max-h-70 overflow-y-auto box-border"
+              role="listbox"
+            >
               {options.map((opt) => {
                 const isActive = opt.value === String(value ?? "");
                 return (
@@ -125,13 +138,23 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
                       type="button"
                       disabled={opt.disabled}
                       onClick={() => handleSelect(opt)}
-                      className={clsx(styles.menuItem, {
-                        [styles.menuItemActive]: isActive,
-                      })}
+                      className={cn(
+                        "flex items-center justify-between gap-3 w-full px-3 py-2 border-0 rounded-md bg-transparent font-inherit text-[13px] font-medium text-slate-300 cursor-pointer text-left transition-colors select-none disabled:opacity-40 disabled:cursor-not-allowed",
+                        !isActive && "hover:bg-white/8 hover:text-white",
+                        isActive &&
+                          "bg-emerald-500/18 text-emerald-500 font-semibold hover:bg-emerald-500/25 hover:text-emerald-400",
+                      )}
                     >
-                      <span className={styles.menuLabel}>{opt.label}</span>
+                      <span
+                        className={cn(
+                          "truncate",
+                          isActive && "text-emerald-500 font-semibold",
+                        )}
+                      >
+                        {opt.label}
+                      </span>
                       {isActive ? (
-                        <span className={styles.menuCheck}>
+                        <span className="flex items-center shrink-0 text-emerald-500 ml-auto">
                           <Check size={14} strokeWidth={3} />
                         </span>
                       ) : null}
@@ -142,7 +165,11 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
             </ul>
           ) : null}
         </div>
-        {error && <span className={styles.errorText}>{error}</span>}
+        {error && (
+          <span className="text-xs text-[var(--db-danger-text,#ef4444)] font-medium">
+            {error}
+          </span>
+        )}
       </div>
     );
   },

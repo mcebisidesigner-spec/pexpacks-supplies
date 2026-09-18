@@ -30,7 +30,7 @@ import {
 } from "@/components/admin/shared/DataTable";
 import type { BadgeTone } from "@/components/admin/ui";
 import type { QuotationsListResult, QuotationRow } from "@/lib/admin/quotations";
-import styles from "../views/CorePagesView.module.css";
+import { corePages as styles } from "../views/CorePagesView";;
 
 const STATUS_CONFIG: Record<string, { label: string; tone: BadgeTone }> = {
   draft: { label: "Draft", tone: "slate" },

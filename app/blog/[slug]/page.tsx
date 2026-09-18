@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { CTASection } from "@/components/marketing/CTASection";
@@ -12,10 +13,6 @@ import { listBlogPosts, getBlogPost } from "@/lib/blog";
 import { buildMetadata, siteUrl } from "@/lib/seo";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { articleSchema } from "@/lib/schema";
-import clsx from "clsx";
-import styles from "../Blog.module.css";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
 
 export const revalidate = 300;
 
@@ -127,8 +124,8 @@ function renderContent(content: string[]): ReactNode[] {
     if (!listBuffer) return;
     const ListTag = listBuffer.ordered ? "ol" : "ul";
     const cls = listBuffer.ordered
-      ? styles.postOrderedList
-      : styles.postList;
+      ? "list-decimal pl-5 sm:pl-6 my-5 grid gap-2 text-slate-700 text-[16px] sm:text-[17px] leading-relaxed"
+      : "list-disc pl-5 sm:pl-6 my-5 grid gap-2 text-slate-700 text-[16px] sm:text-[17px] leading-relaxed";
     elements.push(
       <ListTag key={`list-${elements.length}`} className={cls}>
         {listBuffer.items.map((item, i) => (
@@ -157,14 +154,14 @@ function renderContent(content: string[]): ReactNode[] {
       if (isCaption) i++;
 
       elements.push(
-        <figure key={`img-${i}`} className={styles.postImageWrapper}>
+        <figure key={`img-${i}`} className="my-6">
           <Image
             src={img.src}
             alt={img.alt}
             width={800}
             height={450}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 800px"
-            className={styles.postImage}
+            className="w-full h-auto object-cover block rounded-2xl border border-black/5"
             placeholder="blur"
             blurDataURL={IMAGE_BLUR_DATA_URL}
             style={{
@@ -175,7 +172,7 @@ function renderContent(content: string[]): ReactNode[] {
             }}
           />
           {isCaption ? (
-            <figcaption className={styles.postImageCaption}>
+            <figcaption className="mt-2.5 text-sm text-slate-500 leading-normal text-center">
               {content[i]}
             </figcaption>
           ) : null}
@@ -193,7 +190,7 @@ function renderContent(content: string[]): ReactNode[] {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
       elements.push(
-        <h2 key={`h2-${i}`} id={id} className={styles.postHeading}>
+        <h2 key={`h2-${i}`} id={id} className="mt-8 sm:mt-10 mb-4 text-xl sm:text-2xl font-extrabold text-[#1a2a40] leading-snug first:mt-0">
           {title}
         </h2>
       );
@@ -204,7 +201,7 @@ function renderContent(content: string[]): ReactNode[] {
     if (line.startsWith("> ")) {
       flushList();
       elements.push(
-        <blockquote key={`bq-${i}`} className={styles.postBlockquote}>
+        <blockquote key={`bq-${i}`} className="my-5 py-4 px-5 border-l-4 border-teal-600 bg-slate-50 rounded-r-xl text-[#1a2a40] text-base sm:text-lg font-semibold leading-relaxed">
           {line.replace("> ", "")}
         </blockquote>
       );
@@ -239,14 +236,14 @@ function renderContent(content: string[]): ReactNode[] {
         .replace(/\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g, "")
         .trim();
       if (cleaned) {
-        elements.push(<p key={`p-${i}`}>{renderInlineContent(cleaned)}</p>);
+        elements.push(<p key={`p-${i}`} className="mb-5 last:mb-0">{renderInlineContent(cleaned)}</p>);
       }
       elements.push(
-        <div key={`pills-${i}`} className={styles.postLinkPillRow}>
+        <div key={`pills-${i}`} className="flex flex-wrap gap-3 my-5">
           {pills.map((pill, pi) => (
-            <Link key={pi} href={pill.href} className={styles.postLinkPill}>
+            <Link key={pi} href={pill.href} className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-white border border-teal-600 text-teal-700 font-extrabold text-sm no-underline hover:bg-teal-600 hover:text-white hover:-translate-y-0.5 hover:shadow-md transition-all">
               {pill.text}
-              <span aria-hidden="true">&rarr;</span>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
           ))}
         </div>
@@ -254,7 +251,7 @@ function renderContent(content: string[]): ReactNode[] {
       continue;
     }
 
-    elements.push(<p key={`p-${i}`}>{renderInlineContent(line)}</p>);
+    elements.push(<p key={`p-${i}`} className="mb-5 last:mb-0">{renderInlineContent(line)}</p>);
   }
 
   flushList();
@@ -291,70 +288,69 @@ export default async function BlogPostPage({
       <PageHero
         eyebrow={post.category}
         title={post.title}
-            panelText={`By ${post.author}`}
+        panelText={`By ${post.author}`}
         panelTitle={publishedDate}
       >
-        <Link href="/blog" className={styles.backLink}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: "middle" }}>
-            <path d="M19 12H5" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
+        <Link href="/blog" className="inline-flex items-center gap-1.5 text-teal-600 font-extrabold text-sm sm:text-base no-underline mt-4 hover:opacity-80 transition-opacity">
+          <ArrowLeft className="w-4 h-4" />
           Back to Resource Hub
         </Link>
       </PageHero>
 
-      <section className={styles.documentSection}>
-        <div className={styles.documentInner}>
+      <section className="bg-gradient-to-b from-slate-50 to-white">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)] gap-6 lg:gap-8 items-start max-w-7xl mx-auto py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
           {/* ── Sidebar ── */}
-          <aside className={styles.sidebarShell}>
-            <nav className={styles.sidebarCard} aria-label="Article sections">
+          <aside className="lg:sticky lg:top-[calc(72px+16px)] self-start z-20">
+            <nav className="border border-slate-200/90 rounded-[24px] p-5 bg-white/80 backdrop-blur-md shadow-sm" aria-label="Article sections">
               {headings.length > 0 ? (
                 <>
-                  <p className={styles.sidebarEyebrow}>Jump to</p>
-                  <h2 className={styles.sidebarTitle}>Contents</h2>
-                  <ol className={styles.sidebarToc}>
+                  <p className="m-0 text-teal-600 text-xs font-extrabold uppercase tracking-wider">Jump to</p>
+                  <h2 className="mt-1.5 mb-4 text-[#1a2a40] text-xl font-bold leading-tight">Contents</h2>
+                  <ol className="grid gap-1 m-0 p-0 list-none">
                     {headings.map((h) => (
                       <li key={h.id}>
-                        <a href={`#${h.id}`}>{h.title}</a>
+                        <a href={`#${h.id}`} className="block rounded-md px-2.5 py-2 text-slate-700 text-xs font-bold leading-snug no-underline hover:bg-slate-100 hover:text-teal-600 hover:translate-x-0.5 transition-all">
+                          {h.title}
+                        </a>
                       </li>
                     ))}
                   </ol>
-                  <hr className={styles.sidebarDivider} />
+                  <hr className="my-4 border-0 h-px bg-slate-200" />
                 </>
               ) : null}
 
-              <div className={styles.sidebarMeta}>
-                <div>
-                  <span className={styles.sidebarMetaLabel}>Published</span>
-                  <span className={styles.sidebarMetaValue}>{publishedDate}</span>
+              <div className="grid gap-2.5">
+                <div className="grid gap-0.5">
+                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Published</span>
+                  <span className="text-sm font-semibold text-[#1a2a40] leading-snug">{publishedDate}</span>
                 </div>
-                <div>
-                  <span className={styles.sidebarMetaLabel}>Author</span>
-                  <span className={styles.sidebarMetaValue}>{post.author}</span>
+                <div className="grid gap-0.5">
+                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Author</span>
+                  <span className="text-sm font-semibold text-[#1a2a40] leading-snug">{post.author}</span>
                 </div>
-                <div>
-                  <span className={styles.sidebarMetaLabel}>Category</span>
-                  <span className={styles.sidebarMetaValue}>{post.category}</span>
+                <div className="grid gap-0.5">
+                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Category</span>
+                  <span className="text-sm font-semibold text-[#1a2a40] leading-snug">{post.category}</span>
                 </div>
               </div>
 
-              <Link href="/schools" className={styles.sidebarCta} data-conversion-event="article_find_school_pack">
+              <Link href="/schools" className="block mt-5 py-3 px-4 rounded-full bg-[#1a2a40] text-white font-extrabold text-sm text-center no-underline hover:bg-teal-600 hover:-translate-y-0.5 transition-all" data-conversion-event="article_find_school_pack">
                 Find Your School Pack
               </Link>
             </nav>
           </aside>
 
           {/* ── Main content ── */}
-          <div className={styles.documentContent}>
+          <div className="grid gap-5 min-w-0">
             {post.image ? (
-              <div className={styles.postHeroCard}>
+              <div className="rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-sm border border-slate-200/90">
                 <Image
                   src={post.image}
                   alt={post.title}
                   width={800}
                   height={450}
                   sizes="(max-width: 768px) 100vw, 800px"
-                  className={styles.postImage}
+                  className="w-full h-auto object-cover block"
                   placeholder="blur"
                   blurDataURL={IMAGE_BLUR_DATA_URL}
                   priority
@@ -362,38 +358,38 @@ export default async function BlogPostPage({
               </div>
             ) : null}
 
-            <article className={styles.documentCard}>
-              <div className={styles.postCardBody}>
+            <article className="relative border border-slate-200/90 rounded-[24px] sm:rounded-[28px] bg-white/95 shadow-sm overflow-hidden">
+              <div className="p-5 sm:p-7 text-slate-700 text-[16px] sm:text-[17px] leading-relaxed">
                 {renderContent(post.content)}
               </div>
             </article>
 
             <aside
-              className={styles.knowledgeCard}
+              className="border border-teal-600/25 rounded-[24px] sm:rounded-[28px] p-5 sm:p-7 bg-gradient-to-br from-teal-600/[0.06] to-white/90 shadow-sm"
               aria-label="Explore more resources"
             >
-              <p className={styles.sidebarEyebrow}>Keep digging</p>
-              <h2 className={styles.knowledgeTitle}>
+              <p className="m-0 text-teal-600 text-xs font-extrabold uppercase tracking-wider">Keep digging</p>
+              <h2 className="mt-1.5 mb-2.5 text-[#1a2a40] text-xl sm:text-2xl font-bold leading-tight">
                 Dive deeper into related topics
               </h2>
-              <p className={styles.knowledgeText}>
+              <p className="m-0 mb-5 text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-[660px]">
                 Discover helpful resources to make your back-to-school
                 experience smoother.
               </p>
-              <div className={styles.postKnowledgeGrid}>
-                <Link href="/schools" className={styles.postKnowledgePill} data-conversion-event="article_browse_school_packs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                <Link href="/schools" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all" data-conversion-event="article_browse_school_packs">
                   Browse school packs
                 </Link>
-                <Link href="/happy-pay" className={styles.postKnowledgePill}>
+                <Link href="/happy-pay" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all">
                   Split in 2 with Happy Pay
                 </Link>
-                <Link href="/add-your-school" className={styles.postKnowledgePill} data-conversion-event="article_request_school">
+                <Link href="/add-your-school" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all" data-conversion-event="article_request_school">
                   Request your school
                 </Link>
-                <Link href="/faq" className={styles.postKnowledgePill}>
+                <Link href="/faq" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all">
                   Frequently asked questions
                 </Link>
-                <Link href="/partnership" className={styles.postKnowledgePill}>
+                <Link href="/partnership" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all">
                   School partnerships
                 </Link>
               </div>
@@ -401,23 +397,23 @@ export default async function BlogPostPage({
 
             {relatedPosts.length > 0 ? (
               <section
-                className={styles.documentCard}
+                className="relative border border-slate-200/90 rounded-[24px] sm:rounded-[28px] bg-white/95 shadow-sm overflow-hidden"
                 aria-label="Continue reading"
               >
-                <div className={styles.postCardHeader}>
-                  <h2>Continue reading</h2>
+                <div className="pt-6 sm:pt-7 px-5 sm:px-7">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-[#1a2a40] m-0">Continue reading</h2>
                 </div>
-                <div className={styles.postCardBody}>
-                  <div className={styles.postRelatedGrid}>
+                <div className="p-5 sm:p-7">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {relatedPosts.map((rp) => (
                       <Link
                         key={rp.id}
                         href={`/blog/${rp.slug}`}
-                        className={styles.postRelatedCard}
+                        className="group border border-slate-200 rounded-2xl p-5 bg-white shadow-xs no-underline flex flex-col hover:-translate-y-1 hover:shadow-md transition-all"
                       >
-                        <h3>{rp.title}</h3>
-                        <p>{rp.excerpt}</p>
-                        <span>Read more &rarr;</span>
+                        <h3 className="text-base m-0 mb-2 text-[#1a2a40] font-extrabold leading-snug group-hover:text-teal-600 transition-colors">{rp.title}</h3>
+                        <p className="text-xs text-slate-500 m-0 flex-1 leading-relaxed line-clamp-3">{rp.excerpt}</p>
+                        <span className="mt-3.5 text-xs font-extrabold text-teal-600 group-hover:opacity-80 transition-opacity flex items-center gap-1">Read more &rarr;</span>
                       </Link>
                     ))}
                   </div>
@@ -425,8 +421,8 @@ export default async function BlogPostPage({
               </section>
             ) : null}
 
-            <div className={clsx(styles.documentCard, styles.searchWidgetCard)}>
-              <div className={styles.postCardBody}>
+            <div className="relative border border-slate-200/90 rounded-[24px] sm:rounded-[28px] bg-white/95 shadow-sm overflow-visible z-30 focus-within:z-40">
+              <div className="p-5 sm:p-7">
                 <SchoolSearchWidget
                   compact={true}
                   titleText="Find your official school pack"
@@ -448,34 +444,34 @@ export default async function BlogPostPage({
         secondaryLabel="My school isn't listed"
       />
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
+      <section className="py-12 sm:py-16 bg-slate-50 border-t border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div>
-              <p className={sectionStyles.sectionEyebrow}>Beat Janu-worry</p>
-              <h2>Plan ahead, pay at your own pace</h2>
-              <p>
+              <p className="text-xs font-extrabold uppercase tracking-wider text-teal-600 mb-2">Beat Janu-worry</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1a2a40] mb-3 leading-tight">Plan ahead, pay at your own pace</h2>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
                 Find your child&rsquo;s school pack early, lock in your list,
                 and order at your own pace so back-to-school is stress-free.
               </p>
-              <div className={sectionStyles.buttonRow}>
-                <Button href="/schools" variant="primary" data-conversion-event="article_find_school_pack_bottom">
+              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                <Button href="/schools" variant="primary" className="min-h-[44px]" data-conversion-event="article_find_school_pack_bottom">
                   Find Your School Pack
                 </Button>
               </div>
             </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 style={{ fontSize: "20px" }}>School partnerships</h3>
+            <div className="rounded-[24px] border border-slate-200 bg-white p-6 sm:p-8 shadow-xs flex flex-col gap-4">
+              <div>
+                <h3 className="text-xl font-extrabold text-[#1a2a40] m-0">School partnerships</h3>
               </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
+              <div>
+                <p className="text-slate-600 text-sm sm:text-base leading-relaxed m-0">
                   Schools can submit stationery lists so parents order
                   grade-specific packs. No admin, no hassle.
                 </p>
               </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/partnership" className={cardStyles.cardLink} data-conversion-event="article_partnership">
+              <div className="pt-2">
+                <Link href="/partnership" className="inline-flex items-center gap-1.5 text-sm font-extrabold text-teal-600 hover:text-teal-700 transition-colors" data-conversion-event="article_partnership">
                   Explore partnerships &rarr;
                 </Link>
               </div>

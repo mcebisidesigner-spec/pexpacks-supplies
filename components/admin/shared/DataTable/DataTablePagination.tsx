@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
-import styles from "./DataTablePagination.module.css";
+import { cn } from "@/lib/utils";
 import { useTableParams } from "./useTableParams";
 
 export interface DataTablePaginationProps {
@@ -82,8 +82,13 @@ export function DataTablePagination({
   };
 
   return (
-    <div className={`${styles.paginationFooter} ${className || ""}`}>
-      <div className={styles.paginationLeft}>
+    <div
+      className={cn(
+        "flex flex-col sm:flex-row items-center justify-between p-3 sm:px-4.5 sm:py-3 bg-[var(--db-surface-inner,#090e17)] border-t border-[var(--db-border,rgba(30,41,59,0.8))] text-xs text-[var(--db-text-muted,#94a3b8)] w-full gap-4 flex-wrap",
+        className,
+      )}
+    >
+      <div className="flex items-center w-full sm:w-auto justify-between sm:justify-start">
         <AdminDropdown
           value={pageSize}
           options={[10, 20, 25, 50, 100].map((opt) => ({
@@ -97,19 +102,29 @@ export function DataTablePagination({
         />
       </div>
 
-      <div className={styles.paginationRight}>
-        <div className={styles.rangeText}>
-          Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}
-          <span className={styles.rangeHighlight}>{formatCount(toRecord)}</span> of{" "}
-          <span className={styles.rangeHighlight}>{formatCount(total)}</span> records
+      <div className="flex items-center justify-between sm:justify-end gap-4.5 flex-wrap w-full sm:w-auto sm:ml-auto">
+        <div className="text-xs font-medium text-[var(--db-text-muted,#94a3b8)] whitespace-nowrap">
+          Showing{" "}
+          <span className="text-[var(--db-text-primary,#ffffff)] font-bold">
+            {formatCount(fromRecord)}
+          </span>{" "}
+          to{" "}
+          <span className="text-[var(--db-text-primary,#ffffff)] font-bold">
+            {formatCount(toRecord)}
+          </span>{" "}
+          of{" "}
+          <span className="text-[var(--db-text-primary,#ffffff)] font-bold">
+            {formatCount(total)}
+          </span>{" "}
+          records
         </div>
 
-        <div className={styles.controls}>
+        <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={() => handlePageClick(currentPage - 1)}
             disabled={currentPage <= 1}
-            className={styles.pageBtn}
+            className="inline-flex items-center justify-center min-w-7 h-7 px-2 border border-slate-700/80 rounded-md bg-transparent text-slate-300 text-xs font-medium cursor-pointer transition-colors hover:bg-slate-700/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
             aria-label="Previous Page"
           >
             <ChevronLeft size={13} />
@@ -118,7 +133,10 @@ export function DataTablePagination({
           {pageNumbers.map((p, idx) => {
             if (p === "...") {
               return (
-                <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
+                <span
+                  key={`ellipsis-${idx}`}
+                  className="px-1 text-slate-500 text-xs select-none"
+                >
                   ...
                 </span>
               );
@@ -132,7 +150,11 @@ export function DataTablePagination({
                 key={`page-${pageNum}`}
                 type="button"
                 onClick={() => handlePageClick(pageNum)}
-                className={`${styles.pageBtn} ${isActive ? styles.pageBtnActive : ""}`}
+                className={cn(
+                  "inline-flex items-center justify-center min-w-7 h-7 px-2 border border-slate-700/80 rounded-md bg-transparent text-slate-300 text-xs font-medium cursor-pointer transition-colors hover:bg-slate-700/50 hover:text-white",
+                  isActive &&
+                    "border-emerald-500 bg-emerald-500/18 text-emerald-400 font-bold hover:bg-emerald-500/25 hover:text-emerald-300",
+                )}
               >
                 {pageNum}
               </button>
@@ -143,7 +165,7 @@ export function DataTablePagination({
             type="button"
             onClick={() => handlePageClick(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            className={styles.pageBtn}
+            className="inline-flex items-center justify-center min-w-7 h-7 px-2 border border-slate-700/80 rounded-md bg-transparent text-slate-300 text-xs font-medium cursor-pointer transition-colors hover:bg-slate-700/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
             aria-label="Next Page"
           >
             <ChevronRight size={13} />

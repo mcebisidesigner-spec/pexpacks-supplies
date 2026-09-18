@@ -10,7 +10,6 @@ import {
   trackQuoteSubmitted,
   trackQuoteSubmissionFailed,
 } from "@/lib/analytics";
-import styles from "./OrderPage.module.css";
 
 type OrderCategory = "Primary School Learner" | "High School Learner";
 
@@ -165,13 +164,13 @@ export function OrderForm() {
 
   if (isSuccess) {
     return (
-      <div className={clsx(styles.formCard, styles.successState)}>
-        <div className={styles.successIcon}>✓</div>
-        <h2>List Received!</h2>
-        <p>
+      <div className="bg-[var(--pex-card-bg)] rounded-[var(--radius-md)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[0_4px_20px_rgba(26,42,64,0.06)] text-center flex flex-col items-center justify-center py-12">
+        <div className="w-14 h-14 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] grid place-items-center text-2xl font-bold mb-4">✓</div>
+        <h2 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">List Received!</h2>
+        <p className="text-[var(--pex-muted)] text-sm leading-relaxed max-w-md mb-6">
           Thanks {name.split(" ")[0]}! We have received your stationery list.
           <br /><br />
-          Our packing team is reviewing it now and will send your custom quote to <strong>{phone}</strong> via WhatsApp within 2 hours.
+          Our packing team is reviewing it now and will send your custom quote to <strong className="text-[var(--pex-navy)] font-semibold">{phone}</strong> via WhatsApp within 2 hours.
         </p>
         <Button 
           variant="outline" 
@@ -188,7 +187,6 @@ export function OrderForm() {
             setConsent(false);
             setErrors({});
           }}
-          style={{ marginTop: "32px" }}
         >
           Submit another list
         </Button>
@@ -197,32 +195,37 @@ export function OrderForm() {
   }
 
   return (
-    <div className={styles.formCard}>
+    <div className="bg-[var(--pex-card-bg)] rounded-[var(--radius-md)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[0_4px_20px_rgba(26,42,64,0.06)]">
       {/* Progress Indicator */}
       <div
-        className={styles.progressBar}
+        className="flex gap-2 mb-8"
         role="progressbar"
         aria-label="Quote request progress"
         aria-valuemin={1}
         aria-valuemax={3}
         aria-valuenow={step}
       >
-        <div className={clsx(styles.progressStep, step >= 1 && styles.active)}></div>
-        <div className={clsx(styles.progressStep, step >= 2 && styles.active)}></div>
-        <div className={clsx(styles.progressStep, step >= 3 && styles.active)}></div>
+        <div className={clsx("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 1 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
+        <div className={clsx("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 2 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
+        <div className={clsx("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 3 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
       </div>
 
-      <div className={styles.stepContainer}>
+      <div className="flex flex-col gap-6">
         {/* FORM STEP 1: Who is this for? */}
         {step === 1 && (
-          <div className={styles.animateFadeIn}>
-            <h2 className={styles.stepTitle}>Who are we packing for?</h2>
-            <div className={styles.verticalOptions}>
+          <div className="animate-in fade-in duration-300">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Who are we packing for?</h2>
+            <div className="flex flex-col gap-3">
               {(["Primary School Learner", "High School Learner"] as OrderCategory[]).map((cat) => (
                 <button
                   type="button"
                   key={cat}
-                  className={clsx(styles.verticalOptionBtn, category === cat && styles.selected)}
+                  className={clsx(
+                    "w-full min-h-[52px] px-5 py-4 rounded-[var(--radius-sm)] border text-[var(--pex-navy)] font-semibold text-base text-left transition-all active:scale-[0.99]",
+                    category === cat
+                      ? "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.08)] text-[var(--pex-keppel)] shadow-sm"
+                      : "border-[var(--pex-border)] bg-white hover:border-[var(--pex-keppel)] hover:bg-[rgba(33,158,154,0.04)]"
+                  )}
                   onClick={() => {
                     setCategory(cat);
                     setErrors({});
@@ -238,34 +241,34 @@ export function OrderForm() {
               ))}
             </div>
 
-            <div className={styles.addSchoolContainer}>
-              <Link href="/add-your-school" className={styles.addSchoolLink}>
+            <div className="mt-6 pt-4 border-t border-[var(--pex-border)] text-sm">
+              <Link href="/add-your-school" className="inline-flex items-center gap-2 text-[var(--pex-keppel)] hover:text-[var(--pex-primary)] font-medium transition-colors">
                 <span>Would you like to add your school?</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <svg className="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
             </div>
 
-            {errors.category && <span className={styles.errorText}>{errors.category}</span>}
+            {errors.category && <span className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.category}</span>}
           </div>
         )}
 
         {/* FORM STEP 2: File Upload */}
         {step === 2 && (
-          <div className={styles.animateFadeIn}>
-            <h2 className={styles.stepTitle}>Share your stationery list</h2>
-            <div className={styles.tabs}>
+          <div className="animate-in fade-in duration-300">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Share your stationery list</h2>
+            <div className="flex rounded-[var(--radius-sm)] bg-[var(--pex-bg)] p-1 mb-6 border border-[var(--pex-border)]">
               <button 
                 type="button"
-                className={clsx(styles.tab, inputMethod === "upload" && styles.active)}
+                className={clsx("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "upload" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
                 onClick={() => setInputMethod("upload")}
               >
                 Upload Photo/PDF
               </button>
               <button 
                 type="button"
-                className={clsx(styles.tab, inputMethod === "type" && styles.active)}
+                className={clsx("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "type" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
                 onClick={() => setInputMethod("type")}
               >
                 Paste / Type List
@@ -274,23 +277,28 @@ export function OrderForm() {
 
             {inputMethod === "upload" ? (
               fileName ? (
-                <div className={styles.successArea}>
-                  <div className={styles.successIcon}>✓</div>
-                  <strong>{fileName}</strong>
+                <div className="flex flex-col items-center gap-3 p-6 rounded-[var(--radius-sm)] border-2 border-dashed border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] text-center">
+                  <div className="w-10 h-10 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] grid place-items-center text-xl font-bold">✓</div>
+                  <strong className="text-sm text-[var(--pex-navy)]">{fileName}</strong>
                   <button 
                     type="button" 
                     onClick={() => {
                       setFile(null);
                       setFileName(null);
                     }}
-                    className={styles.removeFileBtn}
+                    className="text-xs text-[var(--pex-coral)] hover:underline font-medium"
                   >
                     Remove file
                   </button>
                 </div>
               ) : (
                 <div 
-                  className={clsx(styles.uploadArea, isDragging && styles.dragging)}
+                  className={clsx(
+                    "flex flex-col items-center justify-center p-8 rounded-[var(--radius-sm)] border-2 border-dashed cursor-pointer text-center relative transition-all min-h-[180px]",
+                    isDragging
+                      ? "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.08)]"
+                      : "border-[var(--pex-border)] hover:border-[var(--pex-keppel)] bg-[var(--pex-bg)] hover:bg-[rgba(33,158,154,0.02)]"
+                  )}
                   onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                   onDragLeave={() => setIsDragging(false)}
                   onDrop={(e) => {
@@ -304,14 +312,14 @@ export function OrderForm() {
                     }
                   }}
                 >
-                  <div className={styles.uploadIcon}>📄</div>
-                  <strong>Click to upload or drag and drop</strong>
-                  <span>All file types supported (PNG, JPG, PDF, Word, Excel, etc. Max 10MB)</span>
+                  <div className="text-3xl mb-2">📄</div>
+                  <strong className="text-sm text-[var(--pex-navy)] mb-1">Click to upload or drag and drop</strong>
+                  <span className="text-xs text-[var(--pex-muted)] max-w-xs">All file types supported (PNG, JPG, PDF, Word, Excel, etc. Max 10MB)</span>
                   <input 
                     id="stationery-list-file"
                     name="stationeryListFile"
                     type="file" 
-                    className={styles.fileInput} 
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" 
                     onChange={handleFileChange}
                   />
                 </div>
@@ -320,7 +328,10 @@ export function OrderForm() {
               <textarea
                 id="stationery-list-text"
                 name="stationeryListText"
-                className={clsx(styles.input, errors.list && styles.inputError)}
+                className={clsx(
+                  "w-full min-h-[120px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
+                  errors.list ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                )}
                 placeholder="Paste your items here (e.g. 5x HB Pencils, 2x Pritt 43g...)"
                 rows={4}
                 value={listText}
@@ -330,10 +341,10 @@ export function OrderForm() {
                 }}
               />
             )}
-            {errors.list && <span className={styles.errorText}>{errors.list}</span>}
+            {errors.list && <span className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.list}</span>}
 
-            <div className={styles.formActions}>
-              <button type="button" onClick={prevStep} className={styles.backBtn}>← Back</button>
+            <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-[var(--pex-border)]">
+              <button type="button" onClick={prevStep} className="text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3">← Back</button>
               <Button 
                 onClick={nextStep} 
                 disabled={inputMethod === "upload" ? !fileName : !listText.trim()}
@@ -348,23 +359,26 @@ export function OrderForm() {
 
         {/* FORM STEP 3: Contact Details */}
         {step === 3 && (
-          <div className={styles.animateFadeIn}>
-            <h2 className={styles.stepTitle}>Where should we send your quote?</h2>
+          <div className="animate-in fade-in duration-300">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Where should we send your quote?</h2>
             
-            <form onSubmit={handleSubmit} className={styles.formGrid}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {errors.submit && (
-                <div role="alert" className={styles.submitAlert}>
+                <div role="alert" className="p-3 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.1)] border border-[rgba(235,94,85,0.3)] text-[var(--pex-coral)] text-sm font-medium">
                   {errors.submit}
                 </div>
               )}
-              <div className={styles.field}>
-                <label htmlFor="quote-name">Your Name</label>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="quote-name" className="text-xs font-semibold text-[var(--pex-navy)]">Your Name</label>
                 <input
                   id="quote-name"
                   type="text"
                   autoComplete="name"
                   required
-                  className={clsx(styles.input, errors.name && styles.inputError)}
+                  className={clsx(
+                    "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
+                    errors.name ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                  )}
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -373,33 +387,39 @@ export function OrderForm() {
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "quote-name-error" : undefined}
                 />
-                {errors.name && <span id="quote-name-error" className={styles.errorText}>{errors.name}</span>}
+                {errors.name && <span id="quote-name-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.name}</span>}
               </div>
 
-              <div className={styles.field}>
-                <label htmlFor="quote-phone">WhatsApp Number</label>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="quote-phone" className="text-xs font-semibold text-[var(--pex-navy)]">WhatsApp Number</label>
                 <input
                   id="quote-phone"
                   type="tel"
                   autoComplete="tel"
                   required
-                  className={clsx(styles.input, errors.phone && styles.inputError)}
+                  className={clsx(
+                    "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
+                    errors.phone ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                  )}
                   placeholder="e.g. 078 123 4567"
                   value={phone}
                   onChange={handlePhoneChange}
                   aria-invalid={!!errors.phone}
                   aria-describedby={errors.phone ? "quote-phone-error" : undefined}
                 />
-                {errors.phone && <span id="quote-phone-error" className={styles.errorText}>{errors.phone}</span>}
+                {errors.phone && <span id="quote-phone-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.phone}</span>}
               </div>
 
-              <div className={styles.field}>
-                <label htmlFor="quote-email">Email Address (Optional)</label>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="quote-email" className="text-xs font-semibold text-[var(--pex-navy)]">Email Address (Optional)</label>
                 <input
                   id="quote-email"
                   type="email"
                   autoComplete="email"
-                  className={clsx(styles.input, errors.email && styles.inputError)}
+                  className={clsx(
+                    "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
+                    errors.email ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                  )}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -408,10 +428,10 @@ export function OrderForm() {
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "quote-email-error" : undefined}
                 />
-                {errors.email && <span id="quote-email-error" className={styles.errorText}>{errors.email}</span>}
+                {errors.email && <span id="quote-email-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.email}</span>}
               </div>
 
-              <div className={styles.consentField}>
+              <div className="flex items-start gap-2.5 mt-2">
                 <input 
                   id="quote-consent" 
                   type="checkbox" 
@@ -422,15 +442,16 @@ export function OrderForm() {
                   }}
                   aria-invalid={!!errors.consent}
                   aria-describedby={errors.consent ? "quote-consent-error" : undefined}
+                  className="mt-1"
                 />
-                <label htmlFor="quote-consent" className={styles.consentLabel}>
+                <label htmlFor="quote-consent" className="text-xs text-[var(--pex-muted)] leading-relaxed cursor-pointer select-none">
                   I consent to Pexpacks processing my information to handle this request under POPIA guidelines.
                 </label>
               </div>
-              {errors.consent && <span id="quote-consent-error" className={clsx(styles.errorText, styles.consentError)}>{errors.consent}</span>}
+              {errors.consent && <span id="quote-consent-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1 ml-6 block">{errors.consent}</span>}
 
-              <div className={styles.formActions}>
-                <button type="button" onClick={prevStep} className={styles.backBtn}>← Back</button>
+              <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-[var(--pex-border)]">
+                <button type="button" onClick={prevStep} className="text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3">← Back</button>
                 <Button 
                   type="submit" 
                   variant="primary" 

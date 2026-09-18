@@ -14,8 +14,6 @@ import { getCachedSchoolBySlug } from "@/lib/school-utils";
 import { getActivePublicSeason } from "@/lib/public-data/seasons";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
-import pageStyles from "@/styles/Page.module.css";
-import styles from "./SchoolDetailPage.module.css";
 
 export const revalidate = 300;
 
@@ -143,39 +141,39 @@ export default async function SchoolDetailPage({
         )}
         title={school.name}
         panelChildren={
-          <div className={styles.schoolHeroCard}>
-            <div className={styles.schoolHeroCardLeft}>
-              <span className={styles.schoolHeroYearLabel}>
+          <div className="bg-white rounded-3xl md:rounded-[var(--radius-card-lg,28px)] p-5 sm:p-6 md:p-[24px_28px] shadow-[0_20px_48px_rgba(0,0,0,0.18)] flex items-center justify-between gap-4 md:gap-[clamp(16px,3vw,28px)]">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[var(--pex-navy)] font-bold text-base sm:text-lg leading-[1.2]">
                 Stationery List {season.academicYear}
               </span>
-              <span className={styles.schoolHeroPrepared}>
+              <span className="text-[var(--pex-navy)] font-[family-name:var(--font-heading)] text-xl sm:text-[clamp(20px,2.5vw,26px)] font-bold leading-[1.2] mt-1">
                 {isRefused ? "Non-partner" : "Prepared with care"}
               </span>
               <a
                 href={officialWebsiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.schoolHeroWebsiteLink}
+                className="inline-flex items-center gap-1 mt-3 text-[var(--pex-keppel)] hover:text-[#156966] text-sm font-bold no-underline transition-all hover:translate-x-0.5 w-fit"
               >
                 Visit School Website
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="w-3.5 h-3.5 stroke-current stroke-[2.2] fill-none">
                   <path d="M7 17L17 7M17 7H7M17 7V17" />
                 </svg>
               </a>
             </div>
-            <div className={styles.schoolHeroLogoBox}>
+            <div className="w-[76px] h-[76px] sm:w-[clamp(80px,10vw,100px)] sm:h-[clamp(80px,10vw,100px)] rounded-2xl sm:rounded-[20px] bg-[var(--pex-bg-soft)] grid place-items-center p-2 sm:p-2.5 shrink-0">
               {school.logo ? (
                 <Image
                   src={school.logo}
                   alt={`${school.name} crest`}
                   width={96}
                   height={96}
-                  className={styles.schoolHeroLogo}
+                  className="w-full h-full object-contain block"
                   priority
                 />
               ) : (
                 <SchoolLogoPlaceholder
-                  className={styles.schoolHeroLogo}
+                  className="w-full h-full object-contain block"
                   title={`${school.name} logo`}
                 />
               )}
@@ -185,20 +183,20 @@ export default async function SchoolDetailPage({
       />
 
       {isRefused ? (
-        <div className={styles.unpartneredCard}>
-          <div className={styles.unpartneredCardBody}>
-            <span className={styles.unpartneredBadge}>
+        <div className="w-full max-w-[var(--content-max-width)] mx-auto px-4 md:px-8 pt-6 sm:pt-10">
+          <div className="py-6 px-5 sm:p-11 sm:px-10 rounded-[var(--radius-section)] bg-gradient-to-br from-[var(--pex-navy)] to-[#0f1e30] text-white text-center">
+            <span className="inline-block mb-3.5 px-3.5 py-1 rounded-full bg-[rgba(255,111,89,0.18)] text-[var(--pex-coral)] text-xs font-extrabold uppercase tracking-wider">
               Not yet an official partner
             </span>
-            <h2 className={styles.unpartneredCardTitle}>
+            <h2 className="m-0 mb-3.5 font-[family-name:var(--font-heading)] text-2xl sm:text-[clamp(24px,3.2vw,34px)] font-extrabold leading-[1.1]">
               {`${school.name} isn't partnered with Pexpacks yet.`}
             </h2>
-            <p className={styles.unpartneredCardText}>
+            <p className="max-w-[520px] mx-auto mb-7 text-white/80 text-[clamp(15px,1.6vw,17px)] leading-[1.6]">
               You can still order — upload your child&apos;s stationery list and
               we&apos;ll pack it for you.
             </p>
 
-            <div className={styles.unpartneredCardActions}>
+            <div className="flex flex-wrap gap-3.5 justify-center [&>*:not(:first-child)]:bg-white/12 [&>*:not(:first-child)]:border-white/35 [&>*:not(:first-child)]:text-white hover:[&>*:not(:first-child)]:bg-white/25 hover:[&>*:not(:first-child)]:border-white/70">
               <Button href="/order" variant="primary">
                 Upload Stationery List
               </Button>
@@ -213,13 +211,15 @@ export default async function SchoolDetailPage({
             </div>
           </div>
 
-          <div className={styles.unpartneredCardSecondary}>
-            <h3>Want to add {school.name} as a partner?</h3>
-            <p>
+          <div className="mt-5 p-6 border border-[var(--color-navy-subtle)] rounded-[var(--radius-section)] bg-white shadow-sm text-center">
+            <h3 className="m-0 mb-2 text-[var(--pex-primary)] text-lg sm:text-[clamp(18px,2vw,22px)] font-extrabold leading-[1.15]">
+              Want to add {school.name} as a partner?
+            </h3>
+            <p className="max-w-[480px] mx-auto mb-5 text-[var(--pex-text-muted)] text-[15px] leading-[1.5]">
               Encourage the school to list with us so parents can order
               grade-specific packs directly.
             </p>
-            <div className={styles.unpartneredCardSecondaryActions}>
+            <div className="flex flex-wrap gap-3 justify-center">
               <Button
                 href={`https://wa.me/?text=${encodeURIComponent(`Hi Principal, please partner with Pexpacks so we can order our stationery packs online. https://pexpacks.co.za/partnership`)}`}
                 variant="outline"
@@ -234,8 +234,8 @@ export default async function SchoolDetailPage({
         </div>
       ) : (
         <>
-          <div className={styles.searchMicroCopy}>
-            <p>
+          <div className="w-full max-w-[var(--content-max-width)] mx-auto px-4 md:px-8 pt-5">
+            <p className="m-0 py-3 px-4.5 rounded-[14px] bg-[rgba(33,158,154,0.07)] text-[var(--pex-navy)] text-sm font-semibold leading-[1.5]">
               Every pack is an exact 100% match to {school.name}&apos;s official
               requirements. Simply select your grade, and you can easily add or
               minus quantities of the required items before checkout.
@@ -243,9 +243,9 @@ export default async function SchoolDetailPage({
           </div>
 
           {/* Subtle Pexcover Advertisement Banner */}
-          <div className={styles.pexcoverBannerOuter}>
-            <div className={styles.pexcoverBanner}>
-              <div className={styles.pexcoverBannerIcon}>
+          <div className="w-full max-w-[var(--content-max-width)] mx-auto px-4 md:px-8 pt-5 sm:pt-6 md:pt-10">
+            <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-stretch md:items-start p-5 bg-[var(--pex-bg-soft)] border border-[var(--pex-border)] rounded-[var(--radius-card)] hover:border-[var(--pex-keppel)] hover:shadow-[0_10px_30px_rgba(26,42,64,0.04)] transition-all duration-200">
+              <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[var(--color-teal-subtle)] text-[var(--pex-keppel)] grid place-items-center">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -253,15 +253,16 @@ export default async function SchoolDetailPage({
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  className="w-6 h-6"
                 >
                   <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
-              <div className={styles.pexcoverBannerContent}>
-                <h4 className={styles.pexcoverBannerTitle}>
+              <div className="flex-1 min-w-0">
+                <h4 className="m-0 mb-1.5 text-[var(--pex-primary)] text-lg font-black leading-[1.25]">
                   Simplify prep with Pexcover book covering
                 </h4>
-                <p className={styles.pexcoverBannerText}>
+                <p className="m-0 mb-3 text-[var(--pex-text)] text-sm leading-[1.5]">
                   Add covered books and custom-printed name labels for as little
                   as <strong>R200</strong>, depending on the pack items. We
                   cover the books and print matching labels so your child is
@@ -269,7 +270,7 @@ export default async function SchoolDetailPage({
                 </p>
                 <Link
                   href="/blog/what-is-pexcover-book-covering"
-                  className={styles.pexcoverBannerLink}
+                  className="inline-flex items-center text-[var(--pex-coral)] hover:text-[var(--pex-primary)] text-sm font-extrabold no-underline hover:underline transition-colors"
                 >
                   Learn how Pexcover works &rarr;
                 </Link>
@@ -277,16 +278,16 @@ export default async function SchoolDetailPage({
             </div>
           </div>
 
-          <section className={pageStyles.section}>
-            <div className={pageStyles.sectionInner}>
+          <section className="py-[var(--section-padding-y-mobile)] sm:py-[var(--section-padding-y-tablet)] lg:py-[var(--section-padding-y-desktop)]">
+            <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
               <GradeSelector school={schoolWithGrades} />
             </div>
           </section>
 
-          <section className={pageStyles.section}>
-            <div className={pageStyles.sectionInner}>
+          <section className="py-[var(--section-padding-y-mobile)] sm:py-[var(--section-padding-y-tablet)] lg:py-[var(--section-padding-y-desktop)]">
+            <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
               <HappyPayBanner variant="schoolPage" />
-              <div style={{ marginTop: 20 }}>
+              <div className="mt-5">
                 <HappyPaySteps />
               </div>
             </div>
@@ -296,3 +297,4 @@ export default async function SchoolDetailPage({
     </>
   );
 }
+

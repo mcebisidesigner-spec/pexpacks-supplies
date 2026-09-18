@@ -6,7 +6,7 @@ import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { trackTrayOpened } from "@/lib/analytics";
 import { PackTrayItem } from "./PackTrayItem";
 import { PackTrayFooter } from "./PackTrayFooter";
-import styles from "./GlobalPackTray.module.css";
+import { cn } from "@/lib/utils";
 
 export function GlobalPackTray() {
   const packs = usePackTrayStore((s) => s.packs);
@@ -135,29 +135,34 @@ export function GlobalPackTray() {
 
   return (
     <div
-      className={styles.overlay}
+      className="fixed inset-0 z-[var(--z-drawer,60)] bg-black/50 flex justify-end overflow-hidden [animation:fadeInOverlay_0.25s_ease-out_forwards]"
       role="presentation"
       onMouseDown={handleOverlayClick}
     >
       <div
-        className={styles.tray}
+        className="w-full sm:max-w-[480px] h-screen h-[100dvh] overflow-x-hidden overflow-y-auto bg-background shadow-[0_24px_64px_rgba(15,37,55,0.25)] flex flex-col [animation:slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="pack-tray-title"
         ref={trayRef}
         tabIndex={-1}
       >
-        <div className={styles.header}>
+        <div className="sticky top-0 z-10 p-4 sm:p-5 md:p-6 pt-[max(16px,env(safe-area-inset-top))] border-b border-border bg-white/95 backdrop-blur-md grid grid-cols-[1fr_auto] gap-4 items-start">
           <div>
-            <h2 id="pack-tray-title">Your Order</h2>
-            <span className={styles.headerSubtitle}>
+            <h2
+              id="pack-tray-title"
+              className="m-0 text-primary font-heading text-2xl sm:text-3xl font-extrabold leading-none"
+            >
+              Your Order
+            </h2>
+            <span className="block mt-1.5 text-muted-foreground text-sm font-semibold">
               Packs saved for checkout
             </span>
           </div>
-          <div className={styles.headerRight}>
+          <div className="flex items-center gap-2.5">
             {hasPacks ? (
               <span
-                className={styles.packCountBadge}
+                className="inline-flex items-center justify-center min-w-7 h-7 px-2 rounded-full bg-[#ff6f59] text-white text-xs font-extrabold leading-none"
                 aria-label={`${packs.length} pack${packs.length === 1 ? "" : "s"} saved`}
               >
                 {packs.length}
@@ -165,7 +170,7 @@ export function GlobalPackTray() {
             ) : null}
             <button
               type="button"
-              className={styles.closeButton}
+              className="w-11 h-11 min-w-11 min-h-11 rounded-full border border-border hover:border-primary text-primary hover:text-primary bg-background text-2xl flex items-center justify-center cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-primary"
               onClick={closeTray}
               aria-label="Close your order"
               ref={closeButtonRef}
@@ -176,34 +181,50 @@ export function GlobalPackTray() {
         </div>
 
         {!hasPacks ? (
-          <div className={styles.searchSection}>
-            <div className={styles.searchContainer}>
-              <h3 className={styles.searchTitle}>Find Your School Pack</h3>
+          <div className="relative z-20 border-b border-border bg-background">
+            <div className="w-full max-w-full p-3.5 sm:p-4 md:px-5 flex flex-col items-stretch text-left min-w-0 box-border">
+              <h3 className="m-0 mb-2.5 text-primary font-heading text-base sm:text-lg md:text-xl font-extrabold">
+                Find Your School Pack
+              </h3>
               <HeroSearch onResultClick={closeTray} source="tray" />
             </div>
           </div>
         ) : null}
 
-        <div className={styles.content}>
+        <div className="flex-1 p-4 sm:p-5 md:p-6 grid gap-3.5 content-start min-w-0">
           {hasPacks ? (
             packs.map((pack, index) => (
               <div
                 key={pack.id}
-                className={index === packs.length - 1 ? styles.packCardAdded : ""}
+                className={cn(
+                  index === packs.length - 1 &&
+                    "[animation:popIn_0.3s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+                )}
               >
                 <PackTrayItem pack={pack} />
               </div>
             ))
           ) : (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon} aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <div className="grid gap-4 justify-items-center text-center py-12 px-5 w-full min-w-0 box-border">
+              <div
+                className="w-16 h-16 rounded-full bg-slate-100 text-muted-foreground grid place-items-center"
+                aria-hidden="true"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-8 h-8 stroke-current stroke-[1.5]"
+                >
                   <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
                   <line x1="3" y1="6" x2="21" y2="6" />
                   <path d="M16 10a4 4 0 01-8 0" />
                 </svg>
               </div>
-              <p>No packs saved yet. Choose a school pack and add it to your order.</p>
+              <p className="m-0 text-muted-foreground text-sm sm:text-base leading-relaxed max-w-[280px]">
+                No packs saved yet. Choose a school pack and add it to your
+                order.
+              </p>
             </div>
           )}
         </div>

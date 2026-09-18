@@ -13,7 +13,6 @@ import GradePackItemSelector, {
 import { formatCurrency } from "@/lib/formatCurrency";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "./PackForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton({ label }: { label: string }) {
@@ -75,7 +74,7 @@ function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
   const inputValue = open ? query : (selected?.name ?? "");
 
   return (
-    <div className={styles.picker} ref={wrapperRef}>
+    <div className="relative" ref={wrapperRef}>
       <input
         type="text"
         id="school_picker"
@@ -103,28 +102,35 @@ function SchoolPicker({ schools, value, onChange, error }: SchoolPickerProps) {
       {open ? (
         <div
           id="school-picker-listbox"
-          className={styles.pickerMenu}
+          className="absolute z-50 top-[calc(100%+6px)] left-0 right-0 max-h-80 overflow-y-auto bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-1.5 flex flex-col gap-0.5"
           role="listbox"
         >
           {filtered.length ? (
-            filtered.map((school) => (
-              <button
-                key={school.id}
-                type="button"
-                role="option"
-                aria-selected={school.id === value}
-                className={`${styles.pickerOption}${school.id === value ? ` ${styles.pickerOptionSelected}` : ""}`}
-                onClick={() => {
-                  onChange(school.id);
-                  setQuery("");
-                  setOpen(false);
-                }}
-              >
-                {school.name}
-              </button>
-            ))
+            filtered.map((school) => {
+              const isSelected = school.id === value;
+              return (
+                <button
+                  key={school.id}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  className={`block w-full text-left border-0 rounded-lg px-3 py-2 text-sm cursor-pointer transition-colors ${
+                    isSelected
+                      ? "bg-emerald-500/15 text-emerald-400 font-bold hover:bg-emerald-500/20"
+                      : "bg-transparent text-slate-200 hover:bg-slate-800"
+                  }`}
+                  onClick={() => {
+                    onChange(school.id);
+                    setQuery("");
+                    setOpen(false);
+                  }}
+                >
+                  {school.name}
+                </button>
+              );
+            })
           ) : (
-            <p className={styles.pickerEmpty}>
+            <p className="m-0 p-3 text-xs text-slate-400">
               No schools match &ldquo;{query.trim()}&rdquo;.
             </p>
           )}
@@ -272,9 +278,11 @@ export function PackForm({
           and price drive what it shows.
         </p>
         {selectedSchool ? (
-          <p className={styles.previewSchool}>{selectedSchool.name}</p>
+          <p className="mt-4 mb-2.5 text-sm font-extrabold text-slate-100">
+            {selectedSchool.name}
+          </p>
         ) : null}
-        <div className={styles.previewCard}>
+        <div className="max-w-md">
           <ArticlePackCard
             gradeLabel={previewGrade}
             bestFor={`Best for ${previewGrade} learners`}
@@ -284,11 +292,15 @@ export function PackForm({
             items={previewItems}
             viewCompleteAriaLabel="Preview complete stationery list"
             onViewCompleteList={() => {}}
-            actions={<span className={styles.previewAction}>Preview</span>}
+            actions={
+              <span className="inline-flex items-center justify-center min-h-[44px] px-5 border border-dashed border-slate-700 rounded-full text-slate-400 text-sm font-extrabold">
+                Preview
+              </span>
+            }
           />
         </div>
         {selectedSchool && grade.trim() ? (
-          <p className={styles.previewTitle}>
+          <p className="mt-3 text-xs text-slate-400">
             Will be created as &ldquo;{selectedSchool.name} {grade.trim()}{" "}
             Pack&rdquo;.
           </p>

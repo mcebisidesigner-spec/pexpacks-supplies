@@ -21,9 +21,8 @@ import { DateField } from "@/components/admin/DateField";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { FieldError } from "@/components/admin/ui/Form";
 import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
-import adminStyles from "@/app/admin/admin.module.css";
-import formStyles from "./SchoolForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface SchoolFormProps {
   school: SchoolRow | null;
@@ -400,8 +399,8 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 >
                   Offered Grades
                 </label>
-                <div className={formStyles.floatingSelectWrapper}>
-                  <div className={formStyles.floatingSelectContainer}>
+                <div className="relative w-full">
+                  <div className="w-full">
                     <select
                       id="school_type_preset"
                       value={gradePreset}
@@ -454,21 +453,23 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   <span className={adminStyles.formLabel}>
                     Select Individual Offered Grades (Grade R – 12):
                   </span>
-                  <div className={formStyles.gradesChipsGrid}>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
                     {ALL_GRADES.map((g) => {
                       const isChecked = selectedGrades.includes(g);
                       return (
                         <label
                           key={g}
-                          className={`${formStyles.gradeChip} ${
-                            isChecked ? formStyles.gradeChipActive : ""
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold border transition-colors cursor-pointer select-none ${
+                            isChecked
+                              ? "border-emerald-500 bg-emerald-500/20 text-emerald-300"
+                              : "border-slate-700 bg-slate-800/80 text-slate-300 hover:bg-slate-700"
                           }`}
                         >
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleToggleGrade(g)}
-                            className={formStyles.gradeChipCheckbox}
+                            className="sr-only"
                           />
                           <span>{g}</span>
                         </label>
@@ -489,14 +490,14 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               </div>
             </div>
 
-            <div className={formStyles.logoUploadContainer}>
-              <div className={formStyles.logoUploadBox}>
+            <div className="flex items-center gap-4 p-3 rounded-lg border border-slate-800 bg-slate-900/50">
+              <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-slate-700 bg-slate-950 flex items-center justify-center shrink-0 cursor-pointer">
                 {logoPreview ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={logoPreview}
                     alt="School logo preview"
-                    className={formStyles.logoPreviewImg}
+                    className="w-full h-full object-contain"
                   />
                 ) : (
                   <SchoolLogoPlaceholder width={80} height={80} />
@@ -505,7 +506,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                   type="file"
                   name="logo_file"
                   accept="image/png,image/webp,image/svg+xml,image/jpeg"
-                  className={formStyles.logoFileInput}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
@@ -517,7 +518,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                 />
               </div>
 
-              <div className={formStyles.logoInfoGroup}>
+              <div className="flex flex-col gap-1 text-xs">
                 <p className={`${adminStyles.cWhite} ${adminStyles.fw600}`}>
                   Upload School Emblem / Logo
                 </p>
@@ -532,7 +533,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
                       setLogoPreview(null);
                       setLogoValue("");
                     }}
-                    className={formStyles.removeLogoBtn}
+                    className="mt-1 text-xs text-rose-400 hover:text-rose-300 underline self-start cursor-pointer"
                   >
                     Remove logo
                   </button>
@@ -680,7 +681,7 @@ export function SchoolForm({ school, action }: SchoolFormProps) {
               />
             )}
 
-            <div className={formStyles.sideActions}>
+            <div className="flex gap-3 mt-4">
               <SubmitButton
                 label={school ? "Save School Details" : "Create School"}
               />

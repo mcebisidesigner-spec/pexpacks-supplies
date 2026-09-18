@@ -2,9 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
-import clsx from "clsx";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import styles from "./SuperpowerSection.module.css";
+import { cn } from "@/lib/utils";
 
 const steps: Array<{
   title: string;
@@ -20,7 +18,7 @@ const steps: Array<{
     href: "/schools",
     dataConversionEvent: "homepage_how_it_works_find_list",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.35-4.35" />
         <path d="M11 8v6M8 11h6" />
@@ -32,7 +30,7 @@ const steps: Array<{
     text: "Already have a ruler or scissors? Untick what you have at home and only pay for what you need. No duplicates, no waste — just the missing items.",
     accent: true,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <path d="M9 12l2 2 4-4" />
       </svg>
@@ -42,7 +40,7 @@ const steps: Array<{
     title: "Delivered to Your Door",
     text: "Securely packed and delivered anywhere in Gauteng and beyond. No queuing, no driving from shop to shop — your stationery arrives before school opens.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
         <rect x="1" y="3" width="15" height="13" rx="2" />
         <path d="M16 8h3l4 4v5a1 1 0 0 1-1 1h-1" />
         <circle cx="6" cy="19" r="2" />
@@ -55,8 +53,8 @@ const steps: Array<{
 
 export function SuperpowerSection() {
   return (
-    <section className={sectionStyles.section} aria-labelledby="superpower-heading">
-      <div className={sectionStyles.inner}>
+    <section className="py-12 sm:py-16 md:py-20 bg-transparent" aria-labelledby="superpower-heading">
+      <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <SectionHeader
             eyebrow="Skip the scramble"
@@ -65,27 +63,45 @@ export function SuperpowerSection() {
             headingId="superpower-heading"
           />
         </ScrollReveal>
-        <div className={styles.grid}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {steps.map((step, idx) => (
             <ScrollReveal key={step.title} delay={idx * 100} as="article">
-              <div className={clsx(styles.card, step.accent && styles.cardAccent)}>
-                <div className={styles.iconWrap}>
+              <div
+                className={cn(
+                  "relative p-6 sm:p-7 md:px-7 md:py-8 rounded-[22px] border border-border/80 bg-background shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 grid gap-3.5 group",
+                  step.accent &&
+                    "border-[#219e9a] shadow-[0_0_0_1px_#219e9a] bg-[radial-gradient(circle_at_90%_10%,rgba(33,158,154,0.06),transparent_40%)]"
+                )}
+              >
+                <div className="w-14 h-14 rounded-2xl grid place-items-center bg-[#219e9a]/10 text-[#219e9a] group-hover:bg-[#219e9a] group-hover:text-white group-hover:scale-105 transition-all duration-300">
                   {step.icon}
                 </div>
-                <div className={styles.number}>{idx + 1}</div>
+                <div className="absolute top-5 sm:top-7 right-5 sm:right-7 w-8 h-8 rounded-full grid place-items-center bg-slate-100 text-muted-foreground group-hover:bg-primary group-hover:text-white text-sm font-extrabold transition-colors duration-300">
+                  {idx + 1}
+                </div>
                 {step.href ? (
                   <Link
                     href={step.href}
-                    className={styles.titleLink}
+                    className="no-underline group-hover:underline underline-offset-4"
                     data-conversion-event={step.dataConversionEvent}
                   >
-                    <h3 className={styles.title}>{step.title}</h3>
+                    <h3 className="m-0 text-[#1a2a40] font-heading text-xl sm:text-[22px] font-extrabold leading-snug group-hover:text-[#219e9a] transition-colors">
+                      {step.title}
+                    </h3>
                   </Link>
                 ) : (
-                  <h3 className={styles.title}>{step.title}</h3>
+                  <h3 className="m-0 text-[#1a2a40] font-heading text-xl sm:text-[22px] font-extrabold leading-snug group-hover:text-[#219e9a] transition-colors">
+                    {step.title}
+                  </h3>
                 )}
-                <p className={styles.text}>{step.text}</p>
-                {step.accent ? <div className={styles.badge}>Save money</div> : null}
+                <p className="m-0 text-muted-foreground text-sm sm:text-[15px] leading-relaxed">
+                  {step.text}
+                </p>
+                {step.accent ? (
+                  <div className="w-fit px-3 py-1 rounded-full bg-[#219e9a] text-white text-xs font-extrabold uppercase tracking-wide">
+                    Save money
+                  </div>
+                ) : null}
               </div>
             </ScrollReveal>
           ))}

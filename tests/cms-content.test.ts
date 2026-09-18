@@ -217,7 +217,6 @@ describe("Pexpacks Content CMS Module", () => {
 
   it("links the public blog resource hub to published CMS resources", () => {
     const blogPage = readRepoFile("app/blog/page.tsx");
-    const blogStyles = readRepoFile("app/blog/Blog.module.css");
     const cms = readRepoFile("lib/cms.ts");
     const blogLib = readRepoFile("lib/blog.ts");
     const actions = readRepoFile("actions/cms.ts");
@@ -227,12 +226,12 @@ describe("Pexpacks Content CMS Module", () => {
     expect(blogPage).toContain("listPublicCmsFiles");
     expect(blogPage).toContain("resources.slice(0, 4)");
     expect(blogPage).toContain("href={resource.file_url}");
+    expect(blogPage).toContain("resourceHubCard");
     expect(cms).toContain("listPublicCmsFiles");
     expect(cms).toContain("listPublicCmsArticles");
     expect(cms).toContain('kind === "article"');
     expect(blogLib).toContain("getPublicCmsResources");
     expect(blogLib).toContain('r.kind === "article"');
-    expect(blogStyles).toContain(".resourceHubCard");
     expect(actions).toContain('revalidatePath("/blog")');
     expect(adminContent).toContain('revalidatePath("/blog")');
   });

@@ -5,7 +5,7 @@ import { InviteUserForm } from "@/components/admin/users/InviteUserForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "../../admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {
   title: "Invite user | Admin | Pexpacks",

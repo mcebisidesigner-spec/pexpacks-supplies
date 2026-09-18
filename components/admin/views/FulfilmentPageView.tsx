@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Clock, Eye, PackageCheck, Truck, CheckCircle2 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
@@ -38,8 +37,8 @@ function schoolName(row: FulfilmentRow): string {
 function statusForRow(row: FulfilmentRow): string {
   return (
     row.packing_records[0]?.status ||
+    (row.orders as { packing_status?: string } | undefined)?.packing_status ||
     row.status ||
-    row.orders?.status ||
     "pending"
   );
 }
@@ -47,27 +46,31 @@ function statusForRow(row: FulfilmentRow): string {
 export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
   const router = useRouter();
   const { params, setParams } = useTableParams();
+  const page = params.page || 1;
+  const pageSize = params.pageSize || 20;
 
   const filtered = useMemo(() => {
-    const q = params.q.trim().toLowerCase();
     return initialData.filter((row) => {
-      const status = statusForRow(row);
-      const matchSearch =
-        !q ||
-        orderRef(row).toLowerCase().includes(q) ||
-        schoolName(row).toLowerCase().includes(q) ||
-        row.method.toLowerCase().includes(q);
-      const matchStatus =
-        !params.status ||
-        params.status === "all" ||
-        status === params.status ||
-        row.status === params.status;
-      return matchSearch && matchStatus;
+      if (params.q) {
+        const query = params.q.toLowerCase();
+        const ref = orderRef(row).toLowerCase();
+        const school = schoolName(row).toLowerCase();
+        const method = row.method.toLowerCase();
+        if (
+          !ref.includes(query) &&
+          !school.includes(query) &&
+          !method.includes(query)
+        ) {
+          return false;
+        }
+      }
+      if (params.status && params.status !== "all") {
+        if (statusForRow(row) !== params.status) return false;
+      }
+      return true;
     });
   }, [initialData, params.q, params.status]);
 
-  const page = params.page || 1;
-  const pageSize = params.pageSize || 10;
   const pagedFulfilment = useMemo(() => {
     return filtered.slice((page - 1) * pageSize, page * pageSize);
   }, [filtered, page, pageSize]);
@@ -78,15 +81,15 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       header: "ORDER & METHOD",
       sortable: true,
       render: (row) => (
-        <div className={styles.productCell}>
+        <div className="flex flex-col gap-0.5">
           <Link
             href={`/admin/fulfilment/${orderRef(row)}`}
-            className={styles.schoolNameTitle}
+            className="text-slate-100 font-semibold text-xs hover:text-emerald-400 transition-colors no-underline"
             onClick={(e) => e.stopPropagation()}
           >
             {orderRef(row)}
           </Link>
-          <span className={styles.productBrand}>
+          <span className="text-[11px] text-slate-400 capitalize">
             {row.method.replaceAll("_", " ")}
           </span>
         </div>
@@ -97,7 +100,7 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       header: "DESTINATION SCHOOL",
       sortable: true,
       render: (row) => (
-        <span className={styles.textMuted}>{schoolName(row)}</span>
+        <span className="text-slate-400 text-xs">{schoolName(row)}</span>
       ),
     },
     {
@@ -107,7 +110,9 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       align: "center",
       width: "130px",
       render: (row) => (
-        <span className={styles.textMuted}>{Math.round(row.readiness)}%</span>
+        <span className="text-slate-300 text-xs font-semibold">
+          {Math.round(row.readiness)}%
+        </span>
       ),
     },
     {
@@ -116,7 +121,7 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       sortable: true,
       width: "140px",
       render: (row) => (
-        <span className={styles.textMuted}>{formatDate(row.target_date)}</span>
+        <span className="text-slate-400 text-xs">{formatDate(row.target_date)}</span>
       ),
     },
     {
@@ -135,12 +140,12 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       width: "80px",
       render: (row) => (
         <div
-          className={styles.actionsCell}
+          className="flex items-center justify-end gap-1.5"
           onClick={(e) => e.stopPropagation()}
         >
           <Link
             href={`/admin/fulfilment/${orderRef(row)}`}
-            className={styles.actionEditBtn}
+            className="inline-flex items-center justify-center w-7 h-7 rounded-lg border border-slate-700 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
             data-db-tooltip={`View pack sheet for ${orderRef(row)}`}
           >
             <Eye size={14} />
@@ -166,7 +171,7 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
   ).length;
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col gap-6 w-full text-slate-200">
       <AdminPageHeader
         title="Packing & Fulfilment"
         count={filtered.length}
@@ -213,11 +218,11 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
       <DataTableToolbar
         searchPlaceholder="Search packing queue by order, school, method..."
         filters={
-          <div className={styles.filterGroup}>
+          <div className="flex items-center gap-2">
             <AdminSelect
               value={params.status || "all"}
               onChange={(e) => setParams({ status: e.target.value }, true)}
-              className={styles.toolbarSelect}
+              className="min-w-[140px]"
             >
               <option value="all">Status: All</option>
               <option value="not_ready">Not Ready</option>
