@@ -10,7 +10,7 @@ import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { buildWhatsAppHref } from "@/data/contact";
 
 function isValidEmail(value: string) {
@@ -550,7 +550,7 @@ export function HappyPayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={clsx(
+                            className={cn(
                               "text-xs font-bold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
                               errors[`learner_${index}`] &&
                                 "text-[var(--pex-coral)] underline",

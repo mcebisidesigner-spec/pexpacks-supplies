@@ -12,7 +12,7 @@ import {
   Truck,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { AdminPage, AdminButton } from "@/components/admin/ui";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import {
@@ -181,7 +181,7 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-6 w-full text-slate-200">
+    <AdminPage fullWidth className="gap-6">
       <AdminPageHeader
         title="Orders & Commerce"
         count={initialData.total}
@@ -257,6 +257,6 @@ export function OrdersPageView({ initialData }: OrdersPageViewProps) {
           />
         }
       />
-    </div>
+    </AdminPage>
   );
 }

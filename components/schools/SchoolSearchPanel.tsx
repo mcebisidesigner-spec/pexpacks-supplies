@@ -171,14 +171,13 @@ export function SchoolSearchPanel({
               setTrendingVisible(false);
             }
           }}
-          aria-controls="school-search-results"
           data-mobile-search-active={searchActive ? "true" : "false"}
         >
           <label
             className="min-w-0 grid content-center gap-1.5 sm:gap-2 p-0 bg-transparent"
             htmlFor="schoolQuery"
           >
-            <span className="text-primary text-sm sm:text-base font-bold leading-tight pl-1">
+            <span className="text-teal-300 text-sm sm:text-base font-bold leading-tight pl-1">
               School Name
             </span>
             <div className="relative w-full flex items-center">

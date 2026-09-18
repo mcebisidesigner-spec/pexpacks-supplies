@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useTransition, useMemo } from "react";
 import Link from "next/link";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import {
   Megaphone,
   HelpCircle,
@@ -756,7 +756,7 @@ export default function ContentCMSPage() {
       align: "center",
       render: (row) => (
         <span
-          className={clsx(
+          className={cn(
             styles.badgeFormat,
             row.kind === "article" && styles.badgeArticle,
           )}
@@ -1935,7 +1935,7 @@ export default function ContentCMSPage() {
                       <div className={styles.resourceKindToggle}>
                         <button
                           type="button"
-                          className={clsx(
+                          className={cn(
                             styles.resourceKindBtn,
                             resKind === "file" && styles.resourceKindBtnActive,
                           )}
@@ -1946,7 +1946,7 @@ export default function ContentCMSPage() {
                         </button>
                         <button
                           type="button"
-                          className={clsx(
+                          className={cn(
                             styles.resourceKindBtn,
                             resKind === "article" &&
                               styles.resourceKindBtnActive,

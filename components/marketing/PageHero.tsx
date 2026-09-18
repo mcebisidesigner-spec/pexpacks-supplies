@@ -35,7 +35,7 @@ export function PageHero({
     >
       <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-[clamp(38px,6vw,76px)] items-center">
         <div className="max-w-[850px] min-w-0">
-          <p className="m-0 mb-4 text-[var(--pex-keppel)] font-extrabold text-sm tracking-normal">
+          <p className="m-0 mb-4 text-teal-400 font-extrabold text-sm tracking-normal">
             {eyebrow}
           </p>
           <h1 className="m-0 text-white font-[family-name:var(--font-heading)] text-[clamp(28px,10vw,34px)] sm:text-[clamp(32px,9vw,42px)] lg:text-[clamp(38px,5.4vw,64px)] font-extrabold leading-[1.06] tracking-tight [overflow-wrap:anywhere]">

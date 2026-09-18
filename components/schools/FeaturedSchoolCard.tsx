@@ -76,18 +76,18 @@ export function FeaturedSchoolCard({
           />
         )}
         {school.isPartner && (
-          <span className="bg-[#219e9a]/12 text-[var(--pex-keppel,#1a7a77)] py-1 px-2.5 rounded-full text-[11px] font-extrabold inline-flex items-center gap-1">★ Official Partner ★</span>
+          <span className="bg-[#219e9a]/12 text-[#156966] py-1 px-2.5 rounded-full text-[11px] font-extrabold inline-flex items-center gap-1">★ Official Partner ★</span>
         )}
       </div>
-      <span className="text-[var(--pex-keppel,#1a7a77)] text-[11px] font-extrabold">{school.region}</span>
-      <h3 className="m-0 text-[var(--pex-primary,#1a7a77)] text-[26px] font-extrabold leading-none">{school.name}</h3>
+      <span className="text-[#156966] text-[11px] font-extrabold">{school.region}</span>
+      <h3 className="m-0 text-[#156966] text-[26px] font-extrabold leading-none">{school.name}</h3>
       <p className="m-0 text-[var(--pex-text-muted,#4d5a5d)] font-extrabold text-sm">{gradeRangeLabel(school.grades)}</p>
       {price != null && price > 0 ? (
-        <span className="text-[var(--pex-keppel,#1a7a77)] font-sans text-base font-extrabold leading-[1.2] mt-1 inline-flex items-baseline gap-1.5 before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-[var(--pex-keppel,#1a7a77)] before:opacity-55 before:self-center">
+        <span className="text-[#156966] font-sans text-base font-extrabold leading-[1.2] mt-1 inline-flex items-baseline gap-1.5 before:content-[''] before:w-2 before:h-2 before:rounded-full before:bg-[#156966] before:opacity-55 before:self-center">
           From {formatCurrency(price)}
         </span>
       ) : null}
-      <span className="bg-[#f5ede0] text-[var(--pex-keppel,#1a7a77)] border border-[#e4d7bf] py-1 px-3.5 rounded-full text-[12.5px] font-extrabold leading-[1.2] inline-flex items-center w-fit my-0.5 mb-1 tracking-[0.01em]">
+      <span className="bg-[#f5ede0] text-[#156966] border border-[#e4d7bf] py-1 px-3.5 rounded-full text-[12.5px] font-extrabold leading-[1.2] inline-flex items-center w-fit my-0.5 mb-1 tracking-[0.01em]">
         {schoolBadge(school) || DEFAULT_PACKS_BADGE}
       </span>
       <span className="w-fit min-h-[44px] mt-2.5 py-2 pr-2 pl-5 rounded-full bg-[var(--pex-coral,#ff6f59)] text-white inline-flex items-center justify-center gap-2.5 font-sans text-[15px] font-extrabold leading-none shadow-[0_10px_20px_rgba(255,111,89,0.18)] transition-all duration-300 group-hover/school:bg-[#e85e4b] group-hover/school:-translate-y-0.5 after:content-[''] after:w-7 after:h-7 after:rounded-full after:bg-white after:bg-[url('data:image/svg+xml,%3Csvg_viewBox=%270_0_24_24%27_xmlns=%27http://www.w3.org/2000/svg%27_fill=%27none%27_stroke=%27%23ff6f59%27_stroke-width=%272%27_stroke-linecap=%27round%27_stroke-linejoin=%27round%27%3E%3Cpath_d=%27M7_17_17_7M9_7h8v8%27/%3E%3C/svg%3E')] after:bg-center after:bg-no-repeat after:bg-[length:14px_14px] after:shrink-0 after:transition-transform after:duration-300 group-hover/school:after:scale-105">View packs</span>

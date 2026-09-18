@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { corePages as styles } from "./CorePagesView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { AdminPage, AdminButton } from "@/components/admin/ui";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import {
@@ -225,7 +225,7 @@ export function SuppliersPageView({
   ];
 
   return (
-    <div className={styles.container}>
+    <AdminPage fullWidth className="gap-5">
       <AdminPageHeader
         title="Suppliers"
         count={filtered.length}
@@ -277,6 +277,6 @@ export function SuppliersPageView({
           />
         }
       />
-    </div>
+    </AdminPage>
   );
 }

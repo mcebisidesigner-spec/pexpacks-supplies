@@ -105,7 +105,7 @@ export function Header({ announcement }: HeaderProps = {}) {
               href="/track-order"
               data-conversion-event="header_track_pack"
             >
-              <span>Track Your Pack</span>
+              <span className="text-white">Track Your Pack</span>
               <span className="w-7 h-7 rounded-full bg-[var(--pex-coral,#ff6f59)] text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]" aria-hidden="true">
                 <TrackPackIcon />
               </span>

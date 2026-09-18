@@ -4,6 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Json } from "@/lib/supabase/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { sanitizePayload } from "@/lib/observability/redaction";
 
 /**
  * Dynamic permission catalog. Stored in the `permissions` table (DB is the
@@ -314,7 +315,7 @@ export async function writeAuditLog(entry: AuditEntry): Promise<void> {
       entity_type: entry.entityType,
       entity_id: entry.entityId ?? null,
       summary: entry.summary,
-      details: entry.details ? (entry.details as Json) : null,
+      details: entry.details ? (sanitizePayload(entry.details) as Json) : null,
       ip: entry.ip ?? null,
       user_agent: entry.userAgent ?? null,
     });

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { PageHero } from "@/components/marketing/PageHero";
 import { PolicyContentBar } from "./PolicyContentBar";
 
@@ -115,7 +115,7 @@ export function LegalDocumentPage({
                 <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                   {highlights.map((highlight) => (
                     <div
-                      className={clsx("p-4 sm:px-4.5 rounded-2xl border grid gap-1.5 shadow-xs", highlightToneClass(highlight.tone))}
+                      className={cn("p-4 sm:px-4.5 rounded-2xl border grid gap-1.5 shadow-xs", highlightToneClass(highlight.tone))}
                       key={highlight.title}
                     >
                       <strong className="text-[#1a2a40] text-sm sm:text-[15px] font-bold">{highlight.title}</strong>

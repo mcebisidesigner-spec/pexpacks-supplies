@@ -6,7 +6,6 @@ import {
   phoneNumber,
 } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
-import { FooterHappyPayLink } from "./FooterHappyPayLink";
 import { FooterNav } from "./FooterNav";
 
 export type FooterContent = {
@@ -68,7 +67,6 @@ const policyGroups = [
     links: [
       { label: "Delivery Policy", href: "/delivery-policy" },
       { label: "Returns & Refunds Policy", href: "/returns-refunds-policy" },
-      { label: "Happy Pay Terms", href: "/happy-pay-terms" },
       { label: "Social Media Guidelines", href: "/social-media-guidelines" },
       { label: "Contact / Complaints", href: "/contact" },
     ],
@@ -140,7 +138,6 @@ export function Footer({ company }: FooterContent) {
             >
               <Logo variant="white" className="block w-[clamp(88px,20vw,106px)] lg:w-[124px] h-auto m-0 p-0" />
             </Link>
-            <FooterHappyPayLink className="inline-flex sm:hidden items-start self-start w-[clamp(72px,20vw,92px)] ml-auto m-0 p-0 leading-none" />
           </div>
 
           <div className="grid gap-4 lg:gap-4 justify-items-start lg:justify-items-end min-w-0 w-full">
@@ -214,9 +211,7 @@ export function Footer({ company }: FooterContent) {
             </a>
           </p>
 
-          <div className="flex items-center sm:items-start justify-between sm:justify-end gap-3 sm:gap-[clamp(22px,3vw,36px)]">
-            <FooterHappyPayLink className="hidden sm:inline-flex" />
-
+          <div className="flex items-center justify-end">
             <nav className="flex items-center justify-end gap-2.5" aria-label="Social media">
               {socialLinks.map((link) => (
                 <a

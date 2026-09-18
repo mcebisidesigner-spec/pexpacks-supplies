@@ -84,7 +84,7 @@ export function DataTablePagination({
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row items-center justify-between p-3 sm:px-4.5 sm:py-3 bg-[var(--db-surface-inner,#090e17)] border-t border-[var(--db-border,rgba(30,41,59,0.8))] text-xs text-[var(--db-text-muted,#94a3b8)] w-full gap-4 flex-wrap",
+        "flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-[#040812] border-t border-slate-800/60 text-xs text-slate-400 w-full gap-4 flex-wrap",
         className,
       )}
     >
@@ -102,32 +102,22 @@ export function DataTablePagination({
         />
       </div>
 
-      <div className="flex items-center justify-between sm:justify-end gap-4.5 flex-wrap w-full sm:w-auto sm:ml-auto">
-        <div className="text-xs font-medium text-[var(--db-text-muted,#94a3b8)] whitespace-nowrap">
-          Showing{" "}
-          <span className="text-[var(--db-text-primary,#ffffff)] font-bold">
-            {formatCount(fromRecord)}
-          </span>{" "}
-          to{" "}
-          <span className="text-[var(--db-text-primary,#ffffff)] font-bold">
-            {formatCount(toRecord)}
-          </span>{" "}
-          of{" "}
-          <span className="text-[var(--db-text-primary,#ffffff)] font-bold">
-            {formatCount(total)}
-          </span>{" "}
-          records
+      <div className="flex items-center justify-between sm:justify-end gap-5 flex-wrap w-full sm:w-auto sm:ml-auto">
+        <div className="text-xs font-medium text-slate-400 whitespace-nowrap">
+          Showing <span className="text-white font-bold">{formatCount(fromRecord)}</span> to{" "}
+          <span className="text-white font-bold">{formatCount(toRecord)}</span> of{" "}
+          <span className="text-white font-bold">{formatCount(total)}</span> records
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => handlePageClick(currentPage - 1)}
             disabled={currentPage <= 1}
-            className="inline-flex items-center justify-center min-w-7 h-7 px-2 border border-slate-700/80 rounded-md bg-transparent text-slate-300 text-xs font-medium cursor-pointer transition-colors hover:bg-slate-700/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-8 h-8 rounded-full border border-slate-800 bg-transparent text-slate-400 hover:text-white hover:border-slate-700 flex items-center justify-center transition-colors disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer"
             aria-label="Previous Page"
           >
-            <ChevronLeft size={13} />
+            <ChevronLeft size={14} />
           </button>
 
           {pageNumbers.map((p, idx) => {
@@ -135,7 +125,7 @@ export function DataTablePagination({
               return (
                 <span
                   key={`ellipsis-${idx}`}
-                  className="px-1 text-slate-500 text-xs select-none"
+                  className="px-1.5 text-slate-500 text-xs select-none"
                 >
                   ...
                 </span>
@@ -151,9 +141,9 @@ export function DataTablePagination({
                 type="button"
                 onClick={() => handlePageClick(pageNum)}
                 className={cn(
-                  "inline-flex items-center justify-center min-w-7 h-7 px-2 border border-slate-700/80 rounded-md bg-transparent text-slate-300 text-xs font-medium cursor-pointer transition-colors hover:bg-slate-700/50 hover:text-white",
+                  "w-8 h-8 rounded-full border border-slate-800 bg-transparent text-slate-300 text-xs font-medium flex items-center justify-center transition-colors hover:border-slate-700 hover:text-white cursor-pointer",
                   isActive &&
-                    "border-emerald-500 bg-emerald-500/18 text-emerald-400 font-bold hover:bg-emerald-500/25 hover:text-emerald-300",
+                    "w-9 h-9 border-2 border-[#00dfb6] bg-transparent text-[#00dfb6] font-bold shadow-[0_0_12px_rgba(0,223,182,0.25)] hover:border-[#00dfb6] hover:text-[#00dfb6]",
                 )}
               >
                 {pageNum}
@@ -165,10 +155,10 @@ export function DataTablePagination({
             type="button"
             onClick={() => handlePageClick(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            className="inline-flex items-center justify-center min-w-7 h-7 px-2 border border-slate-700/80 rounded-md bg-transparent text-slate-300 text-xs font-medium cursor-pointer transition-colors hover:bg-slate-700/50 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-8 h-8 rounded-full border border-slate-800 bg-transparent text-slate-400 hover:text-white hover:border-slate-700 flex items-center justify-center transition-colors disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer"
             aria-label="Next Page"
           >
-            <ChevronRight size={13} />
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>

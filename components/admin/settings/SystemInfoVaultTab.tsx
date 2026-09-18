@@ -22,7 +22,7 @@ import {
 } from "@/app/admin/settings/actions";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-import styles from "./SettingsControlCentre.module.css";
+import styles from "./settingsStyles";
 
 interface SystemInfoVaultTabProps {
   initialVaultCredentials?: SystemVaultCredential[];

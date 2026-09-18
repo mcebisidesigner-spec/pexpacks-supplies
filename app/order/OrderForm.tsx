@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import {
   trackQuoteStepCompleted,
   trackQuoteSubmitted,
@@ -205,9 +205,9 @@ export function OrderForm() {
         aria-valuemax={3}
         aria-valuenow={step}
       >
-        <div className={clsx("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 1 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
-        <div className={clsx("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 2 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
-        <div className={clsx("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 3 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
+        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 1 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
+        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 2 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
+        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 3 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -220,7 +220,7 @@ export function OrderForm() {
                 <button
                   type="button"
                   key={cat}
-                  className={clsx(
+                  className={cn(
                     "w-full min-h-[52px] px-5 py-4 rounded-[var(--radius-sm)] border text-[var(--pex-navy)] font-semibold text-base text-left transition-all active:scale-[0.99]",
                     category === cat
                       ? "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.08)] text-[var(--pex-keppel)] shadow-sm"
@@ -261,14 +261,14 @@ export function OrderForm() {
             <div className="flex rounded-[var(--radius-sm)] bg-[var(--pex-bg)] p-1 mb-6 border border-[var(--pex-border)]">
               <button 
                 type="button"
-                className={clsx("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "upload" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
+                className={cn("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "upload" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
                 onClick={() => setInputMethod("upload")}
               >
                 Upload Photo/PDF
               </button>
               <button 
                 type="button"
-                className={clsx("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "type" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
+                className={cn("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "type" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
                 onClick={() => setInputMethod("type")}
               >
                 Paste / Type List
@@ -278,8 +278,11 @@ export function OrderForm() {
             {inputMethod === "upload" ? (
               fileName ? (
                 <div className="flex flex-col items-center gap-3 p-6 rounded-[var(--radius-sm)] border-2 border-dashed border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] text-center">
-                  <div className="w-10 h-10 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] grid place-items-center text-xl font-bold">✓</div>
-                  <strong className="text-sm text-[var(--pex-navy)]">{fileName}</strong>
+                  <div className="text-3xl">📎</div>
+                  <div>
+                    <strong className="text-sm font-semibold text-[var(--pex-navy)] block max-w-xs truncate">{fileName}</strong>
+                    <span className="text-xs text-[var(--pex-muted)]">File attached successfully</span>
+                  </div>
                   <button 
                     type="button" 
                     onClick={() => {
@@ -293,7 +296,7 @@ export function OrderForm() {
                 </div>
               ) : (
                 <div 
-                  className={clsx(
+                  className={cn(
                     "flex flex-col items-center justify-center p-8 rounded-[var(--radius-sm)] border-2 border-dashed cursor-pointer text-center relative transition-all min-h-[180px]",
                     isDragging
                       ? "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.08)]"
@@ -328,7 +331,7 @@ export function OrderForm() {
               <textarea
                 id="stationery-list-text"
                 name="stationeryListText"
-                className={clsx(
+                className={cn(
                   "w-full min-h-[120px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
                   errors.list ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
                 )}
@@ -375,7 +378,7 @@ export function OrderForm() {
                   type="text"
                   autoComplete="name"
                   required
-                  className={clsx(
+                  className={cn(
                     "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
                     errors.name ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
                   )}
@@ -397,7 +400,7 @@ export function OrderForm() {
                   type="tel"
                   autoComplete="tel"
                   required
-                  className={clsx(
+                  className={cn(
                     "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
                     errors.phone ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
                   )}
@@ -416,7 +419,7 @@ export function OrderForm() {
                   id="quote-email"
                   type="email"
                   autoComplete="email"
-                  className={clsx(
+                  className={cn(
                     "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
                     errors.email ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
                   )}

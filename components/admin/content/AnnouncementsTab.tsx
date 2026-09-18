@@ -8,7 +8,7 @@ import {
   deleteCmsAnnouncementAction,
   toggleCmsAnnouncementActiveAction,
 } from "@/app/admin/content/actions";
-import styles from "./CmsContentManager.module.css";
+import { cmsStyles as styles } from "./cmsStyles";
 
 interface AnnouncementsTabProps {
   initialAnnouncements: CmsAnnouncementRow[];

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/data/blog";
 
 const CATEGORIES = [
@@ -47,7 +47,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
               key={cat.key}
               type="button"
               onClick={() => setActive(cat.key)}
-              className={clsx(
+              className={cn(
                 "px-4 py-2 rounded-full border text-xs sm:text-sm font-semibold transition-all cursor-pointer",
                 active === cat.key
                   ? "bg-[var(--pex-navy)] text-white border-[var(--pex-navy)]"

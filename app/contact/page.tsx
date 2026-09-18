@@ -103,7 +103,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                   <h2 className="text-sm font-extrabold text-[#1a2a40] m-0">
                     Gauteng Support Desk Active
                   </h2>
-                  <span className="text-xs text-slate-500 mt-0.5">
+                  <span className="text-xs text-slate-600 mt-0.5">
                     Live chat active • WhatsApp response time &lt; 5 mins
                   </span>
                 </div>
@@ -112,14 +112,14 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               {/* SERVICE LEVEL AGREEMENTS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="rounded-2xl border border-slate-200/80 bg-white p-4 flex flex-col gap-1.5 shadow-xs">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-600">School Partners</span>
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">School Partners</span>
                   <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">&lt; 2 Hours</h3>
                   <span className="text-[12.5px] text-slate-600 leading-snug">
                     Dedicated School Relations Lead callback.
                   </span>
                 </div>
                 <div className="rounded-2xl border border-slate-200/80 bg-white p-4 flex flex-col gap-1.5 shadow-xs">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-600">Bulk / Quotes</span>
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">Bulk / Quotes</span>
                   <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">&lt; 4 Hours</h3>
                   <span className="text-[12.5px] text-slate-600 leading-snug">
                     Custom line-item quotation prepared.
@@ -137,7 +137,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                     <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">1</span>
                     <div className="flex flex-col gap-1">
                       <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">Submit Request</h3>
-                      <p className="text-xs text-slate-500 leading-relaxed m-0">
+                      <p className="text-xs text-slate-600 leading-relaxed m-0">
                         Submit your contact form with your exact needs.
                       </p>
                     </div>
@@ -148,7 +148,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                       <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">
                         Gauteng Fast-Track Router
                       </h3>
-                      <p className="text-xs text-slate-500 leading-relaxed m-0">
+                      <p className="text-xs text-slate-600 leading-relaxed m-0">
                         Your request is automatically fast-tracked to the
                         correct department.
                       </p>

@@ -21,7 +21,7 @@ import { AnnouncementsTab } from "./AnnouncementsTab";
 import { FaqsTab } from "./FaqsTab";
 import { TestimonialsTab } from "./TestimonialsTab";
 import { ResourcesTab } from "./ResourcesTab";
-import styles from "./CmsContentManager.module.css";
+import { cmsStyles as styles } from "./cmsStyles";
 
 interface UnifiedCmsViewProps {
   metrics: {

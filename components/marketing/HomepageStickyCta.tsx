@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import styles from "./HomepageStickyCta.module.css";
 
 type HomepageStickyCtaProps = {
@@ -33,7 +33,7 @@ export function HomepageStickyCta({ targetSelector }: HomepageStickyCtaProps) {
 
   return (
     <div
-      className={clsx(styles.stickyBar, isVisible && styles.visible)}
+      className={cn(styles.stickyBar, isVisible && styles.visible)}
       aria-hidden={!isVisible}
     >
       <div className={styles.inner}>

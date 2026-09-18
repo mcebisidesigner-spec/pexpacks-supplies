@@ -1,5 +1,5 @@
 import React from "react";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 export function Page({
   className,
@@ -7,7 +7,7 @@ export function Page({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-page", className)} {...props}>
+    <div className={cn("db-page", className)} {...props}>
       {children}
     </div>
   );
@@ -21,7 +21,7 @@ export function Stack({
 }: React.HTMLAttributes<HTMLDivElement> & { size?: "sm" | "md" | "lg" }) {
   return (
     <div
-      className={clsx(
+      className={cn(
         "db-stack",
         size === "sm" && "db-stack-sm",
         size === "lg" && "db-stack-lg",
@@ -40,7 +40,7 @@ export function Row({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-row", className)} {...props}>
+    <div className={cn("db-row", className)} {...props}>
       {children}
     </div>
   );
@@ -52,7 +52,7 @@ export function RowBetween({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-row-between", className)} {...props}>
+    <div className={cn("db-row-between", className)} {...props}>
       {children}
     </div>
   );
@@ -66,7 +66,7 @@ export function FormGrid({
 }: React.HTMLAttributes<HTMLDivElement> & { columns?: 1 | 2 }) {
   return (
     <div
-      className={clsx(
+      className={cn(
         "db-form-grid",
         columns === 2 && "db-form-grid-2",
         className,
@@ -84,7 +84,7 @@ export function FormSection({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-form-section", className)} {...props}>
+    <div className={cn("db-form-section", className)} {...props}>
       {children}
     </div>
   );
@@ -96,7 +96,7 @@ export function FormRow({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-form-row", className)} {...props}>
+    <div className={cn("db-form-row", className)} {...props}>
       {children}
     </div>
   );
@@ -108,7 +108,7 @@ export function FormActions({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-form-actions", className)} {...props}>
+    <div className={cn("db-form-actions", className)} {...props}>
       {children}
     </div>
   );
@@ -120,7 +120,7 @@ export function Field({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx("db-field", className)} {...props}>
+    <div className={cn("db-field", className)} {...props}>
       {children}
     </div>
   );
@@ -132,7 +132,7 @@ export function FieldLabel({
   ...props
 }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
-    <label className={clsx("db-field-label", className)} {...props}>
+    <label className={cn("db-field-label", className)} {...props}>
       {children}
     </label>
   );
@@ -144,7 +144,7 @@ export function FieldHelper({
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={clsx("db-field-helper", className)} {...props}>
+    <span className={cn("db-field-helper", className)} {...props}>
       {children}
     </span>
   );
@@ -156,7 +156,7 @@ export function FieldError({
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={clsx("db-field-error-text", className)} {...props}>
+    <span className={cn("db-field-error-text", className)} {...props}>
       {children}
     </span>
   );

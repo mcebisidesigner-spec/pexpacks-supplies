@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import styles from "./ScrollReveal.module.css";
 
 interface ScrollRevealProps {
@@ -39,7 +39,7 @@ export function ScrollReveal({
   return (
     <Tag
       ref={ref}
-      className={clsx(styles.reveal, visible ? styles.visible : styles.hidden, className)}
+      className={cn(styles.reveal, visible ? styles.visible : styles.hidden, className)}
     >
       {children}
     </Tag>

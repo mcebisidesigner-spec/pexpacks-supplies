@@ -11,9 +11,27 @@ import {
 import { AlertCircle, CheckCircle2, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+export const dbNoticeVariants = cva("db-message-banner", {
+  variants: {
+    type: {
+      success: "db-message-success",
+      error: "db-message-error",
+      warning: "db-message-error",
+    },
+  },
+  defaultVariants: {
+    type: "success",
+  },
+});
+
 export type DbNoticeType = "success" | "error" | "warning";
 
-export interface DbNoticeProps {
+export interface DbNoticeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof dbNoticeVariants> {
   type: DbNoticeType;
   message: string;
   onClose?: () => void;
@@ -29,15 +47,15 @@ export function DbNotice({
   message,
   onClose,
   className = "",
+  ...props
 }: DbNoticeProps) {
   const isPositive = type === "success";
 
   return (
     <div
       role="status"
-      className={`db-message-banner ${
-        isPositive ? "db-message-success" : "db-message-error"
-      } ${className}`}
+      className={cn(dbNoticeVariants({ type }), className)}
+      {...props}
     >
       {isPositive ? (
         <CheckCircle2 size={18} className="db-message-icon-success" />

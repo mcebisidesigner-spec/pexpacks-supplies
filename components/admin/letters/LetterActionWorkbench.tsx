@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import type { AdminLetterRecord } from "@/lib/admin/letters";
 import { sendLetterEmailAction } from "@/app/admin/letters/actions";
-import styles from "./LetterActionWorkbench.module.css";
+import { letterWorkbenchStyles as styles } from "./letterWorkbenchStyles";
 
 export interface LetterActionWorkbenchProps {
   letter: AdminLetterRecord;

@@ -31,7 +31,7 @@ import {
   updateBankingDetailsAction,
   updateNotesAndTermsAction,
 } from "@/app/admin/quotations/pexpacks-details/actions";
-import styles from "./PexpacksDetails.module.css";
+import { pexpacksDetailsStyles as styles } from "./pexpacksDetailsStyles";
 import adminStyles from "@/app/admin/admin.module.css";
 import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import { DbNotice } from "@/components/admin/ui/DbNotice";

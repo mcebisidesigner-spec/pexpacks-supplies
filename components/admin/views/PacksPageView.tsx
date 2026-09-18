@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, Package, FileText, CheckCircle2, EyeOff } from "lucide-react";
 import { corePages as styles } from "./CorePagesView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminPage } from "@/components/admin/ui";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import {
@@ -185,7 +186,7 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
   ];
 
   return (
-    <div className={styles.container}>
+    <AdminPage fullWidth className="gap-5">
       <AdminPageHeader
         title="School Packs"
         count={data.totalSchools}
@@ -235,6 +236,6 @@ export function PacksPageView({ initialData }: PacksPageViewProps) {
           />
         }
       />
-    </div>
+    </AdminPage>
   );
 }

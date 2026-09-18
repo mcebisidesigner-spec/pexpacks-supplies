@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Clock, Eye, PackageCheck, Truck, CheckCircle2 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminPage } from "@/components/admin/ui";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import { QuickMetricsGrid } from "@/components/admin/ui/QuickMetricsGrid";
@@ -171,7 +172,7 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
   ).length;
 
   return (
-    <div className="flex flex-col gap-6 w-full text-slate-200">
+    <AdminPage fullWidth className="gap-6">
       <AdminPageHeader
         title="Packing & Fulfilment"
         count={filtered.length}
@@ -253,6 +254,6 @@ export function FulfilmentPageView({ initialData }: FulfilmentPageViewProps) {
           />
         }
       />
-    </div>
+    </AdminPage>
   );
 }

@@ -6,6 +6,7 @@ export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string;
   helper?: string;
   error?: string;
+  wrapperClassName?: string;
 };
 
 export default function Textarea({
@@ -18,6 +19,7 @@ export default function Textarea({
   error,
   rows = 4,
   className = "",
+  wrapperClassName = "",
   ...props
 }: TextareaProps) {
   const generatedId = useId();
@@ -25,7 +27,7 @@ export default function Textarea({
   const errorId = `${textareaId}-error`;
 
   return (
-    <div className={cn("grid gap-2 text-left", className)}>
+    <div className={cn("grid gap-2 text-left", wrapperClassName)}>
       {label && (
         <label
           htmlFor={textareaId}

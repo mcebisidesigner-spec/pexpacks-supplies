@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { updateAssetAction } from "@/app/admin/assets/actions";
 import type { AssetFormState } from "@/lib/admin/assets";
-import styles from "./assets-form.module.css";
+import styles from "./assetStyles";
 
 function SaveButton() {
   const { pending } = useFormStatus();

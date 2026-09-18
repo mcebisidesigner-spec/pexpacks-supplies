@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, RotateCcw, Home } from "lucide-react";
+import { reportException } from "@/lib/observability/sentry";
 
 export default function AdminError({
   error,
@@ -13,6 +14,7 @@ export default function AdminError({
 }) {
   useEffect(() => {
     console.error("[admin] error boundary:", error);
+    reportException(error, "admin-error-boundary");
   }, [error]);
 
   return (

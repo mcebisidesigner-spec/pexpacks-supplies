@@ -33,10 +33,12 @@ export default async function AdminLayout({
 
   return (
     <SessionSecurityProvider>
-      <MustChangePasswordModal
-        userEmail={session.user.email ?? ""}
-        mustChangePassword={mustChangePassword}
-      />
+      {mustChangePassword && (
+        <MustChangePasswordModal
+          userEmail={session.user.email ?? ""}
+          mustChangePassword={mustChangePassword}
+        />
+      )}
       <AdminDialogProvider>
         <DbNoticeProvider>
           <AdminShell

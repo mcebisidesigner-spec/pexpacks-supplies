@@ -29,7 +29,7 @@ import { DateField } from "@/components/admin/DateField";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import type { QuotationStatus } from "@/lib/admin/quotations";
-import styles from "./Quotations.module.css";
+import { quotationStyles as styles } from "./quotationStyles";
 import adminStyles from "@/app/admin/admin.module.css";
 
 export interface MasterProductOption {

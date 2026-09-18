@@ -1,6 +1,7 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/lib/supabase/types";
 import { maskEmail } from "./rate-limit";
+import { sanitizePayload } from "@/lib/observability/redaction";
 
 export type SecurityEventType =
   | "LOGIN_SUCCESS"
@@ -38,6 +39,7 @@ export async function logSecurityEvent({
   try {
     const admin = createSupabaseAdminClient();
     const emailMasked = email ? maskEmail(email) : undefined;
+    const sanitizedMetadata = sanitizePayload(metadata) as Json;
 
     await admin.from("security_audit_logs").insert({
       ip_address: ipAddress || "127.0.0.1",
@@ -45,7 +47,7 @@ export async function logSecurityEvent({
       event_type: eventType,
       email_masked: emailMasked,
       user_id: userId || null,
-      metadata: metadata as Json,
+      metadata: sanitizedMetadata,
     });
   } catch (err) {
     console.error("[security-audit] Failed to write security audit log:", err);

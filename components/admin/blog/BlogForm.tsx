@@ -9,7 +9,7 @@ import { ContentBlocks } from "./ContentBlocks";
 import type { BlogPostFormState } from "@/lib/admin/blog";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "./blog-form.module.css";
+import styles from "./blogStyles";
 
 export interface BlogFormDefaults {
   slug: string;

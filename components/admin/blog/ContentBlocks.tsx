@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import styles from "./content-blocks.module.css";
+import styles from "./contentBlocksStyles";
 
 /**
  * Block composer for blog article content. Each block is a paragraph,

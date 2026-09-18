@@ -1,7 +1,18 @@
 "use client";
 
-import React from "react";
-import { ArrowDown, ArrowUp, ArrowUpDown, Inbox } from "lucide-react";
+import React, { useMemo } from "react";
+import { Inbox } from "lucide-react";
+import {
+  useTable,
+  flexRender,
+  createColumnHelper,
+  tableFeatures,
+  rowSortingFeature,
+  columnVisibilityFeature,
+  createSortedRowModel,
+  sortFns,
+  type ColumnDef as TanStackColumnDef,
+} from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 import { useTableParams } from "./useTableParams";
 
@@ -38,6 +49,11 @@ export interface DataTableProps<T> {
   className?: string;
 }
 
+/**
+ * Universal TanStack Table v9 Data Table for Pexpacks.
+ * Adopts the dark midnight canvas with neon-teal header accents,
+ * pixel-matched to the official reference design.
+ */
 export function DataTable<T>({
   data,
   columns,
@@ -64,79 +80,123 @@ export function DataTable<T>({
     }
   };
 
+  const columnHelper = useMemo(() => createColumnHelper<any, any>(), []);
+
+  const tanstackColumns = useMemo(() => {
+    return columns.map((col) => {
+      const isActions =
+        col.key === "actions" || col.header.toUpperCase() === "ACTIONS";
+      return columnHelper.display({
+        id: col.key,
+        header: () => (
+          <div
+            className={cn(
+              "inline-flex items-center gap-1.5",
+              col.align === "center" || isActions
+                ? "justify-center"
+                : col.align === "right"
+                  ? "justify-end"
+                  : "justify-start",
+            )}
+          >
+            <span>{col.header}</span>
+            {!isActions && (
+              <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+            )}
+          </div>
+        ),
+        cell: (info) => col.render(info.row.original as T, info.row.index),
+      });
+    });
+  }, [columns, columnHelper]);
+
+  const features = useMemo(
+    () =>
+      tableFeatures({
+        rowSortingFeature,
+        columnVisibilityFeature,
+        sortedRowModel: createSortedRowModel(),
+        sortFns,
+      }),
+    [],
+  );
+
+  const table = useTable({
+    features,
+    columns: tanstackColumns as any,
+    data: data as any,
+  });
+
   return (
     <div
       className={cn(
-        "bg-[var(--db-surface)] border border-[var(--db-border)] rounded-xl overflow-hidden flex flex-col shadow-sm",
+        "rounded-[28px] border border-slate-800/80 bg-[#040812] shadow-2xl overflow-hidden flex flex-col",
         className,
       )}
     >
-      <div className="w-full overflow-auto max-h-[70vh] relative">
-        <table className="w-full border-collapse border-spacing-0 text-left text-[13px]">
-          <thead className="sticky top-0 z-10">
-            <tr>
-              {columns.map((col) => {
-                const isCurrentSort = params.sort === col.key;
-                const alignClass =
-                  col.align === "center"
-                    ? "text-center"
-                    : col.align === "right"
-                      ? "text-right"
-                      : "text-left";
-                const widthClass = col.width
-                  ? WIDTH_CLASS[col.width] || `w-[${col.width}]`
-                  : undefined;
-                const stickyClass =
-                  col.sticky === "right"
-                    ? "sticky right-0 bg-[var(--db-surface-elevated,#0f172a)] shadow-[-12px_0_12px_-4px_rgba(0,0,0,0.5)] z-20"
-                    : col.sticky === "left"
-                      ? "sticky left-0 bg-[var(--db-surface-elevated,#0f172a)] shadow-[12px_0_12px_-4px_rgba(0,0,0,0.5)] z-20"
-                      : undefined;
+      <div className="w-full overflow-auto max-h-[68vh] relative [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar-track]:bg-[#040812] [&::-webkit-scrollbar-thumb]:bg-[#00dfb6] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#00dfb6]/80">
+        <table className="w-full border-collapse border-spacing-0 text-left text-xs font-sans text-slate-200">
+          <thead className="sticky top-0 z-20">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr
+                key={headerGroup.id}
+                className="border-b border-slate-800/60 bg-[#040812]"
+              >
+                {headerGroup.headers.map((header, colIndex) => {
+                  const origCol = columns[colIndex];
+                  const isActions =
+                    origCol?.key === "actions" ||
+                    origCol?.header.toUpperCase() === "ACTIONS";
+                  const alignClass =
+                    origCol?.align === "center" || isActions
+                      ? "text-center"
+                      : origCol?.align === "right"
+                        ? "text-right"
+                        : "text-left";
+                  const widthClass = origCol?.width
+                    ? WIDTH_CLASS[origCol.width] || `w-[${origCol.width}]`
+                    : undefined;
+                  const stickyClass =
+                    origCol?.sticky === "right" || isActions
+                      ? "sticky right-0 bg-[#040812] border-l border-slate-800/40 z-30"
+                      : origCol?.sticky === "left"
+                        ? "sticky left-0 bg-[#040812] border-r border-slate-800/40 z-30"
+                        : undefined;
 
-                return (
-                  <th
-                    key={col.key}
-                    scope="col"
-                    className={cn(
-                      "bg-[var(--db-surface-elevated,#0f172a)] border-b border-[var(--db-border)] px-4.5 py-3.5 text-xs font-bold text-emerald-500 uppercase tracking-wider whitespace-nowrap select-none",
-                      alignClass,
-                      widthClass,
-                      stickyClass,
-                      col.sortable &&
-                        "cursor-pointer transition-colors hover:text-emerald-400",
-                    )}
-                    onClick={() => handleSort(col.key, col.sortable)}
-                  >
-                    <div className="inline-flex items-center gap-1.5">
-                      <span>{col.header}</span>
-                      {col.sortable && (
-                        <span className="inline-flex items-center text-emerald-500">
-                          {isCurrentSort ? (
-                            params.order === "asc" ? (
-                              <ArrowUp size={13} />
-                            ) : (
-                              <ArrowDown size={13} />
-                            )
-                          ) : (
-                            <ArrowUpDown
-                              size={12}
-                              className="text-emerald-500/70"
-                            />
-                          )}
-                        </span>
+                  return (
+                    <th
+                      key={header.id}
+                      scope="col"
+                      className={cn(
+                        "px-5 py-4 text-xs font-bold text-[#00dfb6] uppercase tracking-wider whitespace-nowrap select-none",
+                        alignClass,
+                        widthClass,
+                        stickyClass,
+                        origCol?.sortable &&
+                          "cursor-pointer transition-colors hover:text-[#00dfb6]/80",
                       )}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
+                      onClick={() =>
+                        handleSort(origCol?.key ?? header.id, origCol?.sortable)
+                      }
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  );
+                })}
+              </tr>
+            ))}
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-800/30 bg-[#040812]">
             {isLoading ? (
               <tr>
                 <td colSpan={columns.length}>
                   <div className="p-12 flex flex-col items-center justify-center gap-3 text-center text-slate-400">
-                    <div className="w-6 h-6 border-2 border-emerald-500 border-r-transparent rounded-full animate-spin" />
+                    <div className="w-6 h-6 border-2 border-[#00dfb6] border-r-transparent rounded-full animate-spin" />
                     <span>Loading data...</span>
                   </div>
                 </td>
@@ -145,7 +205,7 @@ export function DataTable<T>({
               <tr>
                 <td colSpan={columns.length}>
                   <div className="p-12 flex flex-col items-center justify-center gap-3 text-center text-slate-400">
-                    <Inbox size={32} />
+                    <Inbox size={32} className="text-slate-600" />
                     <div className="text-base font-bold text-slate-200">
                       {emptyTitle}
                     </div>
@@ -156,45 +216,57 @@ export function DataTable<T>({
                 </td>
               </tr>
             ) : (
-              data.map((row, idx) => {
-                const rowKey = keyExtractor(row);
+              table.getRowModel().rows.map((row) => {
+                const rowKey = keyExtractor(row.original as T);
+                const cells =
+                  typeof (row as any).getVisibleCells === "function"
+                    ? (row as any).getVisibleCells()
+                    : ((row as any).getAllCells?.() ?? []);
+
                 return (
                   <tr
                     key={rowKey}
                     className={cn(
-                      "border-b border-[var(--db-border-muted)] transition-colors hover:bg-[var(--db-surface-hover)]",
+                      "hover:bg-[#071324] transition-colors duration-150 group",
                       Boolean(onRowClick) && "cursor-pointer",
                     )}
-                    onClick={() => onRowClick?.(row)}
+                    onClick={() => onRowClick?.(row.original as T)}
                   >
-                    {columns.map((col) => {
+                    {cells.map((cell: any, colIndex: number) => {
+                      const origCol = columns[colIndex];
+                      const isActions =
+                        origCol?.key === "actions" ||
+                        origCol?.header.toUpperCase() === "ACTIONS";
                       const alignClass =
-                        col.align === "center"
+                        origCol?.align === "center" || isActions
                           ? "text-center"
-                          : col.align === "right"
+                          : origCol?.align === "right"
                             ? "text-right"
                             : "text-left";
-                      const widthClass = col.width
-                        ? WIDTH_CLASS[col.width] || `w-[${col.width}]`
+                      const widthClass = origCol?.width
+                        ? WIDTH_CLASS[origCol.width] || `w-[${origCol.width}]`
                         : undefined;
                       const stickyClass =
-                        col.sticky === "right"
-                          ? "sticky right-0 bg-[var(--db-surface)] shadow-[-12px_0_12px_-4px_rgba(0,0,0,0.5)] z-10"
-                          : col.sticky === "left"
-                            ? "sticky left-0 bg-[var(--db-surface)] shadow-[12px_0_12px_-4px_rgba(0,0,0,0.5)] z-10"
+                        origCol?.sticky === "right" || isActions
+                          ? "sticky right-0 bg-[#040812] group-hover:bg-[#071324] border-l border-slate-800/40 z-10"
+                          : origCol?.sticky === "left"
+                            ? "sticky left-0 bg-[#040812] group-hover:bg-[#071324] border-r border-slate-800/40 z-10"
                             : undefined;
 
                       return (
                         <td
-                          key={col.key}
+                          key={cell.id}
                           className={cn(
-                            "px-4.5 py-4 text-[var(--db-text-secondary)] align-middle",
+                            "px-5 py-4.5 text-slate-300 align-middle",
                             alignClass,
                             widthClass,
                             stickyClass,
                           )}
                         >
-                          {col.render(row, idx)}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
                         </td>
                       );
                     })}

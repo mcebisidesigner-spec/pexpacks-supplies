@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import { buildWhatsAppHref } from "@/data/contact";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import {
   trackCheckoutValidationFailed,
   trackPaymentFailed,
@@ -614,7 +614,7 @@ export function TrayCheckoutClient() {
               sectionRefs.current.details = node;
             }}
             tabIndex={-1}
-            className={clsx(
+            className={cn(
               "bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none transition-shadow",
               showDetailsHiddenWarning && "ring-2 ring-[var(--pex-coral)] ring-offset-2",
             )}
@@ -643,7 +643,7 @@ export function TrayCheckoutClient() {
             </div>
             <div
               id="customer-details-summary"
-              className={clsx(
+              className={cn(
                 "hidden md:block",
                 mobileSectionSummaryOpen.details && "!block",
               )}
@@ -710,7 +710,7 @@ export function TrayCheckoutClient() {
                     {contactOptions.map((option) => (
                       <label
                         key={option.value}
-                        className={clsx(
+                        className={cn(
                           "flex items-center justify-center gap-2 py-2.5 px-3 rounded-[var(--radius-sm)] text-xs sm:text-sm font-semibold text-[var(--pex-muted)] cursor-pointer transition-all hover:text-[var(--pex-navy)] select-none",
                           preferredContactMethod === option.value &&
                             "bg-white text-[var(--pex-keppel)] shadow-sm font-bold",
@@ -777,7 +777,7 @@ export function TrayCheckoutClient() {
 
             <div
               id="fulfilment-summary"
-              className={clsx(
+              className={cn(
                 "hidden md:block",
                 mobileSectionSummaryOpen.delivery && "!block",
               )}
@@ -790,7 +790,7 @@ export function TrayCheckoutClient() {
                   {availableFulfilmentOptions.map((option) => (
                     <label
                       key={option.value}
-                      className={clsx(
+                      className={cn(
                         "flex flex-col p-4 sm:p-5 rounded-[var(--radius-md)] border-2 border-[var(--pex-border)] bg-white cursor-pointer transition-all hover:border-[rgba(33,158,154,0.4)] relative",
                         fulfilmentOption === option.value &&
                           "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.03)] shadow-sm",
@@ -836,7 +836,7 @@ export function TrayCheckoutClient() {
                       return (
                         <label
                           key={school.slug}
-                          className={clsx(
+                          className={cn(
                             "flex items-center gap-3 p-3 rounded-[var(--radius-sm)] border border-[var(--pex-border)] bg-white hover:border-[var(--pex-keppel)] cursor-pointer transition-all",
                             isSelected && "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] shadow-xs",
                           )}
@@ -1070,7 +1070,7 @@ export function TrayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={clsx(
+                            className={cn(
                               "text-xs font-bold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
                               errors[`learner_${index}`] &&
                                 "text-[var(--pex-coral)] underline",

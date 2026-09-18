@@ -44,7 +44,7 @@ import type { PexcoAdminRate } from "@/lib/admin/pexco-rates";
 import { AddUsersTab } from "./AddUsersTab";
 import { UserIdentityTab } from "./UserIdentityTab";
 import { SystemInfoVaultTab } from "./SystemInfoVaultTab";
-import styles from "./SettingsControlCentre.module.css";
+import { settingsStyles as styles } from "./settingsStyles";
 import { corePages as viewStyles } from "@/components/admin/views/CorePagesView";
 import adminStyles from "@/app/admin/admin.module.css";
 

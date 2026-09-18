@@ -142,13 +142,13 @@ export const corePages = {
   badgeIconWrap: "inline-flex items-center gap-[4px]",
 
   skuBadge:
-    "inline-flex items-center justify-center px-[12px] py-[8px] bg-[rgba(15,23,42,0.6)] border border-[rgba(56,189,248,0.25)] rounded-[8px] font-mono text-[11.5px] font-bold text-[var(--db-info-text)] tracking-[0.02em] whitespace-nowrap",
+    "inline-flex items-center justify-center px-3 py-1.5 bg-[#0a1626]/70 border border-cyan-500/30 rounded-xl font-mono text-xs font-semibold text-[#38bdf8] tracking-wide whitespace-nowrap",
   itemSkuBadge: "",
 
   productCell: "flex flex-col gap-[3px]",
 
   schoolNameTitle:
-    "text-white text-[14px] font-extrabold leading-[1.3] no-underline transition-colors duration-[140ms] hover:text-[var(--db-brand)]",
+    "text-white text-sm font-bold leading-tight tracking-tight no-underline transition-colors hover:text-[#00dfb6]",
   productNameLink: "",
 
   productBrand: "",
@@ -156,20 +156,20 @@ export const corePages = {
     "text-[12px] text-[var(--db-text-subtle)] font-medium",
 
   textMuted:
-    "text-[13.5px] text-[var(--db-text-muted)] font-medium",
+    "text-sm text-slate-300 font-medium",
 
   text11: "text-[var(--a-text-3)] text-[10px]",
 
   priceHighlight: "text-white text-[14px] font-extrabold",
 
-  costPrice: "text-[13.5px] font-semibold text-[var(--db-text-muted)]",
+  costPrice: "inline-flex items-center px-2.5 py-1 rounded-md bg-[#131d2e]/80 border border-slate-700/50 text-slate-400 text-xs font-medium",
 
   actionsCell: "inline-flex items-center gap-[6px]",
 
   actionEditBtn:
-    "inline-flex items-center justify-center w-[36px] h-[36px] bg-[rgba(15,23,42,0.6)] border border-[rgba(45,212,191,0.3)] rounded-[8px] text-[var(--db-brand)] cursor-pointer no-underline transition-all duration-[140ms] hover:bg-[rgba(45,212,191,0.15)] hover:border-[var(--db-brand)] hover:text-white",
+    "inline-flex items-center justify-center w-9 h-9 bg-[#0a1626] border border-[#00dfb6]/25 rounded-xl text-[#00dfb6] cursor-pointer no-underline transition-all duration-150 hover:bg-[#00dfb6]/10 hover:border-[#00dfb6]/60 hover:shadow-[0_0_12px_rgba(0,223,182,0.15)]",
   actionDeleteBtn:
-    "inline-flex items-center justify-center w-[36px] h-[36px] bg-[rgba(15,23,42,0.6)] border border-[rgba(239,68,68,0.3)] rounded-[8px] text-[var(--db-danger-text)] cursor-pointer transition-all duration-[140ms] hover:bg-[rgba(239,68,68,0.16)] hover:border-[var(--db-danger)] hover:text-white",
+    "inline-flex items-center justify-center w-9 h-9 bg-[#0a1626] border border-red-500/30 rounded-xl text-red-400 cursor-pointer transition-all duration-150 hover:bg-red-500/10 hover:border-red-500/60",
 
   brandAssetBox:
     "flex flex-col gap-[2px] p-[14px] bg-[var(--db-surface)] border border-[var(--db-border)] rounded-[10px]",
