@@ -150,7 +150,7 @@ export function Footer({ company }: FooterContent) {
               >
                 {phone ? (
                   <>
-                    <a href={phoneHrefLocal} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                    <a href={phoneHrefLocal} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                       {formatPhoneNumber(phone)}
                     </a>
                     <span className="text-[var(--pex-keppel,#1a7a77)] opacity-50 text-base font-medium leading-none" aria-hidden="true">
@@ -158,7 +158,7 @@ export function Footer({ company }: FooterContent) {
                     </span>
                   </>
                 ) : null}
-                <a href={emailHref} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                <a href={emailHref} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   {email}
                 </a>
               </address>
@@ -180,7 +180,7 @@ export function Footer({ company }: FooterContent) {
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                              className="relative text-white/45 text-[11px] font-normal leading-[1.3] no-underline transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                            className="relative text-white/45 text-[11px] font-normal leading-[1.3] no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                             >
                               {link.label}
                             </Link>

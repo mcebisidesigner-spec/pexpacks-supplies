@@ -138,7 +138,7 @@ export function HeaderAccountControls({
       <Tooltip content="Track Your Pack" position="bottom">
         <Link
           href="/track-order"
-          className="w-10 h-10 min-w-10 min-h-10 rounded-full inline-grid place-items-center bg-transparent text-[var(--pex-navy,#1a2a40)] hover:text-[var(--pex-keppel,#1a7a77)] cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-coral,#ff6f59)] focus-visible:ring-offset-2 [&_svg]:w-[25px] [&_svg]:h-[25px]"
+          className="w-10 h-10 min-w-10 min-h-10 rounded-full inline-grid place-items-center bg-transparent text-pex-navy hover:text-pex-keppel cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral focus-visible:ring-offset-2 [&_svg]:w-[25px] [&_svg]:h-[25px]"
           aria-label="Track Your Pack"
         >
           <TrackPackIcon aria-hidden="true" />

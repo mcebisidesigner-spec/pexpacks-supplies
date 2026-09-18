@@ -16,6 +16,16 @@
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #128c7e;
 
+  /* First-class pex-* aliases — eliminates all [var(--pex-*)] arbitrary strings */
+  --color-pex-navy: var(--pex-navy);
+  --color-pex-keppel: var(--pex-keppel);
+  --color-pex-keppel-dark: var(--pex-keppel-dark);
+  --color-pex-coral: var(--pex-coral);
+  --color-pex-coral-hover: var(--pex-coral-hover);
+  --color-pex-border: var(--pex-border);
+  --color-pex-bg: var(--pex-bg);
+  --color-pex-bg-soft: var(--pex-bg-soft);
+
   --color-background: var(--pex-body-bg);
   --color-foreground: var(--pex-text);
   --color-card: var(--pex-bg);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Backpack } from "lucide-react";
+import { ShoppingCartIcon } from "@/components/ui/icons";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -31,11 +31,11 @@ export function HeaderOrderIcon() {
     return (
       <button
         type="button"
-        className="relative w-10 h-10 min-w-10 min-h-10 border-0 rounded-full bg-transparent text-[var(--pex-navy,#1a2a40)] cursor-pointer inline-grid place-items-center opacity-0 pointer-events-none"
+        className="relative w-10 h-10 min-w-10 min-h-10 border-0 rounded-full bg-transparent text-pex-navy cursor-pointer inline-grid place-items-center opacity-0 pointer-events-none"
         aria-label="Fill up your Backpack"
         disabled
       >
-        <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
+        <ShoppingCartIcon size={22} />
       </button>
     );
   }
@@ -45,15 +45,15 @@ export function HeaderOrderIcon() {
       <button
         type="button"
         className={cn(
-          "relative w-10 h-10 min-w-10 min-h-10 border-0 rounded-full bg-transparent text-[var(--pex-navy,#1a2a40)] cursor-pointer inline-grid place-items-center transition-colors duration-200 hover:text-[var(--pex-keppel,#1a7a77)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-coral,#ff6f59)] focus-visible:ring-offset-2",
+          "relative w-10 h-10 min-w-10 min-h-10 border-0 rounded-full bg-transparent text-pex-navy cursor-pointer inline-grid place-items-center transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral focus-visible:ring-offset-2",
           animate && "animate-[iconPop_0.5s_cubic-bezier(0.16,1,0.3,1)] motion-reduce:animate-none"
         )}
         onClick={handleClick}
         aria-label={`Fill up your Backpack (${packCount} pack${packCount === 1 ? "" : "s"})`}
       >
-        <Backpack aria-hidden="true" size={22} strokeWidth={1.8} />
+        <ShoppingCartIcon size={22} />
         <span
-          className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 rounded-full bg-[var(--pex-coral,#ff6f59)] text-white text-[10px] font-extrabold leading-4 text-center flex items-center justify-center pointer-events-none shadow-[0_1px_3px_rgba(0,0,0,0.15)] select-none"
+          className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 rounded-full bg-pex-coral text-white text-[10px] font-extrabold leading-4 text-center flex items-center justify-center pointer-events-none shadow-[0_1px_3px_rgba(0,0,0,0.15)] select-none"
           aria-hidden="true"
         >
           {packCount > 9 ? "9+" : packCount}
