@@ -477,7 +477,7 @@ export function SchoolSearchBox({
                                     <Link
                                       key={g}
                                       href={`/schools/${school.slug}`}
-                                      className="px-2.5 py-0.5 rounded-full bg-pex-navy !text-white hover:bg-pex-navy/85 text-xs font-bold no-underline transition-all"
+                                      className="px-2.5 py-0.5 rounded-full bg-transparent !text-pex-navy hover:!text-pex-keppel text-xs font-bold no-underline transition-all"
                                       onClick={() =>
                                         handleSchoolSelected(
                                           school.slug,
@@ -501,7 +501,7 @@ export function SchoolSearchBox({
                                     <Link
                                       key={g}
                                       href={`/schools/${school.slug}`}
-                                      className="px-2.5 py-0.5 rounded-full bg-pex-navy !text-white hover:bg-pex-navy/85 text-xs font-bold no-underline transition-all"
+                                      className="px-2.5 py-0.5 rounded-full bg-transparent !text-pex-navy hover:!text-pex-keppel text-xs font-bold no-underline transition-all"
                                       onClick={() =>
                                         handleSchoolSelected(
                                           school.slug,
