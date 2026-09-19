@@ -25,7 +25,7 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
   return (
     <>
       {text.slice(0, idx)}
-      <mark className="bg-[#fef08a] text-inherit rounded-xs px-0.5 font-bold">
+      <mark className="bg-[#faeedd] text-inherit rounded-xs px-1 font-bold border border-[#f0dfc6]">
         {text.slice(idx, idx + query.length)}
       </mark>
       {text.slice(idx + query.length)}
@@ -477,7 +477,7 @@ export function SchoolSearchBox({
                                     <Link
                                       key={g}
                                       href={`/schools/${school.slug}`}
-                                      className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-pex-keppel hover:text-white text-slate-800 text-xs font-bold no-underline transition-all"
+                                      className="px-2.5 py-0.5 rounded-full bg-pex-navy !text-white hover:bg-pex-navy/85 text-xs font-bold no-underline transition-all"
                                       onClick={() =>
                                         handleSchoolSelected(
                                           school.slug,
@@ -501,7 +501,7 @@ export function SchoolSearchBox({
                                     <Link
                                       key={g}
                                       href={`/schools/${school.slug}`}
-                                      className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-pex-keppel hover:text-white text-slate-800 text-xs font-bold no-underline transition-all"
+                                      className="px-2.5 py-0.5 rounded-full bg-pex-navy !text-white hover:bg-pex-navy/85 text-xs font-bold no-underline transition-all"
                                       onClick={() =>
                                         handleSchoolSelected(
                                           school.slug,
@@ -535,7 +535,7 @@ export function SchoolSearchBox({
 
                           <Link
                             href={`/schools/${school.slug}`}
-                            className="w-full md:w-auto min-h-[44px] md:min-h-[48px] px-5 rounded-full bg-primary hover:bg-primary/90 text-white font-heading text-sm md:text-[15px] font-extrabold no-underline inline-flex items-center justify-center whitespace-nowrap transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full md:w-auto min-h-[44px] md:min-h-[48px] px-5 rounded-full bg-pex-navy hover:bg-pex-navy/90 !text-white font-heading text-sm md:text-[15px] font-extrabold no-underline inline-flex items-center justify-center whitespace-nowrap transition-all hover:scale-[1.02] active:scale-[0.98]"
                             aria-label={`View ${school.name} packs in ${formatSchoolSearchLocation(school)}`}
                             data-conversion-event={`${source}_school_result`}
                             onClick={() =>

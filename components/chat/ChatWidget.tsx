@@ -125,7 +125,9 @@ export function ChatWidget() {
   const pathname = usePathname();
   const starterLinks = starterLinksForPath(pathname);
   const [isOpen, setIsOpen] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -139,6 +141,17 @@ export function ChatWidget() {
     "Hi Pexpacks, I need help with my stationery pack.",
   );
 
+  /* Disappear on header (top of page within 120px) */
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsHeaderVisible(window.scrollY < 120);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  /* Disappear on footer */
   useEffect(() => {
     const footer = document.getElementById("site-footer");
     if (!footer) return;
@@ -151,6 +164,22 @@ export function ChatWidget() {
       { threshold: 0.02, rootMargin: "0px 0px 40px 0px" },
     );
     observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
+  /* Disappear on mobile toggle menu tray */
+  useEffect(() => {
+    const checkMenu = () => {
+      const open = document.body.classList.contains("menu-open");
+      setIsMenuOpen(open);
+      if (open) setIsOpen(false);
+    };
+    checkMenu();
+    const observer = new MutationObserver(checkMenu);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
     return () => observer.disconnect();
   }, []);
 
@@ -237,14 +266,16 @@ export function ChatWidget() {
     void sendMessage(input);
   };
 
+  const isWidgetHidden = isHeaderVisible || isFooterVisible || isMenuOpen;
+
   return (
     <div
       className={cn(
         "fixed bottom-5 right-5 z-[1000] font-sans transition-[opacity,transform,visibility] duration-300",
-        isFooterVisible &&
+        isWidgetHidden &&
           "pointer-events-none invisible translate-y-6 opacity-0",
       )}
-      aria-hidden={isFooterVisible}
+      aria-hidden={isWidgetHidden}
     >
       {!isOpen ? (
         <button

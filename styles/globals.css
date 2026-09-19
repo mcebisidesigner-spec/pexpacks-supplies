@@ -128,6 +128,14 @@ body.menu-open {
   overflow: hidden;
 }
 
+body.menu-open [aria-label*="Ask Bro Pex"],
+body.menu-open [aria-label*="Bro Pex"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 @layer base {
   a {
     color: inherit;

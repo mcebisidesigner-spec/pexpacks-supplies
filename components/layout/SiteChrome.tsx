@@ -50,14 +50,16 @@ export function SiteChrome({
     return <main id="site-main" className="site-main site-main-admin">{children}</main>;
   }
 
+  const isCheckout = pathname === "/checkout" || pathname?.startsWith("/checkout");
+
   return (
     <>
       <Header announcement={announcement} />
       <main id="site-main" className="site-main">
         {children}
       </main>
-      <SiteRatingStrip />
-      <Footer company={company} footer={footer} />
+      {!isCheckout && <SiteRatingStrip />}
+      {!isCheckout && <Footer company={company} footer={footer} />}
     </>
   );
 }
