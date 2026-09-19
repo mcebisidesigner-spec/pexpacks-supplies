@@ -134,7 +134,7 @@ export default async function HomePage() {
         className="overflow-hidden bg-pex-bg-soft/90 py-5 border-y border-pex-border relative [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
         aria-hidden="true"
       >
-        <div className="flex gap-[60px] w-max [animation:marqueeScroll_40s_linear_infinite] hover:[animation-play-state:paused] motion-reduce:animate-none items-center">
+        <div className="brand-marquee-track">
           {[
             "croxley",
             "bic",

@@ -218,6 +218,33 @@ a:not([class*="rounded-full"]):not([class*="rounded-2xl"]):not([class*="rounded-
   transition: color 150ms ease;
 }
 
+/* 7. Mobile Header Hamburger Toggle - Remove greenish border, outline, and tap ring */
+button[aria-controls="mobile-menu"],
+button[aria-label="Open menu"],
+button[aria-label="Close menu"] {
+  border: none !important;
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+button[aria-controls="mobile-menu"]:focus,
+button[aria-controls="mobile-menu"]:focus-visible,
+button[aria-controls="mobile-menu"]:active,
+button[aria-label="Open menu"]:focus,
+button[aria-label="Open menu"]:focus-visible,
+button[aria-label="Open menu"]:active,
+button[aria-label="Close menu"]:focus,
+button[aria-label="Close menu"]:focus-visible,
+button[aria-label="Close menu"]:active {
+  border: none !important;
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
     [type="file"]
@@ -685,6 +712,16 @@ div[id*="assistant-control" i] {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* Continuous Brand Marquee Track (Desktop & Mobile) */
+.brand-marquee-track {
+  display: flex !important;
+  gap: 60px !important;
+  width: max-content !important;
+  align-items: center !important;
+  animation: marqueeScroll 35s linear infinite !important;
+  will-change: transform;
 }
 
 @keyframes marqueeScroll {

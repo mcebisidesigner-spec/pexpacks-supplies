@@ -142,7 +142,7 @@ export function HeaderMenu() {
     <>
       <button
         ref={menuButtonRef}
-        className="relative grid lg:hidden place-items-center w-10 h-10 min-w-10 min-h-10 border-0 p-0 bg-transparent rounded-full text-[var(--pex-navy,#1a2a40)] cursor-pointer z-10 select-none transition-colors focus:outline-none"
+        className="relative grid lg:hidden place-items-center w-10 h-10 min-w-10 min-h-10 !border-0 border-none p-0 bg-transparent rounded-full text-pex-navy cursor-pointer z-10 select-none transition-colors !outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 active:outline-none active:ring-0 !shadow-none [-webkit-tap-highlight-color:transparent]"
         type="button"
         onClick={() => (mobileOpen ? closeMobileMenu() : openMobileMenu())}
         aria-label={mobileOpen ? "Close menu" : "Open menu"}
