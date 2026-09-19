@@ -50,7 +50,7 @@ export type WebsiteContentValue = Record<
 
 export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   "homepage.hero": {
-    eyebrow: "School stationery made simple",
+    eyebrow: "2027 School packs now available",
     title: "Your school stationery list, perfectly packed.",
     lead: "Your official school stationery list, perfectly packed and delivered.",
   },

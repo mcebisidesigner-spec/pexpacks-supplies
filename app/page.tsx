@@ -25,9 +25,11 @@ export default async function HomePage() {
   ]);
   const hero = content["homepage.hero"];
   const heroEyebrow =
-    typeof hero.eyebrow === "string" && hero.eyebrow
+    typeof hero.eyebrow === "string" &&
+    hero.eyebrow &&
+    hero.eyebrow !== "School stationery made simple"
       ? hero.eyebrow
-      : "School stationery made simple";
+      : "2027 School packs now available";
   const heroTitle =
     typeof hero.title === "string" && hero.title
       ? hero.title
@@ -58,7 +60,7 @@ export default async function HomePage() {
         <div className="relative w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] items-center gap-[clamp(40px,6vw,76px)]">
           <div className="min-w-0">
             {/* Glassmorphic Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/15 text-pex-keppel text-xs sm:text-sm font-extrabold uppercase tracking-wider mb-5 shadow-[0_4px_16px_rgba(0,0,0,0.12)]">
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/15 text-pex-keppel text-xs sm:text-sm font-extrabold mb-5 shadow-[0_4px_16px_rgba(0,0,0,0.12)]">
               <span className="w-2 h-2 rounded-full bg-pex-keppel shadow-[0_0_8px_var(--pex-keppel)] animate-pulse" />
               <span>{heroEyebrow}</span>
             </div>
