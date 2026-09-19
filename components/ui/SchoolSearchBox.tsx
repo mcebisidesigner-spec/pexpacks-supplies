@@ -1,0 +1,647 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
+import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
+import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
+import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
+import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
+import { formatSchoolSearchLocation } from "@/lib/schools/searchPresentation";
+import {
+  trackSchoolNoResultsRecovery,
+  trackSchoolResultSelected,
+} from "@/lib/analytics";
+import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
+import { cn } from "@/lib/utils";
+
+/* ─── Utility ─────────────────────────────────────────────────────────────── */
+
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) return <>{text}</>;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-[#fef08a] text-inherit rounded-xs px-0.5 font-bold">
+        {text.slice(idx, idx + query.length)}
+      </mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+}
+
+/* ─── Types ────────────────────────────────────────────────────────────────── */
+
+export type SchoolSearchSource = "home" | "tray" | "schools";
+
+export type SchoolSearchBoxProps = {
+  /** Which surface this box lives on — controls analytics & search options. */
+  source?: SchoolSearchSource;
+  /** Called when a result is selected (e.g. close the tray). */
+  onResultClick?: () => void;
+  /** Show the "Can't remember…Browse all schools" pill link below the card. */
+  showBrowseLink?: boolean;
+  /** Pre-populate the query from the URL `?q=` param (schools page). */
+  readQueryFromUrl?: boolean;
+  /** Extra className applied to the outermost wrapper. */
+  className?: string;
+};
+
+const resultLimit = 12;
+
+/* ─── Shared search-card card shell classes ────────────────────────────────── */
+const CARD_CLASSES =
+  "relative z-[11] w-full p-3.5 sm:p-4 md:pl-5 " +
+  "border border-pex-keppel/10 " +
+  "rounded-[28px] md:rounded-[34px] " +
+  "bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,252,252,0.94))] " +
+  "shadow-[0_24px_58px_rgba(26,42,64,0.13),inset_0_1px_0_rgba(255,255,255,0.95)] " +
+  "flex flex-col min-w-0 transition-all duration-200";
+
+const INPUT_CLASSES =
+  "min-w-0 w-full min-h-[58px] md:min-h-[72px] " +
+  "border-2 border-pex-border focus:border-pex-keppel " +
+  "rounded-xl md:rounded-[22px] outline-none " +
+  "bg-pex-bg text-pex-navy " +
+  "text-lg md:text-2xl font-bold leading-tight " +
+  "px-4 sm:px-5 pr-11 " +
+  "transition-all duration-200 " +
+  "shadow-[inset_0_2px_4px_rgba(26,42,64,0.04)] " +
+  "focus:ring-4 focus:ring-pex-keppel/15 " +
+  "placeholder:text-foreground/40 placeholder:font-medium " +
+  "[&::-webkit-search-cancel-button]:hidden " +
+  "[&::-webkit-search-decoration]:hidden " +
+  "[&::-webkit-search-results-button]:hidden " +
+  "[&::-webkit-search-results-decoration]:hidden";
+
+const CHIP_CLASSES =
+  "shrink-0 snap-start inline-flex items-center gap-2 " +
+  "py-2 px-3.5 rounded-2xl " +
+  "bg-pex-bg border border-pex-border " +
+  "hover:border-pex-keppel " +
+  "transition-all hover:-translate-y-0.5 hover:shadow-md " +
+  "cursor-pointer no-underline";
+
+/* ─── Component ────────────────────────────────────────────────────────────── */
+
+export function SchoolSearchBox({
+  source = "home",
+  onResultClick,
+  showBrowseLink = false,
+  readQueryFromUrl = false,
+  className,
+}: SchoolSearchBoxProps) {
+  const searchRef = useRef<HTMLDivElement>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const [trendingSchools, setTrendingSchools] = useState<
+    { name: string; slug: string; image?: string | null }[]
+  >([]);
+  const [trendingVisible, setTrendingVisible] = useState(false);
+  const trendingFetched = useRef(false);
+  const urlQueryApplied = useRef(false);
+
+  const {
+    query,
+    results,
+    total,
+    hasMore,
+    hasSearched,
+    panelOpen,
+    isLoading,
+    error,
+    queryReady,
+    setPanelOpen,
+    fetchResults,
+    updateQuery,
+  } = usePaginatedSchoolSearch({
+    phaseAllValue: source === "schools" ? "all" : "",
+    resultLimit,
+    searchSource: source,
+    errorMessage:
+      source === "schools"
+        ? "We couldn't load the school list. Please refresh or contact Pexpacks."
+        : "We couldn't search schools right now. Please try again.",
+  });
+
+  const searchActive = panelOpen;
+
+  /* Sync from URL ?q= on schools page */
+  useEffect(() => {
+    if (!readQueryFromUrl || urlQueryApplied.current) return;
+    urlQueryApplied.current = true;
+    const q = new URLSearchParams(window.location.search).get("q")?.trim();
+    if (q) updateQuery(q);
+  }, [readQueryFromUrl, updateQuery]);
+
+  /* Click-outside to close */
+  useEffect(() => {
+    if (!panelOpen) return;
+    function onPointerDown(e: PointerEvent) {
+      if (!searchRef.current?.contains(e.target as Node)) {
+        setPanelOpen(false);
+        setIsInputFocused(false);
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [panelOpen, setPanelOpen]);
+
+  /* Trending schools fetch */
+  useEffect(() => {
+    if (trendingFetched.current || query.length >= 3) return;
+    trendingFetched.current = true;
+
+    const fetchDefault = () =>
+      fetch("/api/schools/search?limit=8")
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.results) {
+            setTrendingSchools(data.results);
+            setTrendingVisible(true);
+          }
+        })
+        .catch(() => {});
+
+    if (typeof window !== "undefined" && "geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          fetch(
+            `/api/schools/search?limit=8&lat=${latitude}&lng=${longitude}`,
+          )
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.results?.length > 0) {
+                setTrendingSchools(data.results);
+                setTrendingVisible(true);
+              } else {
+                fetchDefault();
+              }
+            })
+            .catch(fetchDefault);
+        },
+        fetchDefault,
+        { timeout: 4000, maximumAge: 120000 },
+      );
+    } else {
+      fetchDefault();
+    }
+  }, [query]);
+
+  function handleSchoolSelected(
+    schoolSlug: string,
+    position: number,
+    placement: "result" | "trending",
+  ) {
+    trackSchoolResultSelected({ source, schoolSlug, position, placement });
+    onResultClick?.();
+  }
+
+  /* Tray context: compact input on mobile when active */
+  const inputMobileActive =
+    searchActive
+      ? "max-lg:min-h-[48px] max-lg:text-base max-lg:border-pex-keppel max-lg:rounded-2xl"
+      : "";
+
+  /* Helper-pill storage key per surface */
+  const helperStorageKey =
+    source === "schools"
+      ? "Pexpacks:gauteng-helper:schools"
+      : source === "tray"
+        ? "Pexpacks:gauteng-helper:tray"
+        : "Pexpacks:gauteng-helper:home";
+
+  /* Input id must be unique per surface so label htmlFor works */
+  const inputId =
+    source === "schools"
+      ? "schoolQuery"
+      : source === "tray"
+        ? "traySchoolQuery"
+        : "homeSchoolQuery";
+
+  return (
+    <div
+      className={cn(
+        "relative w-full max-w-[760px] mt-6 md:mt-[26px] flex flex-col min-w-0",
+        source === "schools" && "max-w-[1120px] mt-6",
+        className,
+      )}
+    >
+      {/* Mobile overlay */}
+      {searchActive && (
+        <div className="fixed inset-0 z-[119] lg:z-10 bg-white/80 backdrop-blur-sm transition-opacity duration-300" />
+      )}
+
+      {/* ── Search card ──────────────────────────────────────────────────── */}
+      <div
+        ref={searchRef}
+        role="search"
+        data-mobile-search-active={searchActive ? "true" : "false"}
+        className={cn(
+          CARD_CLASSES,
+          "order-1",
+          searchActive &&
+            "max-lg:fixed max-lg:top-[max(4px,env(safe-area-inset-top))] max-lg:left-2.5 max-lg:right-2.5 max-lg:z-[1000] max-lg:w-auto max-lg:p-3.5 sm:max-lg:p-[18px] max-lg:rounded-3xl max-lg:shadow-[0_18px_42px_rgba(12,26,43,0.22)]",
+        )}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            setPanelOpen(false);
+            setIsInputFocused(false);
+            setTrendingVisible(false);
+          }
+        }}
+      >
+        {/* Label + Input */}
+        <label
+          className="min-w-0 grid content-center gap-1.5 sm:gap-2 p-0 bg-transparent"
+          htmlFor={inputId}
+        >
+          <span className="text-pex-navy text-sm sm:text-base font-bold leading-tight pl-1">
+            School Name
+          </span>
+          <div className="relative w-full flex items-center">
+            <input
+              id={inputId}
+              name="schoolQuery"
+              type="search"
+              placeholder="Type your school name..."
+              autoComplete="off"
+              value={query}
+              onFocus={() => {
+                setIsInputFocused(true);
+                setTrendingVisible(true);
+              }}
+              onBlur={() => setIsInputFocused(false)}
+              onChange={(e) => updateQuery(e.target.value)}
+              className={cn(INPUT_CLASSES, inputMobileActive)}
+            />
+            {query ? (
+              <button
+                type="button"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 border-none bg-transparent hover:bg-pex-navy/10 text-pex-navy cursor-pointer rounded-full z-10 transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  updateQuery("");
+                }}
+                aria-label="Clear school name"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  focusable="false"
+                  className="w-3.5 h-3.5 stroke-current stroke-[2.6] stroke-linecap-round"
+                >
+                  <path d="m6 6 12 12M18 6 6 18" />
+                </svg>
+              </button>
+            ) : null}
+          </div>
+        </label>
+
+        {/* Trending chips */}
+        {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
+          <div className="mt-3 min-w-0">
+            <span className="block mb-2 px-1 text-pex-navy/50 text-xs font-extrabold uppercase tracking-wider">
+              Trending Near You
+            </span>
+            {/* Scrollable chip strip */}
+            <div className="relative">
+              <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {trendingSchools.map((school, index) => (
+                  <Link
+                    key={school.slug}
+                    href={`/schools/${school.slug}`}
+                    className={CHIP_CLASSES}
+                    data-conversion-event={`${source}_trending_school`}
+                    onClick={() =>
+                      handleSchoolSelected(school.slug, index + 1, "trending")
+                    }
+                  >
+                    {school.image ? (
+                      <Image
+                        src={school.image}
+                        alt={`${school.name} logo`}
+                        width={28}
+                        height={28}
+                        className="rounded-md object-cover shrink-0"
+                      />
+                    ) : (
+                      <SchoolLogoPlaceholder
+                        className="rounded-md object-cover shrink-0"
+                        width={28}
+                        height={28}
+                        title={`${school.name} logo`}
+                      />
+                    )}
+                    <span className="text-xs font-bold text-pex-navy whitespace-nowrap">
+                      {school.name}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              {/* Teal scroll indicator bar */}
+              <div
+                className="h-[3px] rounded-full bg-pex-keppel/30 mt-0.5 overflow-hidden"
+                aria-hidden="true"
+              >
+                <div className="h-full w-[42%] bg-pex-keppel rounded-full" />
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Results panel */}
+        {panelOpen ? (
+          <div
+            id={`${source}-school-search-results`}
+            aria-live="polite"
+            data-school-results-scroll
+            className={cn(
+              "absolute z-[12] inset-x-0 top-[calc(100%+10px)] md:top-[calc(100%+12px)] w-full max-h-[min(70dvh,520px)] overflow-y-auto p-3 sm:p-4 border border-pex-border/80 rounded-3xl bg-pex-bg shadow-[0_24px_58px_rgba(26,42,64,0.16)] [animation:schoolResultsIn_0.2s_ease-out_both]",
+              searchActive &&
+                "max-lg:fixed max-lg:top-[calc(max(4px,env(safe-area-inset-top))+80px)] max-lg:bottom-[max(10px,env(safe-area-inset-bottom))] max-lg:inset-x-2.5 max-lg:w-auto max-lg:max-h-none max-lg:p-4 max-lg:pt-3 max-lg:pb-5 max-lg:rounded-3xl max-lg:shadow-[0_16px_48px_rgba(12,26,43,0.18)] max-lg:overscroll-contain",
+            )}
+          >
+            {/* Mobile close button */}
+            <button
+              className="sticky top-0 z-10 w-9 h-9 min-w-9 min-h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 shadow-sm flex lg:hidden items-center justify-center cursor-pointer mb-3"
+              type="button"
+              aria-label="Close school search results"
+              onClick={() => {
+                setPanelOpen(false);
+                setIsInputFocused(false);
+                setTrendingVisible(false);
+              }}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+                className="w-3.5 h-3.5 stroke-slate-900 stroke-[2.2] stroke-linecap-round fill-none"
+              >
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
+            </button>
+
+            {!hasSearched && isLoading ? (
+              <p className="m-0 py-2.5 px-3 text-muted-foreground text-xs font-bold text-center">
+                Loading schools...
+              </p>
+            ) : null}
+
+            {error ? (
+              <p
+                className="m-0 rounded-lg py-3 px-3.5 bg-white/85 text-destructive text-sm font-extrabold leading-snug"
+                role="alert"
+              >
+                {error}
+              </p>
+            ) : null}
+
+            {!isLoading && queryReady && hasSearched && !error ? (
+              <>
+                <div className="mb-3.5 px-1 flex items-center justify-between gap-4 text-muted-foreground font-bold text-xs sm:text-sm">
+                  <strong className="text-pex-navy font-extrabold text-sm sm:text-base">
+                    {total === 1 ? "1 school found" : `${total} schools found`}
+                  </strong>
+                  {total > 0 ? (
+                    <span className="text-muted-foreground text-xs sm:text-sm font-semibold">
+                      Showing {results.length} of {total}
+                    </span>
+                  ) : null}
+                </div>
+
+                {results.length > 0 ? (
+                  <>
+                    <div className="grid gap-3 sm:gap-2.5">
+                      {results.map((school, index) => (
+                        <article
+                          key={school.id}
+                          className="p-3.5 sm:p-4 md:px-4.5 rounded-2xl bg-[#f5f9fb] border border-slate-200/60 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto] items-stretch md:items-center gap-3 md:gap-4 hover:border-pex-keppel transition-colors"
+                        >
+                          <div className="min-w-0 grid gap-2.5 md:gap-2">
+                            <div className="flex items-start gap-3">
+                              {school.image ? (
+                                <Image
+                                  src={school.image}
+                                  alt={`${school.name} logo`}
+                                  className="shrink-0 w-9 h-9 rounded-lg object-contain bg-pex-bg mt-0.5"
+                                  width={36}
+                                  height={36}
+                                  placeholder="blur"
+                                  blurDataURL={IMAGE_BLUR_DATA_URL}
+                                />
+                              ) : (
+                                <SchoolLogoPlaceholder
+                                  className="shrink-0 w-9 h-9 rounded-lg object-contain bg-pex-bg mt-0.5"
+                                  width={36}
+                                  height={36}
+                                  title={`${school.name} logo`}
+                                />
+                              )}
+                              <div className="min-w-0 grid gap-1">
+                                <h3 className="m-0 text-pex-navy font-bold text-base sm:text-lg md:text-xl leading-tight">
+                                  <Link
+                                    href={`/schools/${school.slug}`}
+                                    className="text-inherit no-underline hover:text-pex-keppel transition-colors"
+                                    onClick={() =>
+                                      handleSchoolSelected(
+                                        school.slug,
+                                        index + 1,
+                                        "result",
+                                      )
+                                    }
+                                  >
+                                    <HighlightMatch
+                                      text={school.name}
+                                      query={query}
+                                    />
+                                  </Link>
+                                </h3>
+                                <p className="m-0 text-muted-foreground text-xs sm:text-sm font-semibold">
+                                  {formatSchoolSearchLocation(school)}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Grade + badge tags */}
+                            <div className="min-w-0 flex flex-col md:flex-row md:items-center flex-wrap gap-2 sm:gap-2.5">
+                              <div className="min-w-0 flex flex-wrap gap-1.5">
+                                {/* Desktop: 4 grades */}
+                                <div className="hidden md:flex flex-wrap items-center gap-1.5">
+                                  {school.grades.slice(0, 4).map((g) => (
+                                    <Link
+                                      key={g}
+                                      href={`/schools/${school.slug}`}
+                                      className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-pex-keppel hover:text-white text-slate-800 text-xs font-bold no-underline transition-all"
+                                      onClick={() =>
+                                        handleSchoolSelected(
+                                          school.slug,
+                                          index + 1,
+                                          "result",
+                                        )
+                                      }
+                                    >
+                                      {g}
+                                    </Link>
+                                  ))}
+                                  {school.grades.length > 4 && (
+                                    <span className="px-1.5 py-0.5 text-muted-foreground text-xs font-bold">
+                                      +{school.grades.length - 4} more
+                                    </span>
+                                  )}
+                                </div>
+                                {/* Mobile: 3 grades */}
+                                <div className="flex md:hidden flex-wrap items-center gap-1.5">
+                                  {school.grades.slice(0, 3).map((g) => (
+                                    <Link
+                                      key={g}
+                                      href={`/schools/${school.slug}`}
+                                      className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-pex-keppel hover:text-white text-slate-800 text-xs font-bold no-underline transition-all"
+                                      onClick={() =>
+                                        handleSchoolSelected(
+                                          school.slug,
+                                          index + 1,
+                                          "result",
+                                        )
+                                      }
+                                    >
+                                      {g}
+                                    </Link>
+                                  ))}
+                                  {school.grades.length > 3 && (
+                                    <span className="px-1.5 py-0.5 text-muted-foreground text-xs font-bold">
+                                      +{school.grades.length - 3} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <span className="bg-[#faeedd] text-[#0f766e] border border-[#f0dfc6] py-1 px-3 rounded-full text-xs font-extrabold">
+                                  {school.customBadge || DEFAULT_PACKS_BADGE}
+                                </span>
+                                {school.isPartner && (
+                                  <span className="bg-[#e0f5f2] text-[#0d9488] border border-teal-500/35 py-1 px-2.5 rounded-full text-xs font-extrabold">
+                                    ★ Official Partner ★
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <Link
+                            href={`/schools/${school.slug}`}
+                            className="w-full md:w-auto min-h-[44px] md:min-h-[48px] px-5 rounded-full bg-primary hover:bg-primary/90 text-white font-heading text-sm md:text-[15px] font-extrabold no-underline inline-flex items-center justify-center whitespace-nowrap transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            aria-label={`View ${school.name} packs in ${formatSchoolSearchLocation(school)}`}
+                            data-conversion-event={`${source}_school_result`}
+                            onClick={() =>
+                              handleSchoolSelected(
+                                school.slug,
+                                index + 1,
+                                "result",
+                              )
+                            }
+                          >
+                            View packs
+                          </Link>
+                        </article>
+                      ))}
+                    </div>
+
+                    <SchoolResultsAutoLoad
+                      hasMore={hasMore}
+                      isLoading={isLoading}
+                      onLoadMore={() => fetchResults(results.length, "append")}
+                      className="w-full h-px pointer-events-none"
+                    />
+
+                    {hasMore && !isLoading ? (
+                      <button
+                        className="w-full mt-3 min-h-[44px] py-2.5 px-4 border-0 rounded-full bg-primary hover:bg-primary/90 text-white font-heading font-extrabold flex items-center justify-center transition-all cursor-pointer"
+                        type="button"
+                        onClick={() => fetchResults(results.length, "append")}
+                      >
+                        Load more schools
+                      </button>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    <div className="min-h-[78px] py-6 px-3 grid place-items-center text-center">
+                      <p className="m-0 py-2.5 px-3 text-muted-foreground text-xs font-bold text-center">
+                        No matching schools found.
+                      </p>
+                    </div>
+                    <div className="mt-5 p-4 sm:p-5 rounded-2xl bg-[rgba(255,111,89,0.05)] border border-[rgba(255,111,89,0.15)] text-left">
+                      <p className="m-0 mb-1 text-pex-coral font-heading text-xs font-extrabold tracking-wider uppercase">
+                        Edge case? Covered.
+                      </p>
+                      <p className="m-0 mb-3.5 text-pex-navy text-sm leading-relaxed font-semibold">
+                        Don&rsquo;t see your school? Upload your stationery list
+                        or send it to us on WhatsApp and we&rsquo;ll pack every
+                        item exactly as specified.
+                      </p>
+                      <div className="flex justify-center">
+                        <Link
+                          href="/order"
+                          className="inline-flex items-center min-h-[44px] sm:min-h-[48px] py-2.5 px-5 rounded-full bg-pex-coral hover:bg-pex-coral/90 text-white font-heading text-sm font-extrabold no-underline transition-all hover:scale-[1.02]"
+                          data-conversion-event={`${source}_upload_list`}
+                          onClick={() => {
+                            trackSchoolNoResultsRecovery({ source });
+                            onResultClick?.();
+                          }}
+                        >
+                          Upload Your School List
+                        </Link>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
+      {/* Gauteng helper pill */}
+      <SearchHelperPill
+        storageKey={helperStorageKey}
+        isInputFocused={isInputFocused}
+        inputValue={query}
+        className={cn(
+          "order-0 md:order-2 mb-2 md:mb-0",
+          source === "schools" && "order-2",
+        )}
+      />
+
+      {/* "Browse all schools" link — schools page only */}
+      {showBrowseLink && (
+        <a
+          href="#browse-schools-heading"
+          className="group order-3 mt-4 w-fit inline-flex items-center gap-2 px-4 py-2 border border-pex-navy/10 rounded-full bg-pex-bg text-pex-navy text-sm font-extrabold no-underline hover:border-pex-keppel hover:text-pex-keppel transition-all duration-200"
+        >
+          <span className="text-pex-navy/50 font-semibold">
+            Can&rsquo;t remember the exact name?
+          </span>
+          Browse all schools
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="w-4 h-4 text-pex-keppel group-hover:translate-y-0.5 transition-transform duration-150"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </a>
+      )}
+    </div>
+  );
+}
