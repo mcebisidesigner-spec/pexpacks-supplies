@@ -3,11 +3,16 @@ import { PEXPACKS_SYSTEM_PROMPT } from "@/lib/ai/prompts";
 import { POST } from "@/app/api/chat/route";
 
 const ESCALATION_PATTERNS = [
+  /how\s+mu(?:ch|sh|st)/i,
+  /\bhow\s+expensive\b/i,
   /\bprice\b/i,
   /\bpricing\b/i,
   /\bcost\b/i,
+  /\bcosts\b/i,
   /\bquote\b/i,
   /\bquotation\b/i,
+  /\brate\b/i,
+  /\bamount\b/i,
   /\bdiscount\b/i,
   /\bbulk\b/i,
   /\bcustom list\b/i,
@@ -44,6 +49,12 @@ describe("Pexpacks Assistant System Prompt", () => {
 describe("Escalation Pattern Matcher", () => {
   it("triggers on quotation requests", () => {
     const input = "Can you give me a quote for 80 grade 5 stationery packs?";
+    const matched = ESCALATION_PATTERNS.some((p) => p.test(input));
+    expect(matched).toBe(true);
+  });
+
+  it("triggers on 'how mush / how much' inquiries", () => {
+    const input = "How mush are the grade packs";
     const matched = ESCALATION_PATTERNS.some((p) => p.test(input));
     expect(matched).toBe(true);
   });
@@ -118,5 +129,29 @@ describe("Chat API Route Handler", () => {
     expect(body).toContain("text-start");
     expect(body).toContain("text-delta");
     expect(body).toContain("Primrose Hill Primary");
+  });
+
+  it("returns distinct pricing response for 'How mush are the grade packs'", async () => {
+    const req = new Request("http://localhost:3000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: [
+          {
+            id: "msg-3",
+            role: "user",
+            parts: [{ type: "text", text: "How mush are the grade packs" }],
+          },
+        ],
+      }),
+    });
+
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+
+    const body = await res.text();
+    expect(body).toContain("R450 to R890");
+    expect(body).toContain("Customise & Save");
+    expect(body).not.toContain("Primrose Hill Primary");
   });
 });
