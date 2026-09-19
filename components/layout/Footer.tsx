@@ -150,7 +150,7 @@ export function Footer({ company }: FooterContent) {
               >
                 {phone ? (
                   <>
-                    <a href={phoneHrefLocal} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                    <a href={phoneHrefLocal} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                       {formatPhoneNumber(phone)}
                     </a>
                     <span className="text-pex-keppel opacity-50 text-base font-medium leading-none" aria-hidden="true">
@@ -158,7 +158,7 @@ export function Footer({ company }: FooterContent) {
                     </span>
                   </>
                 ) : null}
-                <a href={emailHref} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                <a href={emailHref} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   {email}
                 </a>
               </address>
@@ -197,7 +197,7 @@ export function Footer({ company }: FooterContent) {
 
         <hr className="border-none h-[1px] bg-white/[0.14] my-6 sm:my-[30px] mb-5" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:gap-[18px]">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-[18px]">
           <p className="min-w-0 m-0 text-white/70 text-[11px] sm:text-xs font-semibold leading-[1.3]">
             &copy; {currentYear} Pexpacks (Pty) Ltd. All rights reserved.
             Design:{"  "}
@@ -217,7 +217,7 @@ export function Footer({ company }: FooterContent) {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="relative grid place-items-center w-6 h-6 text-white bg-white/10 border border-white/[0.12] rounded-full transition-all duration-200 hover:bg-pex-coral hover:brightness-110 hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                  className="relative grid place-items-center w-8 h-8 sm:w-9 sm:h-9 text-pex-navy bg-white border border-white rounded-full transition-all duration-200 hover:bg-pex-keppel hover:brightness-110 hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"
