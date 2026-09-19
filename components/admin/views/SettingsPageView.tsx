@@ -16,7 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { corePages as styles } from "./CorePagesView";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";

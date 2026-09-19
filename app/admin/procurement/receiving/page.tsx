@@ -4,7 +4,7 @@ import { listPurchaseOrdersForReceiving } from "@/lib/admin/operations";
 import { createSupplierReceiptAction } from "../../operations-actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
 export const dynamic = "force-dynamic";

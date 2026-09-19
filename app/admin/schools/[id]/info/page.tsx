@@ -9,7 +9,7 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface SchoolInfoPageProps {

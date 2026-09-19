@@ -22,7 +22,7 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 const PAGE_SIZE = 4;
 const GRADES = [

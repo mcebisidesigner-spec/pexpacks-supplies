@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import styles from "./AnimatedVehicle.module.css";
 
 type AnimatedVehicleProps = {
   position: number;
@@ -14,15 +13,33 @@ export function AnimatedVehicle({ position }: AnimatedVehicleProps) {
   } as CSSProperties;
 
   return (
-    <div className={styles.trackContainer} aria-hidden="true">
-      <div className={styles.track}>
-        <div className={styles.vehicleWrapper} style={{ left: `${position}%` }}>
+    <div
+      className="relative mt-[var(--space-4)] pt-[14px] border-t-2 border-dashed border-[rgba(26,42,64,0.1)]"
+      aria-hidden="true"
+    >
+      {/* Track */}
+      <div className="relative w-[calc(100%-150px)] h-[66px] mx-auto max-[480px]:w-[calc(100%-116px)] max-[480px]:h-[52px]">
+        {/* Vehicle wrapper — position is driven by the parent slider's `position` prop */}
+        <div
+          className="absolute top-0 w-[150px] -translate-x-1/2 transition-[left] duration-[160ms] [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none max-[480px]:w-[116px]"
+          style={{ left: `${position}%` }}
+        >
           <svg
-            className={styles.vehicleSvg}
+            className="block w-full h-auto [filter:drop-shadow(0_12px_18px_rgba(26,42,64,0.16))]"
             viewBox="0 0 150 66"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g className={styles.cargo} style={cargoStyle}>
+            {/* Cargo — CSS custom properties applied inline via cargoStyle */}
+            <g
+              style={{
+                ...cargoStyle,
+                opacity: "var(--cargo-opacity)",
+                transform: "translateY(var(--cargo-y)) scale(var(--cargo-scale))",
+                transformOrigin: "48px 28px",
+                transition:
+                  "opacity 0.24s ease, transform 0.24s cubic-bezier(0.2,0.8,0.2,1)",
+              }}
+            >
               <rect
                 x="18"
                 y="8"
@@ -83,7 +100,15 @@ export function AnimatedVehicle({ position }: AnimatedVehicleProps) {
             <circle cx="112" cy="46" r="11" fill="var(--pex-primary)" />
             <circle cx="112" cy="46" r="4.5" fill="#ffffff" />
 
-            <g className={styles.speedLines}>
+            {/* Speed lines — vehiclePulse keyframe is defined in globals.css */}
+            <g
+              style={{
+                opacity: 0.72,
+                transformOrigin: "center",
+                animation: "vehiclePulse 1.4s ease-in-out infinite",
+              }}
+              className="motion-reduce:[animation:none]"
+            >
               <path
                 d="M145 38H156"
                 stroke="rgba(26, 42, 64, 0.32)"

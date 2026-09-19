@@ -2,7 +2,7 @@ import { ArrowLeft, CheckSquare, Save, Tag } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {

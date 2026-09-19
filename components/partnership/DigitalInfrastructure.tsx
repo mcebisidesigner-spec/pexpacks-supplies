@@ -2,7 +2,6 @@ import React from "react";
 import { Globe, Lock, Smartphone, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { buildWhatsAppHref } from "@/data/contact";
-import styles from "./Partnership.module.css";
 
 const INFRA_FEATURES = [
   {
@@ -33,16 +32,16 @@ export function DigitalInfrastructure() {
   );
 
   return (
-    <section className={styles.section} aria-labelledby="digital-infra-heading">
-      <div className={styles.container}>
-        <div className={styles.infraCard}>
-          <div className={styles.infraGrid}>
+    <section className="py-[clamp(54px,7vw,96px)] relative" aria-labelledby="digital-infra-heading">
+      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
+        <div className="bg-[var(--pex-navy,#1a2a40)] rounded-[24px] p-[clamp(32px,6vw,64px)] text-white relative overflow-hidden">
+          <div className="grid grid-cols-1 min-[981px]:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] gap-[clamp(32px,5vw,60px)] items-center">
             <div>
-              <p className={styles.eyebrowLight}>Digital infrastructure suite</p>
-              <h2 id="digital-infra-heading" className={styles.sectionTitleLight}>
+              <p className="mb-[14px] text-[#5eead4] text-sm font-extrabold tracking-normal text-left">Digital infrastructure suite</p>
+              <h2 id="digital-infra-heading" className="mb-[14px] text-white font-heading text-[clamp(32px,4.6vw,56px)] font-extrabold leading-[1.05] tracking-[-0.01em] text-left">
                 A Digital Front Door Built Around Your School.
               </h2>
-              <p className={styles.sectionLeadLight}>
+              <p className="max-w-[760px] mb-[34px] text-white/80 text-lg leading-[1.45] text-left">
                 A complimentary 12-month digital infrastructure package included with
                 qualifying institutional partnerships. We build, host, and maintain
                 a professional digital portal tailored to your school's procurement
@@ -67,16 +66,16 @@ export function DigitalInfrastructure() {
               </div>
             </div>
 
-            <div className={styles.infraPillList}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {INFRA_FEATURES.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.title} className={styles.infraPill}>
-                    <h3 className={styles.infraPillTitle}>
+                  <div key={item.title} className="bg-white/[0.06] border border-white/[0.12] rounded-[14px] p-4 flex flex-col gap-1.5">
+                    <h3 className="text-[14.5px] font-bold text-white m-0 flex items-center gap-2">
                       <Icon size={18} style={{ color: "#5eead4" }} />
                       <span>{item.title}</span>
                     </h3>
-                    <p className={styles.infraPillDesc}>{item.desc}</p>
+                    <p className="text-[12.5px] text-[#94a3b8] leading-[1.45] m-0">{item.desc}</p>
                   </div>
                 );
               })}

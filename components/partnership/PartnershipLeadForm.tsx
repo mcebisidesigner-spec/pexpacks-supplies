@@ -12,7 +12,6 @@ import {
 import { formatZAR } from "./rebateCalculator";
 import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import { CheckCircle2, X } from "lucide-react";
-import styles from "./Partnership.module.css";
 
 interface PartnershipLeadFormProps {
   initialPrefill?: CalculatorPrefill | null;
@@ -121,23 +120,23 @@ export function PartnershipLeadForm({
   }
 
   return (
-    <section className={styles.section} id="partnership-enquiry" aria-labelledby="enquiry-form-title">
-      <div className={styles.container}>
-        <div className={styles.formSectionWrap}>
-          <div className={styles.formCard}>
-            <div className={styles.formIntro}>
-              <p className={styles.eyebrow}>Institutional consultation</p>
-              <h2 id="enquiry-form-title" className={styles.sectionTitle} style={{ fontSize: "clamp(26px, 3.5vw, 36px)" }}>
+    <section className="py-[clamp(54px,7vw,96px)] relative" id="partnership-enquiry" aria-labelledby="enquiry-form-title">
+      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
+        <div className="max-w-[820px] mx-auto">
+          <div className="bg-white border border-[var(--pex-border,#e1e7ea)] rounded-[24px] p-[clamp(28px,5vw,48px)] shadow-[0_20px_48px_rgba(26,42,64,0.08)]">
+            <div className="mb-7">
+              <p className="mb-[14px] text-[var(--pex-keppel,#1a7a77)] text-sm font-extrabold text-left">Institutional consultation</p>
+              <h2 id="enquiry-form-title" className="mb-[14px] text-[var(--pex-navy,#1a2a40)] font-heading font-extrabold leading-[1.05] tracking-[-0.01em] text-left text-[clamp(26px,3.5vw,36px)]">
                 Explore a Pexpacks Partnership for Your School.
               </h2>
-              <p className={styles.sectionLead} style={{ marginBottom: 0 }}>
+              <p className="max-w-[760px] text-[var(--pex-text-muted,#64748b)] text-lg leading-[1.45] text-left mb-0">
                 Tell us a little about your institution and an executive member of our
                 partnership team will arrange a brief, consultative discussion.
               </p>
             </div>
 
             {initialPrefill && (
-              <div className={styles.calcContextBanner}>
+              <div className="bg-[rgba(26,122,119,0.08)] border border-[rgba(26,122,119,0.25)] rounded-xl p-[12px_16px] mb-5 text-[13px] text-[var(--pex-navy,#1a2a40)] flex items-center justify-between gap-2.5">
                 <span>
                   <strong>Calculator Context Attached:</strong> ~{initialPrefill.learnerCount} learners at{" "}
                   {initialPrefill.adoptionRate}% adoption (~{formatZAR(initialPrefill.estimatedRebate)} estimated annual rebate).
@@ -146,7 +145,7 @@ export function PartnershipLeadForm({
                   <button
                     type="button"
                     onClick={onClearPrefill}
-                    className={styles.calcContextDismiss}
+                    className="bg-transparent border-0 text-[var(--pex-muted,#64748b)] cursor-pointer p-0.5 flex"
                     aria-label="Remove calculator context"
                   >
                     <X size={16} />
@@ -156,9 +155,9 @@ export function PartnershipLeadForm({
             )}
 
             {success ? (
-              <div className={styles.formSuccessNotice} role="status">
+              <div className="bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.3)] rounded-[14px] p-6 text-[var(--pex-navy,#1a2a40)] text-center flex flex-col items-center gap-3" role="status">
                 <CheckCircle2 size={48} style={{ color: "var(--pex-keppel)" }} />
-                <h3 className={styles.formSuccessTitle}>Institutional Enquiry Received</h3>
+                <h3 className="text-xl font-extrabold text-[var(--pex-navy,#1a2a40)] m-0">Institutional Enquiry Received</h3>
                 <p style={{ margin: 0, fontSize: "15px", color: "var(--pex-muted)", maxWidth: 500, lineHeight: 1.6 }}>
                   Thank you for reaching out. A dedicated Pexpacks institutional manager has been assigned
                   to your school profile and will contact you via your preferred communication method to schedule
@@ -194,11 +193,11 @@ export function PartnershipLeadForm({
                   </div>
                 )}
 
-                <div className={styles.formGrid}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
                   {/* School Name */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-school-name" className={styles.formLabel}>
-                      <span>School Name <span className={styles.formRequired}>*</span></span>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-school-name" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
+                      <span>School Name <span className="text-red-500 ml-[3px]">*</span></span>
                     </label>
                     <input
                       id="p-school-name"
@@ -206,18 +205,18 @@ export function PartnershipLeadForm({
                       type="text"
                       placeholder="e.g. St. Stithians College or Bryanston High"
                       required
-                      className={styles.formInput}
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                       aria-invalid={Boolean(errors.schoolName)}
                     />
-                    {errors.schoolName && <span className={styles.formError}>{errors.schoolName}</span>}
+                    {errors.schoolName && <span className="text-xs font-semibold text-red-700">{errors.schoolName}</span>}
                   </div>
 
                   {/* School Type */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-school-type" className={styles.formLabel}>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-school-type" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
                       <span>School Type</span>
                     </label>
-                    <select id="p-school-type" name="schoolType" className={styles.formSelect}>
+                    <select id="p-school-type" name="schoolType" className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]">
                       <option value="">Select school type (optional)</option>
                       {SCHOOL_TYPES.map((type) => (
                         <option key={type} value={type}>{type}</option>
@@ -226,9 +225,9 @@ export function PartnershipLeadForm({
                   </div>
 
                   {/* Contact Name */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-full-name" className={styles.formLabel}>
-                      <span>Contact Person Name <span className={styles.formRequired}>*</span></span>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-full-name" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
+                      <span>Contact Person Name <span className="text-red-500 ml-[3px]">*</span></span>
                     </label>
                     <input
                       id="p-full-name"
@@ -237,22 +236,22 @@ export function PartnershipLeadForm({
                       placeholder="e.g. Dr. Jennifer Adams"
                       required
                       autoComplete="name"
-                      className={styles.formInput}
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                       aria-invalid={Boolean(errors.fullName)}
                     />
-                    {errors.fullName && <span className={styles.formError}>{errors.fullName}</span>}
+                    {errors.fullName && <span className="text-xs font-semibold text-red-700">{errors.fullName}</span>}
                   </div>
 
                   {/* Role at School */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-role" className={styles.formLabel}>
-                      <span>Your Role / Capacity <span className={styles.formRequired}>*</span></span>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-role" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
+                      <span>Your Role / Capacity <span className="text-red-500 ml-[3px]">*</span></span>
                     </label>
                     <select
                       id="p-role"
                       name="role"
                       required
-                      className={styles.formSelect}
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                       aria-invalid={Boolean(errors.role)}
                     >
                       <option value="">Select your institutional capacity</option>
@@ -260,13 +259,13 @@ export function PartnershipLeadForm({
                         <option key={role} value={role}>{role}</option>
                       ))}
                     </select>
-                    {errors.role && <span className={styles.formError}>{errors.role}</span>}
+                    {errors.role && <span className="text-xs font-semibold text-red-700">{errors.role}</span>}
                   </div>
 
                   {/* Work Email */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-email" className={styles.formLabel}>
-                      <span>Official School Email <span className={styles.formRequired}>*</span></span>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-email" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
+                      <span>Official School Email <span className="text-red-500 ml-[3px]">*</span></span>
                     </label>
                     <input
                       id="p-email"
@@ -275,16 +274,16 @@ export function PartnershipLeadForm({
                       placeholder="principal@yourschool.co.za"
                       required
                       autoComplete="email"
-                      className={styles.formInput}
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                       aria-invalid={Boolean(errors.email)}
                     />
-                    {errors.email && <span className={styles.formError}>{errors.email}</span>}
+                    {errors.email && <span className="text-xs font-semibold text-red-700">{errors.email}</span>}
                   </div>
 
                   {/* Contact Phone */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-phone" className={styles.formLabel}>
-                      <span>Direct Contact Number <span className={styles.formRequired}>*</span></span>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-phone" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
+                      <span>Direct Contact Number <span className="text-red-500 ml-[3px]">*</span></span>
                     </label>
                     <input
                       id="p-phone"
@@ -293,15 +292,15 @@ export function PartnershipLeadForm({
                       placeholder="011 456 7890 or 082 123 4567"
                       required
                       autoComplete="tel"
-                      className={styles.formInput}
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                       aria-invalid={Boolean(errors.phone)}
                     />
-                    {errors.phone && <span className={styles.formError}>{errors.phone}</span>}
+                    {errors.phone && <span className="text-xs font-semibold text-red-700">{errors.phone}</span>}
                   </div>
 
                   {/* Learner Count */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-learners" className={styles.formLabel}>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-learners" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
                       <span>Approximate Learner Enrollment</span>
                     </label>
                     <input
@@ -310,16 +309,16 @@ export function PartnershipLeadForm({
                       type="number"
                       placeholder="e.g. 850"
                       defaultValue={initialPrefill?.learnerCount || ""}
-                      className={styles.formInput}
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                     />
                   </div>
 
                   {/* Preferred Contact Method */}
-                  <div className={styles.formField}>
-                    <label htmlFor="p-contact-method" className={styles.formLabel}>
+                  <div className="flex flex-col gap-[7px]">
+                    <label htmlFor="p-contact-method" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
                       <span>Preferred Contact Method</span>
                     </label>
-                    <select id="p-contact-method" name="preferredContactMethod" className={styles.formSelect}>
+                    <select id="p-contact-method" name="preferredContactMethod" className="w-full h-[50px] px-3.5 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]">
                       {PREFERRED_CONTACT_METHODS.map((method) => (
                         <option key={method} value={method}>{method}</option>
                       ))}
@@ -327,20 +326,20 @@ export function PartnershipLeadForm({
                   </div>
 
                   {/* Additional Notes */}
-                  <div className={`${styles.formField} ${styles.formFull}`}>
-                    <label htmlFor="p-message" className={styles.formLabel}>
+                  <div className="flex flex-col gap-[7px] sm:col-span-2">
+                    <label htmlFor="p-message" className="text-[13.5px] font-bold text-[var(--pex-navy,#1a2a40)] flex items-center justify-between">
                       <span>Additional Comments or Specific Procurement Priorities</span>
                     </label>
                     <textarea
                       id="p-message"
                       name="message"
                       placeholder="Share details on your current stationery timeline, SGB review cycle, or specific pack requirements..."
-                      className={styles.formTextarea}
+                      className="w-full h-auto min-h-[100px] p-[12px_14px] rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-white text-[var(--pex-text,#172326)] text-[14.5px] outline-none resize-y transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
                     />
                   </div>
 
                   {/* POPIA Consent Checkbox */}
-                  <div className={`${styles.formField} ${styles.formFull}`}>
+                  <div className="flex flex-col gap-[7px] sm:col-span-2">
                     <label
                       htmlFor="p-consent"
                       style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer" }}
@@ -353,7 +352,7 @@ export function PartnershipLeadForm({
                         style={{ marginTop: 4, accentColor: "var(--pex-keppel)" }}
                         aria-invalid={Boolean(errors.consent)}
                       />
-                      <span className={styles.privacyNotice} style={{ margin: 0 }}>
+                      <span className="text-[12.5px] text-[var(--pex-muted,#64748b)] leading-[1.5] m-0 [&_a]:text-[var(--pex-keppel,#1a7a77)] [&_a]:underline [&_a]:underline-offset-2">
                         By submitting this form, you acknowledge that Pexpacks Supplies may process the
                         information provided for the purpose of responding to your institutional enquiry,
                         in accordance with our{" "}
@@ -363,7 +362,7 @@ export function PartnershipLeadForm({
                         and applicable data-protection requirements.
                       </span>
                     </label>
-                    {errors.consent && <span className={styles.formError}>{errors.consent}</span>}
+                    {errors.consent && <span className="text-xs font-semibold text-red-700">{errors.consent}</span>}
                   </div>
                 </div>
 

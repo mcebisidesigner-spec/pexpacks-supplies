@@ -30,7 +30,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import type { QuotationStatus } from "@/lib/admin/quotations";
 import { quotationStyles as styles } from "./quotationStyles";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 export interface MasterProductOption {
   id: string;

@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import type { InviteResult, RoleInfo } from "@/lib/admin/users";
 import { inviteUserAction } from "@/app/admin/users/actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 

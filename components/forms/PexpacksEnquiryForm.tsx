@@ -6,9 +6,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { endpointPathForFormType, type FormType } from "@/lib/forms/types";
-import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
-import heroStyles from "@/components/marketing/HeroBase.module.css";
-import formStyles from "@/components/marketing/MarketingForms.module.css";
+import {
+  isValidEmailAddress,
+  isValidSouthAfricanPhone,
+} from "@/lib/forms/contact";
 
 type ApiResponse = {
   success: boolean;
@@ -64,6 +65,34 @@ function errorAttributes(errors: Record<string, string>, fieldName: string) {
     : {};
 }
 
+// ── Shared form utility strings ───────────────────────────────────────────────
+const formCardCls =
+  "p-[28px] bg-[var(--card-bg)] rounded-[var(--radius-card-lg)] [box-shadow:var(--card-shadow)] max-[480px]:p-[22px]";
+const formStackCls = "grid gap-[var(--form-grid-gap)]";
+const fieldCls = "min-w-0 grid gap-[var(--form-field-gap)]";
+const fieldLabelCls =
+  "text-[var(--form-label-color)] text-[var(--form-label-size)] font-[var(--form-label-weight)] leading-[1.25]";
+const fieldInputCls =
+  "min-w-0 w-full min-h-[var(--form-control-height)] [border:var(--form-control-border)] rounded-[var(--form-control-radius)] px-[var(--form-control-padding-x)] py-0 bg-[var(--form-control-bg)] text-[var(--form-control-color)] text-[15px] font-inherit transition-[var(--interactive-transition)] placeholder:text-[var(--form-control-placeholder)] placeholder:opacity-100 hover:border-[var(--form-control-hover-border)] focus-visible:outline-none focus-visible:border-[var(--form-control-focus-border)] focus-visible:[box-shadow:var(--form-control-focus-shadow)]";
+const fieldTextareaCls =
+  "min-w-0 w-full min-h-[118px] [border:var(--form-control-border)] rounded-[var(--form-control-radius)] px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)] bg-[var(--form-control-bg)] text-[var(--form-control-color)] text-[15px] font-inherit resize-y transition-[var(--interactive-transition)] placeholder:text-[var(--form-control-placeholder)] placeholder:opacity-100 hover:border-[var(--form-control-hover-border)] focus-visible:outline-none focus-visible:border-[var(--form-control-focus-border)] focus-visible:[box-shadow:var(--form-control-focus-shadow)]";
+const fieldErrorCls =
+  "text-[var(--form-error-color)] text-[var(--form-error-size)] font-[var(--form-error-weight)] leading-[1.3]";
+const honeypotCls = "absolute left-[-10000px] w-px h-px overflow-hidden";
+const consentFieldCls =
+  "grid grid-cols-[20px_1fr] gap-[var(--space-3)] items-start";
+const consentInputCls = "w-[20px] h-[20px] mt-[2px] accent-[var(--pex-keppel)]";
+const consentSpanCls =
+  "text-[var(--pex-primary)] text-[var(--text-sm)] leading-[1.45]";
+const inlineTextLinkCls =
+  "text-[var(--pex-keppel)] font-extrabold underline decoration-2 underline-offset-4";
+const privacyNoticeCls =
+  "m-0 text-[var(--pex-text-muted)] text-[var(--text-sm)] leading-[1.45]";
+const statusMessageCls =
+  "mt-[4px] rounded-[var(--radius-md)] px-[14px] py-[var(--space-3)] bg-[rgba(47,133,90,0.12)] text-[var(--pex-success)] font-extrabold";
+const statusErrorCls =
+  "mt-[4px] rounded-[var(--radius-md)] px-[14px] py-[var(--space-3)] bg-[rgba(185,28,28,0.1)] text-[var(--pex-error)] font-extrabold";
+
 function FieldError({
   id,
   message,
@@ -71,12 +100,9 @@ function FieldError({
   id: string;
   message: string | undefined;
 }) {
-  if (!message) {
-    return null;
-  }
-
+  if (!message) return null;
   return (
-    <span id={id} className={formStyles.fieldError}>
+    <span id={id} className={fieldErrorCls}>
       {message}
     </span>
   );
@@ -111,16 +137,18 @@ export function PexpacksEnquiryForm({
       validationErrors.consent = "You must consent to process this request.";
     }
 
-    const phoneVal = (fd.get("phone") as string || "").trim();
+    const phoneVal = ((fd.get("phone") as string) || "").trim();
     if (!phoneVal) {
       validationErrors.phone = "Phone number is required.";
     } else if (!isValidSouthAfricanPhone(phoneVal)) {
-      validationErrors.phone = "Please enter a valid South African phone number (e.g., 072 123 4567).";
+      validationErrors.phone =
+        "Please enter a valid South African phone number (e.g., 072 123 4567).";
     }
 
-    const emailVal = (fd.get("email") as string || "").trim();
+    const emailVal = ((fd.get("email") as string) || "").trim();
     if (emailVal && !isValidEmailAddress(emailVal)) {
-      validationErrors.email = "Please enter a valid email address (e.g., name@example.com).";
+      validationErrors.email =
+        "Please enter a valid email address (e.g., name@example.com).";
     }
 
     if (Object.keys(validationErrors).length > 0) {
@@ -182,32 +210,39 @@ export function PexpacksEnquiryForm({
   }
 
   return (
-    <div className={formStyles.formCard}>
-      <form onSubmit={handleSubmit} noValidate>
-        <p className={heroStyles.eyebrow}>
+    <div
+      className={formCardCls}
+      style={{ border: "var(--card-border)" }}
+    >
+      <form onSubmit={handleSubmit} noValidate className="grid gap-[14px]">
+        {/* Eyebrow — migrated from HeroBase.module.css */}
+        <p className="m-0 mb-[var(--space-4)] text-[var(--pex-keppel)] font-extrabold text-[var(--text-sm)] tracking-[0]">
           {isContact ? "Contact enquiry" : "Partnership enquiry"}
         </p>
-        <h2>{title}</h2>
-        <p className={formStyles.privacyNotice}>
+        <h2 className="m-0 mb-[var(--space-2)] text-[var(--pex-primary)] text-[30px] leading-[1]">
+          {title}
+        </h2>
+        <p className={privacyNoticeCls}>
           I confirm that I am duly authorised to submit the parent or
           learner-related information and that the information provided is
           accurate.
         </p>
-        <div className={formStyles.formStack}>
-          <label className={formStyles.field} htmlFor="enqFullName">
-            <span>Full name</span>
+        <div className={formStackCls}>
+          <label className={fieldCls} htmlFor="enqFullName">
+            <span className={fieldLabelCls}>Full name</span>
             <input
               id="enqFullName"
               name="fullName"
               placeholder="Your name"
               autoComplete="name"
               required
+              className={fieldInputCls}
               {...errorAttributes(errors, "fullName")}
             />
             <FieldError id="fullName-error" message={errors.fullName} />
           </label>
-          <label className={formStyles.field} htmlFor="enqPhone">
-            <span>Phone</span>
+          <label className={fieldCls} htmlFor="enqPhone">
+            <span className={fieldLabelCls}>Phone</span>
             <input
               id="enqPhone"
               name="phone"
@@ -215,18 +250,20 @@ export function PexpacksEnquiryForm({
               placeholder="078 003 6048"
               autoComplete="tel"
               required
+              className={fieldInputCls}
               {...errorAttributes(errors, "phone")}
             />
             <FieldError id="phone-error" message={errors.phone} />
           </label>
-          <label className={formStyles.field} htmlFor="enqEmail">
-            <span>Email</span>
+          <label className={fieldCls} htmlFor="enqEmail">
+            <span className={fieldLabelCls}>Email</span>
             <input
               id="enqEmail"
               name="email"
               type="email"
               placeholder="name@example.com"
               autoComplete="email"
+              className={fieldInputCls}
               {...errorAttributes(errors, "email")}
             />
             <FieldError id="email-error" message={errors.email} />
@@ -254,8 +291,8 @@ export function PexpacksEnquiryForm({
             />
           ) : (
             <>
-              <label className={formStyles.field} htmlFor="enqPartnerBusinessName">
-                <span>School</span>
+              <label className={fieldCls} htmlFor="enqPartnerBusinessName">
+                <span className={fieldLabelCls}>School</span>
                 <input
                   id="enqPartnerBusinessName"
                   name="businessName"
@@ -263,6 +300,7 @@ export function PexpacksEnquiryForm({
                   autoComplete="organization"
                   defaultValue={initialBusinessName}
                   required
+                  className={fieldInputCls}
                   {...errorAttributes(errors, "businessName")}
                 />
                 <FieldError
@@ -282,25 +320,27 @@ export function PexpacksEnquiryForm({
 
           {showSchoolFields ? (
             <>
-              <label className={formStyles.field} htmlFor="enqSchoolName">
-                <span>School name</span>
+              <label className={fieldCls} htmlFor="enqSchoolName">
+                <span className={fieldLabelCls}>School name</span>
                 <input
                   id="enqSchoolName"
                   name="schoolName"
                   placeholder="School name"
                   autoComplete="organization"
                   required
+                  className={fieldInputCls}
                   {...errorAttributes(errors, "schoolName")}
                 />
                 <FieldError id="schoolName-error" message={errors.schoolName} />
               </label>
-              <label className={formStyles.field} htmlFor="enqGrade">
-                <span>Grade</span>
+              <label className={fieldCls} htmlFor="enqGrade">
+                <span className={fieldLabelCls}>Grade</span>
                 <input
                   id="enqGrade"
                   name="grade"
                   placeholder="Grade R, Grade 4..."
                   required
+                  className={fieldInputCls}
                   {...errorAttributes(errors, "grade")}
                 />
                 <FieldError id="grade-error" message={errors.grade} />
@@ -308,31 +348,38 @@ export function PexpacksEnquiryForm({
             </>
           ) : null}
 
-          <label className={formStyles.field} htmlFor="enqMessage">
-            <span>Message</span>
+          <label className={fieldCls} htmlFor="enqMessage">
+            <span className={fieldLabelCls}>Message</span>
             <textarea
               id="enqMessage"
               name="message"
               placeholder="Tell us what you need"
               defaultValue={initialMessage}
               required
+              className={fieldTextareaCls}
               {...errorAttributes(errors, "message")}
             />
             <FieldError id="message-error" message={errors.message} />
           </label>
         </div>
 
-        <label className={formStyles.consentField} htmlFor="enqConsent">
+        <label className={consentFieldCls} htmlFor="enqConsent">
           <input
             id="enqConsent"
             name="consent"
             type="checkbox"
             required
+            className={consentInputCls}
             {...errorAttributes(errors, "consent")}
           />
-          <span>
+          <span className={consentSpanCls}>
             {consentText}{" "}
-            <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className={formStyles.inlineTextLink}>
+            <Link
+              href="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={inlineTextLinkCls}
+            >
               privacy policy
             </Link>
             .
@@ -341,9 +388,18 @@ export function PexpacksEnquiryForm({
         <FieldError id="consent-error" message={errors.consent} />
 
         {/* Honeypot — hidden from real users */}
-        <label className={formStyles.honeypot} aria-hidden="true" htmlFor="enqCompanyWebsite">
+        <label
+          className={honeypotCls}
+          aria-hidden="true"
+          htmlFor="enqCompanyWebsite"
+        >
           Company website
-          <input id="enqCompanyWebsite" name="companyWebsite" tabIndex={-1} autoComplete="off" />
+          <input
+            id="enqCompanyWebsite"
+            name="companyWebsite"
+            tabIndex={-1}
+            autoComplete="off"
+          />
         </label>
 
         <Button type="submit" disabled={pending}>
@@ -352,7 +408,7 @@ export function PexpacksEnquiryForm({
         {status ? (
           <p
             className={
-              status.success ? formStyles.statusMessage : formStyles.statusError
+              status.success ? statusMessageCls : statusErrorCls
             }
             role={status.success ? "status" : "alert"}
             aria-live="polite"

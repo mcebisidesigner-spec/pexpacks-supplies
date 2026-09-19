@@ -1,10 +1,9 @@
-﻿import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getFaq } from "@/lib/admin/content";
 import { FaqForm } from "@/components/admin/content/FaqForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import adminStyles from "../../../admin.module.css";
-import styles from "../../content.module.css";
+import adminStyles from "../../../adminStyles";
 
 export const metadata = {
   title: "Edit FAQ | Admin | Pexpacks",
@@ -28,7 +27,7 @@ export default async function EditFaqPage({
         title="Edit FAQ"
         subtitle={row.question}
       />
-      <div className={styles.card}>
+      <div className="bg-[var(--db-surface)] border border-[var(--db-border)] rounded-[var(--db-radius-card)] p-5 flex flex-col gap-3">
         <FaqForm
           id={row.id}
           defaults={{

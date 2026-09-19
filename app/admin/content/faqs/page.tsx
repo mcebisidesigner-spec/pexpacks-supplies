@@ -8,8 +8,7 @@ import { ReorderPanel } from "@/components/admin/ReorderPanel";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import adminStyles from "../../admin.module.css";
-import styles from "../content.module.css";
+import adminStyles from "../../adminStyles";
 
 export const metadata = {
   title: "FAQs | Admin | Pexpacks",
@@ -95,9 +94,9 @@ export default async function FaqsPage() {
                   {faqs.map((faq) => (
                     <tr key={faq.id}>
                       <td>
-                        <div className={styles.questionCell}>
-                          <div className={styles.questionText}>{faq.question}</div>
-                          <div className={styles.answerSnippet}>{faq.answer}</div>
+                        <div className="min-w-[240px]">
+                          <div className="font-bold text-sm text-[var(--a-text,#ffffff)] leading-snug">{faq.question}</div>
+                          <div className="mt-1 text-xs text-[var(--db-text-muted)] max-w-[420px] truncate">{faq.answer}</div>
                         </div>
                       </td>
                       <td>
@@ -112,7 +111,7 @@ export default async function FaqsPage() {
                         />
                       </td>
                       <td>
-                        <div className={styles.actions}>
+                        <div className="flex items-center gap-2">
                           {canManage ? (
                             <>
                               <Link
@@ -126,7 +125,7 @@ export default async function FaqsPage() {
                               >
                                 <button
                                   type="submit"
-                                  className={`${adminStyles.rowButton} ${styles.rowButtonToggle}`}
+                                  className={`${adminStyles.rowButton} hover:text-white`}
                                 >
                                   {faq.visible ? "Hide" : "Show"}
                                 </button>
@@ -141,7 +140,7 @@ export default async function FaqsPage() {
                               </form>
                             </>
                           ) : (
-                            <span className={styles.mutedAction}>View only</span>
+                            <span className="text-xs text-[var(--db-text-muted)] italic">View only</span>
                           )}
                         </div>
                       </td>

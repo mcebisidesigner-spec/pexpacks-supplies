@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./ShareButtons.module.css";
 
 type ShareButtonsProps = {
   text: string;
@@ -40,12 +39,12 @@ export function ShareButtons({ text, className = "" }: ShareButtonsProps) {
   }
 
   return (
-    <div className={[styles.shareRow, className].filter(Boolean).join(" ")}>
-      <span className={styles.shareLabel}>Share this list:</span>
-      <div className={styles.shareButtons}>
+    <div className={`flex flex-col gap-2 mt-5 pt-4 border-t border-[var(--pex-border,rgba(26,42,64,0.1))] ${className}`}>
+      <span className="text-[0.6875rem] font-bold text-[var(--pex-text-muted)] tracking-wide">Share this list:</span>
+      <div className="flex gap-2 flex-wrap max-md:gap-1.5">
         <button
           type="button"
-          className={styles.shareBtn}
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 max-md:px-3 max-md:text-xs border border-[rgba(26,42,64,0.12)] rounded-full bg-[var(--pex-bg)] text-[var(--pex-text)] text-[0.6875rem] font-semibold cursor-pointer transition-all hover:bg-[var(--pex-keppel)] hover:text-white hover:border-[var(--pex-keppel)] hover:-translate-y-0.5 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-[var(--pex-coral)] focus-visible:outline-offset-2 motion-reduce:transition-none [&>svg]:shrink-0"
           onClick={shareWhatsApp}
           aria-label="Share via WhatsApp"
         >
@@ -56,7 +55,7 @@ export function ShareButtons({ text, className = "" }: ShareButtonsProps) {
         </button>
         <button
           type="button"
-          className={styles.shareBtn}
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 max-md:px-3 max-md:text-xs border border-[rgba(26,42,64,0.12)] rounded-full bg-[var(--pex-bg)] text-[var(--pex-text)] text-[0.6875rem] font-semibold cursor-pointer transition-all hover:bg-[var(--pex-keppel)] hover:text-white hover:border-[var(--pex-keppel)] hover:-translate-y-0.5 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-[var(--pex-coral)] focus-visible:outline-offset-2 motion-reduce:transition-none [&>svg]:shrink-0"
           onClick={copyLink}
           aria-label="Copy link to clipboard"
         >

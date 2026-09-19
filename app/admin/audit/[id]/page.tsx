@@ -1,9 +1,8 @@
-﻿import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getAuditLog } from "@/lib/admin/audit";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import adminStyles from "../../admin.module.css";
-import styles from "../audit.module.css";
+import adminStyles from "../../adminStyles";
 
 interface AuditDetailPageProps {
   params: Promise<{ id: string }>;
@@ -40,47 +39,47 @@ export default async function AuditDetailPage({ params }: AuditDetailPageProps) 
         subtitle={log.action}
       />
 
-      <div className={styles.detailMeta}>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Time</div>
-          <div className={styles.metaValue}>{formatDateTime(log.created_at)}</div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 mb-5">
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Time</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{formatDateTime(log.created_at)}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Actor</div>
-          <div className={styles.metaValue}>{log.actor_name ?? "—"}</div>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Actor</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{log.actor_name ?? "—"}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Action</div>
-          <div className={styles.metaValue}>{log.action}</div>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Action</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{log.action}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Entity type</div>
-          <div className={styles.metaValue}>{log.entity_type}</div>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Entity type</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{log.entity_type}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Entity ID</div>
-          <div className={styles.metaValue}>{log.entity_id ?? "—"}</div>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Entity ID</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{log.entity_id ?? "—"}</div>
         </div>
       </div>
 
-      <div className={styles.detailCard}>
-        <div className={styles.detailCardHeader}>
-          <h2 className={styles.detailCardTitle}>Summary</h2>
+      <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-2xl overflow-hidden mb-4">
+        <div className="p-[20px_22px_0]">
+          <h2 className="m-0 text-lg font-extrabold text-[var(--a-text)]">Summary</h2>
         </div>
-        <div className={styles.detailCardBody}>
+        <div className="p-[16px_22px_22px]">
           <p className={adminStyles.m0}>{log.summary}</p>
         </div>
       </div>
 
-      <div className={styles.detailCard}>
-        <div className={styles.detailCardHeader}>
-          <h2 className={styles.detailCardTitle}>Details</h2>
+      <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-2xl overflow-hidden mb-4">
+        <div className="p-[20px_22px_0]">
+          <h2 className="m-0 text-lg font-extrabold text-[var(--a-text)]">Details</h2>
         </div>
-        <div className={styles.detailCardBody}>
+        <div className="p-[16px_22px_22px]">
           {detailsJson ? (
-            <pre className={styles.preBlock}>{detailsJson}</pre>
+            <pre className="bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-[10px] p-[14px_16px] font-mono text-[12.5px] leading-[1.6] text-[var(--a-text)] overflow-x-auto whitespace-pre-wrap break-words">{detailsJson}</pre>
           ) : (
-            <p className={`${styles.mutedText} ${adminStyles.m0}`}>
+            <p className={`text-[var(--db-text-muted)] ${adminStyles.m0}`}>
               No additional details recorded for this entry.
             </p>
           )}
@@ -88,12 +87,12 @@ export default async function AuditDetailPage({ params }: AuditDetailPageProps) 
       </div>
 
       {(log.ip || log.user_agent) && (
-        <div className={styles.detailCard}>
-          <div className={styles.detailCardHeader}>
-            <h2 className={styles.detailCardTitle}>Request context</h2>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-2xl overflow-hidden mb-4">
+          <div className="p-[20px_22px_0]">
+            <h2 className="m-0 text-lg font-extrabold text-[var(--a-text)]">Request context</h2>
           </div>
-          <div className={styles.detailCardBody}>
-            <pre className={styles.preBlock}>
+          <div className="p-[16px_22px_22px]">
+            <pre className="bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-[10px] p-[14px_16px] font-mono text-[12.5px] leading-[1.6] text-[var(--a-text)] overflow-x-auto whitespace-pre-wrap break-words">
               {`IP: ${log.ip ?? "—"}\nUser agent: ${log.user_agent ?? "—"}`}
             </pre>
           </div>

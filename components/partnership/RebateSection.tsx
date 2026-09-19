@@ -9,7 +9,6 @@ import {
 } from "./rebateCalculator";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, Info, Sparkles } from "lucide-react";
-import styles from "./Partnership.module.css";
 
 interface RebateSectionProps {
   onDiscussEstimate?: (prefill: CalculatorPrefill) => void;
@@ -36,21 +35,21 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
   };
 
   return (
-    <section className={styles.section} id="rebate-calculator" aria-labelledby="rebate-heading">
-      <div className={styles.container}>
-        <div className={styles.sectionHeader}>
-          <p className={styles.eyebrow}>Annual partnership rebate</p>
-          <h2 id="rebate-heading" className={styles.sectionTitle}>
+    <section className="py-[clamp(54px,7vw,96px)] relative" id="rebate-calculator" aria-labelledby="rebate-heading">
+      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
+        <div className="max-w-[760px] mb-[34px] text-left flex flex-col items-start">
+          <p className="mb-[14px] text-[var(--pex-keppel,#1a7a77)] text-sm font-extrabold text-left">Annual partnership rebate</p>
+          <h2 id="rebate-heading" className="mb-[14px] text-[var(--pex-navy,#1a2a40)] font-heading text-[clamp(32px,4.6vw,56px)] font-extrabold leading-[1.05] tracking-[-0.01em] text-left">
             Adoption That Gives Back to Your School.
           </h2>
-          <p className={styles.sectionLead}>
+          <p className="max-w-[760px] mb-[34px] text-[var(--pex-text-muted,#64748b)] text-lg leading-[1.45] text-left">
             Our institutional rebate returns a direct percentage of completed
             parent stationery orders to your school development fund. The more
             families adopt your official digital list, the higher your rebate tier.
           </p>
         </div>
 
-        <div className={styles.rebateLayout}>
+        <div className="grid grid-cols-1 min-[981px]:grid-cols-[minmax(0,1fr)_minmax(360px,1.15fr)] gap-[clamp(28px,4vw,54px)] items-start">
           {/* Tiers Explanation */}
           <div>
             <h3 style={{ fontSize: "22px", fontWeight: 800, color: "var(--pex-navy)", margin: "0 0 8px" }}>
@@ -61,7 +60,7 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
               Settled annually for verified completed packs.
             </p>
 
-            <div className={styles.tiersList} role="table" aria-label="Rebate tier thresholds">
+            <div className="flex flex-col gap-4 mt-6" role="table" aria-label="Rebate tier thresholds">
               {REBATE_TIERS.map((tier) => {
                 const isActive =
                   calcState.adoptionPercentage >= tier.minAdoption &&
@@ -72,11 +71,15 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
                 return (
                   <div
                     key={tier.name}
-                    className={`${styles.tierCard} ${isActive ? styles.tierCardActive : ""}`}
+                    className={`bg-white border rounded-[18px] p-[20px_22px] flex items-center justify-between gap-4 transition-all duration-160 ease-out ${
+                      isActive
+                        ? "border-[var(--pex-keppel,#1a7a77)] bg-[rgba(26,122,119,0.05)] shadow-[0_6px_20px_rgba(26,122,119,0.12)]"
+                        : "border-[var(--pex-border,#e1e7ea)]"
+                    }`}
                     role="row"
                   >
-                    <div className={styles.tierInfo}>
-                      <p className={styles.tierName}>
+                    <div className="flex flex-col gap-1">
+                      <p className="text-[15px] font-extrabold text-[var(--pex-navy,#1a2a40)] m-0">
                         {tier.name}
                         {isActive && (
                           <span
@@ -95,9 +98,16 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
                           </span>
                         )}
                       </p>
-                      <p className={styles.tierRange}>{tier.description}</p>
+                      <p className="text-[13px] text-[var(--pex-muted,#4d5a5d)] m-0">{tier.description}</p>
                     </div>
-                    <div className={styles.tierRateBadge} aria-label={`${tier.label} rebate`}>
+                    <div
+                      className={`text-xl font-extrabold py-1.5 px-3.5 rounded-full shrink-0 ${
+                        isActive
+                          ? "bg-[var(--pex-keppel,#1a7a77)] text-white"
+                          : "text-[var(--pex-keppel,#1a7a77)] bg-[rgba(26,122,119,0.1)]"
+                      }`}
+                      aria-label={`${tier.label} rebate`}
+                    >
                       {tier.label}
                     </div>
                   </div>
@@ -127,7 +137,7 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
           </div>
 
           {/* Interactive Calculator */}
-          <div className={styles.calculatorCard}>
+          <div className="bg-white border border-[var(--pex-border,#e1e7ea)] rounded-[24px] p-[clamp(24px,4vw,36px)] shadow-[0_16px_44px_rgba(26,42,64,0.07)]">
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
               <div>
                 <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--pex-navy)", margin: 0 }}>
@@ -140,14 +150,14 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
               <Sparkles size={20} style={{ color: "var(--pex-keppel)" }} />
             </div>
 
-            <div className={styles.calcInputs}>
+            <div className="flex flex-col gap-[22px] mb-[30px]">
               {/* Total Learners */}
-              <div className={styles.calcField}>
-                <div className={styles.calcLabelRow}>
-                  <label htmlFor="total-learners-input" className={styles.calcLabel}>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="total-learners-input" className="text-sm font-bold text-[var(--pex-navy,#1a2a40)]">
                     Total School Enrollment
                   </label>
-                  <span className={styles.calcValueBadge}>
+                  <span className="text-sm font-extrabold text-[var(--pex-keppel,#1a7a77)] bg-[rgba(26,122,119,0.09)] py-0.5 px-2.5 rounded-md">
                     {formatNumber(calcState.totalLearners)} Learners
                   </span>
                 </div>
@@ -164,18 +174,18 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
                       totalLearners: Math.max(1, parseInt(e.target.value, 10) || 0),
                     }))
                   }
-                  className={styles.calcInput}
+                  className="h-12 px-4 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-[var(--pex-bg-soft,#f8f9fa)] text-[var(--pex-navy,#1a2a40)] text-base font-semibold w-full box-border transition-all duration-150 focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.15)] focus:bg-white focus:outline-none"
                   aria-label="Total School Enrollment"
                 />
               </div>
 
               {/* Adoption Slider */}
-              <div className={styles.calcField}>
-                <div className={styles.calcLabelRow}>
-                  <label htmlFor="adoption-slider" className={styles.calcLabel}>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="adoption-slider" className="text-sm font-bold text-[var(--pex-navy,#1a2a40)]">
                     Estimated Parent Adoption
                   </label>
-                  <span className={styles.calcValueBadge}>
+                  <span className="text-sm font-extrabold text-[var(--pex-keppel,#1a7a77)] bg-[rgba(26,122,119,0.09)] py-0.5 px-2.5 rounded-md">
                     {calcState.adoptionPercentage}% Adoption
                   </span>
                 </div>
@@ -192,7 +202,7 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
                       adoptionPercentage: parseInt(e.target.value, 10) || 0,
                     }))
                   }
-                  className={styles.calcSlider}
+                  className="w-full h-2 rounded bg-slate-200 outline-none cursor-pointer accent-[var(--pex-keppel,#1a7a77)]"
                   aria-label="Estimated Parent Adoption Percentage"
                 />
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--pex-muted)" }}>
@@ -204,12 +214,12 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
               </div>
 
               {/* Average Order Value */}
-              <div className={styles.calcField}>
-                <div className={styles.calcLabelRow}>
-                  <label htmlFor="aov-input" className={styles.calcLabel}>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="aov-input" className="text-sm font-bold text-[var(--pex-navy,#1a2a40)]">
                     Estimated Average Pack Value (ZAR)
                   </label>
-                  <span className={styles.calcValueBadge}>
+                  <span className="text-sm font-extrabold text-[var(--pex-keppel,#1a7a77)] bg-[rgba(26,122,119,0.09)] py-0.5 px-2.5 rounded-md">
                     {formatZAR(calcState.averageOrderValue)}
                   </span>
                 </div>
@@ -226,52 +236,52 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
                       averageOrderValue: Math.max(0, parseInt(e.target.value, 10) || 0),
                     }))
                   }
-                  className={styles.calcInput}
+                  className="h-12 px-4 rounded-xl border border-[var(--pex-border,#e1e7ea)] bg-[var(--pex-bg-soft,#f8f9fa)] text-[var(--pex-navy,#1a2a40)] text-base font-semibold w-full box-border transition-all duration-150 focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.15)] focus:bg-white focus:outline-none"
                   aria-label="Estimated Average Pack Value in Rand"
                 />
               </div>
             </div>
 
             {/* Output Panel */}
-            <div className={styles.calcResultsBox}>
-              <div className={styles.calcMainOutput}>
-                <span className={styles.calcOutputLabel}>
+            <div className="bg-[var(--pex-navy,#1a2a40)] rounded-[18px] p-6 text-white flex flex-col gap-[18px]">
+              <div className="flex flex-col gap-1 border-b border-white/[0.12] pb-4">
+                <span className="text-xs uppercase tracking-[0.05em] text-slate-400 font-bold">
                   Estimated Annual School Development Rebate
                 </span>
-                <strong className={styles.calcRebateAmount}>
+                <strong className="text-[clamp(34px,4.5vw,46px)] font-extrabold text-emerald-400 leading-none">
                   {formatZAR(result.estimatedSchoolRebate)}
                 </strong>
               </div>
 
-              <div className={styles.calcMetricsGrid}>
-                <div className={styles.calcMetricItem}>
-                  <span className={styles.calcMetricLabel}>Participating Learners</span>
-                  <span className={styles.calcMetricVal}>
+              <div className="grid grid-cols-2 gap-3.5">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[11.5px] text-slate-400">Participating Learners</span>
+                  <span className="text-[15px] font-bold text-white">
                     {formatNumber(result.participatingLearners)} families
                   </span>
                 </div>
-                <div className={styles.calcMetricItem}>
-                  <span className={styles.calcMetricLabel}>Estimated Qualifying Turnover</span>
-                  <span className={styles.calcMetricVal}>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[11.5px] text-slate-400">Estimated Qualifying Turnover</span>
+                  <span className="text-[15px] font-bold text-white">
                     {formatZAR(result.estimatedTurnover)}
                   </span>
                 </div>
-                <div className={styles.calcMetricItem}>
-                  <span className={styles.calcMetricLabel}>Applicable Rebate Rate</span>
-                  <span className={styles.calcMetricVal} style={{ color: "#34d399" }}>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[11.5px] text-slate-400">Applicable Rebate Rate</span>
+                  <span className="text-[15px] font-bold text-white" style={{ color: "#34d399" }}>
                     {result.rebateRatePercent.toFixed(1)}% ({result.activeTierName})
                   </span>
                 </div>
-                <div className={styles.calcMetricItem}>
-                  <span className={styles.calcMetricLabel}>Administrative Cost</span>
-                  <span className={styles.calcMetricVal} style={{ color: "#5eead4" }}>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[11.5px] text-slate-400">Administrative Cost</span>
+                  <span className="text-[15px] font-bold text-white" style={{ color: "#5eead4" }}>
                     R0.00 (Zero Overhead)
                   </span>
                 </div>
               </div>
 
               {result.nextTierHint && (
-                <div className={styles.calcHintBox}>
+                <div className="text-[12.5px] text-slate-300 bg-white/[0.07] py-2.5 px-3.5 rounded-lg leading-[1.4]">
                   {result.nextTierHint}
                 </div>
               )}
@@ -281,14 +291,13 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
                 variant="primary"
                 size="md"
                 onClick={handleDiscussClick}
-                className={styles.calcCtaBtn}
               >
                 <span>Discuss This Estimate for Your School</span>
                 <ArrowRight size={15} style={{ marginLeft: 6, display: "inline" }} />
               </Button>
             </div>
 
-            <p className={styles.calcDisclaimer}>
+            <p className="text-[11.5px] text-[var(--pex-muted,#64748b)] leading-[1.5] mt-3.5">
               * Estimates are illustrative and based on the learner count, adoption rate, and average pack values
               entered above. Actual rebates are calculated from qualifying completed Pexpacks orders under the
               applicable statutory school partnership agreement.

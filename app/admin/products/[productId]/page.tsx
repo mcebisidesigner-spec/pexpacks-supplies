@@ -16,7 +16,7 @@ import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { deleteItemAction } from "../actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface ProductDetailPageProps {

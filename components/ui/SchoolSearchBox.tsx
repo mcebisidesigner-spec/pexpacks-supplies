@@ -81,7 +81,7 @@ const CHIP_CLASSES =
   "shrink-0 snap-start inline-flex items-center gap-2 " +
   "py-2 px-3.5 rounded-2xl " +
   "bg-pex-bg border border-pex-border " +
-  "hover:border-pex-keppel " +
+  "text-pex-navy hover:text-pex-keppel hover:border-pex-keppel " +
   "transition-all hover:-translate-y-0.5 hover:shadow-md " +
   "cursor-pointer no-underline";
 

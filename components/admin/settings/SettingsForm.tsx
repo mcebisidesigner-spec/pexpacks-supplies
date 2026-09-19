@@ -9,7 +9,7 @@ import type {
 } from "@/lib/admin/settings";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 function SubmitButton() {
   return (

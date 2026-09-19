@@ -58,7 +58,7 @@ export function Drawer({
     >
       <div
         className={cn(
-          "w-full sm:w-[min(480px,100%)] h-screen h-[100dvh] overflow-y-auto bg-[var(--pex-bg,#ffffff)] shadow-[var(--shadow-drawer)] flex flex-col animate-in slide-in-from-right duration-300 text-left",
+          "w-full sm:w-[min(480px,100%)] h-screen h-[100dvh] overflow-y-auto bg-white shadow-drawer flex flex-col animate-in slide-in-from-right duration-300 text-left",
           className
         )}
         role="dialog"
@@ -67,16 +67,16 @@ export function Drawer({
         ref={dialogRef}
         tabIndex={-1}
       >
-        <div className="sticky top-0 z-10 p-4 sm:p-6 border-b border-[var(--pex-border,#e1e7ea)] bg-white/95 backdrop-blur-md grid grid-cols-[1fr_auto] gap-4 items-start pt-[max(1rem,env(safe-area-inset-top))] sm:pt-6">
+        <div className="sticky top-0 z-10 p-4 sm:p-6 border-b border-pex-border bg-white/95 backdrop-blur-md grid grid-cols-[1fr_auto] gap-4 items-start pt-[max(1rem,env(safe-area-inset-top))] sm:pt-6">
           <div>
             <h2
               id={titleId}
-              className="m-0 text-[var(--pex-primary,#1a2a40)] font-heading text-2xl sm:text-3xl font-extrabold leading-none"
+              className="m-0 text-pex-navy font-heading text-2xl sm:text-3xl font-extrabold leading-none"
             >
               {title}
             </h2>
             {subtitle ? (
-              <span className="block mt-1.5 text-[var(--pex-keppel,#1a7a77)] text-sm font-bold">
+              <span className="block mt-1.5 text-pex-keppel text-sm font-bold">
                 {subtitle}
               </span>
             ) : null}
@@ -85,7 +85,7 @@ export function Drawer({
             {headerRight}
             <button
               type="button"
-              className="w-11 h-11 rounded-full border border-[var(--pex-border,#e1e7ea)] bg-[var(--pex-bg,#ffffff)] text-[var(--pex-primary,#1a2a40)] text-2xl grid place-items-center cursor-pointer transition-colors duration-150 hover:border-[var(--pex-keppel,#1a7a77)] hover:text-[var(--pex-keppel,#1a7a77)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel,#1a7a77)] focus-visible:ring-offset-2"
+              className="w-11 h-11 rounded-full border border-pex-border bg-white text-pex-navy text-2xl grid place-items-center cursor-pointer transition-colors duration-150 hover:border-pex-keppel hover:text-pex-keppel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2"
               onClick={onClose}
               aria-label={`Close ${title}`}
               ref={closeBtnRef}
@@ -100,7 +100,7 @@ export function Drawer({
         </div>
 
         {footer ? (
-          <div className="sticky bottom-0 z-10 mt-auto p-4 sm:p-6 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] border-t border-[var(--pex-border,#e1e7ea)] bg-white/95 backdrop-blur-md shadow-[0_-16px_34px_rgba(15,37,55,0.08)] grid gap-3">
+          <div className="sticky bottom-0 z-10 mt-auto p-4 sm:p-6 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] border-t border-pex-border bg-white/95 backdrop-blur-md shadow-[0_-16px_34px_rgba(15,37,55,0.08)] grid gap-3">
             {footer}
           </div>
         ) : null}

@@ -3,15 +3,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const cardVariants = cva(
-  "grid gap-4 sm:gap-6 rounded-[24px] border border-[var(--color-border)] transition-all duration-200 text-[var(--color-foreground)]",
+  "grid gap-4 sm:gap-6 rounded-card border border-border transition-all duration-200 text-foreground",
   {
     variants: {
       variant: {
-        default: "bg-[var(--color-surface)] shadow-[var(--shadow-card)]",
-        soft: "bg-[var(--color-surface-soft)] border-[var(--color-navy-subtle,#e1e7ea)]",
+        default: "bg-card shadow-card",
+        soft: "bg-pex-bg-soft border-pex-border",
         interactive:
-          "bg-[var(--color-surface)] shadow-[var(--shadow-card)] cursor-pointer hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5",
-        outline: "bg-transparent border-[var(--color-border)]",
+          "bg-card shadow-card cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5",
+        outline: "bg-transparent border-border",
       },
       padding: {
         default: "p-5 sm:p-6 md:p-7",
@@ -61,7 +61,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "font-heading text-lg sm:text-xl md:text-2xl font-extrabold leading-tight tracking-tight text-[var(--color-brand-navy)]",
+      "font-heading text-lg sm:text-xl md:text-2xl font-extrabold leading-tight tracking-tight text-pex-navy",
       className
     )}
     {...props}
@@ -75,7 +75,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-xs sm:text-sm text-[var(--color-text-muted)]", className)}
+    className={cn("text-xs sm:text-sm text-pex-muted", className)}
     {...props}
   />
 ));

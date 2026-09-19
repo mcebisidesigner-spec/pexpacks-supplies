@@ -4,7 +4,7 @@ import { useFormStatus } from "react-dom";
 import { Save } from "lucide-react";
 import type { RoleInfo } from "@/lib/admin/users";
 import { updateUserRolesAction } from "@/app/admin/users/actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 
 function SaveButton() {

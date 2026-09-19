@@ -17,7 +17,7 @@ import type { MasterPricingConfig } from "@/lib/admin/items";
 import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 import { MASTER_PRODUCT_CATEGORIES } from "@/lib/admin/item-constants";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 interface ItemFormProps {
   item: ItemRow | null;

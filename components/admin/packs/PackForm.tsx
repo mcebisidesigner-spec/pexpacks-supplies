@@ -12,7 +12,7 @@ import GradePackItemSelector, {
 } from "@/components/grade-packs/GradePackItemSelector";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 function SubmitButton({ label }: { label: string }) {

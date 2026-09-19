@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin, displayName } from "@/lib/admin/rbac";
 import { getRole, permissionGroups } from "@/lib/admin/roles";
@@ -7,8 +7,7 @@ import { RoleForm } from "@/components/admin/roles/RoleForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { deleteRoleAction } from "../actions";
-import adminStyles from "../../admin.module.css";
-import styles from "../roles.module.css";
+import adminStyles from "../../adminStyles";
 
 interface RoleDetailPageProps {
   params: Promise<{ id: string }>;
@@ -54,10 +53,10 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
         </div>
 
         <div className={adminStyles.tableCard}>
-          <div className={styles.cardHeader}>
+          <div className="flex items-start justify-between gap-4 flex-wrap p-[22px_22px_14px]">
             <div>
-              <h2 className={styles.cardTitle}>Members</h2>
-              <p className={styles.cardSubtitle}>
+              <h2 className="m-0 text-lg font-extrabold text-[var(--a-text)]">Members</h2>
+              <p className="mt-1 mb-0 text-[13px] text-[var(--db-text-muted)]">
                 {role.memberCount} {role.memberCount === 1 ? "person" : "people"} with this role.
                 Manage assignments from each user’s profile.
               </p>
@@ -76,15 +75,15 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
               <tbody>
                 {members.users.length === 0 ? (
                   <tr>
-                    <td className={styles.noMembers}>No members yet.</td>
+                    <td className="text-[var(--db-text-muted)]">No members yet.</td>
                   </tr>
                 ) : (
                   members.users.map((user) => (
                     <tr key={user.id}>
                       <td>
-                        <Link href={`/admin/users/${user.id}`} className={styles.memberLink}>
-                          <span className={styles.memberName}>{displayName(user)}</span>
-                          <span className={styles.memberEmail}>{user.email}</span>
+                        <Link href={`/admin/users/${user.id}`} className="flex flex-col gap-0.5 no-underline">
+                          <span className="font-bold text-[var(--a-text)]">{displayName(user)}</span>
+                          <span className="text-xs text-[var(--db-text-muted)]">{user.email}</span>
                         </Link>
                       </td>
                     </tr>
@@ -94,7 +93,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
             </table>
           </div>
           {members.total > members.users.length ? (
-            <div className={styles.moreMembers}>
+            <div className="p-[12px_22px] text-[13px] text-[var(--db-text-muted)] border-t border-[var(--db-border)] [&_a]:text-[var(--db-brand)] [&_a]:font-bold [&_a]:no-underline">
               +{members.total - members.users.length} more ·{" "}
               <Link href={`/admin/users?role=${role.slug}`}>view all</Link>
             </div>
@@ -102,10 +101,10 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
         </div>
 
         {role.slug !== "super_admin" && role.memberCount === 0 ? (
-          <div className={styles.deleteCard}>
+          <div className="flex items-center justify-between gap-4 flex-wrap bg-[var(--pex-bg)] border border-[var(--db-danger-border)] rounded-2xl p-[22px]">
             <div>
-              <div className={styles.deleteTitle}>Delete this role</div>
-              <p className={styles.deleteText}>
+              <div className="font-bold text-[var(--a-text)] text-sm">Delete this role</div>
+              <p className="mt-0.5 mb-0 text-[13px] text-[var(--db-text-muted)] max-w-[520px]">
                 Permanently removes “{role.name}” and its permission set. Only possible while the
                 role has no members.
               </p>
@@ -115,7 +114,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
                 label="Delete role"
                 confirmText={`Permanently delete the "${role.name}" role? This cannot be undone.`}
                 busyLabel="Deleting…"
-                className={styles.deleteButton}
+                className="bg-[var(--db-danger-subtle)] text-[var(--db-danger-text)] border border-[var(--db-danger-border)] rounded-lg py-2 px-4 text-[13px] font-bold cursor-pointer font-inherit"
               />
             </form>
           </div>

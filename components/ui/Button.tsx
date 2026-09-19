@@ -4,22 +4,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2.5 font-bold font-sans leading-none text-center rounded-full border border-transparent max-w-full origin-center select-none transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none aria-disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:transform-none aria-disabled:shadow-none",
+  "inline-flex items-center justify-center gap-2.5 font-bold font-sans leading-none text-center rounded-full border border-transparent max-w-full origin-center select-none transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none aria-disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:transform-none aria-disabled:shadow-none",
   {
     variants: {
       variant: {
         primary:
-          "bg-[var(--pex-coral)] text-white shadow-[0_10px_20px_rgba(255,111,89,0.22)] hover:bg-[var(--pex-coral-hover)] hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
+          "bg-pex-coral !text-white shadow-[0_10px_20px_rgba(255,111,89,0.22)] hover:bg-pex-coral-hover hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
         secondary:
-          "bg-white border-[rgba(26,42,64,0.18)] text-[var(--pex-navy)] shadow-[inset_0_0_0_1px_rgba(26,42,64,0.02)] hover:bg-[var(--pex-bg-soft)] hover:border-[var(--pex-coral)] hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
+          "bg-white border-pex-navy/20 !text-pex-navy shadow-[inset_0_0_0_1px_rgba(26,42,64,0.02)] hover:bg-pex-bg-soft hover:border-pex-coral hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
         tertiary:
-          "bg-transparent text-[var(--pex-text-muted)] underline underline-offset-4 decoration-[1.5px] hover:text-[var(--pex-navy)] hover:transform-none hover:shadow-none",
+          "bg-transparent text-pex-muted underline underline-offset-4 decoration-[1.5px] hover:text-pex-navy hover:transform-none hover:shadow-none",
         navy:
-          "bg-[var(--pex-navy)] text-white shadow-[0_10px_20px_rgba(26,42,64,0.12)] hover:bg-[var(--pex-sme-navy)] hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
+          "bg-pex-navy !text-white shadow-[0_10px_20px_rgba(26,42,64,0.12)] hover:bg-[#152238] hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
+        keppel:
+          "bg-pex-keppel !text-white shadow-[0_10px_20px_rgba(26,122,119,0.18)] hover:bg-pex-keppel-dark hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
         white:
-          "bg-white text-[var(--pex-navy)] shadow-[0_10px_20px_rgba(26,42,64,0.12)] hover:bg-[var(--pex-bg-soft)] hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
+          "bg-white !text-pex-navy shadow-[0_10px_20px_rgba(26,42,64,0.12)] hover:bg-pex-bg-soft hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
         outline:
-          "bg-transparent border-[var(--pex-navy)] text-[var(--pex-navy)] hover:bg-[var(--pex-bg-soft)] hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
+          "bg-transparent border-pex-navy !text-pex-navy hover:bg-pex-bg-soft hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
       },
       size: {
         sm: "min-h-[48px] sm:min-h-[34px] px-4 sm:px-[17px] text-sm",
@@ -36,7 +38,7 @@ export const buttonVariants = cva(
 
 type BaseProps = {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "tertiary" | "navy" | "white" | "outline";
+  variant?: "primary" | "secondary" | "tertiary" | "navy" | "keppel" | "white" | "outline";
   size?: "sm" | "md" | "lg";
   iconDirection?: "right" | "left" | "search" | "menu" | "close" | "none";
   className?: string;

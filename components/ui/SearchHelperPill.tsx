@@ -141,7 +141,7 @@ export function SearchHelperPill({
   return (
     <div
       className={cn(
-        "w-full max-w-full mt-2.5 p-3 pl-3.5 rounded-[18px] md:w-fit md:max-w-[680px] md:mt-3 md:mx-auto md:p-3 md:pl-4 md:rounded-full border border-[rgba(26,42,64,0.08)] bg-[#fff8ed] text-[var(--pex-navy,#1a2a40)] shadow-[0_10px_24px_rgba(26,42,64,0.08)] flex items-center gap-2.5 text-sm md:text-[0.925rem] font-bold leading-snug animate-in fade-in slide-in-from-top-1 duration-200",
+        "w-full max-w-full mt-2.5 p-3 pl-3.5 rounded-[18px] md:w-fit md:max-w-[680px] md:mt-3 md:mx-auto md:p-3 md:pl-4 md:rounded-full border border-pex-navy/10 bg-[#fff8ed] text-pex-navy shadow-[0_10px_24px_rgba(26,42,64,0.08)] flex items-center gap-2.5 text-sm md:text-[0.925rem] font-bold leading-snug animate-in fade-in slide-in-from-top-1 duration-200",
         isExiting && "animate-out fade-out slide-out-to-top-1 duration-200 fill-mode-forwards",
         className
       )}
@@ -149,7 +149,7 @@ export function SearchHelperPill({
       aria-live="polite"
     >
       <span
-        className="w-5 h-5 shrink-0 text-[var(--pex-coral,#ff6f59)] inline-flex items-center justify-center"
+        className="w-5 h-5 shrink-0 text-pex-coral inline-flex items-center justify-center"
         aria-hidden="true"
       >
         <svg viewBox="0 0 20 20" focusable="false" className="w-5 h-5 fill-none stroke-current stroke-[1.8] stroke-linecap-round stroke-linejoin-round">
@@ -160,7 +160,7 @@ export function SearchHelperPill({
       </span>
       <span className="flex-1 min-w-0 break-words">{message}</span>
       <button
-        className="w-11 h-11 min-w-[44px] min-h-[44px] md:w-9 md:h-9 md:min-w-[36px] md:min-h-[36px] rounded-full border-0 p-0 bg-transparent text-[var(--pex-navy,#1a2a40)] inline-flex items-center justify-center text-lg leading-none cursor-pointer hover:bg-[rgba(26,42,64,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-coral,#ff6f59)] focus-visible:ring-offset-2 transition-colors"
+        className="w-11 h-11 min-w-[44px] min-h-[44px] md:w-9 md:h-9 md:min-w-[36px] md:min-h-[36px] rounded-full border-0 p-0 bg-transparent text-pex-navy inline-flex items-center justify-center text-lg leading-none cursor-pointer hover:bg-pex-navy/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral focus-visible:ring-offset-2 transition-colors"
         type="button"
         onClick={dismiss}
         aria-label="Dismiss Gauteng schools notice"

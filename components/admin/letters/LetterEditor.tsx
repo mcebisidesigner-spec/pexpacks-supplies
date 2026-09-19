@@ -51,7 +51,7 @@ import {
 } from "@/lib/admin/letters";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import styles from "./LetterEditor.module.css";
 
 interface QuotationOption {

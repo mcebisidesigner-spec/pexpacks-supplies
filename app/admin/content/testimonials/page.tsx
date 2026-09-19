@@ -7,8 +7,7 @@ import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import adminStyles from "../../admin.module.css";
-import styles from "../content.module.css";
+import adminStyles from "../../adminStyles";
 
 export const metadata = {
   title: "Testimonials | Admin | Pexpacks",
@@ -81,15 +80,15 @@ export default async function TestimonialsPage() {
                 {testimonials.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <div className={styles.authorCell}>
-                        <div className={styles.authorName}>{item.name}</div>
+                      <div className="min-w-[140px] flex flex-col gap-0.5">
+                        <div className="font-bold text-sm text-white">{item.name}</div>
                         {item.role ? (
-                          <div className={styles.authorRole}>{item.role}</div>
+                          <div className="text-xs text-[var(--db-text-muted)]">{item.role}</div>
                         ) : null}
                       </div>
                     </td>
                     <td>
-                      <p className={styles.quoteSnippet}>“{item.quote}”</p>
+                      <p className="m-0 text-xs text-[var(--db-text-secondary)] italic max-w-[380px] line-clamp-2">“{item.quote}”</p>
                     </td>
                     <td>{item.context ?? "—"}</td>
                     <td>{item.sort_order}</td>
@@ -100,7 +99,7 @@ export default async function TestimonialsPage() {
                         />
                     </td>
                     <td>
-                      <div className={styles.actions}>
+                      <div className="flex items-center gap-2">
                         {canManage ? (
                           <>
                             <Link
@@ -118,7 +117,7 @@ export default async function TestimonialsPage() {
                             >
                               <button
                                 type="submit"
-                                className={`${adminStyles.rowButton} ${styles.rowButtonToggle}`}
+                                className={`${adminStyles.rowButton} hover:text-white`}
                               >
                                 {item.visible ? "Hide" : "Show"}
                               </button>
@@ -133,7 +132,7 @@ export default async function TestimonialsPage() {
                             </form>
                           </>
                         ) : (
-                          <span className={styles.mutedAction}>View only</span>
+                          <span className="text-xs text-[var(--db-text-muted)] italic">View only</span>
                         )}
                       </div>
                     </td>

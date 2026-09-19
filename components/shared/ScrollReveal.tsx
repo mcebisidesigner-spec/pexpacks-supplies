@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import styles from "./ScrollReveal.module.css";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -39,7 +38,13 @@ export function ScrollReveal({
   return (
     <Tag
       ref={ref}
-      className={cn(styles.reveal, visible ? styles.visible : styles.hidden, className)}
+      className={cn(
+        "will-change-[transform,opacity]",
+        visible
+          ? "opacity-100 translate-y-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+          : "opacity-0 translate-y-6 motion-reduce:opacity-100 motion-reduce:translate-y-0",
+        className
+      )}
     >
       {children}
     </Tag>

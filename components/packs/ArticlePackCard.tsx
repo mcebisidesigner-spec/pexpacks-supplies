@@ -41,20 +41,20 @@ export function ArticlePackCard({
   return (
     <article
       className={cn(
-        "flex flex-col min-w-0 overflow-hidden border border-[#e1e7ea] rounded-[28px] sm:rounded-[30px] bg-white shadow-[0_12px_32px_rgba(26,42,64,0.05)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(26,42,64,0.12)] motion-reduce:hover:translate-y-0",
+        "flex flex-col min-w-0 overflow-hidden border border-pex-border rounded-card bg-card shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-xl motion-reduce:hover:translate-y-0",
         className
       )}
       style={style}
     >
       <div
         className={cn(
-          "relative overflow-hidden flex items-center justify-between min-h-[80px] h-[80px] sm:min-h-[84px] sm:h-[84px] py-3.5 px-4.5 sm:py-4 sm:px-5 bg-gradient-to-br from-[rgba(33,158,154,0.84)] to-[rgba(26,42,64,0.72)]",
-          tone === "primary" && "bg-gradient-to-br from-[rgba(26,42,64,0.88)] to-[rgba(33,158,154,0.62)]",
-          tone === "high" && "bg-gradient-to-br from-[rgba(21,34,56,0.92)] to-[rgba(26,42,64,0.78)]"
+          "relative overflow-hidden flex items-center justify-between min-h-[80px] h-[80px] sm:min-h-[84px] sm:h-[84px] py-3.5 px-4.5 sm:py-4 sm:px-5 bg-gradient-to-br from-pex-keppel/85 to-pex-navy/75",
+          tone === "primary" && "bg-gradient-to-br from-pex-navy/90 to-pex-keppel/65",
+          tone === "high" && "bg-gradient-to-br from-[#152238] to-pex-navy/80"
         )}
         aria-hidden="true"
       >
-        <span className="relative z-[2] rounded-full py-1.5 px-3.5 bg-white text-[var(--pex-navy,#1a2a40)] text-[13px] font-extrabold leading-none shadow-[0_4px_12px_rgba(0,0,0,0.12)]">{gradeLabel}</span>
+        <span className="relative z-[2] rounded-full py-1.5 px-3.5 bg-white text-pex-navy text-[13px] font-extrabold leading-none shadow-[0_4px_12px_rgba(0,0,0,0.12)]">{gradeLabel}</span>
         <svg
           className="absolute right-3.5 sm:right-[18px] top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 text-white opacity-[0.32] pointer-events-none z-[1]"
           viewBox="0 0 24 24"
@@ -76,9 +76,9 @@ export function ArticlePackCard({
       </div>
 
       <div className="grid flex-1 gap-3 sm:gap-[13px] pt-5 px-5 pb-2.5 sm:pt-6 sm:px-5 sm:pb-3">
-        <p className="m-0 text-[var(--pex-keppel,#1a7a77)] text-[11px] font-extrabold">{bestFor}</p>
-        <h3 className="m-0 text-[var(--pex-primary,#1a7a77)] text-[clamp(23px,2vw,29px)] font-extrabold leading-[1.06]">{title}</h3>
-        <p className="m-0 text-[var(--pex-text,#172326)] leading-[1.48]">{description}</p>
+        <p className="m-0 text-pex-keppel text-[11px] font-extrabold">{bestFor}</p>
+        <h3 className="m-0 text-pex-navy font-heading text-[clamp(23px,2vw,29px)] font-extrabold leading-[1.06]">{title}</h3>
+        <p className="m-0 text-pex-muted leading-[1.48]">{description}</p>
         <PackPreviewList
           items={items}
           listLabel={`${title} stationery list preview`}
@@ -88,7 +88,7 @@ export function ArticlePackCard({
       </div>
 
       <div className="grid gap-4 mt-auto pt-3.5 px-5 pb-5.5 sm:pt-3.5 sm:px-5 sm:pb-5">
-        <p className="m-0 text-[var(--pex-primary,#1a7a77)] text-[19px] font-extrabold">{priceLabel}</p>
+        <p className="m-0 text-pex-navy font-heading text-[19px] font-extrabold">{priceLabel}</p>
         <div className="min-w-0 [&>*]:grid [&>*]:gap-2.5 [&>*>*]:min-w-0 [&>*>div]:!grid [&>*>div]:!grid-cols-1 [&>*>div]:!gap-2.5 [&>*>div>*]:w-full">{actions}</div>
       </div>
     </article>

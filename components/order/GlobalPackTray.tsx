@@ -140,29 +140,29 @@ export function GlobalPackTray() {
       onMouseDown={handleOverlayClick}
     >
       <div
-        className="w-full sm:max-w-[480px] h-screen h-[100dvh] overflow-x-hidden overflow-y-auto bg-background shadow-[0_24px_64px_rgba(15,37,55,0.25)] flex flex-col [animation:slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+        className="w-full sm:max-w-[480px] h-screen h-[100dvh] overflow-x-hidden overflow-y-auto bg-white shadow-[0_24px_64px_rgba(15,37,55,0.25)] flex flex-col [animation:slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="pack-tray-title"
         ref={trayRef}
         tabIndex={-1}
       >
-        <div className="sticky top-0 z-10 p-4 sm:p-5 md:p-6 pt-[max(16px,env(safe-area-inset-top))] border-b border-border bg-white/95 backdrop-blur-md grid grid-cols-[1fr_auto] gap-4 items-start">
+        <div className="sticky top-0 z-10 p-4 sm:p-5 md:p-6 pt-[max(16px,env(safe-area-inset-top))] border-b border-pex-border bg-white/95 backdrop-blur-md grid grid-cols-[1fr_auto] gap-4 items-start">
           <div>
             <h2
               id="pack-tray-title"
-              className="m-0 text-primary font-heading text-2xl sm:text-3xl font-extrabold leading-none"
+              className="m-0 text-pex-navy font-heading text-2xl sm:text-3xl font-extrabold leading-none"
             >
               Your Order
             </h2>
-            <span className="block mt-1.5 text-muted-foreground text-sm font-semibold">
+            <span className="block mt-1.5 text-pex-muted text-sm font-semibold">
               Packs saved for checkout
             </span>
           </div>
           <div className="flex items-center gap-2.5">
             {hasPacks ? (
               <span
-                className="inline-flex items-center justify-center min-w-7 h-7 px-2 rounded-full bg-[#ff6f59] text-white text-xs font-extrabold leading-none"
+                className="inline-flex items-center justify-center min-w-7 h-7 px-2 rounded-full bg-pex-coral text-white text-xs font-extrabold leading-none"
                 aria-label={`${packs.length} pack${packs.length === 1 ? "" : "s"} saved`}
               >
                 {packs.length}
@@ -170,7 +170,7 @@ export function GlobalPackTray() {
             ) : null}
             <button
               type="button"
-              className="w-11 h-11 min-w-11 min-h-11 rounded-full border border-border hover:border-primary text-primary hover:text-primary bg-background text-2xl flex items-center justify-center cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-11 h-11 min-w-11 min-h-11 rounded-full border border-pex-border hover:border-pex-navy text-pex-navy hover:text-pex-navy bg-white text-2xl flex items-center justify-center cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-pex-navy"
               onClick={closeTray}
               aria-label="Close your order"
               ref={closeButtonRef}
@@ -181,9 +181,9 @@ export function GlobalPackTray() {
         </div>
 
         {!hasPacks ? (
-          <div className="relative z-20 border-b border-border bg-background">
+          <div className="relative z-20 border-b border-pex-border bg-white">
             <div className="w-full max-w-full p-3.5 sm:p-4 md:px-5 flex flex-col items-stretch text-left min-w-0 box-border">
-              <h3 className="m-0 mb-2.5 text-primary font-heading text-base sm:text-lg md:text-xl font-extrabold">
+              <h3 className="m-0 mb-2.5 text-pex-navy font-heading text-base sm:text-lg md:text-xl font-extrabold">
                 Find Your School Pack
               </h3>
               <HeroSearch onResultClick={closeTray} source="tray" />
@@ -207,7 +207,7 @@ export function GlobalPackTray() {
           ) : (
             <div className="grid gap-4 justify-items-center text-center py-12 px-5 w-full min-w-0 box-border">
               <div
-                className="w-16 h-16 rounded-full bg-slate-100 text-muted-foreground grid place-items-center"
+                className="w-16 h-16 rounded-full bg-slate-100 text-pex-muted grid place-items-center"
                 aria-hidden="true"
               >
                 <svg
@@ -221,7 +221,7 @@ export function GlobalPackTray() {
                   <path d="M16 10a4 4 0 01-8 0" />
                 </svg>
               </div>
-              <p className="m-0 text-muted-foreground text-sm sm:text-base leading-relaxed max-w-[280px]">
+              <p className="m-0 text-pex-muted text-sm sm:text-base leading-relaxed max-w-[280px]">
                 No packs saved yet. Choose a school pack and add it to your
                 order.
               </p>

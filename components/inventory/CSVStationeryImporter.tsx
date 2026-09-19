@@ -14,7 +14,6 @@ import {
   type CSVStationeryRow,
 } from "@/app/actions/stationery-import";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-import styles from "./CSVStationeryImporter.module.css";
 
 type CsvRow = Record<string, string | number | undefined>;
 
@@ -98,20 +97,22 @@ export function CSVStationeryImporter({
           if (!String(title).trim()) {
             errorMsg = 'Missing required "title" column';
           } else if (isNaN(price) || price < 0) {
-            errorMsg = 'Invalid or missing "unit_price"';
+            errorMsg = 'Invalid "unit_price" (must be >= 0)';
           }
 
           processed.push({
             rowNumber: rowNum,
             error: errorMsg,
             data: {
-              sku: row.sku ? String(row.sku).trim() : undefined,
-              title: String(title).trim(),
-              description: row.description
-                ? String(row.description).trim()
-                : undefined,
+              sku: String(row.sku || row.SKU || `AUTO-${rowNum}`),
+              title: String(title),
+              description: String(
+                row.description || row.Description || row.DESC || "",
+              ),
               unit_price: isNaN(price) ? 0 : price,
-              category: row.category ? String(row.category).trim() : "General",
+              category: String(
+                row.category || row.Category || "General Supplies",
+              ),
             },
           });
         });
@@ -120,18 +121,22 @@ export function CSVStationeryImporter({
         setIsParsing(false);
       },
       error: (err) => {
-        setGlobalError(`CSV Parsing error: ${err.message}`);
+        setGlobalError(`Failed to parse CSV file: ${err.message}`);
         setIsParsing(false);
       },
     });
   };
 
-  // Submit valid records to Supabase
+  // Trigger Bulk Import Action or Staged Items
   const handleExecuteImport = async () => {
-    const validItems = parsedRows.filter((r) => !r.error).map((r) => r.data);
+    const validItems = parsedRows
+      .filter((r) => !r.error)
+      .map((r) => ({
+        ...r.data,
+      }));
 
     if (validItems.length === 0) {
-      setGlobalError("No valid rows found to import.");
+      setGlobalError("No valid rows available to import.");
       return;
     }
 
@@ -170,29 +175,67 @@ export function CSVStationeryImporter({
   const isTiles = variant === "tiles";
   const isCondensed = isCompact || isTiles;
 
+  const rootClasses = isCondensed
+    ? `flex flex-col w-full m-0 p-[var(--db-space-1)] border-2 border-[var(--db-brand)] rounded-[var(--db-radius-card)] bg-[var(--db-surface-inner)] [box-shadow:var(--db-shadow-card)] text-[var(--a-text-2)] font-inherit ${
+        isTiles ? "gap-3" : "gap-[var(--db-space-1)]"
+      }`
+    : "flex flex-col gap-6 w-full max-w-[56rem] mx-auto text-[var(--a-text-2)] font-inherit";
+
+  const cardClasses = isCondensed
+    ? `flex flex-col gap-4 border-0 rounded-none bg-transparent p-0 ${
+        isTiles ? "min-h-[76px]" : "min-h-[66px]"
+      }`
+    : "flex flex-col gap-4 p-6 rounded-[var(--a-radius)] border border-[var(--a-border)] bg-[var(--a-surface)]";
+
+  let cardHeaderClasses =
+    "flex flex-col sm:flex-row sm:items-center gap-4 justify-between pb-4 border-b border-[var(--a-border)]";
+  if (isCondensed) {
+    if (isTiles) {
+      cardHeaderClasses =
+        "grid grid-cols-1 min-[820px]:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1fr)] items-stretch gap-2.5 min-[820px]:gap-[var(--db-space-1)] pb-0 border-b-0";
+    } else {
+      cardHeaderClasses =
+        "grid grid-cols-1 min-[820px]:grid-cols-[minmax(220px,1fr)_minmax(240px,1fr)_minmax(220px,1fr)] items-start min-[820px]:items-center gap-[18px] min-[820px]:gap-6 pb-0 border-b-0";
+    }
+  }
+
+  const titleBlockClasses = isTiles
+    ? "min-w-0 flex min-h-[72px] flex-col justify-center p-[var(--db-space-1-5)_var(--db-space-2)] border border-[var(--db-brand)] rounded-[var(--db-radius-control)] bg-[var(--db-brand)]"
+    : "min-w-0";
+
+  const titleClasses = isTiles
+    ? "flex items-center gap-2 m-0 font-bold text-white text-[13px] leading-[1.1]"
+    : "flex items-center gap-2 m-0 text-xl font-bold text-[var(--a-text)]";
+
+  const titleIconClasses = isTiles
+    ? "text-white w-5 h-5 shrink-0"
+    : "text-[var(--a-accent-strong)] w-5 h-5 shrink-0";
+
+  const subClasses = isTiles
+    ? "mt-1 text-[10px] font-semibold text-white/85"
+    : "mt-1 text-xs text-[var(--a-text-3)]";
+
+  const compactDropzoneClasses = isTiles
+    ? "relative flex min-w-0 flex-col items-center justify-center gap-1 text-[var(--a-text)] text-center cursor-pointer min-h-[72px] p-[var(--db-space-1-5)_var(--db-space-2)] border border-dashed border-[#10b98194] rounded-[var(--db-radius-control)] bg-transparent"
+    : "relative flex min-w-0 flex-col items-start min-[820px]:items-center justify-center gap-1 text-[var(--a-text)] text-left min-[820px]:text-center cursor-pointer";
+
+  const templateBtnClasses = isTiles
+    ? "min-h-[72px] justify-self-stretch justify-center p-[var(--db-space-1-5)_var(--db-space-2)] border border-dashed border-[#10b98194] rounded-[var(--db-radius-control)] bg-transparent text-[var(--db-text-secondary)] text-center hover:border-[#2dd4bf] hover:bg-[#14b8a614] inline-flex items-center gap-2 font-semibold text-xs cursor-pointer transition-colors focus-visible:outline-none focus-visible:[box-shadow:0_0_0_3px_var(--a-accent)]"
+    : isCompact
+      ? "justify-self-start min-[820px]:justify-self-end min-h-0 p-0 border-0 bg-transparent text-[var(--a-text)] text-[11px] font-bold hover:text-[var(--a-accent-strong)] hover:bg-transparent inline-flex items-center gap-2 cursor-pointer transition-colors focus-visible:outline-none focus-visible:[box-shadow:0_0_0_3px_var(--a-accent)]"
+      : "inline-flex items-center gap-2 self-start sm:self-auto min-h-[44px] px-4 rounded-[var(--a-radius-sm)] border border-[var(--a-border-strong)] bg-[var(--a-surface-2)] text-[var(--a-text-2)] text-xs font-semibold cursor-pointer transition-colors hover:bg-[var(--a-surface)] hover:border-[var(--a-border-strong)] focus-visible:outline-none focus-visible:[box-shadow:0_0_0_3px_var(--a-accent)]";
+
   return (
-    <div
-      className={`${styles.root} ${isCondensed ? styles.rootCompact : ""} ${
-        isTiles ? styles.rootTiles : ""
-      }`}
-    >
+    <div className={rootClasses}>
       {/* Top Header Card */}
-      <div
-        className={`${styles.card} ${isCondensed ? styles.cardCompact : ""} ${
-          isTiles ? styles.cardTiles : ""
-        }`}
-      >
-        <div
-          className={`${styles.cardHeader} ${
-            isCondensed ? styles.cardHeaderCompact : ""
-          } ${isTiles ? styles.cardHeaderTiles : ""}`}
-        >
-          <div className={styles.cardTitleBlock}>
-            <h2 className={styles.cardTitle}>
-              <FileSpreadsheet className={styles.titleIcon} />
+      <div className={cardClasses}>
+        <div className={cardHeaderClasses}>
+          <div className={titleBlockClasses}>
+            <h2 className={titleClasses}>
+              <FileSpreadsheet className={titleIconClasses} />
               Bulk CSV Stationery Importer
             </h2>
-            <p className={styles.cardSub}>
+            <p className={subClasses}>
               {onStageItems
                 ? "Add stationery items to this new pack in bulk using a CSV file."
                 : "Upload or update master stationery items in bulk using a CSV file."}
@@ -200,27 +243,23 @@ export function CSVStationeryImporter({
           </div>
 
           {isCondensed ? (
-            <label
-              className={`${styles.compactDropzone} ${
-                isTiles ? styles.tileDropzone : ""
-              }`}
-            >
+            <label className={compactDropzoneClasses}>
               <input
                 type="file"
                 accept=".csv"
                 onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-                className={styles.dropzoneInput}
-            aria-label="Upload CSV file"
+                className="absolute inset-0 w-full h-full z-10 opacity-0 cursor-pointer"
+                aria-label="Upload CSV file"
               />
-              <Upload className={styles.compactUploadIcon} />
-              <span>
+              <Upload className="w-[18px] h-[18px] text-[var(--a-text-3)]" />
+              <span className="max-w-full overflow-hidden text-[var(--a-text)] text-xs font-bold text-ellipsis whitespace-nowrap">
                 {isParsing
                   ? "Parsing CSV..."
                   : file
                     ? file.name
                     : "Click to upload or drag & drop CSV file"}
               </span>
-              <small>
+              <small className="text-[var(--a-text-3)] text-[10px] font-semibold">
                 Supports columns: sku, title, description, unit_price, category
               </small>
             </label>
@@ -229,41 +268,43 @@ export function CSVStationeryImporter({
           <button
             onClick={downloadTemplate}
             type="button"
-            className={`${styles.templateBtn} ${
-              isCondensed ? styles.templateBtnCompact : ""
-            } ${isTiles ? styles.templateBtnTile : ""}`}
+            className={templateBtnClasses}
           >
-            <Download className={styles.templateIcon} />
+            <Download className="text-[var(--a-accent-strong)] w-4 h-4 shrink-0" />
             Download Sample CSV Template
           </button>
         </div>
 
         {/* File Dropzone area */}
         <div
-          className={`${styles.dropzone} ${isCondensed ? styles.hidden : ""}`}
+          className={
+            isCondensed
+              ? "hidden"
+              : "relative p-8 text-center rounded-[var(--a-radius-sm)] border-2 border-dashed border-[var(--a-border-strong)] bg-[var(--a-bg)] transition-colors hover:border-[var(--a-accent)] group"
+          }
         >
           <input
             type="file"
             accept=".csv"
             onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-            className={styles.dropzoneInput}
+            className="absolute inset-0 w-full h-full z-10 opacity-0 cursor-pointer"
             aria-label="Upload CSV file"
           />
-          <div className={styles.dropzoneContent}>
-            <div className={styles.dropzoneIconWrap}>
-              <Upload className={styles.dropzoneIcon} />
+          <div className="pointer-events-none flex flex-col gap-3">
+            <div className="flex items-center justify-center w-12 h-12 mx-auto rounded-[var(--a-radius)] border border-[var(--a-border-strong)] bg-[var(--a-surface)] transition-colors group-hover:border-[var(--a-accent)]">
+              <Upload className="w-6 h-6 text-[var(--a-accent-strong)]" />
             </div>
             <div>
-              <p className={styles.dropzoneTitle}>
+              <p className="m-0 text-sm font-semibold text-[var(--a-text)]">
                 {isParsing
                   ? "Parsing CSV..."
                   : file
                     ? file.name
                     : "Click to upload or drag & drop CSV file"}
               </p>
-              <p className={styles.dropzoneHint}>
+              <p className="mt-0.5 text-xs text-[var(--a-text-4)]">
                 Supports columns:{" "}
-                <span className={styles.dropzoneHintStrong}>
+                <span className="text-[var(--a-text-3)]">
                   sku, title, description, unit_price, category
                 </span>
               </p>
@@ -296,15 +337,17 @@ export function CSVStationeryImporter({
 
       {/* Preview Table & Validation Step */}
       {parsedRows.length > 0 && (
-        <div className={styles.previewCard}>
-          <div className={styles.previewHeader}>
-            <div className={styles.previewHeaderLeft}>
-              <h3 className={styles.previewTitle}>CSV Validation Preview</h3>
-              <span className={`${styles.pill} ${styles.pillValid}`}>
+        <div className="flex flex-col gap-4 p-6 rounded-[var(--a-radius)] border border-[var(--a-border)] bg-[var(--a-surface)]">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between pb-4 border-b border-[var(--a-border)]">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h3 className="m-0 text-base font-bold text-[var(--a-text)]">
+                CSV Validation Preview
+              </h3>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--a-accent-subtle)] text-[var(--a-accent-strong)] border border-[var(--a-accent)]">
                 {validCount} Valid
               </span>
               {invalidCount > 0 && (
-                <span className={`${styles.pill} ${styles.pillInvalid}`}>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--a-red-subtle)] text-[var(--a-red)] border border-[var(--a-red)]">
                   {invalidCount} Invalid
                 </span>
               )}
@@ -315,20 +358,18 @@ export function CSVStationeryImporter({
               onClick={handleExecuteImport}
               disabled={isUploading || validCount === 0}
               type="button"
-              className={styles.importBtn}
+              className="inline-flex items-center justify-center gap-2 self-start sm:self-auto min-h-[44px] px-6 rounded-[var(--a-radius-sm)] border-0 bg-[var(--a-accent)] text-[var(--a-text)] text-sm font-bold cursor-pointer [box-shadow:0_8px_20px_var(--a-accent-subtle)] transition-colors hover:not-disabled:bg-[var(--a-accent-strong)] disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:[box-shadow:0_0_0_3px_var(--a-accent)]"
             >
               {isUploading ? (
                 <>
-                  <RefreshCw
-                    className={`${styles.importBtnIcon} ${styles.spin}`}
-                  />
+                  <RefreshCw className="w-4 h-4 animate-spin" />
                   {onStageItems
                     ? "Adding to pack..."
                     : "Upserting to Supabase..."}
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className={styles.importBtnIcon} />
+                  <CheckCircle2 className="w-4 h-4" />
                   {onStageItems
                     ? `Add ${validCount} Items to Pack`
                     : `Import ${validCount} Items Now`}
@@ -338,50 +379,52 @@ export function CSVStationeryImporter({
           </div>
 
           {/* Records Table Preview */}
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead className={styles.tableHead}>
+          <div className="overflow-x-auto max-h-[320px] overflow-y-auto rounded-[var(--a-radius-sm)] border border-[var(--a-border)]">
+            <table className="w-full border-collapse text-left text-xs text-[var(--a-text-2)]">
+              <thead className="sticky top-0 z-10 bg-[var(--a-bg)] text-[var(--a-text-3)] text-[10px] font-semibold uppercase tracking-[0.06em] border-b border-[var(--a-border)]">
                 <tr>
-                  <th className={styles.th}>Row</th>
-                  <th className={styles.th}>SKU</th>
-                  <th className={styles.th}>Title</th>
-                  <th className={styles.th}>Category</th>
-                  <th className={styles.th}>Unit Price</th>
-                  <th className={styles.th}>Status</th>
+                  <th className="p-3">Row</th>
+                  <th className="p-3">SKU</th>
+                  <th className="p-3">Title</th>
+                  <th className="p-3">Category</th>
+                  <th className="p-3">Unit Price</th>
+                  <th className="p-3">Status</th>
                 </tr>
               </thead>
-              <tbody className={styles.tableBody}>
+              <tbody className="bg-[var(--a-bg)]">
                 {parsedRows.map((row, idx) => (
                   <tr
                     key={idx}
-                    className={`${styles.tableRow} ${
-                      row.error ? styles.tableRowError : styles.tableRowHover
+                    className={`border-b border-[var(--a-border)] last:border-b-0 transition-colors ${
+                      row.error
+                        ? "bg-[var(--a-red-subtle)]"
+                        : "hover:bg-[var(--a-surface-2)]"
                     }`}
                   >
-                    <td className={`${styles.td} ${styles.tdMono}`}>
+                    <td className="p-3 font-mono text-[var(--a-text-3)]">
                       #{row.rowNumber}
                     </td>
-                    <td className={`${styles.td} ${styles.tdMono}`}>
+                    <td className="p-3 font-mono text-[var(--a-text-3)]">
                       {row.data.sku || "-"}
                     </td>
-                    <td className={`${styles.td} ${styles.tdTitle}`}>
+                    <td className="p-3 font-semibold text-[var(--a-text)]">
                       {row.data.title || "-"}
                     </td>
-                    <td className={`${styles.td} ${styles.tdCategory}`}>
+                    <td className="p-3 text-[var(--a-text-3)]">
                       {row.data.category}
                     </td>
-                    <td className={`${styles.td} ${styles.tdPrice}`}>
+                    <td className="p-3 font-bold text-[var(--a-accent-strong)]">
                       R {row.data.unit_price.toFixed(2)}
                     </td>
-                    <td className={styles.td}>
+                    <td className="p-3">
                       {row.error ? (
-                        <span className={styles.statusError}>
-                          <AlertTriangle className={styles.statusIcon} />
+                        <span className="inline-flex items-center gap-1 font-medium text-[var(--a-red)]">
+                          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                           {row.error}
                         </span>
                       ) : (
-                        <span className={styles.statusReady}>
-                          <CheckCircle2 className={styles.statusIcon} />
+                        <span className="inline-flex items-center gap-1 font-medium text-[var(--a-accent-strong)]">
+                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                           Ready
                         </span>
                       )}

@@ -68,15 +68,15 @@ export function SuperpowerSection() {
             <ScrollReveal key={step.title} delay={idx * 100} as="article">
               <div
                 className={cn(
-                  "relative p-6 sm:p-7 md:px-7 md:py-8 rounded-[22px] border border-border/80 bg-background shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 grid gap-3.5 group",
+                  "relative p-6 sm:p-7 md:px-7 md:py-8 rounded-card border border-pex-border bg-card shadow-card hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 grid gap-3.5 group",
                   step.accent &&
-                    "border-[#219e9a] shadow-[0_0_0_1px_#219e9a] bg-[radial-gradient(circle_at_90%_10%,rgba(33,158,154,0.06),transparent_40%)]"
+                    "border-pex-keppel shadow-[0_0_0_1px_var(--color-pex-keppel)] bg-[radial-gradient(circle_at_90%_10%,rgba(33,158,154,0.06),transparent_40%)]"
                 )}
               >
-                <div className="w-14 h-14 rounded-2xl grid place-items-center bg-[#219e9a]/10 text-[#219e9a] group-hover:bg-[#219e9a] group-hover:text-white group-hover:scale-105 transition-all duration-300">
+                <div className="w-14 h-14 rounded-2xl grid place-items-center bg-pex-keppel/10 text-pex-keppel group-hover:bg-pex-keppel group-hover:text-white group-hover:scale-105 transition-all duration-300">
                   {step.icon}
                 </div>
-                <div className="absolute top-5 sm:top-7 right-5 sm:right-7 w-8 h-8 rounded-full grid place-items-center bg-slate-100 text-muted-foreground group-hover:bg-primary group-hover:text-white text-sm font-extrabold transition-colors duration-300">
+                <div className="absolute top-5 sm:top-7 right-5 sm:right-7 w-8 h-8 rounded-full grid place-items-center bg-pex-bg text-pex-muted group-hover:bg-pex-navy group-hover:text-white text-sm font-extrabold transition-colors duration-300">
                   {idx + 1}
                 </div>
                 {step.href ? (
@@ -85,20 +85,20 @@ export function SuperpowerSection() {
                     className="no-underline group-hover:underline underline-offset-4"
                     data-conversion-event={step.dataConversionEvent}
                   >
-                    <h3 className="m-0 text-[#1a2a40] font-heading text-xl sm:text-[22px] font-extrabold leading-snug group-hover:text-[#219e9a] transition-colors">
+                    <h3 className="m-0 text-pex-navy font-heading text-xl sm:text-[22px] font-extrabold leading-snug group-hover:text-pex-keppel transition-colors">
                       {step.title}
                     </h3>
                   </Link>
                 ) : (
-                  <h3 className="m-0 text-[#1a2a40] font-heading text-xl sm:text-[22px] font-extrabold leading-snug group-hover:text-[#219e9a] transition-colors">
+                  <h3 className="m-0 text-pex-navy font-heading text-xl sm:text-[22px] font-extrabold leading-snug group-hover:text-pex-keppel transition-colors">
                     {step.title}
                   </h3>
                 )}
-                <p className="m-0 text-muted-foreground text-sm sm:text-[15px] leading-relaxed">
+                <p className="m-0 text-pex-muted text-sm sm:text-[15px] leading-relaxed">
                   {step.text}
                 </p>
                 {step.accent ? (
-                  <div className="w-fit px-3 py-1 rounded-full bg-[#219e9a] text-white text-xs font-extrabold uppercase tracking-wide">
+                  <div className="w-fit px-3 py-1 rounded-full bg-pex-keppel text-white text-xs font-extrabold uppercase tracking-wide">
                     Save money
                   </div>
                 ) : null}

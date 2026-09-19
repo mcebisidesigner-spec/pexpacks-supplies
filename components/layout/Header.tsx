@@ -81,7 +81,7 @@ export function Header({ announcement }: HeaderProps = {}) {
             <Logo priority />
           </Link>
           {isAdmin && (
-            <span className="font-sans text-[17px] font-extrabold leading-none tracking-normal text-[var(--pex-navy,#1a2a40)] whitespace-nowrap overflow-hidden text-ellipsis max-w-[min(280px,38vw)]">
+            <span className="font-sans text-[17px] font-extrabold leading-none tracking-normal text-pex-navy whitespace-nowrap overflow-hidden text-ellipsis max-w-[min(280px,38vw)]">
               {adminUserLoading ? "Admin" : adminUser?.name ?? "Admin"}
             </span>
           )}
@@ -101,12 +101,12 @@ export function Header({ announcement }: HeaderProps = {}) {
           />
           {!isAdmin && (
             <Link
-              className="min-h-[42px] pl-[18px] pr-[7px] rounded-full inline-flex items-center justify-center gap-2.5 bg-[var(--pex-navy,#1a2a40)] text-white font-sans text-[15px] font-bold leading-none shadow-[0_10px_20px_rgba(26,42,64,0.12)] transition-all duration-200 hover:brightness-110 hover:shadow-[0_12px_24px_rgba(26,42,64,0.18)] hover:-translate-y-0.5 active:translate-y-0 active:brightness-100 group"
+              className="min-h-[42px] pl-[18px] pr-[7px] rounded-full inline-flex items-center justify-center gap-2.5 bg-pex-navy text-white font-sans text-[15px] font-bold leading-none shadow-[0_10px_20px_rgba(26,42,64,0.12)] transition-all duration-200 hover:brightness-110 hover:shadow-[0_12px_24px_rgba(26,42,64,0.18)] hover:-translate-y-0.5 active:translate-y-0 active:brightness-100 group"
               href="/track-order"
               data-conversion-event="header_track_pack"
             >
               <span className="text-white">Track Your Pack</span>
-              <span className="w-7 h-7 rounded-full bg-[var(--pex-coral,#ff6f59)] text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]" aria-hidden="true">
+              <span className="w-7 h-7 rounded-full bg-pex-coral text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]" aria-hidden="true">
                 <TrackPackIcon />
               </span>
             </Link>

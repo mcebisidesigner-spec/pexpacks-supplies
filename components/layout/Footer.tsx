@@ -127,7 +127,7 @@ export function Footer({ company }: FooterContent) {
   const phoneHrefLocal = phone ? telHref(phone) : "#";
 
   return (
-    <footer className="bg-[var(--pex-navy,#1a2a40)] text-[var(--pex-bg,#fbfdfd)]" id="site-footer">
+    <footer className="bg-pex-navy text-white" id="site-footer">
       <div className="w-full max-w-[1280px] mx-auto py-[38px] px-4 sm:px-6 lg:py-11 lg:px-[clamp(24px,4vw,56px)] pb-[34px] lg:pb-9">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(380px,1fr)_auto] gap-5 sm:gap-6 lg:gap-8 items-start">
           <div className="flex items-start justify-between gap-4 sm:gap-[18px] w-full min-w-0 m-0 p-0">
@@ -153,7 +153,7 @@ export function Footer({ company }: FooterContent) {
                     <a href={phoneHrefLocal} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                       {formatPhoneNumber(phone)}
                     </a>
-                    <span className="text-[var(--pex-keppel,#1a7a77)] opacity-50 text-base font-medium leading-none" aria-hidden="true">
+                    <span className="text-pex-keppel opacity-50 text-base font-medium leading-none" aria-hidden="true">
                       |
                     </span>
                   </>
@@ -167,7 +167,7 @@ export function Footer({ company }: FooterContent) {
                 className="w-full max-w-full lg:max-w-[760px] text-left lg:text-right group/policy"
                 suppressHydrationWarning
               >
-                <summary className="relative inline-flex items-center justify-start lg:justify-end gap-2.5 max-w-full cursor-pointer text-[#dae2eb]/60 text-xs sm:text-sm font-normal leading-[1.3] list-none transition-colors duration-200 hover:text-[#f1f6f8]/90 focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full [&::-webkit-details-marker]:hidden after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                <summary className="relative inline-flex items-center justify-start lg:justify-end gap-2.5 max-w-full cursor-pointer text-[#dae2eb]/60 text-xs sm:text-sm font-normal leading-[1.3] list-none transition-colors duration-200 hover:text-[#f1f6f8]/90 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full [&::-webkit-details-marker]:hidden after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   <span className="min-w-0 overflow-wrap-anywhere">{siteName} policies &amp; information:</span>
                   <span className="w-2 h-2 border-r-2 border-b-2 border-current rotate-45 -translate-y-0.5 origin-center shrink-0 transition-transform duration-200 group-open/policy:rotate-[225deg]" aria-hidden="true" />
                 </summary>
@@ -205,7 +205,7 @@ export function Footer({ company }: FooterContent) {
               href="https://mcebisih.co.za/"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative text-white font-extrabold no-underline transition-colors duration-200 hover:text-[var(--pex-coral,#ff6f59)] hover:underline hover:underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+              className="relative text-white font-extrabold no-underline transition-colors duration-200 hover:text-pex-coral hover:underline hover:underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
             >
               McebisiH
             </a>
@@ -217,7 +217,7 @@ export function Footer({ company }: FooterContent) {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="relative grid place-items-center w-6 h-6 text-white bg-white/10 border border-white/[0.12] rounded-full transition-all duration-200 hover:bg-[var(--pex-coral,#ff6f59)] hover:brightness-110 hover:scale-105 focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                  className="relative grid place-items-center w-6 h-6 text-white bg-white/10 border border-white/[0.12] rounded-full transition-all duration-200 hover:bg-pex-coral hover:brightness-110 hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"

@@ -7,7 +7,7 @@ import {
   createMasterProductAction,
   importMasterProductsAction,
 } from "../../operations-actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 export const dynamic = "force-dynamic";
 

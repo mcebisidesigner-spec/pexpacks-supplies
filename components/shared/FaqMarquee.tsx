@@ -2,7 +2,6 @@ import Link from "next/link";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { FAQ } from "@/data/faqs";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 
 type FaqMarqueeProps = {
   faqs: FAQ[];
@@ -23,10 +22,10 @@ export function FaqMarquee({
 
   return (
     <section
-      className={sectionStyles.section}
+      className="py-[var(--section-padding-y-desktop)] bg-transparent max-lg:py-[var(--section-padding-y-tablet)] max-[480px]:py-[var(--section-padding-y-mobile)]"
       aria-labelledby="faq-marquee-heading"
     >
-      <div className={sectionStyles.inner}>
+      <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-[var(--gutter-desktop)] max-lg:px-[var(--gutter-mobile)]">
         <SectionHeader
           eyebrow={eyebrow}
           title={title}

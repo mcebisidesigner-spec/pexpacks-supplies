@@ -1,5 +1,5 @@
 ﻿import type { ReactNode } from "react";
-import styles from "../../app/admin/admin.module.css";
+import styles from "../../app/admin/adminStyles";
 
 type EmptyStateProps = {
   icon?: ReactNode;

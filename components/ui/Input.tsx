@@ -32,14 +32,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className={cn("grid gap-2 text-left", wrapperClassName)}>
         {label ? (
           <label
-            className="text-[var(--form-label-color,#1a2a40)] text-sm font-extrabold leading-tight tracking-tight select-none"
+            className="text-pex-navy text-sm font-extrabold leading-tight tracking-tight select-none"
             htmlFor={inputId}
           >
             {label}
           </label>
         ) : null}
         {helper ? (
-          <p className="m-0 text-[var(--form-helper-color,#4d5a5d)] text-xs sm:text-[13px] leading-snug">
+          <p className="m-0 text-pex-muted text-xs sm:text-[13px] leading-snug">
             {helper}
           </p>
         ) : null}
@@ -48,9 +48,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "w-full min-h-[50px] sm:min-h-[54px] rounded-[18px] border border-[var(--form-control-border,#e1e7ea)] px-4 bg-[var(--form-control-bg,#ffffff)] text-[var(--form-control-color,#1a2a40)] font-sans text-sm sm:text-[15px] placeholder:text-[rgba(77,90,93,0.48)] transition-all duration-150 hover:border-[rgba(26,42,64,0.18)] focus:outline-none focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-4 focus:ring-[rgba(26,122,119,0.12)] disabled:cursor-not-allowed disabled:opacity-60",
+              "w-full min-h-[50px] sm:min-h-[54px] rounded-field border border-pex-border px-4 bg-white text-pex-navy font-sans text-sm sm:text-[15px] placeholder:text-pex-muted/50 transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
               error &&
-                "border-[var(--color-danger,#b91c1c)] focus:border-[var(--color-danger,#b91c1c)] ring-4 ring-[rgba(185,28,28,0.1)]",
+                "border-destructive focus:border-destructive ring-4 ring-destructive/10",
               className
             )}
             aria-invalid={error ? true : undefined}
@@ -59,7 +59,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
           {showValid ? (
             <span
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--pex-success,#2f855a)] pointer-events-none"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-600 pointer-events-none"
               aria-hidden="true"
             >
               <svg
@@ -77,7 +77,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {error ? (
           <p
             id={errorId}
-            className="m-0 text-[var(--color-danger,#b91c1c)] text-xs sm:text-[13px] font-extrabold leading-normal"
+            className="m-0 text-destructive text-xs sm:text-[13px] font-extrabold leading-normal"
             role="alert"
           >
             {error}

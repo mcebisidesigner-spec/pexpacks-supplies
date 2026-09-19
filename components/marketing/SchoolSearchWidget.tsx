@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import styles from "./SchoolSearchWidget.module.css";
 
 type SchoolSearchResult = {
   id: string;
@@ -104,22 +103,51 @@ export function SchoolSearchWidget({
     router.push(`/schools/${result.slug}`);
   }
 
+  const checkIconSvg = (
+    <svg
+      className="w-[16px] h-[16px] text-[var(--pex-keppel)] shrink-0 mt-[2px]"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+
   return (
     <article
-      className={cn(styles.widgetCard, compact && styles.compactWidget)}
-      data-results-open={open ? "true" : undefined}
-    >
-      <span className={styles.eyebrow}>Skip the queue</span>
-      {headingLevel === "h2" ? (
-        <h2 className={styles.title}>{titleText}</h2>
-      ) : (
-        <h3 className={styles.title}>{titleText}</h3>
+      className={cn(
+        "relative z-[1] bg-[var(--card-bg,#ffffff)] rounded-[var(--radius-card,20px)] border-[var(--card-border,1px_solid_rgba(15,37,55,0.08))] p-[clamp(24px,4vw,36px)] [box-shadow:var(--card-shadow,0_10px_30px_rgba(15,37,55,0.03))] transition-all duration-[250ms] ease flex flex-col gap-[20px] hover:[box-shadow:var(--card-shadow-hover,0_20px_40px_rgba(15,37,55,0.06))] hover:border-[var(--color-teal-border)] data-[results-open=true]:z-[80] focus-within:z-[80]",
+        compact && "compact-widget"
       )}
-      <p className={styles.text}>{bodyText}</p>
+      data-results-open={open ? "true" : undefined}
+      style={{ border: "var(--card-border, 1px solid rgba(15,37,55,0.08))" }}
+    >
+      <span className="font-[var(--font-button)] text-[12px] font-extrabold text-[var(--pex-keppel)] uppercase tracking-[0.05em]">
+        Skip the queue
+      </span>
+      {headingLevel === "h2" ? (
+        <h2 className="text-[var(--pex-navy)] text-[22px] font-extrabold leading-[1.25] m-0">
+          {titleText}
+        </h2>
+      ) : (
+        <h3 className="text-[var(--pex-navy)] text-[22px] font-extrabold leading-[1.25] m-0">
+          {titleText}
+        </h3>
+      )}
+      <p className="text-[var(--pex-text)] text-[15px] leading-[1.5] m-0">
+        {bodyText}
+      </p>
 
-      <form onSubmit={handleSearch} className={styles.searchForm}>
-        <div className={styles.inputGroup} ref={wrapperRef}>
-          <label htmlFor="widgetSchoolQuery" className={styles.inputLabel}>
+      <form onSubmit={handleSearch} className="flex flex-col gap-[var(--space-3)] w-full">
+        <div className="relative z-[1] flex flex-col gap-[6px]" ref={wrapperRef}>
+          <label
+            htmlFor="widgetSchoolQuery"
+            className="text-[var(--text-2xs)] font-bold text-[var(--pex-navy)]"
+          >
             Enter school name
           </label>
           <input
@@ -137,7 +165,7 @@ export function SchoolSearchWidget({
               if (e.key === "Escape") setOpen(false);
             }}
             placeholder="e.g. Parktown Primary"
-            className={styles.inputField}
+            className="w-full min-h-[48px] px-[var(--space-4)] py-[var(--space-3)] rounded-full border border-[var(--pex-border,rgba(15,37,55,0.12))] bg-[var(--pex-bg,#f4f7f6)] font-inherit text-[15px] text-[var(--pex-navy)] outline-none transition-all duration-[200ms] ease focus:border-[var(--pex-keppel)] focus:bg-white focus:[box-shadow:0_0_0_4px_rgba(33,158,154,0.12)]"
             required
             autoComplete="off"
             role="combobox"
@@ -147,38 +175,43 @@ export function SchoolSearchWidget({
           />
           {open ? (
             <div
-              className={styles.schoolResults}
+              className="absolute z-[90] top-[calc(100%+8px)] inset-x-0 max-h-[420px] overflow-y-auto border border-[rgba(15,37,55,0.08)] rounded-[var(--radius-card,20px)] p-[var(--space-2)] bg-white [box-shadow:0_20px_40px_rgba(15,37,55,0.12)]"
               id="widget-school-results"
               role="listbox"
             >
               {loading ? (
-                <p className={styles.schoolEmpty}>Searching schools...</p>
+                <p className="m-0 px-[14px] py-[var(--space-3)] text-[var(--pex-text-muted,#5a6b7a)] text-[var(--text-sm)]">
+                  Searching schools...
+                </p>
               ) : null}
               {!loading && results.length > 0
                 ? results.map((result) => (
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={false}
-                        className={styles.schoolResult}
-                        key={result.id}
-                        onClick={() => selectSchool(result)}
-                      >
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={false}
+                      className="w-full min-h-[58px] border-0 rounded-[14px] px-[14px] py-[var(--space-3)] bg-transparent text-[var(--pex-navy,#1a2a40)] text-left grid gap-[3px] cursor-pointer transition-all duration-[150ms] ease font-inherit text-inherit hover:bg-[var(--pex-bg,#f4f7f6)] focus-visible:bg-[var(--pex-bg,#f4f7f6)] focus-visible:outline-none"
+                      key={result.id}
+                      onClick={() => selectSchool(result)}
+                    >
                       <strong>{result.name}</strong>
-                      <span>
+                      <span className="text-[var(--pex-text-muted,#5a6b7a)] text-[var(--text-sm)]">
                         {result.city}, {result.province}
                       </span>
                     </button>
                   ))
                 : null}
               {!loading && !results.length && query.trim() ? (
-                <p className={styles.schoolEmpty}>
+                <p className="m-0 px-[14px] py-[var(--space-3)] text-[var(--pex-text-muted,#5a6b7a)] text-[var(--text-sm)]">
                   No matching schools found. You can also{" "}
                   <Link href="/schools">browse schools</Link>.
                 </p>
               ) : null}
               {error ? (
-                <p className={styles.schoolError} role="alert">
+                <p
+                  className="m-0 px-[14px] py-[var(--space-3)] text-[var(--pex-error,#dc2626)] text-[var(--text-sm)] font-bold"
+                  role="alert"
+                >
                   {error}
                 </p>
               ) : null}
@@ -189,48 +222,18 @@ export function SchoolSearchWidget({
 
       {!compact && (
         <>
-          <div className={styles.divider} role="separator" />
-          <ul className={styles.featuresList}>
-            <li className={styles.featureItem}>
-              <svg
-                className={styles.checkIcon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+          <div className="h-[1px] bg-[rgba(15,37,55,0.08)] my-[4px]" role="separator" />
+          <ul className="list-none p-0 m-0 flex flex-col gap-[10px]">
+            <li className="flex items-start gap-[10px] text-[13.5px] text-[var(--pex-text)] leading-[1.4]">
+              {checkIconSvg}
               <span>100% correct items packed per grade list</span>
             </li>
-            <li className={styles.featureItem}>
-              <svg
-                className={styles.checkIcon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+            <li className="flex items-start gap-[10px] text-[13.5px] text-[var(--pex-text)] leading-[1.4]">
+              {checkIconSvg}
               <span>Teacher-preferred brands only</span>
             </li>
-            <li className={styles.featureItem}>
-              <svg
-                className={styles.checkIcon}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+            <li className="flex items-start gap-[10px] text-[13.5px] text-[var(--pex-text)] leading-[1.4]">
+              {checkIconSvg}
               <span>Custom school development fund rebates</span>
             </li>
           </ul>

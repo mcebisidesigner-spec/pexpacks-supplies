@@ -8,7 +8,7 @@ import { saveBlogPostAction } from "@/app/admin/blog/actions";
 import { ContentBlocks } from "./ContentBlocks";
 import type { BlogPostFormState } from "@/lib/admin/blog";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import styles from "./blogStyles";
 
 export interface BlogFormDefaults {

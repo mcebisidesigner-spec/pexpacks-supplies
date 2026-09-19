@@ -6,7 +6,7 @@ import { listPacksForFilter } from "@/lib/admin/packs";
 import { ItemForm } from "@/components/admin/items/ItemForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "../../admin.module.css";
+import adminStyles from "../../adminStyles";
 
 interface EditItemPageProps {
   params: Promise<{ id?: string; slug?: string }>;

@@ -16,7 +16,7 @@ import {
   approveProductPriceAction,
   createPricingRuleAction,
 } from "../operations-actions";
-import admin from "../admin.module.css";
+import admin from "../adminStyles";
 
 export const dynamic = "force-dynamic";
 

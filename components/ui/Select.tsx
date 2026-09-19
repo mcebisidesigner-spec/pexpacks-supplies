@@ -142,7 +142,7 @@ export default function Select({
       {label && (
         <label
           htmlFor={selectId}
-          className="text-[var(--form-label-color,#1a2a40)] text-sm font-extrabold leading-tight tracking-tight select-none"
+          className="text-pex-navy text-sm font-extrabold leading-tight tracking-tight select-none"
         >
           {label}
         </label>
@@ -164,12 +164,12 @@ export default function Select({
           id={selectId}
           type="button"
           className={cn(
-            "w-full min-h-[50px] sm:min-h-[54px] rounded-[18px] border border-[var(--form-control-border,#e1e7ea)] px-4 pr-11 bg-[var(--form-control-bg,#ffffff)] text-[var(--form-control-color,#1a2a40)] font-sans text-sm sm:text-[15px] flex items-center justify-between text-left cursor-pointer transition-all duration-150 hover:border-[rgba(26,42,64,0.18)] focus:outline-none focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-4 focus:ring-[rgba(26,122,119,0.12)] disabled:cursor-not-allowed disabled:opacity-60",
+            "w-full min-h-[50px] sm:min-h-[54px] rounded-field border border-pex-border px-4 pr-11 bg-white text-pex-navy font-sans text-sm sm:text-[15px] flex items-center justify-between text-left cursor-pointer transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
             open &&
-              "border-[var(--pex-keppel,#1a7a77)] ring-4 ring-[rgba(26,122,119,0.12)]",
-            !hasSelection && "text-[rgba(77,90,93,0.48)]",
+              "border-pex-keppel ring-4 ring-pex-keppel/15",
+            !hasSelection && "text-pex-muted/50",
             error &&
-              "border-[var(--color-danger,#b91c1c)] focus:border-[var(--color-danger,#b91c1c)] ring-4 ring-[rgba(185,28,28,0.1)]"
+              "border-destructive focus:border-destructive ring-4 ring-destructive/10"
           )}
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -207,8 +207,8 @@ export default function Select({
 
         <span
           className={cn(
-            "absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-[var(--pex-text-muted,#4d5a5d)] transition-transform duration-200",
-            open && "rotate-180 text-[var(--pex-keppel,#1a7a77)]"
+            "absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-pex-muted transition-transform duration-200",
+            open && "rotate-180 text-pex-keppel"
           )}
           aria-hidden="true"
         >
@@ -225,7 +225,7 @@ export default function Select({
         {open ? (
           <div
             id={listboxId}
-            className="absolute z-[200] top-[calc(100%+8px)] left-0 right-0 grid gap-1.5 max-h-[min(320px,56vh)] overflow-auto p-2 border border-[rgba(9,119,113,0.16)] rounded-[14px] bg-gradient-to-b from-[rgba(239,250,249,0.96)] to-[rgba(255,255,255,0.98)] shadow-[0_18px_42px_rgba(15,35,58,0.14)] backdrop-blur-sm"
+            className="absolute z-[200] top-[calc(100%+8px)] left-0 right-0 grid gap-1.5 max-h-[min(320px,56vh)] overflow-auto p-2 border border-pex-keppel/20 rounded-[14px] bg-gradient-to-b from-white/95 to-white shadow-dropdown backdrop-blur-sm"
             role="listbox"
           >
             {normalisedOptions.map((option) => {
@@ -238,9 +238,9 @@ export default function Select({
                   aria-selected={selected}
                   disabled={option.disabled}
                   className={cn(
-                    "flex items-center justify-between gap-3 w-full min-h-[44px] rounded-xl px-3.5 py-2.5 bg-transparent text-[var(--pex-text,#172326)] font-bold text-sm sm:text-[15px] text-left cursor-pointer transition-all duration-150 hover:bg-[rgba(224,244,244,0.74)] hover:border-[rgba(9,119,113,0.24)] focus-visible:outline-none focus-visible:bg-[rgba(224,244,244,0.74)] disabled:opacity-50 disabled:cursor-not-allowed",
+                    "flex items-center justify-between gap-3 w-full min-h-[44px] rounded-xl px-3.5 py-2.5 bg-transparent text-foreground font-bold text-sm sm:text-[15px] text-left cursor-pointer transition-all duration-150 hover:bg-pex-keppel/10 hover:border-pex-keppel/20 focus-visible:outline-none focus-visible:bg-pex-keppel/10 disabled:opacity-50 disabled:cursor-not-allowed",
                     selected &&
-                      "bg-[rgba(26,122,119,0.1)] text-[var(--pex-keppel,#1a7a77)] shadow-[inset_4px_0_0_var(--pex-keppel,#1a7a77)] border border-[rgba(9,119,113,0.28)]"
+                      "bg-pex-keppel/10 text-pex-keppel shadow-[inset_4px_0_0_var(--color-pex-keppel)] border border-pex-keppel/30"
                   )}
                   onClick={() => commitValue(option.value)}
                 >
@@ -249,7 +249,7 @@ export default function Select({
                   </span>
                   {selected ? (
                     <span
-                      className="rounded-full px-2 py-0.5 bg-[rgba(9,119,113,0.1)] text-[var(--pex-keppel,#1a7a77)] text-[0.72rem] font-bold"
+                      className="rounded-full px-2 py-0.5 bg-pex-keppel/10 text-pex-keppel text-[0.72rem] font-bold"
                       aria-hidden="true"
                     >
                       Selected
@@ -265,7 +265,7 @@ export default function Select({
       {error && (
         <span
           id={errorId}
-          className="m-0 text-[var(--color-danger,#b91c1c)] text-xs sm:text-[13px] font-extrabold leading-normal"
+          className="m-0 text-destructive text-xs sm:text-[13px] font-extrabold leading-normal"
           role="alert"
         >
           {error}

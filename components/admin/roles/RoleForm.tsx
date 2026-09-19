@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { createRoleAction, updateRoleAction } from "@/app/admin/roles/actions";
 import type { RoleFormState } from "@/lib/admin/roles";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 

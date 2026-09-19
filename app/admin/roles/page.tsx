@@ -6,8 +6,7 @@ import { deleteRoleAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "../admin.module.css";
-import styles from "./roles.module.css";
+import adminStyles from "../adminStyles";
 
 export default async function RolesPage() {
   await requireAdmin({ permission: "roles.manage" });
@@ -63,18 +62,18 @@ export default async function RolesPage() {
                 {roles.map((role) => (
                   <tr key={role.id}>
                     <td>
-                      <div className={styles.roleCell}>
-                        <span className={styles.roleDot} aria-hidden="true" />
+                      <div className="flex items-start gap-3">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[var(--db-brand)] mt-1.5 shrink-0" aria-hidden="true" />
                         <div>
-                          <div className={styles.roleName}>
+                          <div className="font-bold text-[var(--a-text)]">
                             {role.name}
                             {role.slug === "super_admin" ? (
-                              <span className={styles.seedTag}> seed</span>
+                              <span className="text-[11px] font-bold text-[var(--db-warning-text)] bg-[var(--db-warning-subtle)] rounded-full py-0.5 px-2 ml-1.5"> seed</span>
                             ) : null}
                           </div>
-                          <div className={styles.roleSlug}>{role.slug}</div>
+                          <div className="font-mono text-xs text-[var(--db-text-muted)] mt-0.5">{role.slug}</div>
                           {role.description ? (
-                            <div className={styles.roleDesc}>{role.description}</div>
+                            <div className="text-[13px] text-[var(--db-text-muted)] mt-1 max-w-[360px]">{role.description}</div>
                           ) : null}
                         </div>
                       </div>
@@ -82,7 +81,7 @@ export default async function RolesPage() {
                     <td>{role.memberCount}</td>
                     <td>{role.permissionCount}</td>
                     <td>
-                      <div className={styles.actions}>
+                      <div className="flex items-center gap-2.5 whitespace-nowrap">
                         <Link href={`/admin/roles/${role.id}`} className={adminStyles.actionLink}>
                           Edit
                         </Link>

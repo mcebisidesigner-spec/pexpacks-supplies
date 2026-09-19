@@ -14,7 +14,7 @@ import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { updateApprovalAction } from "../operations-actions";
-import admin from "../admin.module.css";
+import admin from "../adminStyles";
 
 export const dynamic = "force-dynamic";
 

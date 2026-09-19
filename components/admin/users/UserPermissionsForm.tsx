@@ -7,7 +7,7 @@ import {
   updateUserPermissionsAction,
   type PermissionOverrideState,
 } from "@/app/admin/users/actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 

@@ -6,8 +6,7 @@ import { AssetEditForm } from "@/components/admin/assets/AssetEditForm";
 import { deleteAssetAction } from "./actions";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import adminStyles from "../admin.module.css";
-import styles from "./assets.module.css";
+import adminStyles from "../adminStyles";
 
 export const metadata = {
   title: "Assets | Admin | Pexpacks",
@@ -56,7 +55,6 @@ export default async function AssetsPage({
       />
 
       <div className={adminStyles.toolbar}>
-
         <form method="get" action="/admin/assets" className={adminStyles.filterForm}>
           <select name="folder" defaultValue={folder ?? ""} className={adminStyles.filterInput}>
             <option value="">All folders</option>
@@ -78,9 +76,9 @@ export default async function AssetsPage({
       </div>
 
       {canUpload ? (
-        <div className={styles.uploadCard}>
-          <h2 className={styles.uploadTitle}>Upload file</h2>
-          <p className={styles.uploadSubtitle}>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-[16px] p-[22px] mb-5">
+          <h2 className="m-0 mb-1 text-lg font-extrabold text-[var(--a-text)]">Upload file</h2>
+          <p className="m-0 mb-4 text-[13px] text-[var(--db-text-muted)]">
             PNG, WebP, SVG, JPG, GIF or PDF up to 10 MB. Files land in the media library
             and can be referenced anywhere on the site.
           </p>
@@ -127,16 +125,16 @@ export default async function AssetsPage({
                 {assets.map((asset) => (
                   <tr key={asset.id}>
                     <td>
-                      <div className={styles.assetCell}>
+                      <div className="flex items-center gap-3">
                         {isImage(asset.mime_type) && asset.public_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={asset.public_url}
                             alt=""
-                            className={styles.thumb}
+                            className="w-11 h-11 rounded-lg object-cover bg-[var(--db-surface-inner)] inline-flex items-center justify-center text-[var(--db-brand)] text-[11px] font-extrabold uppercase shrink-0 border border-[var(--db-border)]"
                           />
                         ) : (
-                          <span className={styles.thumb} aria-hidden="true">
+                          <span className="w-11 h-11 rounded-lg object-cover bg-[var(--db-surface-inner)] inline-flex items-center justify-center text-[var(--db-brand)] text-[11px] font-extrabold uppercase shrink-0 border border-[var(--db-border)] [&>svg]:w-5 [&>svg]:h-5 [&>svg]:stroke-current [&>svg]:fill-none [&>svg]:stroke-2 [&>svg]:stroke-linecap-round [&>svg]:stroke-linejoin-round" aria-hidden="true">
                             <svg viewBox="0 0 24 24">
                               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                               <path d="M14 2v6h6" />
@@ -144,8 +142,8 @@ export default async function AssetsPage({
                           </span>
                         )}
                         <div>
-                          <div className={styles.assetName}>{asset.name}</div>
-                          <div className={styles.assetMeta}>
+                          <div className="font-bold text-[var(--a-text)] break-all">{asset.name}</div>
+                          <div className="text-xs text-[var(--db-text-muted)] mt-0.5">
                             {asset.folder}
                             {asset.alt_text ? ` · ${asset.alt_text}` : ""}
                           </div>
@@ -156,22 +154,22 @@ export default async function AssetsPage({
                     <td>{formatBytes(asset.size_bytes)}</td>
                     <td>{formatDate(asset.created_at)}</td>
                     <td>
-                      <div className={styles.actions}>
+                      <div className="flex items-center gap-3 whitespace-nowrap">
                         {asset.public_url ? (
                           <a
                             href={asset.public_url}
                             target="_blank"
                             rel="noreferrer"
-                            className={styles.openLink}
+                            className="text-[13px] font-bold text-[var(--db-brand)] no-underline hover:underline"
                           >
                             Open
                           </a>
                         ) : null}
                         {canManage ? (
                           <>
-                            <details className={styles.editDetails}>
-                              <summary className={styles.editSummary}>Edit</summary>
-                              <div className={styles.editPanel}>
+                            <details className="mt-2">
+                              <summary className="cursor-pointer text-[13px] font-bold text-[var(--db-brand)] list-none inline-flex items-center gap-1.5 hover:underline [&::-webkit-details-marker]:hidden">Edit</summary>
+                              <div className="mt-2.5 max-w-[480px]">
                                 <AssetEditForm
                                   id={asset.id}
                                   name={asset.name}
@@ -189,7 +187,7 @@ export default async function AssetsPage({
                             </form>
                           </>
                         ) : (
-                          <span className={styles.assetMeta}>View only</span>
+                          <span className="text-xs text-[var(--db-text-muted)] mt-0.5">View only</span>
                         )}
                       </div>
                     </td>

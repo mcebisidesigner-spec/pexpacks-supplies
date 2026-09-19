@@ -71,18 +71,18 @@ export function RecentlyViewedSchools() {
 
   return (
     <section
-      className="py-[var(--section-padding-y-mobile)] sm:py-[var(--section-padding-y-tablet)] lg:py-[var(--section-padding-y-desktop)]"
+      className="py-8 sm:py-10"
       aria-labelledby="recent-schools-heading"
     >
       <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
         <div className="mb-5">
           <h2
             id="recent-schools-heading"
-            className="m-0 text-[var(--pex-primary)] text-xl leading-[1.1] font-[family-name:var(--font-heading)] font-extrabold"
+            className="m-0 text-pex-navy text-xl leading-tight font-heading font-extrabold"
           >
             Recently viewed
           </h2>
-          <p className="mt-1 mb-0 text-[var(--pex-text-muted)] text-sm font-bold">
+          <p className="mt-1 mb-0 text-pex-muted text-sm font-bold">
             Pick up where you left off
           </p>
         </div>
@@ -90,12 +90,12 @@ export function RecentlyViewedSchools() {
         <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-3">
           {recentVisits.map((visit) => (
             <article
-              className="relative pr-14 sm:pr-[58px] p-4 bg-white border border-[var(--pex-border)] rounded-2xl shadow-sm hover:border-[#1a7a77] hover:shadow-md transition-all flex flex-col justify-between"
+              className="relative pr-14 sm:pr-[58px] p-4 bg-card border border-pex-border rounded-card shadow-card hover:border-pex-keppel/40 hover:shadow-lg transition-all flex flex-col justify-between"
               key={`${visit.schoolSlug}-${visit.gradeSlug}`}
             >
               <button
                 type="button"
-                className="absolute top-3 right-3 w-[34px] h-[34px] border border-[var(--pex-border)] rounded-full bg-[var(--pex-bg)] text-[var(--pex-text-muted)] grid place-items-center cursor-pointer hover:bg-[var(--pex-bg-soft)] hover:text-[var(--pex-coral)] hover:-translate-y-px hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all"
+                className="absolute top-3 right-3 w-[34px] h-[34px] border border-pex-border rounded-full bg-pex-bg text-pex-muted grid place-items-center cursor-pointer hover:bg-pex-bg-soft hover:text-pex-coral hover:-translate-y-px hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-pex-keppel transition-all"
                 onClick={() => removeRecentVisit(visit)}
                 aria-label={`Remove ${visit.schoolName} ${visit.grade} from recently viewed`}
               >
@@ -110,22 +110,22 @@ export function RecentlyViewedSchools() {
               </button>
               <div>
                 <div className="mb-2.5">
-                  <h3 className="m-0 text-base sm:text-lg font-bold text-[#102a43] leading-snug">
+                  <h3 className="m-0 text-base sm:text-lg font-bold text-pex-navy leading-snug">
                     <Link
                       href={`/schools/${visit.schoolSlug}`}
-                      className="hover:text-[var(--pex-keppel)] transition-colors"
+                      className="hover:text-pex-keppel transition-colors"
                     >
                       {visit.schoolName}
                     </Link>
                   </h3>
-                  <p className="m-0 mt-0.5 text-xs sm:text-sm text-muted-foreground font-semibold">
+                  <p className="m-0 mt-0.5 text-xs sm:text-sm text-pex-muted font-semibold">
                     {visit.grade}
                   </p>
                 </div>
               </div>
               <Link
                 href={`/schools/${visit.schoolSlug}`}
-                className="inline-flex items-center justify-center w-full min-h-[38px] px-4 rounded-full bg-primary hover:bg-primary/90 text-white font-heading text-xs sm:text-sm font-extrabold no-underline transition-all mt-2"
+                className="inline-flex items-center justify-center w-full min-h-[38px] px-4 rounded-full bg-pex-navy hover:bg-pex-navy/90 text-white font-heading text-xs sm:text-sm font-extrabold no-underline transition-all mt-2"
               >
                 View pack
               </Link>

@@ -7,9 +7,7 @@ import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import adminStyles from "../admin.module.css";
-import styles from "./blog.module.css";
-import contentStyles from "../content/content.module.css";
+import adminStyles from "../adminStyles";
 
 export const metadata = {
   title: "Blog & Resource Hub | Admin | Pexpacks",
@@ -81,28 +79,28 @@ export default async function BlogPage() {
                 {posts.map((post) => (
                   <tr key={post.id}>
                     <td>
-                      <div className={styles.postCell}>
+                      <div className="min-w-[240px]">
                         <Link
                           href={`/blog/${post.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={styles.postTitle}
+                          className="font-bold text-sm text-[var(--a-text)] hover:underline no-underline"
                         >
                           {post.title}
                         </Link>
-                        <p className={styles.excerpt}>{post.excerpt || "—"}</p>
+                        <p className="mt-[3px] mb-0 text-xs text-[var(--db-text-muted)] max-w-[420px] truncate">{post.excerpt || "—"}</p>
                       </div>
                     </td>
                     <td>
                       {post.category ? (
                         <StatusBadge status={post.category} tone="blue" />
                       ) : (
-                        <span className={contentStyles.emptyNote}>—</span>
+                        <span className="text-xs text-[var(--db-text-muted)]">—</span>
                       )}
                     </td>
                     <td>{post.author || "—"}</td>
                     <td>
-                      <span className={styles.date}>{formatDate(post.created_at)}</span>
+                      <span className="text-[13px] text-[var(--pex-text,var(--db-text-primary))] whitespace-nowrap">{formatDate(post.created_at)}</span>
                     </td>
                     <td>
                       <StatusBadge
@@ -113,7 +111,7 @@ export default async function BlogPage() {
                     </td>
                     <td>
                       {canManage ? (
-                        <div className={contentStyles.actions}>
+                        <div className="flex items-center gap-2">
                           <Link
                             href={`/admin/blog/${post.id}`}
                             className={adminStyles.actionLink}
@@ -123,11 +121,7 @@ export default async function BlogPage() {
                           <form action={setBlogPostPublishedAction.bind(null, post.id, !post.published)}>
                             <button
                               type="submit"
-                              className={`${adminStyles.rowButton} ${
-                                post.published
-                                  ? contentStyles.rowButtonHide
-                                  : contentStyles.rowButtonShow
-                              }`}
+                              className={adminStyles.rowButton}
                             >
                               {post.published ? "Unpublish" : "Publish"}
                             </button>
@@ -142,7 +136,7 @@ export default async function BlogPage() {
                           </form>
                         </div>
                       ) : (
-                        <span className={contentStyles.mutedAction}>View only</span>
+                        <span className="text-xs text-[var(--db-text-muted)] italic">View only</span>
                       )}
                     </td>
                   </tr>

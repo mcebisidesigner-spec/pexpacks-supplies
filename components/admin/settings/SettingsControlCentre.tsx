@@ -46,7 +46,7 @@ import { UserIdentityTab } from "./UserIdentityTab";
 import { SystemInfoVaultTab } from "./SystemInfoVaultTab";
 import { settingsStyles as styles } from "./settingsStyles";
 import { corePages as viewStyles } from "@/components/admin/views/CorePagesView";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 interface SettingsControlCentreProps {
   initialSettings: Record<string, SystemSettingRecord>;

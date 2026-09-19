@@ -2,7 +2,7 @@
 import { permissionGroups } from "@/lib/admin/roles";
 import { RoleForm } from "@/components/admin/roles/RoleForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import adminStyles from "../../admin.module.css";
+import adminStyles from "../../adminStyles";
 
 export const metadata = {
   title: "New role | Admin | Pexpacks",

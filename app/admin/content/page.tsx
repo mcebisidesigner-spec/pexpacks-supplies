@@ -49,7 +49,7 @@ import {
   saveHeroEyebrowAction,
 } from "@/actions/cms";
 import { PAGE_HERO_SECTIONS } from "@/lib/admin/content-constants";
-import styles from "./content.module.css";
+import styles from "./cmsStyles";
 import { corePages as coreStyles } from "@/components/admin/views/CorePagesView";
 
 type ContentTab = "eyebrows" | "faqs" | "testimonials" | "resources";

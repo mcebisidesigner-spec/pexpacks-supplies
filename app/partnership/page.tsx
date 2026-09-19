@@ -5,7 +5,6 @@ import { PageHero } from "@/components/marketing/PageHero";
 import { Button } from "@/components/ui/Button";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { PartnershipPageContent } from "@/components/partnership/PartnershipPageContent";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
 import type { FAQ } from "@/data/faqs";
 
 const fallbackInstitutionalFaqs: FAQ[] = [
@@ -112,7 +111,7 @@ export default async function PartnerWithSchoolsPage() {
         panelTitle="What your school gets"
         panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"
       >
-        <div className={sectionStyles.buttonRow}>
+        <div className="flex flex-wrap gap-3">
           <Button href="#partnership-enquiry" variant="primary">
             Apply to Partner
           </Button>

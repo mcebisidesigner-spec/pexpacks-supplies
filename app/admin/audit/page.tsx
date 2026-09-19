@@ -5,8 +5,7 @@ import { DateField } from "@/components/admin/DateField";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Pagination } from "@/components/admin/Pagination";
 import { buildHref, formatDateTime, PAGE_SIZE } from "@/lib/admin/ui-utils";
-import adminStyles from "../admin.module.css";
-import styles from "./audit.module.css";
+import adminStyles from "../adminStyles";
 
 interface AuditPageProps {
   searchParams: Promise<{
@@ -68,7 +67,7 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
           canExport ? (
             <Link
               href={buildHref("/admin/audit/export", baseParams)}
-              className={styles.exportLink}
+              className="inline-flex items-center gap-2 bg-[var(--pex-bg)] text-[var(--a-text)] border border-[var(--db-border)] rounded-lg py-2.5 px-4 text-sm font-bold no-underline font-inherit"
             >
               Export CSV
             </Link>
@@ -188,12 +187,12 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
                 {logs.map((log) => (
                   <tr key={log.id}>
                     <td>{formatDateTime(log.created_at)}</td>
-                    <td className={styles.actorCell}>
+                    <td className="font-semibold text-[var(--a-text)]">
                       {log.actor_name ?? "—"}
                     </td>
-                    <td className={styles.actionCell}>{log.action}</td>
+                    <td className="font-mono text-xs font-bold text-[var(--a-text)]">{log.action}</td>
                     <td>
-                      <div className={styles.entityCell}>
+                      <div className="font-mono text-xs text-[var(--db-text-muted)]">
                         {log.entity_type}
                         {log.entity_id
                           ? ` · ${log.entity_id.slice(0, 12)}`
@@ -201,8 +200,8 @@ export default async function AuditPage({ searchParams }: AuditPageProps) {
                       </div>
                     </td>
                     <td>
-                      <div className={styles.summaryCell}>
-                        <span className={styles.summaryText}>
+                      <div className="max-w-[380px]">
+                        <span className="text-[var(--pex-text,var(--db-text-primary))]">
                           {log.summary}
                         </span>
                       </div>

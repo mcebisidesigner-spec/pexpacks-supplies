@@ -7,16 +7,47 @@ import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { FaqMarquee } from '@/components/shared/FaqMarquee'
 import { getFaqs, getWebsiteContent } from '@/lib/cms'
 import { buildMetadata } from '@/lib/seo'
-import heroStyles from '@/components/marketing/HeroBase.module.css'
-import sectionStyles from '@/components/marketing/MarketingSections.module.css'
-import cardStyles from '@/components/marketing/MarketingCards.module.css'
-import formStyles from '@/components/marketing/MarketingForms.module.css'
 
 export const metadata: Metadata = buildMetadata(
   'Add Your School',
   'Submit your school details so Pexpacks can prepare a school stationery pack page for your grade lists.',
   '/add-your-school',
 )
+
+// ── Shared layout tokens ─────────────────────────────────────────────────────
+const sectionCls =
+  'py-[var(--section-padding-y-desktop)] bg-transparent max-lg:py-[var(--section-padding-y-tablet)] max-[480px]:py-[var(--section-padding-y-mobile)]'
+const innerCls =
+  'w-full max-w-[var(--layout-max-width)] mx-auto px-[var(--gutter-desktop)] max-lg:px-[var(--gutter-mobile)]'
+const splitBandCls =
+  'rounded-[var(--radius-section)] p-[clamp(28px,5vw,54px)] grid grid-cols-[minmax(0,1fr)_minmax(260px,0.72fr)] gap-[clamp(28px,5vw,60px)] items-center bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] max-lg:grid-cols-1'
+const sectionEyebrowCls =
+  'm-[var(--section-eyebrow-margin)] text-[var(--section-eyebrow-color)] font-[var(--section-eyebrow-font-weight)] text-[var(--section-eyebrow-font-size)] tracking-[var(--section-eyebrow-letter-spacing)]'
+const buttonRowCls =
+  'mt-[26px] flex items-center flex-wrap gap-[var(--space-3)] max-lg:items-stretch max-lg:[&>*]:w-full'
+const checkListCls =
+  'm-0 p-0 list-none grid gap-[10px] [&_li]:relative [&_li]:pl-[28px] [&_li]:font-bold [&_li]:overflow-wrap-anywhere [&_li::before]:content-[""] [&_li::before]:absolute [&_li::before]:left-0 [&_li::before]:top-[0.38em] [&_li::before]:w-[12px] [&_li::before]:h-[12px] [&_li::before]:rounded-full [&_li::before]:bg-[var(--pex-keppel)]'
+
+// ── Card tokens ──────────────────────────────────────────────────────────────
+const infoGridCls = 'grid grid-cols-2 gap-[18px] max-lg:grid-cols-1'
+const infoCardCls =
+  'border-[var(--card-border)] rounded-[var(--radius-card)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] p-[26px]'
+const packCardCls =
+  'rounded-[var(--radius-card)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] overflow-hidden flex flex-col relative'
+const packCardHeadCls =
+  'py-[var(--space-5)] px-[var(--space-5)] pb-[var(--space-3)] min-w-0'
+const packTitleCls =
+  'm-0 text-[var(--pex-primary)] font-[var(--font-heading)] text-[var(--text-xl)] font-[var(--font-weight-bold)] leading-[1.2]'
+const packCardBodyCls =
+  'px-[var(--space-5)] grow flex flex-col gap-[var(--space-5)]'
+const packDescriptionCls =
+  'text-[var(--pex-text-muted)] m-0 text-[15px] leading-[1.45]'
+const packCardButtonWrapCls = 'px-[var(--space-5)] pb-[var(--space-5)]'
+const cardLinkCls = 'mt-[var(--space-5)] text-[var(--pex-keppel)] font-extrabold'
+
+// ── Form tokens ──────────────────────────────────────────────────────────────
+const formCardCls =
+  'p-[28px] bg-[var(--card-bg)] rounded-[var(--radius-card-lg)] [box-shadow:var(--card-shadow)] max-[480px]:p-[22px]'
 
 export default async function AddYourSchoolPage() {
   const [faqs, content] = await Promise.all([
@@ -40,7 +71,7 @@ export default async function AddYourSchoolPage() {
         panelText="Need a pack today?"
         panelTitle="Use a standard grade combo while your school list is being reviewed."
       >
-        <div className={sectionStyles.buttonRow}>
+        <div className={buttonRowCls}>
           <Button href="#school-request-form" variant="primary">
             Add your school
           </Button>
@@ -50,28 +81,38 @@ export default async function AddYourSchoolPage() {
         </div>
       </PageHero>
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={cardStyles.infoGrid}>
-            <article className={formStyles.formCard} id="school-request-form">
-              <p className={heroStyles.eyebrow}>School request</p>
+      <section className={sectionCls}>
+        <div className={innerCls}>
+          <div className={infoGridCls}>
+            <article
+              className={formCardCls}
+              id="school-request-form"
+              style={{ border: 'var(--card-border)' }}
+            >
+              {/* eyebrow — migrated from HeroBase.module.css */}
+              <p className="m-0 mb-[var(--space-4)] text-[var(--pex-keppel)] font-extrabold text-[var(--text-sm)] tracking-[0]">
+                School request
+              </p>
               <h2>Submit school details</h2>
               <AddSchoolForm />
             </article>
 
-            <article className={cardStyles.infoCard}>
+            <article
+              className={infoCardCls}
+              style={{ border: 'var(--card-border)' }}
+            >
               <SectionHeader
                 eyebrow="How it works"
                 title="What happens next?"
                 text="Pexpacks checks whether the school can be added and whether a standard pack can help while the official list is prepared."
               />
-              <ul className={sectionStyles.checkList}>
+              <ul className={checkListCls}>
                 <li>We confirm the school name and location.</li>
                 <li>We review the grade or stationery list requirement.</li>
                 <li>We recommend a school-specific or standard grade pack.</li>
                 <li>We help you move to an order or enquiry path.</li>
               </ul>
-              <div className={sectionStyles.buttonRow}>
+              <div className={buttonRowCls}>
                 <Button href="/contact">Talk to Us</Button>
               </div>
             </article>
@@ -83,17 +124,20 @@ export default async function AddYourSchoolPage() {
         <FaqMarquee faqs={faqs} />
       </div>
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
+      <section className={sectionCls}>
+        <div className={innerCls}>
+          <div
+            className={splitBandCls}
+            style={{ border: 'var(--card-border)' }}
+          >
             <div>
-              <p className={sectionStyles.sectionEyebrow}>Already listed?</p>
+              <p className={sectionEyebrowCls}>Already listed?</p>
               <h2>Find your school pack</h2>
               <p>
                 Search for your school now &mdash; if we already have the list,
                 you can order in seconds.
               </p>
-              <div className={sectionStyles.buttonRow}>
+              <div className={buttonRowCls}>
                 <Button href="/schools" variant="primary">
                   Search Schools
                 </Button>
@@ -102,18 +146,21 @@ export default async function AddYourSchoolPage() {
                 </Button>
               </div>
             </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
-                <h3 className={cardStyles.packTitle}>Contact us</h3>
+            <div
+              className={packCardCls}
+              style={{ border: 'var(--card-border)' }}
+            >
+              <div className={packCardHeadCls}>
+                <h3 className={packTitleCls}>Contact us</h3>
               </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
+              <div className={packCardBodyCls}>
+                <p className={packDescriptionCls}>
                   Questions about the school request process? Reach out to the
                   Pexpacks support team.
                 </p>
               </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/contact" className={cardStyles.cardLink}>
+              <div className={packCardButtonWrapCls}>
+                <Link href="/contact" className={cardLinkCls}>
                   Contact Pexpacks &rarr;
                 </Link>
               </div>

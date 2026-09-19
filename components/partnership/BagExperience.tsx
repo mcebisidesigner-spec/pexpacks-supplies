@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { UserCheck, Sparkles, Shield, Award } from "lucide-react";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
-import styles from "./Partnership.module.css";
 
 const GALLERY_IMAGES = [
   {
@@ -29,68 +28,68 @@ const GALLERY_IMAGES = [
 
 export function BagExperience() {
   return (
-    <section className={styles.sectionAlt} aria-labelledby="brand-experience-title">
-      <div className={styles.container}>
-        <div className={styles.brandExpGrid}>
+    <section className="py-[clamp(54px,7vw,96px)] relative bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-[var(--pex-border,#e1e7ea)]" aria-labelledby="brand-experience-title">
+      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 min-[981px]:grid-cols-[minmax(320px,1fr)_minmax(0,1.15fr)] gap-[clamp(32px,5vw,64px)] items-center">
           {/* Feature Highlights */}
           <div>
-            <p className={styles.eyebrow}>The physical brand experience</p>
-            <h2 id="brand-experience-title" className={styles.sectionTitle}>
+            <p className="mb-[14px] text-[var(--pex-keppel,#1a7a77)] text-sm font-extrabold text-left">The physical brand experience</p>
+            <h2 id="brand-experience-title" className="mb-[14px] text-[var(--pex-navy,#1a2a40)] font-heading text-[clamp(32px,4.6vw,56px)] font-extrabold leading-[1.05] tracking-[-0.01em] text-left">
               From Classroom Essential to Walking Brand Asset.
             </h2>
-            <p className={styles.sectionLead} style={{ marginBottom: "28px" }}>
+            <p className="max-w-[760px] mb-7 text-[var(--pex-text-muted,#64748b)] text-lg leading-[1.45] text-left">
               Pexpacks delivery packaging is purpose-designed for long-term scholastic
               utility rather than disposable waste. Every pack serves as a durable,
               functional extension of your school’s pride and identity.
             </p>
 
-            <div className={styles.featureList}>
-              <div className={styles.featureItem}>
-                <div className={styles.featureIconBox}>
+            <div className="flex flex-col gap-5">
+              <div className="flex gap-4 items-start">
+                <div className="w-11 h-11 rounded-xl bg-[rgba(26,122,119,0.1)] text-[var(--pex-keppel,#1a7a77)] flex items-center justify-center shrink-0">
                   <UserCheck size={20} />
                 </div>
-                <div className={styles.featureText}>
-                  <h3 className={styles.featureTitle}>Clear Learner ID Window</h3>
-                  <p className={styles.featureDesc}>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-[16.5px] font-bold text-[var(--pex-navy,#1a2a40)] m-0">Clear Learner ID Window</h3>
+                  <p className="text-sm text-[var(--pex-muted,#4d5a5d)] leading-[1.55] m-0">
                     Allows rapid teacher identification and classroom bag allocation on day one,
                     preventing mix-ups and ensuring smooth desk distribution.
                   </p>
                 </div>
               </div>
 
-              <div className={styles.featureItem}>
-                <div className={styles.featureIconBox}>
+              <div className="flex gap-4 items-start">
+                <div className="w-11 h-11 rounded-xl bg-[rgba(26,122,119,0.1)] text-[var(--pex-keppel,#1a7a77)] flex items-center justify-center shrink-0">
                   <Shield size={20} />
                 </div>
-                <div className={styles.featureText}>
-                  <h3 className={styles.featureTitle}>Reflective Safety Detailing</h3>
-                  <p className={styles.featureDesc}>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-[16.5px] font-bold text-[var(--pex-navy,#1a2a40)] m-0">Reflective Safety Detailing</h3>
+                  <p className="text-sm text-[var(--pex-muted,#4d5a5d)] leading-[1.55] m-0">
                     Subtle reflective piping enhances learner visibility during early-morning
                     winter drop-offs and everyday transport to campus.
                   </p>
                 </div>
               </div>
 
-              <div className={styles.featureItem}>
-                <div className={styles.featureIconBox}>
+              <div className="flex gap-4 items-start">
+                <div className="w-11 h-11 rounded-xl bg-[rgba(26,122,119,0.1)] text-[var(--pex-keppel,#1a7a77)] flex items-center justify-center shrink-0">
                   <Sparkles size={20} />
                 </div>
-                <div className={styles.featureText}>
-                  <h3 className={styles.featureTitle}>Water-Resistant Construction</h3>
-                  <p className={styles.featureDesc}>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-[16.5px] font-bold text-[var(--pex-navy,#1a2a40)] m-0">Water-Resistant Construction</h3>
+                  <p className="text-sm text-[var(--pex-muted,#4d5a5d)] leading-[1.55] m-0">
                     Constructed with heavy-gauge protective fabrics and reinforced seams
                     to protect costly exercise books and stationery against inclement weather.
                   </p>
                 </div>
               </div>
 
-              <div className={styles.featureItem}>
-                <div className={styles.featureIconBox}>
+              <div className="flex gap-4 items-start">
+                <div className="w-11 h-11 rounded-xl bg-[rgba(26,122,119,0.1)] text-[var(--pex-keppel,#1a7a77)] flex items-center justify-center shrink-0">
                   <Award size={20} />
                 </div>
-                <div className={styles.featureText}>
-                  <h3 className={styles.featureTitle}>School Identity &amp; Crest Integration</h3>
-                  <p className={styles.featureDesc}>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-[16.5px] font-bold text-[var(--pex-navy,#1a2a40)] m-0">School Identity &amp; Crest Integration</h3>
+                  <p className="text-sm text-[var(--pex-muted,#4d5a5d)] leading-[1.55] m-0">
                     Your institutional crest and school colours are professionally integrated,
                     providing proud visual cohesion throughout the academic year.
                   </p>
@@ -100,10 +99,10 @@ export function BagExperience() {
           </div>
 
           {/* Gallery Showcase */}
-          <div className={styles.galleryGrid} aria-label="Physical stationery pack gallery">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Physical stationery pack gallery">
             {GALLERY_IMAGES.map((img) => (
-              <div key={img.src} className={styles.galleryCard}>
-                <div className={styles.galleryImageContainer}>
+              <div key={img.src} className="rounded-2xl overflow-hidden border border-[var(--pex-border,#e1e7ea)] bg-white shadow-[0_8px_24px_rgba(26,42,64,0.05)]">
+                <div className="relative w-full aspect-[4/3]">
                   <Image
                     src={img.src}
                     alt={img.alt}
@@ -114,7 +113,7 @@ export function BagExperience() {
                     style={{ objectFit: "cover" }}
                   />
                 </div>
-                <p className={styles.galleryCaption}>{img.caption}</p>
+                <p className="p-[12px_14px] text-[12.5px] font-semibold text-[var(--pex-navy,#1a2a40)] m-0 bg-white">{img.caption}</p>
               </div>
             ))}
           </div>

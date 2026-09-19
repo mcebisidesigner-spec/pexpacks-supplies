@@ -22,7 +22,7 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { FieldError } from "@/components/admin/ui/Form";
 import { StickyFormBar } from "@/components/admin/ui/StickyFormBar";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 
 interface SchoolFormProps {
   school: SchoolRow | null;

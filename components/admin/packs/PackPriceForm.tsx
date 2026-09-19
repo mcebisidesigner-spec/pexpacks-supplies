@@ -8,7 +8,7 @@ import { Save } from "lucide-react";
 import { updatePackPriceAction } from "@/app/admin/packs/actions";
 import type { PackFormState } from "@/lib/admin/packs";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 
 const GRADES = [

@@ -1,157 +1,126 @@
-import { describe, it, expect } from "vitest";
-import { PEXPACKS_SYSTEM_PROMPT } from "@/lib/ai/prompts";
+import { describe, expect, it } from "vitest";
+import { NextRequest } from "next/server";
 import { POST } from "@/app/api/chat/route";
+import { buildPexReply, detectPexIntent, PexChatResponseSchema } from "@/lib/chat/pex";
 
-const ESCALATION_PATTERNS = [
-  /how\s+mu(?:ch|sh|st)/i,
-  /\bhow\s+expensive\b/i,
-  /\bprice\b/i,
-  /\bpricing\b/i,
-  /\bcost\b/i,
-  /\bcosts\b/i,
-  /\bquote\b/i,
-  /\bquotation\b/i,
-  /\brate\b/i,
-  /\bamount\b/i,
-  /\bdiscount\b/i,
-  /\bbulk\b/i,
-  /\bcustom list\b/i,
-  /\bschool list\b/i,
-  /\bunlisted\b/i,
-  /\bnot listed\b/i,
-  /\bsend.*list\b/i,
-  /\bupload.*list\b/i,
-  /\bspecial order\b/i,
-  /\bwholesale\b/i,
-];
+function chatRequest(body: unknown, ip = "198.51.100.10") {
+  return new NextRequest("http://localhost:3000/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Origin: "http://localhost:3000",
+      "x-forwarded-for": ip,
+    },
+    body: JSON.stringify(body),
+  });
+}
 
-describe("Pexpacks Assistant System Prompt", () => {
-  it("contains core mission and identity", () => {
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("Stationery sorted. Time saved.");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("pexpacks.co.za");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("South African school stationery");
+describe("Pex intent routing", () => {
+  it("routes purchasing language to the school journey", () => {
+    expect(detectPexIntent("How do I order stationery?")).toBe("find_school");
+    expect(detectPexIntent("I need a Grade 3 pack")).toBe("find_school_pack");
   });
 
-  it("enforces strict anti-hallucination pricing boundaries", () => {
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("PRICING, QUOTATIONS & HUMAN ESCALATION");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("You must NOT invent, estimate, calculate or guess");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("Chat with us on WhatsApp");
+  it("keeps Pexcover and tracking on their protected journeys", () => {
+    expect(detectPexIntent("How does Pexcover work?")).toBe("pexcover_information");
+    expect(detectPexIntent("Please track my order")).toBe("order_tracking");
   });
 
-  it("covers key delivery streams and payment options", () => {
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("Annual Pre-Orders");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("Year-Round Standard Orders");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("Happy Pay");
-    expect(PEXPACKS_SYSTEM_PROMPT).toContain("Paxi / PEP");
+  it("never uses a static price range for pricing-related prompts", () => {
+    const reply = buildPexReply("How much will payment cost?");
+    expect(reply.text).not.toContain("R450");
+    expect(reply.text).toContain("checkout");
+  });
+
+  it("returns task choices instead of an unrelated greeting for unknown input", () => {
+    const reply = buildPexReply("Can you help?");
+    expect(reply.intent).toBe("unknown_intent");
+    expect(reply.handoffRecommended).toBe(false);
   });
 });
 
-describe("Escalation Pattern Matcher", () => {
-  it("triggers on quotation requests", () => {
-    const input = "Can you give me a quote for 80 grade 5 stationery packs?";
-    const matched = ESCALATION_PATTERNS.some((p) => p.test(input));
-    expect(matched).toBe(true);
+describe("Pex chat API", () => {
+  it("returns a validated structured response", async () => {
+    const response = await POST(chatRequest({
+      messages: [{ role: "user", content: "I need to upload a stationery list" }],
+      context: { pathname: "/order" },
+    }));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    await expect(response.json()).resolves.toMatchObject({
+      intent: "upload_stationery_list",
+      actions: [{ href: "/order" }],
+    });
   });
 
-  it("triggers on 'how mush / how much' inquiries", () => {
-    const input = "How mush are the grade packs";
-    const matched = ESCALATION_PATTERNS.some((p) => p.test(input));
-    expect(matched).toBe(true);
-  });
+  it("rejects malformed, oversized, and cross-origin requests", async () => {
+    const malformed = await POST(chatRequest({ messages: [] }, "198.51.100.11"));
+    expect(malformed.status).toBe(400);
 
-  it("triggers on unlisted school requests", () => {
-    const input = "Our school is not listed on the website yet";
-    const matched = ESCALATION_PATTERNS.some((p) => p.test(input));
-    expect(matched).toBe(true);
-  });
+    const oversized = await POST(chatRequest({
+      messages: [{ role: "user", content: "x".repeat(1201) }],
+    }, "198.51.100.12"));
+    expect(oversized.status).toBe(400);
 
-  it("does not trigger on general questions like delivery or happy pay", () => {
-    const input = "How long does standard courier delivery take to Durban?";
-    const matched = ESCALATION_PATTERNS.some((p) => p.test(input));
-    expect(matched).toBe(false);
+    const crossOrigin = new NextRequest("http://localhost:3000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: "https://attacker.invalid", "x-forwarded-for": "198.51.100.13" },
+      body: JSON.stringify({ messages: [{ role: "user", content: "hello" }] }),
+    });
+    expect((await POST(crossOrigin)).status).toBe(403);
   });
 });
-
-describe("Chat API Route Handler", () => {
-  it("returns a streaming response for delivery inquiries", async () => {
-    const req = new Request("http://localhost:3000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: [
-          {
-            id: "msg-1",
-            role: "user",
-            content: "How long does delivery take?",
-          },
-        ],
-      }),
+describe("Pex public catalogue boundary", () => {
+  it("declares a restricted public product projection without cost or supplier fields", () => {
+    const response = PexChatResponseSchema.parse({
+      intent: "product_search",
+      text: "Catalogue result",
+      actions: [],
+      quickReplies: [],
+      handoffRecommended: false,
+      productCards: [{ id: "item-1", name: "Pencil", category: null, description: null, unit: "each", price: 10, requiresPexcover: false, costPrice: 4, supplier: "Private" }],
     });
-
-    const res = await POST(req);
-    expect(res.status).toBe(200);
-    expect(res.headers.get("content-type")).toContain("text/event-stream");
-
-    const body = await res.text();
-    expect(body).toContain("Year-Round Orders");
+    expect(response.productCards[0]).not.toHaveProperty("costPrice");
+    expect(response.productCards[0]).not.toHaveProperty("supplier");
   });
 
-  it("returns 400 if messages are missing or malformed", async () => {
-    const req = new Request("http://localhost:3000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-
-    const res = await POST(req);
-    expect(res.status).toBe(400);
+  it("keeps the order-tray action reversible", () => {
+    const reply = buildPexReply("Open my cart");
+    expect(reply.actions).toContainEqual(expect.objectContaining({ id: "open-tray", href: "/checkout" }));
   });
-
-  it("emits valid text-start and text-delta chunks for school inquiry", async () => {
-    const req = new Request("http://localhost:3000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: [
-          {
-            id: "msg-2",
-            role: "user",
-            parts: [{ type: "text", text: "Primrose hill grade1" }],
-          },
-        ],
-      }),
-    });
-
-    const res = await POST(req);
-    expect(res.status).toBe(200);
-
-    const body = await res.text();
-    expect(body).toContain("text-start");
-    expect(body).toContain("text-delta");
-    expect(body).toContain("Primrose Hill Primary");
-  });
-
-  it("returns distinct pricing response for 'How mush are the grade packs'", async () => {
-    const req = new Request("http://localhost:3000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: [
-          {
-            id: "msg-3",
-            role: "user",
-            parts: [{ type: "text", text: "How mush are the grade packs" }],
-          },
-        ],
-      }),
-    });
-
-    const res = await POST(req);
-    expect(res.status).toBe(200);
-
-    const body = await res.text();
-    expect(body).toContain("R450 to R890");
-    expect(body).toContain("Customise & Save");
-    expect(body).not.toContain("Primrose Hill Primary");
+});
+describe("Pex pack-to-tray boundary", () => {
+  it("rejects internal pricing fields in a pack card before it can reach the browser", () => {
+    expect(() => PexChatResponseSchema.parse({
+      intent: "find_school_pack",
+      text: "Pack result",
+      actions: [],
+      quickReplies: [],
+      handoffRecommended: false,
+      packCards: [{
+        id: "pack-1",
+        title: "Grade R Stationery Pack",
+        grade: "Grade R",
+        gradeSlug: "grade-r",
+        price: 349.19,
+        href: "/schools/example-school",
+        schoolId: "school-1",
+        schoolSlug: "example-school",
+        schoolName: "Example School",
+        items: [{
+          id: "item-1",
+          name: "Exercise Book",
+          quantity: 1,
+          unitPrice: 22.08,
+          requiresPexcover: true,
+          pexcoCode: "PEXC002",
+          pexcoRateCents: 1400,
+          pexcoRateActive: true,
+          supplierCost: 16,
+        }],
+        internalMargin: 38,
+      }],
+    })).toThrow();
   });
 });

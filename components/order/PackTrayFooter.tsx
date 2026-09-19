@@ -50,22 +50,22 @@ export function PackTrayFooter() {
 
   if (showSchoolChoice) {
     return (
-      <div className="sticky bottom-0 z-10 mt-auto p-4 sm:p-5 md:px-6 pb-[calc(16px+env(safe-area-inset-bottom,0px))] border-t border-border bg-white/95 backdrop-blur-md shadow-[0_-16px_34px_rgba(15,37,55,0.08)] grid gap-3">
-        <div className="grid gap-2 p-4 border border-border rounded-2xl bg-slate-50">
-          <p className="m-0 mb-2 text-primary font-bold text-sm">
+      <div className="sticky bottom-0 z-10 mt-auto p-4 sm:p-5 md:px-6 pb-[calc(16px+env(safe-area-inset-bottom,0px))] border-t border-pex-border bg-white/95 backdrop-blur-md shadow-[0_-16px_34px_rgba(15,37,55,0.08)] grid gap-3">
+        <div className="grid gap-2 p-4 border border-pex-border rounded-2xl bg-slate-50">
+          <p className="m-0 mb-2 text-pex-navy font-bold text-sm">
             Is the next learner at the same school?
           </p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className="flex-1 min-w-[130px] min-h-[44px] border border-border hover:border-[#219e9a] rounded-full bg-background text-primary hover:text-[#219e9a] text-sm font-bold cursor-pointer transition-colors"
+              className="flex-1 min-w-[130px] min-h-[44px] border border-pex-border hover:border-pex-keppel rounded-full bg-white text-pex-navy hover:text-pex-keppel text-sm font-bold cursor-pointer transition-colors"
               onClick={handleSameSchool}
             >
               Same school
             </button>
             <button
               type="button"
-              className="flex-1 min-w-[130px] min-h-[44px] border border-border hover:border-[#219e9a] rounded-full bg-background text-primary hover:text-[#219e9a] text-sm font-bold cursor-pointer transition-colors"
+              className="flex-1 min-w-[130px] min-h-[44px] border border-pex-border hover:border-pex-keppel rounded-full bg-white text-pex-navy hover:text-pex-keppel text-sm font-bold cursor-pointer transition-colors"
               onClick={handleDifferentSchool}
             >
               Different school
@@ -77,33 +77,33 @@ export function PackTrayFooter() {
   }
 
   return (
-    <div className="sticky bottom-0 z-10 mt-auto p-4 sm:p-5 md:px-6 pb-[calc(16px+env(safe-area-inset-bottom,0px))] border-t border-border bg-white/95 backdrop-blur-md shadow-[0_-16px_34px_rgba(15,37,55,0.08)] grid gap-3">
+    <div className="sticky bottom-0 z-10 mt-auto p-4 sm:p-5 md:px-6 pb-[calc(16px+env(safe-area-inset-bottom,0px))] border-t border-pex-border bg-white/95 backdrop-blur-md shadow-[0_-16px_34px_rgba(15,37,55,0.08)] grid gap-3">
       <div className="flex justify-between items-baseline flex-wrap gap-2">
-        <span className="text-primary text-sm sm:text-base font-bold">
+        <span className="text-pex-navy text-sm sm:text-base font-bold">
           {packs.length === 1 ? "Total" : "Combined total"}
         </span>
-        <span className="text-[#1a7a77] text-xl sm:text-2xl font-heading font-black leading-none">
+        <span className="text-pex-keppel-dark text-xl sm:text-2xl font-heading font-black leading-none">
           {formatCurrency(total)}
         </span>
       </div>
       <div className="grid gap-2.5">
         <button
           type="button"
-          className="w-full min-h-[52px] border-0 rounded-full bg-[#ff6f59] hover:bg-[#ff6f59]/90 active:scale-[0.99] text-white font-heading text-base sm:text-[17px] font-extrabold cursor-pointer flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full min-h-[52px] border-0 rounded-full bg-pex-coral hover:bg-pex-coral-hover active:scale-[0.99] text-white font-heading text-base sm:text-[17px] font-extrabold cursor-pointer flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleCheckout}
         >
           Checkout &amp; Pay Now
         </button>
         <button
           type="button"
-          className="w-full min-h-[48px] border border-border hover:border-[#219e9a] rounded-full bg-background text-primary hover:text-[#219e9a] font-heading text-sm sm:text-base font-bold cursor-pointer flex items-center justify-center gap-2 transition-all"
+          className="w-full min-h-[48px] border border-pex-border hover:border-pex-keppel rounded-full bg-white text-pex-navy hover:text-pex-keppel font-heading text-sm sm:text-base font-bold cursor-pointer flex items-center justify-center gap-2 transition-all"
           onClick={handleAddAnotherLearner}
         >
           Add Another Learner
         </button>
         <button
           type="button"
-          className="border-0 p-2 bg-transparent text-muted-foreground hover:text-destructive text-xs font-bold underline underline-offset-4 cursor-pointer transition-colors mx-auto"
+          className="border-0 p-2 bg-transparent text-pex-muted hover:text-destructive text-xs font-bold underline underline-offset-4 cursor-pointer transition-colors mx-auto"
           onClick={handleClearOrder}
         >
           Clear order

@@ -7,8 +7,7 @@ import { CTASection } from "@/components/marketing/CTASection";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import { getFaqs, getWebsiteContent } from "@/lib/cms";
 import { buildMetadata } from "@/lib/seo";
-import sectionStyles from "@/components/marketing/MarketingSections.module.css";
-import cardStyles from "@/components/marketing/MarketingCards.module.css";
+import { Suspense } from "react";
 
 export const metadata: Metadata = buildMetadata(
   "Track Order",
@@ -16,7 +15,29 @@ export const metadata: Metadata = buildMetadata(
   "/track-order",
 );
 
-import { Suspense } from "react";
+// ── Shared layout tokens ────────────────────────────────────────────────────
+const sectionCls =
+  "py-[var(--section-padding-y-desktop)] bg-transparent max-lg:py-[var(--section-padding-y-tablet)] max-[480px]:py-[var(--section-padding-y-mobile)]";
+const innerCls =
+  "w-full max-w-[var(--layout-max-width)] mx-auto px-[var(--gutter-desktop)] max-lg:px-[var(--gutter-mobile)]";
+const splitBandCls =
+  "rounded-[var(--radius-section)] p-[clamp(28px,5vw,54px)] grid grid-cols-[minmax(0,1fr)_minmax(260px,0.72fr)] gap-[clamp(28px,5vw,60px)] items-center border-[var(--card-border)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] max-lg:grid-cols-1";
+const sectionEyebrowCls =
+  "m-[var(--section-eyebrow-margin)] text-[var(--section-eyebrow-color)] font-[var(--section-eyebrow-font-weight)] text-[var(--section-eyebrow-font-size)] tracking-[var(--section-eyebrow-letter-spacing)]";
+const buttonRowCls =
+  "mt-[26px] flex items-center flex-wrap gap-[var(--space-3)] max-lg:items-stretch max-lg:[&>*]:w-full";
+
+// ── Card tokens ─────────────────────────────────────────────────────────────
+const packCardCls =
+  "border-[var(--card-border)] rounded-[var(--radius-card)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] overflow-hidden flex flex-col relative";
+const packCardHeadCls =
+  "py-[var(--space-5)] px-[var(--space-5)] pb-[var(--space-3)] min-w-0";
+const packCardBodyCls =
+  "px-[var(--space-5)] grow flex flex-col gap-[var(--space-5)]";
+const packDescriptionCls = "text-[var(--pex-text-muted)] m-0 text-[15px] leading-[1.45]";
+const packCardButtonWrapCls = "px-[var(--space-5)] pb-[var(--space-5)]";
+const cardLinkCls =
+  "mt-[var(--space-5)] text-[var(--pex-keppel)] font-extrabold";
 
 export default async function TrackOrderPage() {
   const [faqs, content] = await Promise.all([
@@ -34,7 +55,6 @@ export default async function TrackOrderPage() {
       : "Check your stationery pack status";
   const visibleTrackingFaqs = faqs;
 
-
   return (
     <>
       <PageHero
@@ -43,8 +63,8 @@ export default async function TrackOrderPage() {
         panelTitle="Order Tracking"
         panelText="Stay updated on your pack."
       />
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
+      <section className={sectionCls}>
+        <div className={innerCls}>
           <Suspense
             fallback={
               <div
@@ -75,17 +95,17 @@ export default async function TrackOrderPage() {
         secondaryLabel="Upload Your School List"
       />
 
-      <section className={sectionStyles.section}>
-        <div className={sectionStyles.inner}>
-          <div className={sectionStyles.splitBand}>
+      <section className={sectionCls}>
+        <div className={innerCls}>
+          <div className={splitBandCls} style={{ border: "var(--card-border)" }}>
             <div>
-              <p className={sectionStyles.sectionEyebrow}>Need help?</p>
+              <p className={sectionEyebrowCls}>Need help?</p>
               <h2>Contact Pexpacks</h2>
               <p>
                 If you cannot find your order status, reach out to the support
                 team for assistance.
               </p>
-              <div className={sectionStyles.buttonRow}>
+              <div className={buttonRowCls}>
                 <Button href="/contact" variant="primary">
                   Contact Support
                 </Button>
@@ -94,18 +114,18 @@ export default async function TrackOrderPage() {
                 </Button>
               </div>
             </div>
-            <div className={cardStyles.packCard}>
-              <div className={cardStyles.packCardHead}>
+            <div className={packCardCls} style={{ border: "var(--card-border)" }}>
+              <div className={packCardHeadCls}>
                 <h3 style={{ fontSize: "20px" }}>Start a new order</h3>
               </div>
-              <div className={cardStyles.packCardBody}>
-                <p className={cardStyles.packDescription}>
+              <div className={packCardBodyCls}>
+                <p className={packDescriptionCls}>
                   Ready to order? Find your school pack or have your school list
                   packed exactly as specified.
                 </p>
               </div>
-              <div className={cardStyles.packCardButtonWrap}>
-                <Link href="/schools" className={cardStyles.cardLink}>
+              <div className={packCardButtonWrapCls}>
+                <Link href="/schools" className={cardLinkCls}>
                   Find school packs &rarr;
                 </Link>
               </div>

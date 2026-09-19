@@ -1,7 +1,6 @@
 "use client";
 
 import type { MouseEventHandler } from "react";
-import styles from "./ViewCompleteListButton.module.css";
 
 type ViewCompleteListButtonProps = {
   ariaLabel: string;
@@ -17,7 +16,20 @@ export function ViewCompleteListButton({
   return (
     <button
       type="button"
-      className={[styles.button, className].filter(Boolean).join(" ")}
+      className={[
+        "inline-flex items-center justify-center gap-[6px] min-h-10",
+        "border-0 rounded-full bg-transparent",
+        "text-[var(--pex-text-muted)] font-inherit text-[var(--text-2xs)] font-bold leading-none",
+        "underline underline-offset-[3px]",
+        "cursor-pointer transition-[var(--interactive-transition)]",
+        "hover:text-[var(--color-brand-teal)]",
+        "focus-visible:outline-2 focus-visible:outline-[var(--color-brand-orange)] focus-visible:outline-offset-4 focus-visible:text-[var(--pex-primary)]",
+        "motion-reduce:transition-none",
+        "max-md:min-h-[var(--touch-target-min)]",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       onClick={onClick}
       aria-label={ariaLabel}
     >

@@ -8,7 +8,6 @@ import {
   PEXCOVER_PAPER_STYLES,
   type PexcoverPaperStyle,
 } from "@/lib/pricing/pexcover-paper-style";
-import styles from "./PexcoverDrawerCard.module.css";
 
 export interface PackOrderState {
   packId: string;
@@ -228,7 +227,7 @@ function SwatchThumbnailPreview({ option }: { option: PaperStyleOption }) {
         alt={option.name}
         fill
         sizes="(max-width: 380px) 90px, (max-width: 768px) 110px, 130px"
-        className={styles.swatchImage}
+        className="object-cover w-full h-full block"
         onError={() => setImageError(true)}
       />
     );
@@ -274,16 +273,21 @@ export function PexcoverDrawerCard({
   return (
     <div
       className={cn(
-        styles.card,
-        enabled && !isDisabled && styles.cardActive,
-        isDisabled && styles.cardDisabled,
+        "flex flex-col w-full rounded-xl border box-border overflow-hidden transition-all duration-200",
+        enabled && !isDisabled
+          ? "bg-[#EBF7F5] border-[#BBE5DE] shadow-[0_2px_10px_rgba(30,116,104,0.08)]"
+          : "bg-slate-50 border-slate-200",
+        isDisabled && "opacity-60 cursor-not-allowed"
       )}
       data-testid="pexcover-drawer-card"
       data-active={enabled && !isDisabled}
     >
       {/* ── Top Row Summary (Clickable Checkbox + Details + Price) ── */}
       <div
-        className={cn(styles.topRow, isDisabled && styles.topRowDisabled)}
+        className={cn(
+          "flex items-center gap-3 px-3.5 py-2.5 select-none bg-transparent border-none w-full text-left box-border",
+          isDisabled ? "cursor-not-allowed" : "cursor-pointer"
+        )}
         onClick={handleRowClick}
         role="button"
         tabIndex={isDisabled ? -1 : 0}
@@ -297,7 +301,7 @@ export function PexcoverDrawerCard({
         }}
       >
         <div
-          className={styles.checkboxWrapper}
+          className="relative flex items-center justify-center shrink-0"
           onClick={(e) => e.stopPropagation()}
         >
           <input
@@ -306,13 +310,13 @@ export function PexcoverDrawerCard({
             checked={enabled && !isDisabled}
             disabled={isDisabled}
             onChange={handleCheckboxChange}
-            className={styles.nativeCheckbox}
+            className="peer absolute opacity-0 w-5 h-5 cursor-inherit m-0 z-[1]"
             aria-label="Add Book Covering by Pexcover"
           />
           <div
             className={cn(
-              styles.customCheckbox,
-              enabled && !isDisabled && styles.customCheckboxChecked,
+              "w-5 h-5 rounded-[5px] border border-slate-300 bg-white flex items-center justify-center transition-all duration-180 text-white peer-focus-visible:outline-2 peer-focus-visible:outline-pex-keppel peer-focus-visible:outline-offset-2",
+              enabled && !isDisabled && "bg-pex-keppel border-pex-keppel shadow-[0_2px_6px_rgba(30,116,104,0.35)]"
             )}
             aria-hidden="true"
           >
@@ -320,12 +324,12 @@ export function PexcoverDrawerCard({
           </div>
         </div>
 
-        <div className={styles.serviceInfo}>
-          <div className={styles.serviceTitleRow}>
-            <span className={styles.serviceTitle}>Pexcover</span>
-            <span className={styles.serviceBadge}>Done-For-You</span>
+        <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="m-0 text-[13px] font-bold text-slate-900 leading-snug tracking-tight">Pexcover</span>
+            <span className="inline-flex items-center px-1.5 py-px rounded-full bg-pex-keppel/10 text-pex-keppel text-[10px] font-bold uppercase tracking-wider">Done-For-You</span>
           </div>
-          <span className={styles.serviceSubtitle}>
+          <span className="m-0 text-[11.5px] text-slate-500 leading-snug">
             {isDisabled
               ? "No coverable books in this pack"
               : `${coverableCount} book${coverableCount === 1 ? "" : "s"} covered with protective wrap`}
@@ -334,8 +338,8 @@ export function PexcoverDrawerCard({
 
         <div
           className={cn(
-            styles.priceTag,
-            isDisabled && styles.priceTagDisabled,
+            "text-[13.5px] font-extrabold whitespace-nowrap tracking-tight",
+            isDisabled ? "text-slate-400 font-semibold" : "text-pex-keppel"
           )}
         >
           {isDisabled ? "—" : formatRandPrice(coveringPriceCents)}
@@ -346,27 +350,27 @@ export function PexcoverDrawerCard({
       <div
         id={`pexcover-accordion-${packId}`}
         className={cn(
-          styles.accordion,
-          enabled && !isDisabled && styles.accordionOpen,
+          "grid transition-[grid-template-rows,opacity] duration-250 ease-out",
+          enabled && !isDisabled ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         )}
         aria-hidden={!enabled || isDisabled}
       >
-        <div className={styles.accordionContent}>
-          <div className={styles.accordionBody}>
+        <div className="overflow-hidden flex flex-col">
+          <div className="px-3.5 pb-3.5 pt-1 flex flex-col gap-2.5 border-t border-dashed border-pex-keppel/25">
             {/* Guidance Bar */}
-            <div className={styles.selectorGuidance}>
-              <span className={styles.selectorLabel}>
+            <div className="flex items-center justify-between mt-1.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-pex-keppel flex items-center gap-1">
                 <Sparkles size={11} strokeWidth={2.5} />
                 Decorative Paper Style
               </span>
-              <span className={styles.selectorNote}>
+              <span className="text-[10.5px] text-slate-500 flex items-center gap-1">
                 <Shield size={11} /> Clear sleeve included
               </span>
             </div>
 
             {/* 3-Column Swatch Grid */}
             <div
-              className={styles.swatchGrid}
+              className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full box-border"
               role="radiogroup"
               aria-label="Pexcover Paper Style Options"
             >
@@ -380,42 +384,44 @@ export function PexcoverDrawerCard({
                     aria-checked={isSelected}
                     tabIndex={enabled && !isDisabled ? 0 : -1}
                     className={cn(
-                      styles.swatchCard,
-                      isSelected && styles.swatchCardSelected,
+                      "relative flex flex-col items-center p-1.5 pb-2 sm:p-2 border rounded-xl bg-white cursor-pointer transition-all text-center select-none outline-none font-inherit box-border hover:border-pex-keppel/40 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-pex-keppel focus-visible:outline-offset-2",
+                      isSelected
+                        ? "border-pex-keppel ring-2 ring-pex-keppel/25 shadow-sm"
+                        : "border-slate-200"
                     )}
                     onClick={() => onSelectStyle(packId, opt.id)}
                     title={opt.description}
                   >
                     {/* Fixed Height Swatch Thumbnail with Protective Sleeve Sheen */}
-                    <div className={styles.swatchThumbnail}>
+                    <div className="relative w-full h-[54px] sm:h-[62px] rounded-lg overflow-hidden flex items-center justify-center box-border after:content-[''] after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-br after:from-white/45 after:via-white/15 after:to-black/10 after:pointer-events-none after:z-[1] after:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)]">
                       <SwatchThumbnailPreview option={opt} />
                       {isSelected ? (
                         <div
-                          className={styles.checkmarkBadge}
+                          className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full bg-pex-keppel border border-pex-keppel text-white text-[10.5px] font-black flex items-center justify-center shadow-md z-[3] animate-[popIn_0.18s_ease-out]"
                           aria-label="Selected style"
                         >
                           ✓
                         </div>
                       ) : (
                         <div
-                          className={styles.unselectedCheckbox}
+                          className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full bg-white/90 border border-slate-400 shadow-sm transition-all z-[3]"
                           aria-hidden="true"
                         />
                       )}
                     </div>
 
-                    <p className={styles.swatchTitle}>{opt.name}</p>
-                    <p className={styles.swatchDesc}>{opt.description}</p>
+                    <p className="m-0 mt-1.5 text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">{opt.name}</p>
+                    <p className="m-0 mt-0.5 text-[8.5px] sm:text-[9px] text-slate-500 leading-tight line-clamp-2">{opt.description}</p>
                   </button>
                 );
               })}
             </div>
 
             {/* Selection Confirmation Pill */}
-            <div className={styles.selectionPill}>
-              <span className={styles.selectionPillText}>
+            <div className="flex items-center justify-between px-2.5 py-1.5 bg-pex-keppel/10 rounded-md text-[10.5px] text-pex-keppel-dark font-medium">
+              <span className="flex items-center gap-1">
                 Selected:{" "}
-                <span className={styles.selectionPillName}>
+                <span className="font-bold">
                   {selectedOption.name}
                 </span>
               </span>

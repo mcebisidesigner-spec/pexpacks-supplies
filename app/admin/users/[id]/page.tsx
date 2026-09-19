@@ -27,8 +27,7 @@ import {
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import adminStyles from "../../admin.module.css";
-import styles from "../users.module.css";
+import adminStyles from "../../adminStyles";
 
 interface UserDetailPageProps {
   params: Promise<{ id: string }>;
@@ -88,48 +87,52 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
         }
       />
 
-      <div className={styles.detailMeta}>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Email</div>
-          <div className={styles.metaValue}>{user.email ?? "—"}</div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 mb-5">
+        <div className="bg-[var(--db-surface-inner)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Email</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{user.email ?? "—"}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Status</div>
-          <div className={styles.metaValue}>
+        <div className="bg-[var(--db-surface-inner)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Status</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">
             <StatusBadge status={userStatus} showDot />
           </div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Joined</div>
-          <div className={styles.metaValue}>{formatDateTime(user.created_at)}</div>
+        <div className="bg-[var(--db-surface-inner)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Joined</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{formatDateTime(user.created_at)}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Last sign in</div>
-          <div className={styles.metaValue}>{formatDateTime(user.last_sign_in_at)}</div>
+        <div className="bg-[var(--db-surface-inner)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Last sign in</div>
+          <div className="mt-1 text-sm font-bold text-[var(--a-text)] break-words">{formatDateTime(user.last_sign_in_at)}</div>
         </div>
-        <div className={styles.metaItem}>
-          <div className={styles.metaLabel}>Roles</div>
-          <div className={styles.roleChips}>
+        <div className="bg-[var(--db-surface-inner)] rounded-xl p-3 px-3.5">
+          <div className="text-[11px] font-extrabold uppercase tracking-[0.05em] text-[var(--db-text-muted)]">Roles</div>
+          <div className="flex flex-wrap gap-1.5 mt-1">
             {user.roleSlugs.length > 0 ? (
               user.roleSlugs.map((slug) => (
                 <span
                   key={slug}
-                  className={`${styles.roleChip} ${slug === "super_admin" ? styles.roleChipSuper : ""}`}
+                  className={`text-[11px] font-bold py-[3px] px-2 rounded-full ${
+                    slug === "super_admin"
+                      ? "bg-[var(--db-warning-subtle)] text-[var(--db-warning-text)]"
+                      : "bg-blue-600/10 text-[var(--db-info)]"
+                  }`}
                 >
                   {slug.replace(/_/g, " ")}
                 </span>
               ))
             ) : (
-              <span className={styles.roleChipNone}>No roles assigned</span>
+              <span className="text-xs text-[var(--db-text-muted)]">No roles assigned</span>
             )}
           </div>
         </div>
       </div>
 
-      <div className={styles.sectionGrid}>
-        <div className={styles.sectionCard}>
-          <h2 className={styles.sectionTitle}>Assigned roles</h2>
-          <p className={styles.sectionDesc}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-2xl p-[22px]">
+          <h2 className="m-0 mb-1 text-lg font-extrabold text-[var(--a-text)]">Assigned roles</h2>
+          <p className="m-0 mb-4 text-[13px] text-[var(--db-text-muted)]">
             Roles bundle permissions. Users inherit all permissions from their assigned roles.
           </p>
           <UserRolesForm
@@ -139,9 +142,9 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
           />
         </div>
 
-        <div className={styles.sectionCard}>
-          <h2 className={styles.sectionTitle}>Permission overrides</h2>
-          <p className={styles.sectionDesc}>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-border)] rounded-2xl p-[22px]">
+          <h2 className="m-0 mb-1 text-lg font-extrabold text-[var(--a-text)]">Permission overrides</h2>
+          <p className="m-0 mb-4 text-[13px] text-[var(--db-text-muted)]">
             Grant additional permissions to this specific user beyond their role assignments.
           </p>
           <UserPermissionsForm
@@ -153,12 +156,12 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
       </div>
 
       {!isSelf && (canDeactivate || canDelete) ? (
-        <div className={styles.dangerZone}>
-          <h2 className={styles.dangerTitle}>Danger zone</h2>
-          <p className={styles.dangerDesc}>
+        <div className="bg-[var(--pex-bg)] border border-[var(--db-danger-border)] rounded-2xl p-[22px] mt-6">
+          <h2 className="m-0 mb-1 font-bold text-[var(--a-text)] text-sm">Danger zone</h2>
+          <p className="m-0 mb-4 text-[13px] text-[var(--db-text-muted)]">
             Deactivating prevents the user from signing in. Deleting removes the user permanently.
           </p>
-          <div className={styles.dangerActions}>
+          <div className="flex items-center gap-3 flex-wrap">
             {canDeactivate ? (
               banned ? (
                 <form action={reactivateUserAction.bind(null, user.id)}>
@@ -167,7 +170,7 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
                     title="Reactivate user"
                     confirmText={`Allow ${displayName(user)} to sign in again?`}
                     busyLabel="Reactivating…"
-                    className={`${adminStyles.rowButton} ${styles.dangerBtnReactivate}`}
+                    className={`${adminStyles.rowButton} text-[var(--db-success-text)]`}
                   />
                 </form>
               ) : (
@@ -177,7 +180,7 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
                     title="Deactivate user"
                     confirmText={`Suspend ${displayName(user)} from signing in?`}
                     busyLabel="Deactivating…"
-                    className={`${adminStyles.rowButton} ${styles.dangerBtnDeactivate}`}
+                    className={`${adminStyles.rowButton} text-[var(--db-text-muted)]`}
                   />
                 </form>
               )

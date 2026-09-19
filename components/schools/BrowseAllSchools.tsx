@@ -146,16 +146,16 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
       aria-labelledby="browse-schools-heading"
     >
       <div className="max-w-[var(--layout-max-width)] mx-auto">
-        <p className="m-0 mb-2 text-[var(--pex-keppel)] font-extrabold text-sm">
+        <p className="m-0 mb-2 text-pex-keppel font-extrabold text-sm">
           Full directory
         </p>
         <h2
           id="browse-schools-heading"
-          className="m-0 text-[var(--pex-navy)] font-[family-name:var(--font-heading)] font-extrabold text-[clamp(26px,3vw,38px)] leading-[1.1]"
+          className="m-0 text-pex-navy font-heading font-extrabold text-[clamp(26px,3vw,38px)] leading-[1.1]"
         >
           Browse school directory
         </h2>
-        <p className="mt-3 mb-0 max-w-[640px] text-[var(--pex-text-muted)] text-lg leading-[var(--line-body)]">
+        <p className="mt-3 mb-0 max-w-[640px] text-pex-muted text-lg leading-relaxed">
           Explore the full list below &mdash; every school has grade-specific
           packs prepared to its official stationery list.
         </p>
@@ -163,7 +163,7 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
 
       <div className="mt-5 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_260px] gap-4">
         <label className="block" htmlFor="browse-schools-query">
-          <span className="block mb-2 text-[var(--pex-primary)] text-sm font-extrabold">
+          <span className="block mb-2 text-pex-navy text-sm font-extrabold">
             Filter schools
           </span>
           <input
@@ -172,19 +172,19 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
             value={query}
             placeholder="Search school or area..."
             onChange={(event) => handleQuery(event.target.value)}
-            className="w-full h-[54px] px-4 border border-[var(--pex-border)] rounded-[var(--radius-field)] bg-[var(--pex-bg)] text-[var(--pex-primary)] text-[15px] focus:outline-none focus:border-[var(--form-control-focus-border)] focus:shadow-[var(--form-control-focus-shadow)] transition-all duration-200"
+            className="w-full h-[54px] px-4 border border-pex-border rounded-field bg-pex-bg text-pex-navy text-[15px] focus:outline-none focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/15 transition-all duration-200"
           />
         </label>
 
         <label className="block" htmlFor="browse-schools-region">
-          <span className="block mb-2 text-[var(--pex-primary)] text-sm font-extrabold">
+          <span className="block mb-2 text-pex-navy text-sm font-extrabold">
             Area
           </span>
           <select
             id="browse-schools-region"
             value={region}
             onChange={(event) => handleRegion(event.target.value)}
-            className="w-full h-[54px] px-4 border border-[var(--pex-border)] rounded-[var(--radius-field)] bg-[var(--pex-bg)] text-[var(--pex-primary)] text-[15px] cursor-pointer focus:outline-none focus:border-[var(--form-control-focus-border)] focus:shadow-[var(--form-control-focus-shadow)] transition-all duration-200"
+            className="w-full h-[54px] px-4 border border-pex-border rounded-field bg-pex-bg text-pex-navy text-[15px] cursor-pointer focus:outline-none focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/15 transition-all duration-200"
           >
             <option value="">All areas</option>
             {regions.map((item) => (
@@ -205,8 +205,8 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
           type="button"
           className={
             activeLetter === null
-              ? "min-w-[44px] h-[44px] px-3 rounded-full border border-[var(--pex-navy)] bg-[var(--pex-navy)] text-[var(--pex-bg)] text-sm font-extrabold shadow-[var(--shadow-pill)] cursor-pointer transition-all duration-150"
-              : "min-w-[44px] h-[44px] px-3 rounded-full border border-[var(--color-navy-border)] bg-[var(--pex-bg)] text-[var(--pex-primary)] text-sm font-extrabold cursor-pointer hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
+              ? "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-navy bg-pex-navy text-white text-sm font-extrabold shadow-sm cursor-pointer transition-all duration-150"
+              : "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-border bg-pex-bg text-pex-navy text-sm font-extrabold cursor-pointer hover:border-pex-keppel hover:text-pex-keppel disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
           }
           onClick={() => {
             setActiveLetter(null);
@@ -226,8 +226,8 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
               aria-label={`Schools starting with ${letter}`}
               className={
                 activeLetter === letter
-                  ? "min-w-[44px] h-[44px] px-3 rounded-full border border-[var(--pex-navy)] bg-[var(--pex-navy)] text-[var(--pex-bg)] text-sm font-extrabold shadow-[var(--shadow-pill)] cursor-pointer transition-all duration-150"
-                  : "min-w-[44px] h-[44px] px-3 rounded-full border border-[var(--color-navy-border)] bg-[var(--pex-bg)] text-[var(--pex-primary)] text-sm font-extrabold cursor-pointer hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
+                  ? "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-navy bg-pex-navy text-white text-sm font-extrabold shadow-sm cursor-pointer transition-all duration-150"
+                  : "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-border bg-pex-bg text-pex-navy text-sm font-extrabold cursor-pointer hover:border-pex-keppel hover:text-pex-keppel disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
               }
               onClick={() => handleLetter(letter)}
             >
@@ -238,7 +238,7 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
       </div>
 
       <p
-        className="my-5 mb-3 text-[var(--pex-text-muted)] font-extrabold text-sm"
+        className="my-5 mb-3 text-pex-muted font-extrabold text-sm"
         aria-live="polite"
         suppressHydrationWarning
       >
@@ -258,7 +258,7 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
               <li key={school.id}>
                 <Link
                   href={`/schools/${school.slug}`}
-                  className="group grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_auto] items-start md:items-center gap-2 md:gap-4 p-4 md:px-5 border border-[var(--color-navy-subtle)] rounded-[var(--radius-card-compact)] bg-[var(--pex-bg)] shadow-[var(--shadow-card)] hover:-translate-y-0.5 hover:border-[var(--color-teal-border)] hover:shadow-[var(--shadow-card-hover)] transition-all duration-200 no-underline"
+                  className="group grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_auto] items-start md:items-center gap-2 md:gap-4 p-4 md:px-5 border border-pex-border rounded-card bg-card shadow-card hover:-translate-y-0.5 hover:border-pex-keppel/40 hover:shadow-lg transition-all duration-200 no-underline"
                   onClick={() =>
                     trackSchoolCardClicked({
                       schoolSlug: school.slug,
@@ -267,13 +267,13 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
                     })
                   }
                 >
-                  <span className="text-[var(--pex-primary)] font-[family-name:var(--font-heading)] font-extrabold text-[17px] leading-[1.2]">
+                  <span className="text-pex-navy font-heading font-extrabold text-[17px] leading-[1.2]">
                     {school.name}
                   </span>
-                  <span className="text-[var(--pex-text-muted)] text-sm font-semibold whitespace-normal md:whitespace-nowrap">
+                  <span className="text-pex-muted text-sm font-semibold whitespace-normal md:whitespace-nowrap">
                     {school.region}
                   </span>
-                  <span className="text-[var(--pex-keppel)] text-sm font-extrabold whitespace-normal md:whitespace-nowrap">
+                  <span className="text-pex-keppel text-sm font-extrabold whitespace-normal md:whitespace-nowrap">
                     {school.grades.length > 0
                       ? `${school.grades[0]} to ${
                           school.grades[school.grades.length - 1]
@@ -281,11 +281,11 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
                       : "Multiple grades"}
                   </span>
                   {priceLabel(school) ? (
-                    <span className="text-[var(--pex-keppel)] text-[15px] font-extrabold whitespace-normal md:whitespace-nowrap">
+                    <span className="text-pex-keppel text-[15px] font-extrabold whitespace-normal md:whitespace-nowrap">
                       {priceLabel(school)}
                     </span>
                   ) : null}
-                  <span className="col-span-full md:col-auto w-fit min-h-[40px] mt-2 md:mt-1 px-4 py-2 rounded-full bg-[var(--pex-coral)] group-hover:bg-[var(--pex-coral-hover)] text-white text-sm font-extrabold leading-none inline-flex items-center shadow-[0_8px_18px_rgba(255,111,89,0.16)] group-hover:shadow-[var(--button-hover-shadow)] group-hover:-translate-y-px transition-all duration-150">
+                  <span className="col-span-full md:col-auto w-fit min-h-[40px] mt-2 md:mt-1 px-4 py-2 rounded-full bg-pex-coral group-hover:bg-pex-coral-hover !text-white text-sm font-extrabold leading-none inline-flex items-center shadow-[0_8px_18px_rgba(255,111,89,0.16)] group-hover:-translate-y-px transition-all duration-150">
                     View packs
                   </span>
                 </Link>
@@ -297,11 +297,11 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
             <div className="mt-[clamp(24px,4vw,36px)] flex justify-center items-center">
               <button
                 type="button"
-                className="group inline-flex items-center gap-3 min-h-[48px] px-7 py-3 rounded-full bg-white border-[1.5px] border-[var(--color-navy-border)] text-[var(--pex-navy)] text-[15px] font-extrabold cursor-pointer shadow-[0_4px_14px_rgba(16,28,43,0.05)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(0,168,143,0.18)] active:translate-y-0 transition-all duration-200"
+                className="group inline-flex items-center gap-3 min-h-[48px] px-7 py-3 rounded-full bg-card border border-pex-border text-pex-navy text-[15px] font-extrabold cursor-pointer shadow-[0_4px_14px_rgba(16,28,43,0.05)] hover:border-pex-keppel hover:text-pex-keppel hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all duration-200"
                 onClick={() => setVisibleCount((prev) => prev + 6)}
                 aria-label="Expand to show 6 more schools"
               >
-                <span className="inline-flex items-center justify-center w-[26px] h-[26px] rounded-full bg-[rgba(0,168,143,0.12)] text-[var(--pex-keppel)] group-hover:bg-[var(--pex-keppel)] group-hover:text-white transition-all duration-200">
+                <span className="inline-flex items-center justify-center w-[26px] h-[26px] rounded-full bg-pex-keppel/10 text-pex-keppel group-hover:bg-pex-keppel group-hover:text-white transition-all duration-200">
                   <ChevronDown size={18} />
                 </span>
                 <span>Show 6 more schools</span>
@@ -313,11 +313,11 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
             <div className="mt-[clamp(24px,4vw,36px)] flex justify-center items-center">
               <button
                 type="button"
-                className="group inline-flex items-center gap-3 min-h-[48px] px-7 py-3 rounded-full bg-white border-[1.5px] border-[var(--color-navy-border)] text-[var(--pex-navy)] text-[15px] font-extrabold cursor-pointer shadow-[0_4px_14px_rgba(16,28,43,0.05)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(0,168,143,0.18)] active:translate-y-0 transition-all duration-200"
+                className="group inline-flex items-center gap-3 min-h-[48px] px-7 py-3 rounded-full bg-card border border-pex-border text-pex-navy text-[15px] font-extrabold cursor-pointer shadow-[0_4px_14px_rgba(16,28,43,0.05)] hover:border-pex-keppel hover:text-pex-keppel hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all duration-200"
                 onClick={() => setVisibleCount(4)}
                 aria-label="Collapse back to 4 schools"
               >
-                <span className="inline-flex items-center justify-center w-[26px] h-[26px] rounded-full bg-[rgba(0,168,143,0.12)] text-[var(--pex-keppel)] group-hover:bg-[var(--pex-keppel)] group-hover:text-white transition-all duration-200">
+                <span className="inline-flex items-center justify-center w-[26px] h-[26px] rounded-full bg-pex-keppel/10 text-pex-keppel group-hover:bg-pex-keppel group-hover:text-white transition-all duration-200">
                   <ChevronUp size={18} />
                 </span>
                 <span>Show less</span>
@@ -326,11 +326,11 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
           )}
         </>
       ) : (
-        <div className="p-6 text-center border border-dashed border-[var(--color-navy-border)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)]">
-          <p className="m-0 text-[var(--pex-primary)] font-[family-name:var(--font-heading)] font-extrabold text-lg">
+        <div className="p-6 text-center border border-dashed border-pex-border rounded-card bg-pex-bg-soft">
+          <p className="m-0 text-pex-navy font-heading font-extrabold text-lg">
             No schools match that filter.
           </p>
-          <p className="mt-2 mb-0 text-[var(--pex-text-muted)]">
+          <p className="mt-2 mb-0 text-pex-muted">
             Try a different letter or area, or search by school name above.
           </p>
         </div>
@@ -338,4 +338,3 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
     </section>
   );
 }
-

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import styles from './RetailVsPexpacksSlider.module.css'
 
 export function RetailVsPexpacksSlider() {
   const [sliderPos, setSliderPos] = useState<number>(50)
@@ -120,22 +119,24 @@ export function RetailVsPexpacksSlider() {
   const box3Opacity = Math.min(1, Math.max(0, (sliderPos - 70) / 20))
 
   return (
-    <section className={styles.section} aria-label="Retail run versus Pexpacks comparison">
-      <div className={styles.inner}>
-        <div className={styles.cardContainer}>
+    <section className="py-[clamp(36px,6vw,72px)] bg-pex-bg-soft" aria-label="Retail run versus Pexpacks comparison">
+      <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
+        <div className="relative bg-card border border-pex-border rounded-card md:rounded-[clamp(20px,3vw,28px)] p-4 sm:p-[clamp(20px,3vw,36px)] shadow-card">
           {/* Card Header */}
-          <div className={styles.cardHeader}>
-            <p className={styles.eyebrow}>
-              <span className={styles.eyebrowDot} aria-hidden="true" />
+          <div className="flex items-center justify-between mb-[clamp(16px,2.5vw,24px)] gap-4 flex-wrap max-sm:flex-col max-sm:items-start max-sm:gap-1.5">
+            <p className="text-pex-keppel text-xs font-extrabold tracking-[0.08em] uppercase m-0 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-pex-keppel inline-block animate-pulse" aria-hidden="true" />
               DRAG THE LINE
             </p>
-            <h2 className={styles.title}>DIY vs. Pexpacks ready</h2>
+            <h2 className="text-pex-navy font-heading text-[clamp(24px,3.2vw,36px)] max-sm:text-[22px] font-extrabold m-0 leading-[1.1]">
+              DIY vs. Pexpacks ready
+            </h2>
           </div>
 
           {/* Interactive Split Frame */}
           <div
             ref={containerRef}
-            className={styles.comparisonFrame}
+            className="relative w-full min-h-[clamp(320px,38vw,380px)] max-sm:min-h-[390px] rounded-[clamp(16px,2vw,22px)] overflow-hidden select-none cursor-ew-resize [touch-action:pan-y] shadow-[inset_0_2px_6px_rgba(0,0,0,0.05)]"
             onMouseDown={(e) => handleStart(e.clientX)}
             onTouchStart={(e) => {
               if (e.touches[0]) handleStart(e.touches[0].clientX)
@@ -149,48 +150,52 @@ export function RetailVsPexpacksSlider() {
             onKeyDown={handleKeyDown}
           >
             {/* Layer 1: Dark Teal Pexpacks Side (Bottom) */}
-            <div className={styles.rightLayer}>
-              <span className={styles.badgePexpacks}>Pexpacks ready</span>
-              <h3 className={styles.headlinePexpacks}>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#153b3f] to-[#0d282b] text-white p-[clamp(24px,4vw,40px)] max-sm:p-[18px] flex flex-col justify-between">
+              <span className="self-start bg-white/15 backdrop-blur-md text-white text-xs font-bold py-1.5 px-3.5 rounded-full border border-white/20">
+                Pexpacks ready
+              </span>
+              <h3 className="font-heading text-[clamp(24px,3.8vw,42px)] font-extrabold leading-[1.1] text-white my-[clamp(12px,2vw,20px)] max-w-[580px] tracking-[-0.01em]">
                 Zero trips. 100% exact list. Delivered to your door.
               </h3>
-              <div className={styles.statsRow}>
-                <div className={styles.statCardDark}>
-                  <div className={styles.statCardDarkValue}>100% Ready</div>
-                  <div className={styles.statCardDarkLabel}>Labelled, checked, and delivered</div>
+              <div className="flex gap-[clamp(10px,2vw,16px)] max-sm:gap-2 flex-wrap">
+                <div className="bg-white/[0.08] border border-white/15 backdrop-blur-md rounded-[14px] py-[clamp(10px,1.8vw,16px)] px-[clamp(14px,2vw,20px)] max-sm:py-2.5 max-sm:px-3 min-w-[130px] max-sm:min-w-[110px] flex-1">
+                  <div className="text-[clamp(18px,2.2vw,24px)] font-extrabold text-emerald-400 mb-0.5">100% Ready</div>
+                  <div className="text-[clamp(11px,1.2vw,13px)] text-white/80 font-semibold leading-[1.2]">Labelled, checked, and delivered</div>
                 </div>
-                <div className={styles.statCardDark}>
-                  <div className={styles.statCardDarkValue}>&lt; 2 mins</div>
-                  <div className={styles.statCardDarkLabel}>Order online in under 2 mins</div>
+                <div className="bg-white/[0.08] border border-white/15 backdrop-blur-md rounded-[14px] py-[clamp(10px,1.8vw,16px)] px-[clamp(14px,2vw,20px)] max-sm:py-2.5 max-sm:px-3 min-w-[130px] max-sm:min-w-[110px] flex-1">
+                  <div className="text-[clamp(18px,2.2vw,24px)] font-extrabold text-emerald-400 mb-0.5">&lt; 2 mins</div>
+                  <div className="text-[clamp(11px,1.2vw,13px)] text-white/80 font-semibold leading-[1.2]">Order online in under 2 mins</div>
                 </div>
               </div>
             </div>
 
             {/* Layer 2: Light Peach Retail Side (Top clipped) */}
             <div
-              className={styles.leftLayer}
+              className="absolute inset-0 bg-gradient-to-br from-[#fff4f0] to-[#ffe9e2] text-pex-navy p-[clamp(24px,4vw,40px)] max-sm:p-[18px] flex flex-col justify-between pointer-events-none z-[2]"
               style={{ clipPath: `inset(0 calc(100% - ${sliderPos}%) 0 0)` }}
             >
-              <span className={styles.badgeRetail}>DIY shopping</span>
-              <h3 className={styles.headlineRetail}>
+              <span className="self-start bg-white text-slate-800 text-xs font-bold py-1.5 px-3.5 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.06)]">
+                DIY shopping
+              </span>
+              <h3 className="font-heading text-[clamp(24px,3.8vw,42px)] font-extrabold leading-[1.1] text-pex-navy my-[clamp(12px,2vw,20px)] max-w-[580px] tracking-[-0.01em]">
                 More trips. More gaps. More last–minute stress.
               </h3>
-              <div className={styles.statsRow}>
-                <div className={styles.statCardLight}>
-                  <div className={styles.statCardLightValue}>3–4 hrs</div>
-                  <div className={styles.statCardLightLabel}>Driving, parking, queuing</div>
+              <div className="flex gap-[clamp(10px,2vw,16px)] max-sm:gap-2 flex-wrap">
+                <div className="bg-white border border-slate-100 rounded-[14px] py-[clamp(10px,1.8vw,16px)] px-[clamp(14px,2vw,20px)] max-sm:py-2.5 max-sm:px-3 shadow-[0_4px_14px_rgba(15,23,42,0.04)] min-w-[130px] max-sm:min-w-[110px] flex-1">
+                  <div className="text-[clamp(18px,2.2vw,24px)] font-extrabold text-pex-coral mb-0.5">3–4 hrs</div>
+                  <div className="text-[clamp(11px,1.2vw,13px)] text-slate-500 font-semibold leading-[1.2]">Driving, parking, queuing</div>
                 </div>
-                <div className={styles.statCardLight}>
-                  <div className={styles.statCardLightValue}>Risk</div>
-                  <div className={styles.statCardLightLabel}>Missing or sold–out items</div>
+                <div className="bg-white border border-slate-100 rounded-[14px] py-[clamp(10px,1.8vw,16px)] px-[clamp(14px,2vw,20px)] max-sm:py-2.5 max-sm:px-3 shadow-[0_4px_14px_rgba(15,23,42,0.04)] min-w-[130px] max-sm:min-w-[110px] flex-1">
+                  <div className="text-[clamp(18px,2.2vw,24px)] font-extrabold text-pex-coral mb-0.5">Risk</div>
+                  <div className="text-[clamp(11px,1.2vw,13px)] text-slate-500 font-semibold leading-[1.2]">Missing or sold–out items</div>
                 </div>
               </div>
             </div>
 
             {/* Split Divider Line */}
-            <div className={styles.dividerLine} style={{ left: `${sliderPos}%` }}>
+            <div className="absolute top-0 bottom-0 w-[2px] bg-white shadow-[0_0_10px_rgba(0,0,0,0.25)] z-10 -translate-x-1/2 pointer-events-none" style={{ left: `${sliderPos}%` }}>
               <div
-                className={styles.handleButton}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 max-sm:w-[42px] max-sm:h-[42px] rounded-full bg-white border border-slate-200/90 shadow-[0_8px_24px_rgba(15,23,42,0.2)] flex items-center justify-center text-pex-navy cursor-ew-resize pointer-events-auto transition-[transform,box-shadow] duration-150 hover:scale-110 hover:shadow-[0_12px_28px_rgba(33,158,154,0.3)] focus-visible:scale-110 focus-visible:shadow-[0_12px_28px_rgba(33,158,154,0.3)] focus-visible:outline-none"
                 aria-hidden="true"
                 title="Drag left or right to compare"
               >
@@ -215,7 +220,7 @@ export function RetailVsPexpacksSlider() {
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ margin: '-2px 0 0 -6px' }}
+                  className="-mt-0.5 -ml-1.5"
                 >
                   <polyline points="15 18 9 12 15 6" />
                 </svg>
@@ -228,7 +233,7 @@ export function RetailVsPexpacksSlider() {
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ margin: '-2px -6px 0 0' }}
+                  className="-mt-0.5 -mr-1.5"
                 >
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
@@ -237,21 +242,21 @@ export function RetailVsPexpacksSlider() {
           </div>
 
           {/* Bottom Track with Synced Delivery Van */}
-          <div className={styles.trackArea}>
-            <div className={styles.trackLabels}>
-              <span className={styles.labelStress}>DIY stress</span>
-              <span className={styles.labelReady}>Pexpacks ready</span>
+          <div className="relative mt-[clamp(46px,5vw,64px)] max-sm:mt-[54px] pt-6 max-sm:pt-[42px] border-t border-dashed border-slate-300">
+            <div className="flex justify-between items-center text-[clamp(11px,1.2vw,13px)] font-bold">
+              <span className="text-slate-400">DIY stress</span>
+              <span className="text-pex-keppel">Pexpacks ready</span>
             </div>
 
             {/* Delivery Van SVG tied to sliderPos */}
             <div
-              className={styles.truckWrapper}
+              className="absolute top-[-56px] max-sm:top-[-40px] -translate-x-1/2 transition-[left,transform] duration-[60ms,200ms] ease-out pointer-events-none"
               style={{
                 left: `${sliderPos}%`,
                 transform: `translateX(-50%) scaleX(${sliderPos < 50 ? -1 : 1})`,
               }}
             >
-              <div className={styles.truckContainer}>
+              <div className="flex flex-col items-center drop-shadow-[0_8px_18px_rgba(15,23,42,0.18)] [&_svg]:max-sm:w-[122px] [&_svg]:max-sm:h-[68px]">
                 <svg
                   width="140"
                   height="78"

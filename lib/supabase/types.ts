@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -4958,6 +4958,19 @@ export type Database = {
         }[]
       }
       school_search_query: { Args: { input: string }; Returns: unknown }
+      search_public_products: {
+        Args: { result_limit?: number; search_query: string }
+        Returns: {
+          category: string | null
+          current_selling_price: number
+          description: string | null
+          id: string
+          name: string
+          pexco_code: string | null
+          requires_pexcover: boolean
+          unit: string | null
+        }[]
+      }
       search_public_schools: {
         Args: {
           grade_filter?: string

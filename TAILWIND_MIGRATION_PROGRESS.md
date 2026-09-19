@@ -14,7 +14,7 @@
 | **Phase 2** | UI Primitives Migration | 5 | **Completed** | 5 / 5 |
 | **Phase 3** | Shared Pexpacks Domain Components | 6 | **Completed** | 6 / 6 |
 | **Phase 4** | Customer Route Composition | 10 | **Completed** | 10 / 10 |
-| **Phase 5** | Admin Boundary Operations Suite | 8 | **In Progress** | 1 / 8 |
+| **Phase 5** | Admin Boundary Operations Suite | 8 | **Completed** | 8 / 8 |
 
 ---
 
@@ -48,8 +48,8 @@
 | **Batch 5.2** | Admin Shell, Navigation & Shared DataTable | Admin Chrome | **Verified** | 6 files: `AdminShell.module.css` (722 lines), `DateField.module.css` (311 lines), `DeviceActivityPrompt.module.css` (154 lines), `DataTable.module.css` (185 lines), `DataTablePagination.module.css` (153 lines), `DataTableToolbar.module.css` (65 lines) - 1,590 lines total | Yes | Yes | Yes |
 | **Batch 5.3** | Operations Dashboard & Health Views | Admin View | **Verified** | `DashboardClient.module.css` (662 lines) | Yes | Yes | Yes |
 | **Batch 5.4** | Orders, Fulfilment & Procurement | Admin Feature | **Verified** | 4 files: `orders.module.css` (214 lines), `order-badge.module.css` (77 lines), `RefundButton.module.css` (16 lines), `ProcurementPageView.module.css` (202 lines) - 509 lines total | Yes | Yes | Yes |
-| **Batch 5.5** | Catalog Management (Schools, Grades, Packs, Items, Suppliers) | Admin Feature | Pending | `schools.module.css`, `SchoolProfile.module.css`, `SchoolForm.module.css`, `SchoolOverview.module.css`, `packs.module.css`, `ItemForm.module.css`, `supplier-form.module.css`, etc. | - | - | - |
-| **Batch 5.6** | Quotations, Letters & PDF Engines | Admin Feature | Pending | `Quotations.module.css`, `PexpacksDetails.module.css`, `LetterActionWorkbench.module.css`, `LetterEditor.module.css` | - | - | - |
-| **Batch 5.7** | CMS Content, Blog & Assets | Admin Feature | Pending | `content.module.css`, `reorder.module.css`, `CmsContentManager.module.css`, `blog.module.css`, `assets.module.css`, etc. | - | - | - |
-| **Batch 5.8** | Governance, RBAC, Users, Audit & admin.module.css Retirement | Admin Suite | Pending | `users.module.css`, `roles.module.css`, `audit.module.css`, `TaskDrawer.module.css`, `settings.module.css`, `app/admin/admin.module.css` | - | - | - |
+| **Batch 5.5** | Catalog Management (Schools, Grades, Packs, Items, Suppliers) | Admin Feature | **Verified** | `schools.module.css`, `SchoolProfile.module.css`, `SchoolForm.module.css`, `SchoolOverview.module.css`, `packs.module.css`, `ItemForm.module.css`, `supplier-form.module.css`, etc. (1,680 lines) | Yes | Yes | Yes |
+| **Batch 5.6** | Quotations, Letters & PDF Engines | Admin Feature | **Verified** | `Quotations.module.css`, `PexpacksDetails.module.css`, `LetterActionWorkbench.module.css` (LetterEditor.module.css retained for Chromium PDF contracts) | Yes | Yes | Yes |
+| **Batch 5.7** | CMS Content, Blog & Assets | Admin Feature | **Verified** | `content.module.css` (1,064 lines), `reorder.module.css`, `CmsContentManager.module.css`, `blog.module.css`, `assets.module.css` (1,490 lines) | Yes | Yes | Yes |
+| **Batch 5.8** | Governance, RBAC, Users, Audit & admin.module.css Retirement | Admin Suite | **Verified** | `users.module.css`, `roles.module.css`, `audit.module.css`, `TaskDrawer.module.css`, `settings.module.css`, `app/admin/admin.module.css` (2,473 lines replaced by adminStyles.ts across 60 consumers) | Yes | Yes | Yes |
 

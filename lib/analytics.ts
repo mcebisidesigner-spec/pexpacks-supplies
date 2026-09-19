@@ -34,6 +34,11 @@ export const AnalyticsEvents = {
   aiConversionRetried: "AI Conversion Retried",
   cartReviewOpened: "Cart Review Opened",
   cartReviewItemEdited: "Cart Review Item Edited",
+  pexIntentResolved: "Pex Intent Resolved",
+  pexQuickReplySelected: "Pex Quick Reply Selected",
+  pexActionSelected: "Pex Action Selected",
+  pexHumanHandoff: "Pex Human Handoff",
+  pexRequestFailed: "Pex Request Failed",
 } as const;
 
 type SearchSource = "home" | "schools" | "tray";
@@ -422,4 +427,24 @@ export function trackCartReviewItemEdited({
   estimatedCount: number;
 }) {
   track(AnalyticsEvents.cartReviewItemEdited, { action, estimatedCount });
+}
+
+export function trackPexIntentResolved({ intent, sourcePath }: { intent: string; sourcePath: string }) {
+  track(AnalyticsEvents.pexIntentResolved, { intent, sourcePath });
+}
+
+export function trackPexQuickReplySelected({ quickReplyId, sourcePath }: { quickReplyId: string; sourcePath: string }) {
+  track(AnalyticsEvents.pexQuickReplySelected, { quickReplyId, sourcePath });
+}
+
+export function trackPexActionSelected({ actionId, destination, sourcePath }: { actionId: string; destination: string; sourcePath: string }) {
+  track(AnalyticsEvents.pexActionSelected, { actionId, destination, sourcePath });
+}
+
+export function trackPexHumanHandoff({ sourcePath }: { sourcePath: string }) {
+  track(AnalyticsEvents.pexHumanHandoff, { sourcePath });
+}
+
+export function trackPexRequestFailed({ sourcePath, status }: { sourcePath: string; status: number }) {
+  track(AnalyticsEvents.pexRequestFailed, { sourcePath, status });
 }

@@ -19,7 +19,6 @@ export function ClientRuntimeWidgets() {
   const pathname = usePathname();
   const [idleReady, setIdleReady] = useState(false);
   const hideWhatsApp =
-    pathname?.startsWith("/checkout") ||
     pathname?.startsWith("/admin") ||
     pathname === "/pex-console-secure" ||
     pathname === "/login";

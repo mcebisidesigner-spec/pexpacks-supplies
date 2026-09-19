@@ -270,10 +270,10 @@ export function AiListDropzone() {
           <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 grid place-items-center text-2xl mx-auto mb-4 border-2 border-emerald-200 [animation:scaleSuccess_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)]">
             ✓
           </div>
-          <h3 className="text-[#1a2a40] text-xl font-extrabold m-0 mb-1.5">
+          <h3 className="text-pex-navy font-heading text-xl font-extrabold m-0 mb-1.5">
             Catalog Matched!
           </h3>
-          <p className="text-muted-foreground text-sm m-0">
+          <p className="text-pex-muted text-sm m-0">
             Generating your personalized cart and opening your review page...
           </p>
         </div>
@@ -283,7 +283,7 @@ export function AiListDropzone() {
       {isProcessing && !isSuccess && (
         <div className="py-2.5 flex flex-col gap-6">
           {/* Document Preview with Laser Scan */}
-          <div className="relative w-full max-w-[320px] h-[180px] mx-auto rounded-xl overflow-hidden border border-border bg-[#0f172a] flex items-center justify-center">
+          <div className="relative w-full max-w-[320px] h-[180px] mx-auto rounded-xl overflow-hidden border border-pex-border bg-[#0f172a] flex items-center justify-center">
             {filePreview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -327,18 +327,18 @@ export function AiListDropzone() {
                   key={step.id}
                   className={cn(
                     "flex items-center gap-3.5 text-sm transition-all duration-300",
-                    isCompleted && "text-[#1a2a40] font-semibold",
-                    isActive && "text-[#1a7a77] font-bold",
-                    !isCompleted && !isActive && "text-muted-foreground opacity-55"
+                    isCompleted && "text-pex-navy font-semibold",
+                    isActive && "text-pex-keppel font-bold",
+                    !isCompleted && !isActive && "text-pex-muted opacity-55"
                   )}
                 >
                   <div
                     className={cn(
                       "w-7 h-7 rounded-full grid place-items-center text-xs font-bold shrink-0 border transition-all duration-300",
-                      isCompleted && "bg-[#1a7a77] text-white border-[#1a7a77]",
+                      isCompleted && "bg-pex-keppel text-white border-pex-keppel",
                       isActive &&
-                        "bg-white text-[#1a7a77] border-2 border-[#1a7a77] shadow-[0_0_0_3px_rgba(26,122,119,0.2)] [animation:pulseActive_1.5s_infinite_ease-in-out]",
-                      !isCompleted && !isActive && "bg-slate-100 text-muted-foreground border-border"
+                        "bg-white text-pex-keppel border-2 border-pex-keppel shadow-[0_0_0_3px_rgba(33,158,154,0.2)] [animation:pulseActive_1.5s_infinite_ease-in-out]",
+                      !isCompleted && !isActive && "bg-slate-100 text-pex-muted border-pex-border"
                     )}
                   >
                     {isCompleted ? "✓" : step.id}
@@ -377,8 +377,8 @@ export function AiListDropzone() {
             <button
               type="button"
               className={cn(
-                "flex-1 border-0 bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground rounded-lg cursor-pointer transition-all flex items-center justify-center gap-2 hover:text-[#1a2a40]",
-                activeTab === "upload" && "bg-white text-[#1a7a77] shadow-sm font-bold"
+                "flex-1 border-0 bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-semibold text-pex-muted rounded-lg cursor-pointer transition-all flex items-center justify-center gap-2 hover:text-pex-navy",
+                activeTab === "upload" && "bg-white text-pex-keppel shadow-sm font-bold"
               )}
               onClick={() => {
                 setActiveTab("upload");
@@ -395,8 +395,8 @@ export function AiListDropzone() {
             <button
               type="button"
               className={cn(
-                "flex-1 border-0 bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-semibold text-muted-foreground rounded-lg cursor-pointer transition-all flex items-center justify-center gap-2 hover:text-[#1a2a40]",
-                activeTab === "text" && "bg-white text-[#1a7a77] shadow-sm font-bold"
+                "flex-1 border-0 bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-semibold text-pex-muted rounded-lg cursor-pointer transition-all flex items-center justify-center gap-2 hover:text-pex-navy",
+                activeTab === "text" && "bg-white text-pex-keppel shadow-sm font-bold"
               )}
               onClick={() => {
                 setActiveTab("text");
@@ -417,32 +417,32 @@ export function AiListDropzone() {
             <div>
               <div
                 className={cn(
-                  "border-2 border-dashed border-[#219e9a]/30 hover:border-[#1a7a77] rounded-2xl p-6 sm:p-8 text-center cursor-pointer bg-[#219e9a]/[0.02] hover:bg-[#219e9a]/[0.06] transition-all flex flex-col items-center justify-center relative hover:-translate-y-0.5",
-                  isDragging && "border-solid border-[#1a7a77] bg-[#219e9a]/[0.06] shadow-[0_0_0_4px_rgba(26,122,119,0.15)]"
+                  "border-2 border-dashed border-pex-keppel/30 hover:border-pex-keppel rounded-2xl p-6 sm:p-8 text-center cursor-pointer bg-pex-keppel/[0.02] hover:bg-pex-keppel/[0.06] transition-all flex flex-col items-center justify-center relative hover:-translate-y-0.5",
+                  isDragging && "border-solid border-pex-keppel bg-pex-keppel/[0.06] shadow-[0_0_0_4px_rgba(33,158,154,0.15)]"
                 )}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#1a7a77]/10 text-[#1a7a77] grid place-items-center mb-4 transition-transform duration-200">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-pex-keppel/10 text-pex-keppel grid place-items-center mb-4 transition-transform duration-200">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
                     <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
                     <path d="M12 12v9" />
                     <path d="m16 16-4-4-4 4" />
                   </svg>
                 </div>
-                <span className="block text-sm sm:text-base font-bold text-[#1a2a40] mb-1.5">
-                  Click to browse or drag & drop
+                <span className="block text-sm sm:text-base font-bold text-pex-navy mb-1.5">
+                  Click to browse or drag &amp; drop
                 </span>
-                <span className="block text-xs sm:text-sm text-muted-foreground max-w-[320px] leading-relaxed mb-4.5">
+                <span className="block text-xs sm:text-sm text-pex-muted max-w-[320px] leading-relaxed mb-4.5">
                   Takes photos, printed PDFs, or handwritten school booklists (Max 15MB)
                 </span>
 
                 <div className="flex gap-2.5 flex-wrap justify-center" onClick={(e) => e.stopPropagation()}>
                   <button
                     type="button"
-                    className="bg-[#1a7a77] hover:bg-[#156966] active:scale-[0.98] text-white border-0 py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
+                    className="bg-pex-keppel hover:bg-pex-keppel/90 active:scale-[0.98] text-white border-0 py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -455,7 +455,7 @@ export function AiListDropzone() {
 
                   <button
                     type="button"
-                    className="bg-white hover:bg-[#1a7a77]/5 active:scale-[0.98] text-[#1a2a40] hover:text-[#1a7a77] border border-border hover:border-[#1a7a77] py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
+                    className="bg-white hover:bg-pex-keppel/5 active:scale-[0.98] text-pex-navy hover:text-pex-keppel border border-pex-border hover:border-pex-keppel py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => cameraInputRef.current?.click()}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -507,7 +507,7 @@ export function AiListDropzone() {
           ) : (
             <div className="flex flex-col gap-4">
               <textarea
-                className="w-full border-2 border-border focus:border-[#1a7a77] rounded-xl p-3.5 text-sm text-foreground resize-y min-h-[140px] outline-none transition-all shadow-[inset_0_2px_4px_rgba(26,42,64,0.04)] focus:ring-4 focus:ring-[#1a7a77]/15 placeholder:text-muted-foreground/50"
+                className="w-full border-2 border-pex-border focus:border-pex-keppel rounded-xl p-3.5 text-sm text-foreground resize-y min-h-[140px] outline-none transition-all shadow-[inset_0_2px_4px_rgba(26,42,64,0.04)] focus:ring-4 focus:ring-pex-keppel/15 placeholder:text-muted-foreground/50"
                 rows={6}
                 placeholder="Paste or type your stationery list here...&#10;e.g.&#10;5x 72pg Exercise Books Feint & Margin&#10;2x Pritt Glue Sticks 43g&#10;1x Staedtler Noris 2B Pencils Pack of 12&#10;1x 30cm Shatterproof Ruler"
                 value={pastedText}
@@ -526,7 +526,7 @@ export function AiListDropzone() {
 
               <button
                 type="button"
-                className="bg-[#1a7a77] hover:bg-[#156966] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white border-0 py-3.5 px-6 rounded-full text-sm sm:text-base font-bold cursor-pointer transition-all flex items-center justify-center gap-2 w-full shadow-md"
+                className="bg-pex-coral hover:bg-pex-coral-hover active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white border-0 py-3.5 px-6 rounded-full text-sm sm:text-base font-bold cursor-pointer transition-all flex items-center justify-center gap-2 w-full shadow-md"
                 disabled={!pastedText.trim()}
                 onClick={() => startConversion(null, pastedText)}
               >
@@ -540,7 +540,7 @@ export function AiListDropzone() {
                   <path d="M21 16h-4" />
                   <path d="M11 3H9" />
                 </svg>
-                Match with AI & Generate Cart
+                Match with AI &amp; Generate Cart
               </button>
             </div>
           )}

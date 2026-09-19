@@ -9,8 +9,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { Pagination } from "@/components/admin/Pagination";
-import adminStyles from "../admin.module.css";
-import styles from "./users.module.css";
+import adminStyles from "../adminStyles";
 
 interface UsersPageProps {
   searchParams: Promise<{
@@ -129,34 +128,38 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                   return (
                     <tr key={user.id}>
                       <td>
-                        <div className={styles.userCell}>
-                          <span className={styles.avatar} aria-hidden="true">
+                        <div className="flex items-center gap-3">
+                          <span className="w-[38px] h-[38px] rounded-full bg-[var(--db-brand-subtle)] text-[var(--db-brand)] font-extrabold text-[15px] inline-flex items-center justify-center shrink-0" aria-hidden="true">
                             {(displayName(user).charAt(0) ?? "?").toUpperCase()}
                           </span>
                           <div>
-                            <div className={styles.userName}>{displayName(user)}</div>
-                            <div className={styles.userEmail}>
+                            <div className="font-bold text-[var(--a-text)]">{displayName(user)}</div>
+                            <div className="text-xs text-[var(--db-text-muted)] mt-0.5">
                               {user.email}
                               {user.id === session.user.id ? (
-                                <span className={styles.selfTag}> you</span>
+                                <span className="text-[var(--db-brand)] font-bold"> you</span>
                               ) : null}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div className={styles.flags}>
+                        <div className="flex gap-1.5 flex-wrap">
                           {user.roleSlugs.length > 0 ? (
                             user.roleSlugs.map((slug) => (
                               <span
                                 key={slug}
-                                className={`${styles.flag} ${slug === "super_admin" ? styles.flagSuper : styles.flagRole}`}
+                                className={`text-[11px] font-bold py-[3px] px-2 rounded-full ${
+                                  slug === "super_admin"
+                                    ? "bg-[var(--db-warning-subtle)] text-[var(--db-warning-text)]"
+                                    : "bg-blue-600/10 text-[var(--db-info)]"
+                                }`}
                               >
                                 {slug.replace(/_/g, " ")}
                               </span>
                             ))
                           ) : (
-                            <span className={styles.noRole}>No role</span>
+                            <span className="text-xs text-[var(--db-text-muted)]">No role</span>
                           )}
                         </div>
                       </td>
@@ -169,7 +172,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                       <td>{formatDate(user.last_sign_in_at)}</td>
                       <td>{formatDate(user.created_at)}</td>
                       <td>
-                        <div className={styles.actions}>
+                        <div className="flex items-center gap-2.5 whitespace-nowrap">
                           <Link href={`/admin/users/${user.id}`} className={adminStyles.actionLink}>
                             View
                           </Link>
@@ -180,7 +183,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                                   label="Reactivate"
                                   confirmText={`Reactivate ${displayName(user)}?`}
                                   busyLabel="Reactivating…"
-                                  className={`${adminStyles.rowButton} ${styles.rowButtonRestore}`}
+                                  className={`${adminStyles.rowButton} text-[var(--db-success-text)]`}
                                 />
                               </form>
                             ) : (
@@ -189,7 +192,7 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                                   label="Deactivate"
                                   confirmText={`Deactivate ${displayName(user)}? They will be signed out and blocked.`}
                                   busyLabel="Deactivating…"
-                                  className={`${adminStyles.rowButton} ${styles.rowButtonDeactivate}`}
+                                  className={`${adminStyles.rowButton} text-[var(--db-text-muted)]`}
                                 />
                               </form>
                             )

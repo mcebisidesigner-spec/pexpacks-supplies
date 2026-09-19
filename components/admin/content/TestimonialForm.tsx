@@ -8,7 +8,7 @@ import { saveTestimonialAction } from "@/app/admin/content/actions";
 import { TESTIMONIAL_RATINGS } from "@/lib/admin/content-constants";
 import type { ContentFormState } from "@/lib/admin/content";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { cmsStyles as styles } from "./cmsStyles";
 
 export interface TestimonialDefaults {

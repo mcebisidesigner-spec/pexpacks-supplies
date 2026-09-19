@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Building2, CreditCard, Mail, Save } from "lucide-react";
 import { updateSupplierAction } from "@/app/admin/suppliers/actions";
 import type { SupplierFormState } from "@/lib/admin/suppliers";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 
 export interface SupplierFormDefaults {

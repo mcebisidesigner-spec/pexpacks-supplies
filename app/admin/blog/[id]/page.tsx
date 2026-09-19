@@ -1,11 +1,10 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getBlogPost } from "@/lib/admin/blog";
 import { BlogForm } from "@/components/admin/blog/BlogForm";
-import adminStyles from "../../admin.module.css";
-import styles from "../../content/content.module.css";
+import adminStyles from "../../adminStyles";
 
 export const metadata = {
   title: "Edit Post | Admin | Pexpacks",
@@ -23,18 +22,18 @@ export default async function EditBlogPostPage({
 
   return (
     <div className={adminStyles.adminContainer}>
-      <p className={styles.backRow}>
-        <Link href="/admin/blog" className={styles.backLink}>
-          <ArrowLeft aria-hidden="true" /> Back to Blog
+      <p className="mb-4">
+        <Link href="/admin/blog" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--db-text-muted)] hover:text-white transition-colors">
+          <ArrowLeft aria-hidden="true" size={14} /> Back to Blog
         </Link>
       </p>
       <div className={adminStyles.headerRow}>
         <div>
           <h1 className={adminStyles.pageTitle}>Edit post</h1>
-          <p className={styles.subtitle}>{row.title}</p>
+          <p className="text-xs text-[var(--db-text-muted)] mt-1">{row.title}</p>
         </div>
       </div>
-      <div className={styles.card}>
+      <div className="bg-[var(--db-surface)] border border-[var(--db-border)] rounded-[var(--db-radius-card)] p-5 flex flex-col gap-3">
         <BlogForm
           id={row.id}
           defaults={{

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Calculator, Save, Search, Trash2 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 

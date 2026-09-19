@@ -163,36 +163,29 @@ describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
     expect(html).toContain("disabled");
   });
 
-  it("verifies custom CSS module complies with design specifications without Tailwind", () => {
-    const cssPath = resolve(
+  it("verifies component complies with design specifications in Tailwind v4", () => {
+    const componentPath = resolve(
       process.cwd(),
-      "components/checkout/PexcoverDrawerCard.module.css",
+      "components/checkout/PexcoverDrawerCard.tsx",
     );
-    const cssContent = readFileSync(cssPath, "utf8");
+    const content = readFileSync(componentPath, "utf8");
 
-    // Brand theme variables
-    expect(cssContent).toContain("--pexcover-active-bg: #EBF7F5");
-    expect(cssContent).toContain("--pexcover-active-border: #BBE5DE");
-    expect(cssContent).toContain("--pexcover-inactive-bg: #F8FAFC");
-    expect(cssContent).toContain("--pexcover-inactive-border: #E2E8F0");
-    expect(cssContent).toContain("--pexcover-primary: #1E7468");
-    expect(cssContent).toContain("--pexcover-primary-dark: #165A51");
-    expect(cssContent).toContain("--pexcover-text-primary: #0F172A");
-    expect(cssContent).toContain("--pexcover-text-secondary: #64748B");
+    // Brand theme styling
+    expect(content).toContain("#EBF7F5");
+    expect(content).toContain("#BBE5DE");
+    expect(content).toContain("bg-slate-50");
+    expect(content).toContain("border-slate-200");
+    expect(content).toContain("pex-keppel");
 
     // Sheen overlay gradient & circular checkmark badge / round checkbox
-    expect(cssContent).toContain("linear-gradient");
-    expect(cssContent).toContain("rgba(255, 255, 255");
-    expect(cssContent).toContain(".checkmarkBadge");
-    expect(cssContent).toContain(".unselectedCheckbox");
-    expect(cssContent).toContain("top: 6px");
-    expect(cssContent).toContain("right: 6px");
+    expect(content).toContain("linear-gradient");
+    expect(content).toContain("rgba(255, 255, 255");
+    expect(content).toContain("top-1.5");
+    expect(content).toContain("right-1.5");
 
     // 3-Column responsive grid
-    expect(cssContent).toContain("grid-template-columns: repeat(3, 1fr)");
-    expect(cssContent).toContain(
-      "box-shadow: 0 0 0 2px rgba(30, 116, 104, 0.25)",
-    );
+    expect(content).toContain("grid-cols-3");
+    expect(content).toContain("ring-pex-keppel/25");
   });
 });
 describe("Pexcover fulfilment visibility", () => {

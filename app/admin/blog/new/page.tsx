@@ -1,8 +1,7 @@
-﻿import { requireAdmin } from "@/lib/admin/rbac";
+import { requireAdmin } from "@/lib/admin/rbac";
 import { BlogForm } from "@/components/admin/blog/BlogForm";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import adminStyles from "../../admin.module.css";
-import styles from "../../content/content.module.css";
+import adminStyles from "../../adminStyles";
 
 export const metadata = {
   title: "New Post | Admin | Pexpacks",
@@ -19,7 +18,7 @@ export default async function NewBlogPostPage() {
         title="New post"
         subtitle="Write an article for the public Resource Hub at /blog."
       />
-      <div className={styles.card}>
+      <div className="bg-[var(--db-surface)] border border-[var(--db-border)] rounded-[var(--db-radius-card)] p-5 flex flex-col gap-3">
         <BlogForm id={null} />
       </div>
     </div>

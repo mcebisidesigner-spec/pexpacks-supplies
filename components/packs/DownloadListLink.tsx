@@ -2,7 +2,6 @@
 
 import { useState, type ReactNode } from "react";
 import type { StationeryPdfOptions } from "@/lib/pdf/generateStationeryPdf";
-import styles from "./DownloadListLink.module.css";
 
 type DownloadListLinkProps = {
   children?: ReactNode;
@@ -70,10 +69,24 @@ export function DownloadListLink({
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div className="relative">
       <button
         type="button"
-        className={[styles.link, className].filter(Boolean).join(" ")}
+        className={[
+          "inline-flex items-center justify-center gap-[6px] w-fit min-h-10",
+          "p-0 border-0 bg-transparent font-inherit",
+          "text-[var(--pex-text-muted)] text-[var(--text-2xs)] font-bold leading-none",
+          "underline underline-offset-[3px]",
+          "cursor-pointer transition-[var(--interactive-transition)]",
+          "hover:text-[var(--color-brand-teal)]",
+          "disabled:opacity-[0.65] disabled:cursor-wait",
+          "focus-visible:outline-2 focus-visible:outline-[var(--color-brand-orange)] focus-visible:outline-offset-4 focus-visible:text-[var(--pex-primary)]",
+          "motion-reduce:transition-none",
+          "max-md:min-h-[var(--touch-target-min)]",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
         onClick={handleClick}
         disabled={isGenerating}
         aria-label={
@@ -93,7 +106,7 @@ export function DownloadListLink({
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
-            className={styles.spinner}
+            className="motion-safe:animate-spin motion-reduce:animate-none"
           >
             <path d="M21 12a9 9 0 1 1-6.219-8.56" />
           </svg>
@@ -119,9 +132,23 @@ export function DownloadListLink({
 
       {/* Strategy 4.3: Email capture overlay */}
       {showEmailCapture && !isGenerating && (
-        <div className={styles.emailCapture}>
-          <form onSubmit={handleEmailSubmit} className={styles.emailForm}>
-            <p className={styles.emailPrompt}>
+        <div
+          className={[
+            "absolute left-0 bottom-[calc(100%+8px)] z-10",
+            "min-w-[280px] p-[var(--space-4)]",
+            "rounded-[var(--radius-card)] bg-[var(--card-bg)] border-[var(--card-border)]",
+            "[box-shadow:var(--card-shadow-hover)]",
+            "animate-[fadeUp_200ms_ease]",
+            "motion-reduce:animate-none",
+            "max-md:min-w-[240px] max-md:right-0",
+          ].join(" ")}
+          style={{ border: "var(--card-border)" }}
+        >
+          <form
+            onSubmit={handleEmailSubmit}
+            className="flex flex-col gap-[10px]"
+          >
+            <p className="m-0 text-[var(--text-2xs)] font-bold text-[var(--color-text-strong)]">
               Get notified when this list is updated:
             </p>
             <input
@@ -132,16 +159,19 @@ export function DownloadListLink({
               placeholder="Your email (optional)"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={styles.emailInput}
+              className="w-full px-[var(--space-3)] py-[var(--space-2)] border border-[rgba(26,42,64,0.15)] rounded-[var(--radius-xs)] text-[var(--text-2xs)] outline-none transition-[border-color] duration-150 ease focus:border-[var(--pex-keppel)]"
               autoFocus
             />
-            <div className={styles.emailActions}>
-              <button type="submit" className={styles.emailSubmit}>
+            <div className="flex gap-[var(--space-2)]">
+              <button
+                type="submit"
+                className="flex-1 px-[14px] py-[var(--space-2)] border-0 rounded-full bg-[var(--color-brand-teal)] text-[var(--color-surface)] text-[var(--text-2xs)] font-bold cursor-pointer transition-[var(--button-transition)] hover:brightness-110 hover:[transform:var(--button-hover-transform)] hover:[box-shadow:var(--button-hover-shadow)] hover:bg-[var(--color-brand-navy)]"
+              >
                 {email.trim() ? "Save & Download" : "Download PDF"}
               </button>
               <button
                 type="button"
-                className={styles.emailSkip}
+                className="px-[var(--space-3)] py-[var(--space-2)] border border-[rgba(26,42,64,0.12)] rounded-full bg-transparent text-[var(--pex-text-muted)] text-[var(--text-2xs)] cursor-pointer transition-[var(--interactive-transition)] hover:text-[var(--pex-primary)] hover:brightness-110 hover:[transform:var(--button-hover-transform)] hover:[box-shadow:var(--button-hover-shadow)]"
                 onClick={handleSkip}
               >
                 Skip

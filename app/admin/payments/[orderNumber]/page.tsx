@@ -8,7 +8,7 @@ import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { deletePaymentAction } from "../actions";
-import adminStyles from "@/app/admin/admin.module.css";
+import adminStyles from "@/app/admin/adminStyles";
 import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface PaymentDetailPageProps {
