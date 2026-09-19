@@ -8,11 +8,11 @@
   --color-brand-accent: #ff6f59;
   --color-brand-accent-hover: #e85e4b;
   --color-surface: #ffffff;
-  --color-surface-soft: #f4f5f7;
-  --color-page-bg: #f8f9fa;
+  --color-surface-soft: #f3f5f5;
+  --color-page-bg: #ffffff;
   --color-ink: #172326;
   --color-text-muted: #4d5a5d;
-  --color-line: #e1e7ea;
+  --color-line: #dbe4e7;
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #128c7e;
 
@@ -25,6 +25,7 @@
   --color-pex-border: var(--pex-border);
   --color-pex-bg: var(--pex-bg);
   --color-pex-bg-soft: var(--pex-bg-soft);
+  --color-pex-bg-mint: var(--pex-bg-mint);
 
   --color-background: var(--pex-body-bg);
   --color-foreground: var(--pex-text);

@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import { buildWhatsAppHref } from "@/data/contact";
 import { cn } from "@/lib/utils";
+import { Layers, MapPin, Truck } from "lucide-react";
 import {
   trackCheckoutValidationFailed,
   trackPaymentFailed,
@@ -104,31 +105,14 @@ function getPackItemPreview(pack: TrayPackItem) {
 }
 
 function FulfilmentIcon({ option }: { option: FulfilmentOption }) {
-  if (option === "school_collection") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5" />
-      </svg>
-    );
-  }
+  const Icon =
+    option === "school_collection"
+      ? Layers
+      : option === "home_delivery"
+        ? Truck
+        : MapPin;
 
-  if (option === "home_delivery") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="1" y="3" width="15" height="13" rx="2" />
-        <path d="M16 8h4l3 3v5h-7V8Z" />
-        <circle cx="5.5" cy="18.5" r="2.5" />
-        <circle cx="18.5" cy="18.5" r="2.5" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="M3 10h18M7 15h4" />
-    </svg>
-  );
+  return <Icon className="h-6 w-6 stroke-[2.2]" aria-hidden="true" />;
 }
 
 export function TrayCheckoutClient() {
@@ -575,7 +559,7 @@ export function TrayCheckoutClient() {
   }
 
   return (
-    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] font-[family-name:var(--font-body)] text-[var(--pex-navy)] pb-24 lg:pb-12">
+    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-[var(--pex-bg)] font-[family-name:var(--font-body)] text-[var(--pex-navy)] pb-24 lg:pb-12">
       <header className="flex justify-between items-center max-w-[var(--layout-max-width)] mx-auto mb-8">
         <button
           type="button"
@@ -793,7 +777,7 @@ export function TrayCheckoutClient() {
                       className={cn(
                         "flex flex-col p-4 sm:p-5 rounded-[var(--radius-md)] border-2 border-[var(--pex-border)] bg-white cursor-pointer transition-all hover:border-[rgba(33,158,154,0.4)] relative",
                         fulfilmentOption === option.value &&
-                          "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.03)] shadow-sm",
+                          "border-[var(--pex-keppel)] bg-[var(--pex-bg-mint)] shadow-sm",
                       )}
                     >
                       <input
@@ -808,7 +792,7 @@ export function TrayCheckoutClient() {
                         className="sr-only"
                       />
                       <div className="flex items-center gap-3 mb-1.5 text-sm sm:text-base font-bold text-[var(--pex-navy)]">
-                        <span className="w-8 h-8 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] flex items-center justify-center shrink-0">
+                        <span className="w-8 h-8 rounded-full bg-[var(--pex-bg-mint)] text-[var(--pex-keppel)] flex items-center justify-center shrink-0">
                           <FulfilmentIcon option={option.value} />
                         </span>
                         <strong>{option.title}</strong>
@@ -816,7 +800,7 @@ export function TrayCheckoutClient() {
                       <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0 leading-relaxed pl-11">
                         {option.description}
                       </p>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] self-start mt-2 ml-11">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--pex-bg-mint)] text-[var(--pex-keppel)] self-start mt-2 ml-11">
                         {option.note}
                       </span>
                     </label>
