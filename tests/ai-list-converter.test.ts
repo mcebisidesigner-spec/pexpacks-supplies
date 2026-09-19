@@ -23,21 +23,25 @@ const mockInsertSelect = vi.fn().mockReturnValue({
   single: mockInsertSingle,
 });
 
-const mockRpc = vi.fn().mockResolvedValue({
-  data: [
-    {
-      id: "prod-1",
-      sku: "PEX-TEST-1",
-      name: "Pritt Stick 43g",
-      category: "Stationery",
-      current_selling_price: 52.44,
-      requires_pexcover: false,
-      pexco_code: null,
-      similarity: 0.95,
-    },
-  ],
-  error: null,
-});
+const mockRpc = vi.fn().mockImplementation(
+  (_functionName: string, args: { query_texts?: string[] }) =>
+    Promise.resolve({
+      data: (args.query_texts ?? []).map((_, query_index) => ({
+        query_index,
+        id: `prod-${query_index + 1}`,
+        sku: `PEX-TEST-${query_index + 1}`,
+        name: "Pritt Stick 43g",
+        category: "Stationery",
+        current_selling_price: 52.44,
+        requires_pexcover: false,
+        pexco_code: null,
+        pexco_rate_cents: null,
+        pexco_rate_active: false,
+        similarity: 0.95,
+      })),
+      error: null,
+    }),
+);
 
 const mockSelectMaybeSingle = vi.fn().mockResolvedValue({
   data: {
@@ -165,6 +169,22 @@ describe("AI List Converter API (/api/ai-convert-list)", () => {
     expect(body.error).toContain("10,000 character limit");
   });
 
+  it("rejects a file whose contents do not match its declared image type", async () => {
+    const file = new File(["not an image"], "list.png", { type: "image/png" });
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await convertListPost(
+      new NextRequest("https://pexpacks.co.za/api/ai-convert-list", {
+        method: "POST",
+        body: formData,
+        headers: { origin: "https://pexpacks.co.za" },
+      }),
+    );
+
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toContain("does not match a supported");
+  });
   it("returns 503 when document is uploaded without Gemini API key configured", async () => {
     const origKey = process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_API_KEY;
@@ -234,6 +254,8 @@ describe("AI List Converter API (/api/ai-convert-list)", () => {
     expect(body.success).toBe(true);
     expect(body.draftId).toBe("test-draft-cart-12345");
     expect(body.itemCount).toBeGreaterThan(0);
+    expect(body.hasUnmatchedItems).toBe(false);
+    expect(mockRpc).toHaveBeenCalledTimes(1);
   });
 });
 

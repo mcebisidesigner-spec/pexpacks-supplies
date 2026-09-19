@@ -16,8 +16,6 @@ import { OrderStatusBadge } from "@/components/admin/orders/OrderStatusBadge";
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { refundOrderAction, deleteOrderAction } from "../actions";
-import adminStyles from "../../admin.module.css";
-import styles from "../orders.module.css";
 
 interface OrderDetailPageProps {
   params: Promise<{ id: string }>;
@@ -68,17 +66,21 @@ interface ItemShape {
 function ItemsList({ items }: { items: unknown }) {
   if (!Array.isArray(items) || items.length === 0) return null;
   return (
-    <ul className={styles.itemList}>
+    <ul className="flex flex-col gap-1.5 list-none m-0 p-0">
       {items.map((it: ItemShape, idx: number) => {
         const title = it.name ?? "Item";
         const qty = it.quantity ?? 1;
         const price = it.unit_price ?? it.unitPrice ?? null;
         return (
-          <li key={idx} className={styles.itemRow}>
+          <li key={idx} className="flex items-baseline justify-between gap-2 text-xs text-slate-300">
             <span>
               {qty}× {title}
             </span>
-            {price != null ? <span>{money(price * qty)}</span> : null}
+            {price != null ? (
+              <span className="font-mono text-slate-200 font-medium">
+                {money(price * qty)}
+              </span>
+            ) : null}
           </li>
         );
       })}
@@ -95,33 +97,40 @@ function PackContentsCard({
   if (items.length === 0) return null;
 
   return (
-    <div className={`${styles.detailCard} ${adminStyles.mt24}`}>
-      <h2 className={styles.cardTitle}>Pack contents ({items.length})</h2>
-      <div className={styles.packsGrid}>
+    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20 mt-6">
+      <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
+        Pack contents ({items.length})
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
         {items.map((entry, idx) => (
-          <div key={idx} className={styles.packBox}>
-            <div className={styles.packHeader}>
+          <div
+            key={idx}
+            className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex flex-col gap-2.5"
+          >
+            <div className="flex justify-between items-start gap-2">
               <div>
-                <strong className={styles.packName}>
+                <strong className="text-sm font-bold text-slate-100">
                   {entry.pack_name ?? `Pack ${idx + 1}`}
                 </strong>
                 {entry.grade ? (
-                  <span className={styles.packGrade}>{entry.grade}</span>
+                  <span className="block text-xs text-slate-400 font-normal mt-0.5">
+                    {entry.grade}
+                  </span>
                 ) : null}
               </div>
               {entry.total_price != null ? (
-                <span className={styles.packPrice}>
+                <span className="text-sm font-extrabold text-emerald-400">
                   {money(entry.total_price)}
                 </span>
               ) : null}
             </div>
             {entry.learner_name ? (
-              <div className={styles.learnerLabel}>
-                Learner: <strong>{entry.learner_name}</strong>
+              <div className="text-xs text-slate-400">
+                Learner: <strong className="text-slate-200">{entry.learner_name}</strong>
               </div>
             ) : null}
             {entry.wants_pexcover ? (
-              <div className={styles.pexcoverTag}>
+              <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <span>Pexcover requested</span>
                 <span>
                   {pexcoverPaperStyleLabel(
@@ -143,11 +152,13 @@ function PackContentsCard({
 
 function KVRows({ rows }: { rows: { label: string; value: ReactNode }[] }) {
   return (
-    <dl className={styles.kvList}>
+    <dl className="flex flex-col gap-2.5 m-0">
       {rows.map((r, i) => (
-        <div key={i} className={styles.kvRow}>
-          <dt className={styles.kvLabel}>{r.label}</dt>
-          <dd className={styles.kvValue}>{r.value ?? "—"}</dd>
+        <div key={i} className="flex justify-between gap-4 text-xs sm:text-sm">
+          <dt className="text-slate-400 font-medium">{r.label}</dt>
+          <dd className="text-right font-semibold break-words text-slate-100 m-0">
+            {r.value ?? "—"}
+          </dd>
         </div>
       ))}
     </dl>
@@ -195,14 +206,14 @@ export default async function OrderDetailPage({
     session.isSuperAdmin;
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col gap-6 w-full text-slate-200">
       <AdminPageHeader
         backHref="/admin/orders"
         backLabel="Back to Orders"
         title={order.order_reference}
         subtitle={`${order.school_name || "General Order"} • Placed ${formatDateTime(order.created_at)}`}
         actions={
-          <div className={styles.headerActionsGroup}>
+          <div className="flex items-center gap-3 flex-wrap">
             <OrderStatusBadge status={order.status} />
             {canEdit ? (
               <OrderStatusForm id={order.id} current={order.status} />
@@ -214,7 +225,7 @@ export default async function OrderDetailPage({
                   title="Delete Permanently"
                   confirmText={`Permanently delete order ${order.order_reference}? This action cannot be undone.`}
                   busyLabel="Deleting…"
-                  className={styles.deleteBtn}
+                  className="inline-flex items-center justify-center h-9.5 px-4 border border-rose-500/30 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 text-xs font-semibold cursor-pointer transition-colors"
                 />
               </form>
             ) : null}
@@ -223,40 +234,44 @@ export default async function OrderDetailPage({
       />
 
       {canRefund ? (
-        <div className={`${styles.detailCard} ${adminStyles.mb20}`}>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20">
           <form
             action={refundOrderAction.bind(null, order.id)}
-            className={styles.refundForm}
+            className="flex flex-col gap-3"
           >
-            <label className={adminStyles.formLabel} htmlFor="refund_reason">
+            <label className="text-xs font-bold text-slate-300" htmlFor="refund_reason">
               Refund Reason (optional)
             </label>
             <textarea
               id="refund_reason"
               name="reason"
-              className={adminStyles.textareaField}
+              className="w-full p-3 rounded-xl border border-slate-700 bg-slate-950 text-slate-100 text-sm outline-none focus:border-emerald-500 resize-y min-h-[80px]"
               aria-label="Refund reason"
             />
             <ConfirmButton
               label="Refund order"
               confirmText={`Refund ${order.order_reference} for ${money(order.estimated_total)}?`}
               busyLabel="Refunding…"
-              className={styles.deleteBtn}
+              className="inline-flex items-center justify-center h-9.5 px-4 border border-rose-500/30 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 text-xs font-semibold cursor-pointer transition-colors self-start"
             />
           </form>
         </div>
       ) : null}
 
-      <div className={styles.detailGrid}>
-        <div className={styles.detailCard}>
-          <h2 className={styles.cardTitle}>Buyer</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            Buyer
+          </h2>
           <KVRows
             rows={[
               { label: "Name", value: order.buyer_name },
               {
                 label: "Phone",
                 value: order.buyer_phone ? (
-                  <a href={`tel:${order.buyer_phone}`}>{order.buyer_phone}</a>
+                  <a href={`tel:${order.buyer_phone}`} className="text-emerald-400 hover:underline">
+                    {order.buyer_phone}
+                  </a>
                 ) : (
                   "—"
                 ),
@@ -264,7 +279,7 @@ export default async function OrderDetailPage({
               {
                 label: "Email",
                 value: order.buyer_email ? (
-                  <a href={`mailto:${order.buyer_email}`}>
+                  <a href={`mailto:${order.buyer_email}`} className="text-emerald-400 hover:underline">
                     {order.buyer_email}
                   </a>
                 ) : (
@@ -280,8 +295,10 @@ export default async function OrderDetailPage({
           />
         </div>
 
-        <div className={styles.detailCard}>
-          <h2 className={styles.cardTitle}>Order</h2>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            Order
+          </h2>
           <KVRows
             rows={[
               { label: "School", value: order.school_name },
@@ -299,8 +316,10 @@ export default async function OrderDetailPage({
           />
         </div>
 
-        <div className={styles.detailCard}>
-          <h2 className={styles.cardTitle}>Delivery</h2>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            Delivery
+          </h2>
           <KVRows
             rows={[
               {
@@ -329,8 +348,10 @@ export default async function OrderDetailPage({
           />
         </div>
 
-        <div className={styles.detailCard}>
-          <h2 className={styles.cardTitle}>Payment</h2>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            Payment
+          </h2>
           <KVRows
             rows={[
               { label: "Status", value: orderStatusLabel(order.status) },
@@ -338,7 +359,7 @@ export default async function OrderDetailPage({
               {
                 label: "Gateway reference",
                 value: (
-                  <span className={styles.mono}>
+                  <span className="font-mono text-xs text-slate-300">
                     {order.gateway_reference ?? order.payment_reference ?? "—"}
                   </span>
                 ),
@@ -347,7 +368,7 @@ export default async function OrderDetailPage({
             ]}
           />
           {refund ? (
-            <div className={styles.refundInfo}>
+            <div className="mt-3 p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium">
               Refunded
               {refund.refunded_at
                 ? ` ${formatDateTime(refund.refunded_at)}`
@@ -362,44 +383,44 @@ export default async function OrderDetailPage({
       <PackContentsCard order={order} />
 
       {orderItems.length > 0 ? (
-        <div className={`${styles.detailCard} ${adminStyles.mt20}`}>
-          <h2 className={styles.cardTitle}>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20 mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
             Order line items ({orderItems.length})
           </h2>
-          <div className={adminStyles.tableWrapper}>
-            <table className={adminStyles.table}>
+          <div className="overflow-x-auto rounded-xl border border-slate-800">
+            <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr>
-                  <th>SKU</th>
-                  <th>Product</th>
-                  <th>Qty</th>
-                  <th>Unit price</th>
-                  <th>Line total</th>
-                  <th>Est. cost</th>
-                  <th>Margin</th>
+                <tr className="bg-slate-950 border-b border-slate-800 text-slate-400 font-bold">
+                  <th className="px-4 py-3">SKU</th>
+                  <th className="px-4 py-3">Product</th>
+                  <th className="px-4 py-3">Qty</th>
+                  <th className="px-4 py-3">Unit price</th>
+                  <th className="px-4 py-3">Line total</th>
+                  <th className="px-4 py-3">Est. cost</th>
+                  <th className="px-4 py-3">Margin</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-800/60">
                 {orderItems.map((item) => (
-                  <tr key={item.id}>
-                    <td className={styles.mono}>{item.sku_snapshot}</td>
-                    <td>
+                  <tr key={item.id} className="hover:bg-slate-800/30 transition-colors">
+                    <td className="px-4 py-3 font-mono text-slate-300">{item.sku_snapshot}</td>
+                    <td className="px-4 py-3 text-slate-200">
                       {item.product_name_snapshot}
                       {item.description_snapshot ? (
-                        <div className={styles.muted}>
+                        <div className="text-[11px] text-slate-500 mt-0.5">
                           {item.description_snapshot}
                         </div>
                       ) : null}
                     </td>
-                    <td>{item.quantity}</td>
-                    <td>{money(item.unit_selling_price)}</td>
-                    <td>{money(item.line_total)}</td>
-                    <td>
+                    <td className="px-4 py-3 text-slate-300 font-semibold">{item.quantity}</td>
+                    <td className="px-4 py-3 font-mono text-slate-300">{money(item.unit_selling_price)}</td>
+                    <td className="px-4 py-3 font-mono font-semibold text-emerald-400">{money(item.line_total)}</td>
+                    <td className="px-4 py-3 font-mono text-slate-400">
                       {item.estimated_unit_cost != null
                         ? money(item.estimated_unit_cost)
                         : "—"}
                     </td>
-                    <td>
+                    <td className="px-4 py-3 font-mono font-semibold text-slate-300">
                       {item.expected_margin != null
                         ? `${(item.expected_margin * 100).toFixed(1)}%`
                         : "—"}
@@ -413,9 +434,11 @@ export default async function OrderDetailPage({
       ) : null}
 
       {metadata ? (
-        <div className={`${styles.detailCard} ${adminStyles.mt20}`}>
-          <h2 className={styles.cardTitle}>Full metadata</h2>
-          <pre className={styles.metaBlock}>
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm shadow-black/20 mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            Full metadata
+          </h2>
+          <pre className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto max-h-96">
             {JSON.stringify(metadata, null, 2)}
           </pre>
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Mail, Phone, MessageSquare } from 'lucide-react'
 import { ContactForm } from '@/components/forms/ContactForm'
 import { Button } from '@/components/ui/Button'
 import { PageHero } from '@/components/marketing/PageHero'
@@ -14,8 +15,6 @@ import {
   ordersEmailHref,
 } from '@/data/contact'
 import { buildMetadata } from '@/lib/seo'
-import sectionStyles from '@/components/marketing/MarketingSections.module.css'
-import cardStyles from '@/components/marketing/MarketingCards.module.css'
 
 export const metadata: Metadata = buildMetadata(
   'Contact',
@@ -66,8 +65,6 @@ function resolveContactPrefill(
   }
 }
 
-import pageStyles from './ContactPage.module.css'
-
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   const params = searchParams ? await searchParams : {}
   const prefill = resolveContactPrefill(params)
@@ -81,93 +78,87 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         panelText="Service area"
         panelTitle="We currently service Gauteng"
       >
-        <div className={sectionStyles.buttonRow}>
-          <Button href="#contact-form" variant="primary">
+        <div className="flex flex-col sm:flex-row gap-3 mt-5 items-stretch sm:items-center">
+          <Button href="#contact-form" variant="primary" className="min-h-[44px]">
             Send a Message
           </Button>
-          <Button href="/faq" variant="white">
+          <Button href="/faq" variant="white" className="min-h-[44px]">
             Contact FAQs
           </Button>
         </div>
       </PageHero>
 
-      <section className={sectionStyles.section} id="contact-form">
-        <div className={sectionStyles.inner}>
-          <div className={cardStyles.infoGrid}>
+      <section className="py-12 sm:py-20 bg-slate-50" id="contact-form">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <ContactForm {...prefill} />
 
-            <div className={pageStyles.sidebarWrapper}>
+            <div className="flex flex-col gap-7 h-full">
               {/* 🟢 LIVE SUPPORT STATUS */}
-              <div className={pageStyles.liveStatusCard}>
-                <div className={pageStyles.statusIndicator}>
-                  <span className={pageStyles.statusPulse} />
+              <div className="rounded-[20px] border border-teal-600/15 bg-teal-600/[0.05] p-5 flex items-center gap-4 shadow-xs">
+                <div className="relative w-3.5 h-3.5 bg-emerald-500 rounded-full shrink-0">
+                  <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
                 </div>
-                <div className={pageStyles.statusText}>
-                  <h2 className={pageStyles.statusTitle}>
+                <div className="flex flex-col">
+                  <h2 className="text-sm font-extrabold text-[#1a2a40] m-0">
                     Gauteng Support Desk Active
                   </h2>
-                  <span className={pageStyles.statusDesc}>
+                  <span className="text-xs text-slate-600 mt-0.5">
                     Live chat active • WhatsApp response time &lt; 5 mins
                   </span>
                 </div>
               </div>
 
               {/* SERVICE LEVEL AGREEMENTS */}
-              <div className={pageStyles.slaGroup}>
-                <div className={pageStyles.slaCard}>
-                  <span className={pageStyles.slaTitle}>School Partners</span>
-                  <h3 className={pageStyles.slaTime}>&lt; 2 Hours</h3>
-                  <span className={pageStyles.slaLabel}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 flex flex-col gap-1.5 shadow-xs">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">School Partners</span>
+                  <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">&lt; 2 Hours</h3>
+                  <span className="text-[12.5px] text-slate-600 leading-snug">
                     Dedicated School Relations Lead callback.
                   </span>
                 </div>
-                <div className={pageStyles.slaCard}>
-                  <span className={pageStyles.slaTitle}>Bulk / Quotes</span>
-                  <h3 className={pageStyles.slaTime}>&lt; 4 Hours</h3>
-                  <span className={pageStyles.slaLabel}>
+                <div className="rounded-2xl border border-slate-200/80 bg-white p-4 flex flex-col gap-1.5 shadow-xs">
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">Bulk / Quotes</span>
+                  <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">&lt; 4 Hours</h3>
+                  <span className="text-[12.5px] text-slate-600 leading-snug">
                     Custom line-item quotation prepared.
                   </span>
                 </div>
               </div>
 
               {/* "WHAT HAPPENS NEXT?" TIMELINE */}
-              <div className={pageStyles.timelineCard}>
-                <h2 className={pageStyles.timelineTitle}>
+              <div className="rounded-[24px] border border-slate-200 bg-white p-6 sm:px-7 shadow-xs">
+                <h2 className="text-base font-extrabold text-[#1a2a40] mb-5">
                   Your Response Timeline
                 </h2>
-                <div className={pageStyles.timelineSteps}>
-                  <div
-                    className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}
-                  >
-                    <span className={pageStyles.stepIcon}>1</span>
-                    <div className={pageStyles.stepDetails}>
-                      <h3 className={pageStyles.stepTitle}>Submit Request</h3>
-                      <p className={pageStyles.stepDesc}>
+                <div className="relative flex flex-col gap-5 pl-2 before:absolute before:left-[17px] before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
+                  <div className="relative flex gap-4 items-start">
+                    <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">1</span>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">Submit Request</h3>
+                      <p className="text-xs text-slate-600 leading-relaxed m-0">
                         Submit your contact form with your exact needs.
                       </p>
                     </div>
                   </div>
-                  <div
-                    className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}
-                  >
-                    <span className={pageStyles.stepIcon}>2</span>
-                    <div className={pageStyles.stepDetails}>
-                      <h3 className={pageStyles.stepTitle}>
+                  <div className="relative flex gap-4 items-start">
+                    <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">2</span>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">
                         Gauteng Fast-Track Router
                       </h3>
-                      <p className={pageStyles.stepDesc}>
+                      <p className="text-xs text-slate-600 leading-relaxed m-0">
                         Your request is automatically fast-tracked to the
                         correct department.
                       </p>
                     </div>
                   </div>
-                  <div
-                    className={`${pageStyles.timelineStep} ${pageStyles.stepActive}`}
-                  >
-                    <span className={pageStyles.stepIcon}>3</span>
-                    <div className={pageStyles.stepDetails}>
-                      <h3 className={pageStyles.stepTitle}>Direct Outreach</h3>
-                      <p className={pageStyles.stepDesc}>
+                  <div className="relative flex gap-4 items-start">
+                    <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">3</span>
+                    <div className="flex flex-col gap-1">
+                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">Direct Outreach</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed m-0">
                         A support representative contacts you on WhatsApp or
                         phone to finalize details.
                       </p>
@@ -177,102 +168,46 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               </div>
 
               {/* CONTACT DETAILS CHANNELS */}
-              <div className={pageStyles.contactChannelsCard}>
+              <div className="rounded-[24px] border border-slate-200 bg-white p-6 sm:p-7 shadow-xs flex flex-col gap-4">
                 <SectionHeader
                   eyebrow="Reach out direct"
                   title="Contact details"
                   text="Reach out directly through standard support paths."
                 />
-                <div className={pageStyles.channelsGrid}>
-                  <div className={pageStyles.channelRow}>
-                    <svg
-                      className={pageStyles.channelIcon}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                    <strong>General enquiries:</strong>
-                    <a href={generalEmailHref}>{generalEmail}</a>
+                <div className="flex flex-col gap-3.5 pt-2">
+                  <div className="flex items-start gap-3 text-[14.5px] text-slate-700 leading-snug">
+                    <Mail className="w-4.5 h-4.5 text-teal-600 shrink-0 mt-0.5" />
+                    <strong className="text-[#1a2a40] font-bold min-w-[80px]">General enquiries:</strong>
+                    <a href={generalEmailHref} className="text-teal-600 font-semibold underline underline-offset-3 hover:opacity-80 transition-opacity">{generalEmail}</a>
                   </div>
-                  <div className={pageStyles.channelRow}>
-                    <svg
-                      className={pageStyles.channelIcon}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                    <strong>Place an order:</strong>
-                    <a href={ordersEmailHref}>{ordersEmail}</a>
+                  <div className="flex items-start gap-3 text-[14.5px] text-slate-700 leading-snug">
+                    <Mail className="w-4.5 h-4.5 text-teal-600 shrink-0 mt-0.5" />
+                    <strong className="text-[#1a2a40] font-bold min-w-[80px]">Place an order:</strong>
+                    <a href={ordersEmailHref} className="text-teal-600 font-semibold underline underline-offset-3 hover:opacity-80 transition-opacity">{ordersEmail}</a>
                   </div>
-                  <div className={pageStyles.channelRow}>
-                    <svg
-                      className={pageStyles.channelIcon}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                    <strong>Happy Pay &amp; payment enquiries:</strong>
-                    <a href={generalEmailHref}>{generalEmail}</a>
+                  <div className="flex items-start gap-3 text-[14.5px] text-slate-700 leading-snug">
+                    <Mail className="w-4.5 h-4.5 text-teal-600 shrink-0 mt-0.5" />
+                    <strong className="text-[#1a2a40] font-bold min-w-[80px]">Happy Pay &amp; payment enquiries:</strong>
+                    <a href={generalEmailHref} className="text-teal-600 font-semibold underline underline-offset-3 hover:opacity-80 transition-opacity">{generalEmail}</a>
                   </div>
-                  <div className={pageStyles.channelRow}>
-                    <svg
-                      className={pageStyles.channelIcon}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                    <strong>Telephone:</strong>
-                    <a href={phoneHref}>{phoneNumber}</a>
+                  <div className="flex items-start gap-3 text-[14.5px] text-slate-700 leading-snug">
+                    <Phone className="w-4.5 h-4.5 text-teal-600 shrink-0 mt-0.5" />
+                    <strong className="text-[#1a2a40] font-bold min-w-[80px]">Telephone:</strong>
+                    <a href={phoneHref} className="text-teal-600 font-semibold underline underline-offset-3 hover:opacity-80 transition-opacity">{phoneNumber}</a>
                   </div>
-                  <div className={pageStyles.channelRow}>
-                    <svg
-                      className={pageStyles.channelIcon}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                    </svg>
-                    <strong>WhatsApp:</strong>
+                  <div className="flex items-start gap-3 text-[14.5px] text-slate-700 leading-snug">
+                    <MessageSquare className="w-4.5 h-4.5 text-teal-600 shrink-0 mt-0.5" />
+                    <strong className="text-[#1a2a40] font-bold min-w-[80px]">WhatsApp:</strong>
                     {hasWhatsAppNumber ? (
-                      <a href={orderWhatsAppHref}>Start prefilled chat</a>
+                      <a href={orderWhatsAppHref} className="text-teal-600 font-semibold underline underline-offset-3 hover:opacity-80 transition-opacity">Start prefilled chat</a>
                     ) : (
-                      <span>Currently offline</span>
+                      <span className="text-slate-400">Currently offline</span>
                     )}
                   </div>
                 </div>
 
-                <div
-                  className={sectionStyles.buttonRow}
-                  style={{ marginTop: '12px' }}
-                >
-                  <Button href="/partnership">Partner With Us</Button>
+                <div className="mt-3">
+                  <Button href="/partnership" variant="outline" className="min-h-[44px]">Partner With Us</Button>
                 </div>
               </div>
             </div>

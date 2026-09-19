@@ -15,7 +15,6 @@ import type {
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import { trackInitiatePreOrder } from "@/lib/analytics";
-import styles from "./GradeSelector.module.css";
 
 type GradeSelectorProps = {
   school: School;
@@ -147,7 +146,7 @@ export function GradeSelector({
   return (
     <>
       <div
-        className={styles.gradeSelector}
+        className="mt-5 grid grid-cols-1 lg:grid-cols-3 gap-[22px] items-stretch"
         onClickCapture={handleGradeInteraction}
       >
         {school.grades.map((grade) => {

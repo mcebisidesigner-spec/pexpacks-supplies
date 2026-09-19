@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Plus, Eye, Package, CheckCircle2, Truck, Trash2 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { corePages as styles } from "./CorePagesView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
@@ -21,12 +21,13 @@ import {
   useTableParams,
   type ColumnDef,
 } from "@/components/admin/shared/DataTable";
+import { TanStackProductsTable } from "@/components/admin/shared/TanStackProductsTable";
 import type {
   MasterProductRow,
   SupplierCostStats,
 } from "@/lib/admin/operations";
 import { CSVStationeryImporter } from "@/components/inventory/CSVStationeryImporter";
-import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import { AdminPage, AdminConfirmDialog } from "@/components/admin/ui";
 import { clearMasterProductsAction } from "@/app/admin/products/actions";
 import { useDbNotice } from "@/components/admin/ui/DbNotice";
 import {
@@ -301,7 +302,7 @@ export function MasterProductsPageView({
   ];
 
   return (
-    <div className={styles.container}>
+    <AdminPage fullWidth className="gap-5">
       <AdminPageHeader
         title="Master Products"
         count={initialData.total}
@@ -339,23 +340,16 @@ export function MasterProductsPageView({
         }
       />
 
-      <DataTable
+      <TanStackProductsTable
         data={initialData.products}
-        columns={columns}
-        keyExtractor={(row) => row.id}
+        total={initialData.total}
+        page={initialData.page}
+        pageSize={params.pageSize}
         onRowClick={(row) =>
           router.push(`/admin/products/${getProductSlug(row)}`)
         }
         isLoading={isPending}
-        emptyTitle="No products found"
-        emptySubtitle="Try adjusting your search term or category filter."
-        footer={
-          <DataTablePagination
-            total={initialData.total}
-            pageSize={params.pageSize}
-            currentPage={initialData.page}
-          />
-        }
+        onPageChange={(page) => setParams({ page }, true)}
       />
 
       {catalogueMessage && (
@@ -397,16 +391,18 @@ export function MasterProductsPageView({
         />
       </section>
 
-      <ConfirmModal
+      <AdminConfirmDialog
         isOpen={confirmClearOpen}
-        variant="danger"
-        title="Clear all products?"
-        message={`Permanently delete ALL ${initialData.total || 0} products from the master catalogue? Pack compositions referencing them will also be removed. Order and quotation history is preserved as snapshots. This cannot be undone.`}
-        confirmLabel="Clear all products"
-        cancelLabel="Cancel"
+        onClose={() => setConfirmClearOpen(false)}
         onConfirm={performClear}
-        onCancel={() => setConfirmClearOpen(false)}
+        title="Clear All Master Products?"
+        description={`Permanently delete ALL ${initialData.total || 0} products from the master catalogue? Pack compositions referencing them will also be removed. Order line items and quotations keep their historical snapshots. This action cannot be undone.`}
+        confirmLabel="Permanently Clear All"
+        cancelLabel="Cancel"
+        confirmPhrase="CLEAR ALL"
+        isDestructive={true}
+        isLoading={isClearing}
       />
-    </div>
+    </AdminPage>
   );
 }

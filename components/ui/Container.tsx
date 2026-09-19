@@ -1,8 +1,7 @@
 import type { ReactNode, HTMLAttributes } from "react";
-import styles from "./Container.module.css";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
-type ContainerProps = HTMLAttributes<HTMLDivElement> & {
+export type ContainerProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
   className?: string;
   as?: "div" | "section" | "article" | "main";
@@ -15,7 +14,13 @@ export function Container({
   ...props
 }: ContainerProps) {
   return (
-    <Tag className={clsx(styles.container, className)} {...props}>
+    <Tag
+      className={cn(
+        "w-full max-w-[1280px] mx-auto px-[clamp(16px,4vw,24px)] md:px-[clamp(24px,5vw,40px)] lg:px-[clamp(40px,5vw,64px)]",
+        className
+      )}
+      {...props}
+    >
       {children}
     </Tag>
   );

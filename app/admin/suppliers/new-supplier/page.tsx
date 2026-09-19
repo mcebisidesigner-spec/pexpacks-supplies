@@ -2,7 +2,7 @@ import { Building2, CreditCard, Mail, Save } from "lucide-react";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {
   title: "New Supplier | Admin | Pexpacks",

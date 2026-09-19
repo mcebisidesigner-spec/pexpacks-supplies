@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import styles from "./QuickMetricsGrid.module.css";
+import { cn } from "@/lib/utils";
 
 export type MetricTone =
   | "emerald"
@@ -37,6 +37,26 @@ const TONE_COLORS: Record<MetricTone, { stroke: string; fill: string }> = {
   slate: { stroke: "#64748b", fill: "rgba(100, 116, 139, 0.15)" },
 };
 
+const iconToneStyles: Record<MetricTone, string> = {
+  emerald: "bg-emerald-500/12 text-emerald-400 border border-emerald-500/30",
+  cyan: "bg-sky-500/12 text-sky-400 border border-sky-500/30",
+  blue: "bg-blue-500/12 text-blue-400 border border-blue-500/30",
+  amber: "bg-amber-500/12 text-amber-400 border border-amber-500/30",
+  red: "bg-red-500/12 text-red-400 border border-red-500/30",
+  purple: "bg-purple-500/12 text-purple-400 border border-purple-500/30",
+  slate: "bg-slate-500/12 text-slate-400 border border-slate-500/30",
+};
+
+const trendToneStyles: Record<MetricTone, string> = {
+  emerald: "text-emerald-400",
+  cyan: "text-sky-400",
+  blue: "text-blue-400",
+  amber: "text-amber-400",
+  red: "text-red-400",
+  purple: "text-purple-400",
+  slate: "text-slate-400",
+};
+
 function MiniSparkline({
   tone = "emerald",
   direction = "up",
@@ -46,7 +66,6 @@ function MiniSparkline({
 }) {
   const { stroke } = TONE_COLORS[tone] || TONE_COLORS.emerald;
 
-  // Render varied smooth bezier curves based on trend direction
   let pathD = "M 0,18 Q 18,22 36,12 T 72,4";
   let fillD = "M 0,18 Q 18,22 36,12 T 72,4 L 72,24 L 0,24 Z";
 
@@ -61,10 +80,10 @@ function MiniSparkline({
   const gradientId = `sparkline-grad-${tone}-${direction}`;
 
   return (
-    <div className={styles.sparklineWrap}>
+    <div className="w-[72px] h-6 shrink-0 flex items-center justify-end">
       <svg
         viewBox="0 0 72 24"
-        className={styles.sparklineSvg}
+        className="w-full h-full overflow-visible"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -87,42 +106,23 @@ function MiniSparkline({
   );
 }
 
-export function QuickMetricsGrid({ metrics, className }: QuickMetricsGridProps) {
+export function QuickMetricsGrid({
+  metrics,
+  className,
+}: QuickMetricsGridProps) {
   if (!metrics || metrics.length === 0) return null;
 
   return (
-    <div className={`${styles.grid} ${className || ""}`}>
+    <div
+      className={cn(
+        "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full mb-4.5",
+        className,
+      )}
+    >
       {metrics.map((item, idx) => {
         const tone = item.tone || "emerald";
-        const toneClass =
-          tone === "emerald"
-            ? styles.iconSlotEmerald
-            : tone === "cyan"
-            ? styles.iconSlotCyan
-            : tone === "blue"
-            ? styles.iconSlotBlue
-            : tone === "amber"
-            ? styles.iconSlotAmber
-            : tone === "red"
-            ? styles.iconSlotRed
-            : tone === "purple"
-            ? styles.iconSlotPurple
-            : styles.iconSlotSlate;
-
-        const trendClass =
-          tone === "emerald"
-            ? styles.trendEmerald
-            : tone === "cyan"
-            ? styles.trendCyan
-            : tone === "blue"
-            ? styles.trendBlue
-            : tone === "amber"
-            ? styles.trendAmber
-            : tone === "red"
-            ? styles.trendRed
-            : tone === "purple"
-            ? styles.trendPurple
-            : styles.trendSlate;
+        const toneClass = iconToneStyles[tone] || iconToneStyles.emerald;
+        const trendClass = trendToneStyles[tone] || trendToneStyles.emerald;
 
         const formattedVal =
           typeof item.value === "number"
@@ -130,21 +130,38 @@ export function QuickMetricsGrid({ metrics, className }: QuickMetricsGridProps) 
             : item.value;
 
         return (
-          <div key={`${item.label}-${idx}`} className={styles.card}>
-            <div className={styles.cardTop}>
-              <span className={styles.cardLabel}>{item.label}</span>
+          <div
+            key={`${item.label}-${idx}`}
+            className="relative flex flex-col justify-between p-4 sm:p-4.5 bg-linear-to-b from-slate-900/75 to-slate-950/85 border border-slate-800/85 rounded-2xl shadow-md overflow-hidden min-h-[110px] transition-all duration-150 hover:-translate-y-0.5 hover:border-slate-700/90 hover:shadow-lg"
+          >
+            <div className="flex items-center justify-between gap-2.5 mb-1.5">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                {item.label}
+              </span>
               {item.icon && (
-                <div className={`${styles.iconSlot} ${toneClass}`}>
+                <div
+                  className={cn(
+                    "inline-flex items-center justify-center w-8 h-8 rounded-lg shrink-0",
+                    toneClass,
+                  )}
+                >
                   {item.icon}
                 </div>
               )}
             </div>
 
-            <div className={styles.cardValue}>{formattedVal}</div>
+            <div className="text-[26px] font-extrabold text-white tracking-tight leading-tight mb-2 tabular-nums">
+              {formattedVal}
+            </div>
 
-            <div className={styles.cardBottom}>
+            <div className="flex items-center justify-between gap-2">
               {(item.trend || item.subtitle) && (
-                <span className={`${styles.trendText} ${trendClass}`}>
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-1 text-[11px] font-semibold whitespace-nowrap",
+                    trendClass,
+                  )}
+                >
                   {item.trendDirection === "up" && "↗ "}
                   {item.trendDirection === "down" && "↘ "}
                   {item.trend || item.subtitle}
@@ -153,7 +170,9 @@ export function QuickMetricsGrid({ metrics, className }: QuickMetricsGridProps) 
 
               <MiniSparkline
                 tone={tone}
-                direction={item.trendDirection || (tone === "red" ? "down" : "up")}
+                direction={
+                  item.trendDirection || (tone === "red" ? "down" : "up")
+                }
               />
             </div>
           </div>

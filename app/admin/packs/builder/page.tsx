@@ -5,7 +5,7 @@ import { Calculator, Save, Search, Trash2 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 
 interface SelectedItem {

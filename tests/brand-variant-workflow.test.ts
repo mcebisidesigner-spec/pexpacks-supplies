@@ -53,12 +53,11 @@ describe("Brand Variant Workflow & Product Isolation Engine", () => {
 
     expect(code).toContain("isBrandChanged");
     expect(code).toContain("saveMode");
-    expect(code).toContain("brandVariantNotice");
-    expect(code).toContain("brandVariantHeader");
+    expect(code).toContain("Brand Changed");
     expect(code).toContain("save_mode");
     expect(code).toContain("new_variant");
     expect(code).toContain("update_existing");
-    expect(code).toContain("effectiveSubmitLabel");
+    expect(code).toContain("SubmitButton");
   });
 
   it("verifies lib/admin/items.ts updateItem contains new variant creation logic", async () => {

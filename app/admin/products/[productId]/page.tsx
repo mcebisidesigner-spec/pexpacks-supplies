@@ -17,7 +17,7 @@ import { ItemIcon } from "@/components/ui/ItemIcon";
 import { inferIcon } from "@/lib/packs/normalisePackItems";
 import { deleteItemAction } from "../actions";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface ProductDetailPageProps {
   params: Promise<{ productId: string }>;

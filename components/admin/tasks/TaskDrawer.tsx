@@ -9,7 +9,6 @@ import {
   Send,
   X,
 } from "lucide-react";
-import styles from "./TaskDrawer.module.css";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import {
@@ -129,44 +128,48 @@ export function TaskDrawer({
 
   return (
     <div
-      className={styles.backdrop}
+      className="fixed inset-0 bg-black/65 backdrop-blur-xs z-50 flex justify-end animate-in fade-in duration-150"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
-      <div className={styles.drawer} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.header}>
-          <div className={styles.titleGroup}>
-            <div className={styles.metaRow}>
+      <div
+        className="w-full max-w-[520px] h-full bg-[var(--db-surface-inner,#090e17)] border-l border-[var(--db-border,#1e293b)] flex flex-col shadow-2xl overflow-hidden animate-in slide-in-from-right duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-5 sm:p-6 bg-[var(--db-surface,#0c1322)] border-b border-[var(--db-border,#1e293b)] flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
               <StatusBadge status={status} showDot />
               <StatusBadge status={task.priority} showDot />
               {task.due_at && (
-                <span
-                  className={styles.metaRow}
-                  style={{ color: "#94a3b8", fontSize: "12px" }}
-                >
+                <span className="flex items-center gap-1 text-slate-400 text-xs">
                   <Clock size={12} /> Due{" "}
                   {new Date(task.due_at).toLocaleDateString("en-ZA")}
                 </span>
               )}
             </div>
-            <h2 className={styles.title}>{task.title}</h2>
+            <h2 className="m-0 text-lg font-bold text-white tracking-tight leading-tight">
+              {task.title}
+            </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className={styles.closeBtn}
+            className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-800/50 border border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-700/80 transition-colors"
             aria-label="Close drawer"
           >
             <X size={16} />
           </button>
         </div>
 
-        <div className={styles.body}>
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6 flex flex-col gap-6">
           {task.entity_type && (
-            <div className={styles.section}>
-              <span className={styles.sectionTitle}>Linked Record</span>
-              <div className={styles.linkedEntityBox}>
+            <div className="flex flex-col gap-2">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                Linked Record
+              </span>
+              <div className="flex items-center gap-2.5 p-2.5 sm:px-3.5 rounded-lg bg-slate-800/40 border border-slate-700/60 text-xs font-semibold text-blue-400">
                 <Link2 size={14} />
                 <span>
                   {task.entity_type.toUpperCase()}:{" "}
@@ -177,36 +180,41 @@ export function TaskDrawer({
           )}
 
           {task.description && (
-            <div className={styles.section}>
-              <span className={styles.sectionTitle}>
+            <div className="flex flex-col gap-2">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 Description &amp; Objective
               </span>
-              <div className={styles.descriptionBox}>{task.description}</div>
+              <div className="p-3.5 rounded-lg bg-[var(--db-surface,#0c1322)] border border-[var(--db-border,#1e293b)] text-xs sm:text-sm text-slate-300 leading-relaxed">
+                {task.description}
+              </div>
             </div>
           )}
 
-          <div className={styles.section}>
-            <span className={styles.sectionTitle}>
+          <div className="flex flex-col gap-2">
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
               Activity Thread &amp; Notes
             </span>
-            <div className={styles.threadList}>
+            <div className="flex flex-col gap-3">
               {isLoadingComments ? (
-                <div className={styles.emptyComments}>
+                <div className="p-5 text-center text-slate-400 text-xs sm:text-sm">
                   Loading activity thread...
                 </div>
               ) : comments.length === 0 ? (
-                <div className={styles.emptyComments}>
+                <div className="p-5 text-center text-slate-400 text-xs sm:text-sm flex flex-col items-center gap-2">
                   <MessageSquare
                     size={20}
-                    style={{ margin: "0 auto 8px", opacity: 0.5 }}
+                    className="opacity-50"
                   />
                   <div>No discussion yet. Start the conversation below.</div>
                 </div>
               ) : (
                 comments.map((c) => (
-                  <div key={c.id} className={styles.commentCard}>
-                    <div className={styles.commentTop}>
-                      <span className={styles.commentAuthor}>Staff Member</span>
+                  <div
+                    key={c.id}
+                    className="p-3 sm:px-3.5 rounded-lg bg-[var(--db-surface,#0c1322)] border border-[var(--db-border,#1e293b)] flex flex-col gap-1.5"
+                  >
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span className="font-bold text-slate-300">Staff Member</span>
                       <span>
                         {new Date(c.created_at).toLocaleTimeString([], {
                           hour: "2-digit",
@@ -214,7 +222,9 @@ export function TaskDrawer({
                         })}
                       </span>
                     </div>
-                    <div className={styles.commentBody}>{c.body}</div>
+                    <div className="text-xs sm:text-sm text-slate-200 leading-normal break-words">
+                      {c.body}
+                    </div>
                   </div>
                 ))
               )}
@@ -222,14 +232,14 @@ export function TaskDrawer({
           </div>
         </div>
 
-        <div className={styles.footer}>
+        <div className="p-4 sm:px-6 bg-[var(--db-surface,#0c1322)] border-t border-[var(--db-border,#1e293b)] flex flex-col gap-3">
           <form
             onSubmit={handleAddComment}
             className="flex items-center gap-2 w-full"
           >
             <div className="flex-1">
               <input
-                className={styles.commentInput}
+                className="w-full h-9 bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,#1e293b)] rounded-lg px-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500"
                 placeholder="Write a comment or note..."
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
@@ -248,8 +258,8 @@ export function TaskDrawer({
             </AdminButton>
           </form>
 
-          <div className={styles.actionsRow}>
-            <div style={{ display: "flex", gap: "6px" }}>
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5">
               {status !== "in_progress" && (
                 <AdminButton
                   type="button"

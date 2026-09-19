@@ -5,7 +5,6 @@ import * as Sentry from "@sentry/nextjs";
 
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/marketing/PageHero";
-import page from "@/styles/Page.module.css";
 
 export default function GlobalError({
   error,
@@ -22,9 +21,9 @@ export default function GlobalError({
       eyebrow="Something went wrong"
       title="An unexpected error occurred"
     >
-      <div className={page.notFoundActions}>
-        <Button href="/">Go to homepage</Button>
-        <Button type="button" onClick={() => reset()} variant="white">
+      <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+        <Button href="/" className="min-h-[44px]">Go to homepage</Button>
+        <Button type="button" onClick={() => reset()} variant="white" className="min-h-[44px]">
           Try again
         </Button>
       </div>

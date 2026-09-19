@@ -17,10 +17,10 @@ import {
   Upload,
   Zap,
 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { corePages as styles } from "./CorePagesView";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { AdminPage, AdminButton } from "@/components/admin/ui";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { VisibleToggle } from "@/components/admin/packs/VisibleToggle";
@@ -225,7 +225,7 @@ export function SchoolPacksDetailView({
   }, [tailoredPacks]);
 
   return (
-    <div className={styles.container}>
+    <AdminPage fullWidth className="gap-5">
       {/* Header Row */}
       <AdminPageHeader
         backHref="/admin/packs"
@@ -479,6 +479,6 @@ export function SchoolPacksDetailView({
           </div>
         </div>
       </div>
-    </div>
+    </AdminPage>
   );
 }

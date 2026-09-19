@@ -16,9 +16,14 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import styles from "./AdminDialog.module.css";
+import { cn } from "@/lib/utils";
 
-export type DialogVariant = "danger" | "warning" | "primary" | "info" | "success";
+export type DialogVariant =
+  | "danger"
+  | "warning"
+  | "primary"
+  | "info"
+  | "success";
 
 export interface ConfirmDialogOptions {
   title?: string;
@@ -145,29 +150,29 @@ export function AdminDialogProvider({ children }: { children: ReactNode }) {
   const getIconClass = (variant: DialogVariant) => {
     switch (variant) {
       case "danger":
-        return styles.iconSlotDanger;
+        return "border border-[var(--db-danger-border,rgba(239,68,68,0.28))] bg-[var(--db-danger-subtle,rgba(239,68,68,0.12))] text-[var(--db-danger-text,#f87171)]";
       case "warning":
-        return styles.iconSlotWarning;
+        return "border border-[var(--db-warning-border,rgba(245,158,11,0.28))] bg-[var(--db-warning-subtle,rgba(245,158,11,0.12))] text-[var(--db-warning-text,#fbbf24)]";
       case "success":
-        return styles.iconSlotSuccess;
+        return "border border-[var(--db-success-border,rgba(16,185,129,0.28))] bg-[var(--db-success-subtle,rgba(16,185,129,0.12))] text-[var(--db-success-text,#34d399)]";
       case "info":
       case "primary":
       default:
-        return styles.iconSlotInfo;
+        return "border border-[var(--db-info-border,rgba(14,165,233,0.28))] bg-[var(--db-info-subtle,rgba(14,165,233,0.12))] text-[var(--db-info-text,#38bdf8)]";
     }
   };
 
   const getBtnConfirmClass = (variant: DialogVariant) => {
     switch (variant) {
       case "danger":
-        return styles.btnDanger;
+        return "border border-red-500/40 bg-red-600 text-white shadow-[0_4px_12px_rgba(220,38,38,0.35)] hover:bg-red-500 hover:shadow-[0_4px_16px_rgba(239,68,68,0.45)]";
       case "warning":
-        return styles.btnWarning;
+        return "border border-amber-500/40 bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.35)] hover:bg-amber-600 hover:shadow-[0_4px_16px_rgba(245,158,11,0.45)]";
       case "success":
       case "info":
       case "primary":
       default:
-        return styles.btnPrimary;
+        return "border border-emerald-500/40 bg-emerald-500 text-white shadow-[0_4px_12px_rgba(16,185,129,0.35)] hover:bg-emerald-600 hover:shadow-[0_4px_16px_rgba(16,185,129,0.45)]";
     }
   };
 
@@ -176,30 +181,35 @@ export function AdminDialogProvider({ children }: { children: ReactNode }) {
       {children}
       {dialog?.isOpen && (
         <div
-          className={styles.overlay}
+          className="fixed inset-0 z-[999999] grid p-3.5 sm:p-5 place-items-center bg-[#040810]/85 backdrop-blur-md animate-in fade-in duration-150"
           role="dialog"
           aria-modal="true"
           aria-labelledby="admin-dialog-title"
           aria-describedby="admin-dialog-message"
           onClick={() => handleClose(false)}
         >
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.brandRow}>
-              <span className={styles.brandBadge}>
+          <div
+            className="relative flex flex-col gap-4.5 w-full max-w-[460px] p-4.5 sm:px-6 sm:py-5 border border-[var(--db-border,#1e293b)] rounded-[var(--db-radius-card,14px)] bg-[var(--db-surface,#0c1322)] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.75),0_0_0_1px_rgba(255,255,255,0.05),0_0_30px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--db-border-muted,rgba(30,41,59,0.65))]">
+              <span className="inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-wider uppercase text-[var(--db-text-muted,#94a3b8)]">
                 <span
-                  className={
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full",
                     dialog.variant === "danger"
-                      ? styles.brandDotDanger
+                      ? "bg-red-500 shadow-[0_0_8px_#ef4444]"
                       : dialog.variant === "warning"
-                        ? styles.brandDotWarning
-                        : styles.brandDot
-                  }
+                        ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]"
+                        : "bg-emerald-500 shadow-[0_0_8px_#10b981]",
+                  )}
                 />
-                PEXPACKS // {dialog.type === "confirm" ? "CONFIRM ACTION" : "NOTICE"}
+                PEXPACKS //{" "}
+                {dialog.type === "confirm" ? "CONFIRM ACTION" : "NOTICE"}
               </span>
               <button
                 type="button"
-                className={styles.closeBtn}
+                className="grid w-7 h-7 place-items-center border border-[var(--db-border,#1e293b)] rounded-md bg-[var(--db-surface-inner,#090e17)] text-[var(--db-text-muted,#94a3b8)] cursor-pointer transition-colors hover:bg-white/8 hover:text-white hover:border-[var(--db-border-strong,#334155)]"
                 onClick={() => handleClose(false)}
                 aria-label="Close dialog"
               >
@@ -207,25 +217,36 @@ export function AdminDialogProvider({ children }: { children: ReactNode }) {
               </button>
             </div>
 
-            <div className={styles.contentRow}>
-              <div className={`${styles.iconSlot} ${getIconClass(dialog.variant)}`}>
+            <div className="flex items-start gap-4">
+              <div
+                className={cn(
+                  "grid w-11 h-11 shrink-0 place-items-center rounded-xl",
+                  getIconClass(dialog.variant),
+                )}
+              >
                 {renderIcon(dialog.variant)}
               </div>
-              <div className={styles.textBlock}>
-                <h3 id="admin-dialog-title" className={styles.dialogTitle}>
+              <div className="min-w-0 flex-1">
+                <h3
+                  id="admin-dialog-title"
+                  className="m-0 text-base font-bold text-[var(--db-text-primary,#f8fafc)] leading-snug tracking-tight"
+                >
                   {dialog.title}
                 </h3>
-                <p id="admin-dialog-message" className={styles.dialogMessage}>
+                <p
+                  id="admin-dialog-message"
+                  className="mt-2 text-[13.5px] text-[var(--db-text-muted,#94a3b8)] leading-relaxed break-words"
+                >
                   {dialog.message}
                 </p>
               </div>
             </div>
 
-            <div className={styles.buttonRow}>
+            <div className="flex flex-col-reverse sm:flex-row justify-end items-center gap-2.5 pt-1.5">
               {dialog.type === "confirm" && (
                 <button
                   type="button"
-                  className={`${styles.btn} ${styles.btnCancel}`}
+                  className="w-full sm:w-auto inline-flex items-center justify-center min-h-[38px] px-4 rounded-lg font-inherit text-[13px] font-semibold tracking-wide cursor-pointer transition-colors border border-[var(--db-border,#1e293b)] bg-[var(--db-surface-inner,#090e17)] text-[var(--db-text-secondary,#e2e8f0)] hover:bg-white/6 hover:border-[var(--db-border-strong,#334155)] hover:text-white focus-visible:outline-2 focus-visible:outline-emerald-500 focus-visible:outline-offset-2"
                   onClick={() => handleClose(false)}
                 >
                   {dialog.cancelLabel}
@@ -234,7 +255,10 @@ export function AdminDialogProvider({ children }: { children: ReactNode }) {
               <button
                 ref={confirmBtnRef}
                 type="button"
-                className={`${styles.btn} ${getBtnConfirmClass(dialog.variant)}`}
+                className={cn(
+                  "w-full sm:w-auto inline-flex items-center justify-center min-h-[38px] px-4 rounded-lg font-inherit text-[13px] font-semibold tracking-wide cursor-pointer transition-all focus-visible:outline-2 focus-visible:outline-emerald-500 focus-visible:outline-offset-2",
+                  getBtnConfirmClass(dialog.variant),
+                )}
                 onClick={() => handleClose(true)}
               >
                 {dialog.confirmLabel}
@@ -250,7 +274,9 @@ export function AdminDialogProvider({ children }: { children: ReactNode }) {
 export function useAdminDialog() {
   const context = useContext(AdminDialogContext);
   if (!context) {
-    throw new Error("useAdminDialog must be used within an AdminDialogProvider");
+    throw new Error(
+      "useAdminDialog must be used within an AdminDialogProvider",
+    );
   }
   return context;
 }

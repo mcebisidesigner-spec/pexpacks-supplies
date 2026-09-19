@@ -2,16 +2,17 @@
 
 import type { SelectHTMLAttributes } from "react";
 import { useEffect, useId, useRef, useState } from "react";
-import clsx from "clsx";
-import styles from "./Input.module.css";
+import { cn } from "@/lib/utils";
 
-type SelectOption = {
-  value: string;
-  label: string;
-  disabled?: boolean;
-} | string;
+export type SelectOption =
+  | {
+      value: string;
+      label: string;
+      disabled?: boolean;
+    }
+  | string;
 
-type SelectChangeEvent = {
+export type SelectChangeEvent = {
   target: {
     value: string;
     name?: string;
@@ -22,7 +23,7 @@ type SelectChangeEvent = {
   };
 };
 
-type SelectProps = Omit<
+export type SelectProps = Omit<
   SelectHTMLAttributes<HTMLSelectElement>,
   "onChange" | "defaultValue" | "value" | "size" | "multiple"
 > & {
@@ -42,18 +43,18 @@ function normaliseOption(option: SelectOption) {
     : { disabled: false, ...option };
 }
 
-export default function Select({ 
-  label, 
-  id, 
+export default function Select({
+  label,
+  id,
   name,
-  options = [], 
-  value, 
+  options = [],
+  value,
   defaultValue = "",
-  onChange, 
+  onChange,
   onValueChange,
   error,
   placeholder = "Select an option",
-  className = '',
+  className = "",
   disabled,
   required,
   "aria-label": ariaLabel,
@@ -70,7 +71,9 @@ export default function Select({
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const selectedValue = isControlled ? value : internalValue;
-  const selectedOption = normalisedOptions.find((option) => option.value === selectedValue);
+  const selectedOption = normalisedOptions.find(
+    (option) => option.value === selectedValue
+  );
   const hasSelection = Boolean(selectedOption);
 
   useEffect(() => {
@@ -120,26 +123,32 @@ export default function Select({
     if (!enabledOptions.length) {
       return;
     }
-    const currentIndex = enabledOptions.findIndex((option) => option.value === selectedValue);
+    const currentIndex = enabledOptions.findIndex(
+      (option) => option.value === selectedValue
+    );
     const nextIndex =
       currentIndex === -1
         ? direction === 1
           ? 0
           : enabledOptions.length - 1
-        : (currentIndex + direction + enabledOptions.length) % enabledOptions.length;
+        : (currentIndex + direction + enabledOptions.length) %
+          enabledOptions.length;
     commitValue(enabledOptions[nextIndex].value);
     setOpen(true);
   }
 
   return (
-    <div className={clsx(styles.wrapper, className)} ref={wrapperRef}>
+    <div className={cn("grid gap-2 text-left", className)} ref={wrapperRef}>
       {label && (
-        <label htmlFor={selectId} className={styles.label}>
+        <label
+          htmlFor={selectId}
+          className="text-[var(--form-label-color,#1a2a40)] text-sm font-extrabold leading-tight tracking-tight select-none"
+        >
           {label}
         </label>
       )}
-      
-      <div className={styles.selectWrap}>
+
+      <div className="relative grid">
         {name ? (
           <input
             type="hidden"
@@ -154,7 +163,14 @@ export default function Select({
         <button
           id={selectId}
           type="button"
-          className={clsx(styles.select, styles.selectButton, open && styles.selectButtonOpen, !hasSelection && styles.selectPlaceholder)}
+          className={cn(
+            "w-full min-h-[50px] sm:min-h-[54px] rounded-[18px] border border-[var(--form-control-border,#e1e7ea)] px-4 pr-11 bg-[var(--form-control-bg,#ffffff)] text-[var(--form-control-color,#1a2a40)] font-sans text-sm sm:text-[15px] flex items-center justify-between text-left cursor-pointer transition-all duration-150 hover:border-[rgba(26,42,64,0.18)] focus:outline-none focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-4 focus:ring-[rgba(26,122,119,0.12)] disabled:cursor-not-allowed disabled:opacity-60",
+            open &&
+              "border-[var(--pex-keppel,#1a7a77)] ring-4 ring-[rgba(26,122,119,0.12)]",
+            !hasSelection && "text-[rgba(77,90,93,0.48)]",
+            error &&
+              "border-[var(--color-danger,#b91c1c)] focus:border-[var(--color-danger,#b91c1c)] ring-4 ring-[rgba(185,28,28,0.1)]"
+          )}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={listboxId}
@@ -184,17 +200,34 @@ export default function Select({
             }
           }}
         >
-          <span>{selectedOption?.label ?? placeholder}</span>
+          <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+            {selectedOption?.label ?? placeholder}
+          </span>
         </button>
-        
-        <span className={styles.selectChevron} aria-hidden="true">
+
+        <span
+          className={cn(
+            "absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-[var(--pex-text-muted,#4d5a5d)] transition-transform duration-200",
+            open && "rotate-180 text-[var(--pex-keppel,#1a7a77)]"
+          )}
+          aria-hidden="true"
+        >
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </span>
 
         {open ? (
-          <div id={listboxId} className={styles.selectMenu} role="listbox">
+          <div
+            id={listboxId}
+            className="absolute z-[200] top-[calc(100%+8px)] left-0 right-0 grid gap-1.5 max-h-[min(320px,56vh)] overflow-auto p-2 border border-[rgba(9,119,113,0.16)] rounded-[14px] bg-gradient-to-b from-[rgba(239,250,249,0.96)] to-[rgba(255,255,255,0.98)] shadow-[0_18px_42px_rgba(15,35,58,0.14)] backdrop-blur-sm"
+            role="listbox"
+          >
             {normalisedOptions.map((option) => {
               const selected = option.value === selectedValue;
               return (
@@ -204,20 +237,37 @@ export default function Select({
                   role="option"
                   aria-selected={selected}
                   disabled={option.disabled}
-                  className={clsx(styles.selectOption, selected && styles.selectOptionSelected)}
+                  className={cn(
+                    "flex items-center justify-between gap-3 w-full min-h-[44px] rounded-xl px-3.5 py-2.5 bg-transparent text-[var(--pex-text,#172326)] font-bold text-sm sm:text-[15px] text-left cursor-pointer transition-all duration-150 hover:bg-[rgba(224,244,244,0.74)] hover:border-[rgba(9,119,113,0.24)] focus-visible:outline-none focus-visible:bg-[rgba(224,244,244,0.74)] disabled:opacity-50 disabled:cursor-not-allowed",
+                    selected &&
+                      "bg-[rgba(26,122,119,0.1)] text-[var(--pex-keppel,#1a7a77)] shadow-[inset_4px_0_0_var(--pex-keppel,#1a7a77)] border border-[rgba(9,119,113,0.28)]"
+                  )}
                   onClick={() => commitValue(option.value)}
                 >
-                  <span>{option.label}</span>
-                  {selected ? <span aria-hidden="true">Selected</span> : null}
+                  <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {option.label}
+                  </span>
+                  {selected ? (
+                    <span
+                      className="rounded-full px-2 py-0.5 bg-[rgba(9,119,113,0.1)] text-[var(--pex-keppel,#1a7a77)] text-[0.72rem] font-bold"
+                      aria-hidden="true"
+                    >
+                      Selected
+                    </span>
+                  ) : null}
                 </button>
               );
             })}
           </div>
         ) : null}
       </div>
-      
+
       {error && (
-        <span id={errorId} className={styles.errorText} role="alert">
+        <span
+          id={errorId}
+          className="m-0 text-[var(--color-danger,#b91c1c)] text-xs sm:text-[13px] font-extrabold leading-normal"
+          role="alert"
+        >
           {error}
         </span>
       )}

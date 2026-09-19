@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
-import styles from "./DateField.module.css";
+import { cn } from "@/lib/utils";
 
 type DateFieldMode = "date" | "datetime-local";
 
@@ -86,63 +86,54 @@ export function DateField({
   const dialogId = `${triggerId}-calendar`;
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const initialVal = controlledValue !== undefined ? controlledValue : defaultValue;
+  const initialVal =
+    controlledValue !== undefined ? controlledValue : defaultValue;
   const [internalValue, setInternalValue] = useState(initialVal);
-  const currentValue = controlledValue !== undefined ? controlledValue : internalValue;
+  const currentValue =
+    controlledValue !== undefined ? controlledValue : internalValue;
 
   const initialDate = parseDate(currentValue);
   const initialTime = parseTime(currentValue);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Date | null>(initialDate);
   const [viewMonth, setViewMonth] = useState(
-    initialDate ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    initialDate ??
+      new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   );
   const [hour, setHour] = useState(initialTime.hour);
   const [minute, setMinute] = useState(initialTime.minute);
-
 
   useEffect(() => {
     if (controlledValue !== undefined) {
       setInternalValue(controlledValue);
       const parsed = parseDate(controlledValue);
-      if (parsed) {
-        setDraft(parsed);
-      }
+      setDraft(parsed);
+      if (parsed) setViewMonth(parsed);
+      const time = parseTime(controlledValue);
+      setHour(time.hour);
+      setMinute(time.minute);
     }
   }, [controlledValue]);
-
-  useEffect(() => {
-    if (!open) return;
-    const updatePosition = () => {
-      if (rootRef.current) {
-      }
-    };
-    updatePosition();
-
-    const close = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("pointerdown", close);
-    window.addEventListener("keydown", escape);
-    window.addEventListener("resize", updatePosition);
-    return () => {
-      document.removeEventListener("pointerdown", close);
-      window.removeEventListener("keydown", escape);
-      window.removeEventListener("resize", updatePosition);
-    };
-  }, [open]);
 
   const days = useMemo(() => {
     const year = viewMonth.getFullYear();
     const month = viewMonth.getMonth();
-    const firstWeekday = new Date(year, month, 1).getDay();
-    return Array.from(
-      { length: 42 },
-      (_, index) => new Date(year, month, 1 - firstWeekday + index),
-    );
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const prevMonthDays = new Date(year, month, 0).getDate();
+
+    const dates: Date[] = [];
+    for (let i = firstDay - 1; i >= 0; i--) {
+      dates.push(new Date(year, month - 1, prevMonthDays - i));
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      dates.push(new Date(year, month, i));
+    }
+    const remaining = (7 - (dates.length % 7)) % 7;
+    for (let i = 1; i <= remaining; i++) {
+      dates.push(new Date(year, month + 1, i));
+    }
+    return dates;
   }, [viewMonth]);
 
   const openCalendar = () => {
@@ -200,169 +191,202 @@ export function DateField({
     const candidate = toDateValue(date);
     return Boolean(
       (min && candidate < min.slice(0, 10)) ||
-      (max && candidate > max.slice(0, 10)),
+        (max && candidate > max.slice(0, 10)),
     );
   };
 
   return (
-    <div className={styles.root} ref={rootRef}>
-      {name ? <input type="hidden" name={name} value={currentValue} required={required} /> : null}
+    <div className="relative w-full" ref={rootRef}>
+      {name ? (
+        <input
+          type="hidden"
+          name={name}
+          value={currentValue}
+          required={required}
+        />
+      ) : null}
       <button
         id={triggerId}
         type="button"
-        className={`${styles.trigger} ${currentValue ? styles.hasValue : ""} ${className}`}
+        className={cn(
+          "flex w-full h-[46px] min-h-[46px] items-center gap-3 text-left cursor-pointer bg-[var(--db-surface-inner,#090e17)] border border-slate-800 rounded-lg px-3.5 text-white font-inherit text-[13.5px] font-medium outline-none transition-all hover:border-emerald-500/40 focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20",
+          currentValue ? "text-white font-bold" : "text-slate-400 font-medium",
+          className,
+        )}
         aria-label={ariaLabel ?? placeholder}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={open ? dialogId : undefined}
         onClick={openCalendar}
       >
-        <CalendarDays aria-hidden="true" className={styles.calendarIcon} />
-        <span className={styles.triggerText}>
+        <CalendarDays
+          aria-hidden="true"
+          className="w-4.5 h-4.5 shrink-0 text-emerald-500"
+        />
+        <span className="overflow-hidden text-ellipsis whitespace-nowrap text-xs sm:text-[13.5px]">
           {currentValue ? formatValue(currentValue, mode) : placeholder}
         </span>
       </button>
 
       {open ? (
         <div
-          className={styles.modalBackdrop}
+          className="fixed inset-0 z-[9999999] bg-slate-950/65 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
           onClick={() => setOpen(false)}
           aria-hidden="false"
         >
           <div
             id={dialogId}
-            className={styles.popoverCentered}
+            className="relative w-[min(340px,calc(100vw-32px))] max-w-full p-4 border border-emerald-500/50 rounded-xl bg-[#132238] shadow-[0_24px_60px_rgba(0,0,0,0.95),0_0_0_1px_rgba(16,185,129,0.25)] box-border animate-in zoom-in-95 duration-150"
             role="dialog"
             aria-modal="true"
             aria-label={ariaLabel ?? "Choose date"}
             onClick={(e) => e.stopPropagation()}
           >
-          <div className={styles.brandRow}>
-            <span>
-              <strong>Pexpacks</strong> Calendar
-            </span>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close calendar"
-            >
-              <X aria-hidden="true" />
-            </button>
-          </div>
-          <div className={styles.monthRow}>
-            <button
-              type="button"
-              onClick={() =>
-                setViewMonth(
-                  new Date(
-                    viewMonth.getFullYear(),
-                    viewMonth.getMonth() - 1,
-                    1,
-                  ),
-                )
-              }
-              aria-label="Previous month"
-            >
-              <ChevronLeft aria-hidden="true" />
-            </button>
-            <strong>
-              {new Intl.DateTimeFormat("en-ZA", {
-                month: "long",
-                year: "numeric",
-              }).format(viewMonth)}
-            </strong>
-            <button
-              type="button"
-              onClick={() =>
-                setViewMonth(
-                  new Date(
-                    viewMonth.getFullYear(),
-                    viewMonth.getMonth() + 1,
-                    1,
-                  ),
-                )
-              }
-              aria-label="Next month"
-            >
-              <ChevronRight aria-hidden="true" />
-            </button>
-          </div>
-          <div className={styles.weekdays} aria-hidden="true">
-            {WEEKDAYS.map((day) => (
-              <span key={day}>{day}</span>
-            ))}
-          </div>
-          <div className={styles.grid} role="grid">
-            {days.map((date) => {
-              const dateValue = toDateValue(date);
-              const selected = draft ? dateValue === toDateValue(draft) : false;
-              const today = dateValue === toDateValue(new Date());
-              const outside = date.getMonth() !== viewMonth.getMonth();
-              return (
-                <button
-                  key={dateValue}
-                  type="button"
-                  role="gridcell"
-                  className={`${outside ? styles.outside : ""} ${today ? styles.today : ""} ${selected ? styles.selected : ""}`}
-                  disabled={isDisabled(date)}
-                  aria-selected={selected}
-                  onClick={() => handleSelectDate(date)}
-                >
-                  {date.getDate()}
-                </button>
-              );
-            })}
-          </div>
-          {mode === "datetime-local" ? (
-            <div className={styles.timeRow}>
-              <span>Time</span>
-              <input
-                type="number"
-                min="0"
-                max="23"
-                value={hour}
-                onChange={(event) => setHour(event.target.value)}
-                aria-label="Hour"
-              />
-              <strong>:</strong>
-              <input
-                type="number"
-                min="0"
-                max="59"
-                value={minute}
-                onChange={(event) => setMinute(event.target.value)}
-                aria-label="Minute"
-              />
+            <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-700/80 text-[11px] font-bold tracking-wider uppercase text-slate-400">
+              <span>
+                <strong className="text-emerald-400 font-extrabold">
+                  Pexpacks
+                </strong>{" "}
+                Calendar
+              </span>
+              <button
+                type="button"
+                className="grid place-items-center w-6 h-6 rounded bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors cursor-pointer"
+                onClick={() => setOpen(false)}
+                aria-label="Close calendar"
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
             </div>
-          ) : null}
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.textButton}
-              onClick={selectToday}
+            <div className="flex items-center justify-between mb-3 text-white text-sm font-bold">
+              <button
+                type="button"
+                className="grid place-items-center w-7 h-7 rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors cursor-pointer"
+                onClick={() =>
+                  setViewMonth(
+                    new Date(
+                      viewMonth.getFullYear(),
+                      viewMonth.getMonth() - 1,
+                      1,
+                    ),
+                  )
+                }
+                aria-label="Previous month"
+              >
+                <ChevronLeft size={14} aria-hidden="true" />
+              </button>
+              <strong>
+                {new Intl.DateTimeFormat("en-ZA", {
+                  month: "long",
+                  year: "numeric",
+                }).format(viewMonth)}
+              </strong>
+              <button
+                type="button"
+                className="grid place-items-center w-7 h-7 rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors cursor-pointer"
+                onClick={() =>
+                  setViewMonth(
+                    new Date(
+                      viewMonth.getFullYear(),
+                      viewMonth.getMonth() + 1,
+                      1,
+                    ),
+                  )
+                }
+                aria-label="Next month"
+              >
+                <ChevronRight size={14} aria-hidden="true" />
+              </button>
+            </div>
+            <div
+              className="grid grid-cols-7 gap-1 mb-1.5 text-center text-[10.5px] font-bold uppercase text-slate-400 tracking-wider"
+              aria-hidden="true"
             >
-              Today
-            </button>
-            {!required ? (
-              <button
-                type="button"
-                className={styles.textButton}
-                onClick={clear}
-              >
-                Clear
-              </button>
-            ) : null}
+              {WEEKDAYS.map((day) => (
+                <span key={day}>{day}</span>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1" role="grid">
+              {days.map((date) => {
+                const dateValue = toDateValue(date);
+                const selected = draft
+                  ? dateValue === toDateValue(draft)
+                  : false;
+                const today = dateValue === toDateValue(new Date());
+                const outside = date.getMonth() !== viewMonth.getMonth();
+                return (
+                  <button
+                    key={dateValue}
+                    type="button"
+                    role="gridcell"
+                    className={cn(
+                      "h-8 rounded-md text-xs font-semibold flex items-center justify-center transition-colors cursor-pointer text-slate-200 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed",
+                      outside && "text-slate-500",
+                      today && "ring-1 ring-emerald-400 text-emerald-400",
+                      selected &&
+                        "bg-emerald-500 text-white font-bold hover:bg-emerald-600",
+                    )}
+                    disabled={isDisabled(date)}
+                    aria-selected={selected}
+                    onClick={() => handleSelectDate(date)}
+                  >
+                    {date.getDate()}
+                  </button>
+                );
+              })}
+            </div>
             {mode === "datetime-local" ? (
+              <div className="flex items-center justify-center gap-2 mt-3 pt-3 border-t border-slate-700/80 text-xs font-bold text-slate-300">
+                <span>Time</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="23"
+                  value={hour}
+                  onChange={(event) => setHour(event.target.value)}
+                  aria-label="Hour"
+                  className="w-14 h-8 px-2 bg-slate-900 border border-slate-700 rounded text-center text-white text-xs font-mono outline-none focus:border-emerald-500"
+                />
+                <strong>:</strong>
+                <input
+                  type="number"
+                  min="0"
+                  max="59"
+                  value={minute}
+                  onChange={(event) => setMinute(event.target.value)}
+                  aria-label="Minute"
+                  className="w-14 h-8 px-2 bg-slate-900 border border-slate-700 rounded text-center text-white text-xs font-mono outline-none focus:border-emerald-500"
+                />
+              </div>
+            ) : null}
+            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-700/80">
               <button
                 type="button"
-                className={styles.applyButton}
-                onClick={apply}
-                disabled={!draft}
+                className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 hover:underline cursor-pointer bg-transparent border-0 p-1"
+                onClick={selectToday}
               >
-                Apply
+                Today
               </button>
-            ) : null}
-          </div>
+              {!required ? (
+                <button
+                  type="button"
+                  className="text-xs font-semibold text-slate-400 hover:text-slate-200 hover:underline cursor-pointer bg-transparent border-0 p-1"
+                  onClick={clear}
+                >
+                  Clear
+                </button>
+              ) : null}
+              {mode === "datetime-local" ? (
+                <button
+                  type="button"
+                  className="ml-auto px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={apply}
+                  disabled={!draft}
+                >
+                  Apply
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       ) : null}

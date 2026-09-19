@@ -9,7 +9,7 @@ import { ZarIcon } from "@/components/admin/ui/ZarIcon";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { deletePaymentAction } from "../actions";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface PaymentDetailPageProps {
   params: Promise<{ orderNumber: string }>;

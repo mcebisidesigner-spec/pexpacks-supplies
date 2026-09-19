@@ -11,9 +11,9 @@ import {
   EyeOff,
   Award,
 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { corePages as styles } from "./CorePagesView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { AdminButton } from "@/components/admin/ui/AdminButton";
+import { AdminPage, AdminButton } from "@/components/admin/ui";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { AdminSelect } from "@/components/admin/ui/AdminSelect";
 import {
@@ -114,7 +114,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         const isPartner = row.is_partner === true;
         return (
           <StatusBadge
-            status={isPartner ? "Partner" : "Non-partner"}
+            status={isPartner ? "Partner" : "Non-Partner"}
             tone={isPartner ? "emerald" : "slate"}
             showDot
           />
@@ -141,12 +141,12 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
     {
       key: "actions",
       header: "ACTIONS",
-      align: "right",
+      align: "center",
       sticky: "right",
       width: "90px",
       render: (row) => (
         <div
-          className={styles.actionsCell}
+          className="flex items-center justify-center"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -156,7 +156,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
             aria-label={`View ${row.name}`}
             onClick={() => setOverviewSchool(row)}
           >
-            <Eye size={14} />
+            <Eye size={15} />
           </button>
         </div>
       ),
@@ -212,7 +212,7 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
   ];
 
   return (
-    <div className={styles.container}>
+    <AdminPage fullWidth className="gap-5">
       <AdminPageHeader
         title="Schools Directory"
         count={data.total}
@@ -270,6 +270,6 @@ export function SchoolsPageView({ initialData }: SchoolsPageViewProps) {
         school={overviewSchool}
         onClose={() => setOverviewSchool(null)}
       />
-    </div>
+    </AdminPage>
   );
 }

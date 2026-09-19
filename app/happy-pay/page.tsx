@@ -7,12 +7,11 @@ import { buildMetadata } from "@/lib/seo";
 import { getFaqs } from "@/lib/cms";
 import { FaqMarquee } from "@/components/shared/FaqMarquee";
 import type { FAQ } from "@/data/faqs";
-import styles from "./HappyPayPage.module.css";
 
 export const metadata: Metadata = {
   ...buildMetadata(
     "Split in 2 with Happy Pay | Pexpacks",
-    "Split your Pexpacks order into 2 interest-free payments with Happy Pay. Pay 50% today and the rest in 30 days \u2014 0% interest, no application fees.",
+    "Split your Pexpacks order into 2 interest-free payments with Happy Pay. Pay 50% today and the rest in 30 days — 0% interest, no application fees.",
     "/happy-pay"
   ),
 };
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
 const steps = [
   {
     title: "Choose your packs",
-    text: "Select your school and grade packs, or build your own tray. Add Pexcover book covering if you\u2019d like.",
+    text: "Select your school and grade packs, or build your own tray. Add Pexcover book covering if you’d like.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
@@ -52,7 +51,7 @@ const steps = [
   },
   {
     title: "Pay the rest in 30 days",
-    text: "Your second 50% is collected automatically 30 days later. Nothing more to do \u2014 your packs are already on their way.",
+    text: "Your second 50% is collected automatically 30 days later. Nothing more to do — your packs are already on their way.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10" />
@@ -65,7 +64,7 @@ const steps = [
 const benefits = [
   {
     title: "Split in 2",
-    text: "Two equal payments \u2014 50% today and 50% in 30 days. No lump sum at once.",
+    text: "Two equal payments — 50% today and 50% in 30 days. No lump sum at once.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 2v20" />
@@ -116,7 +115,7 @@ const benefits = [
   },
   {
     title: "Packs ship right away",
-    text: "Because Happy Pay settles your full order today, your packs are dispatched immediately \u2014 you don\u2019t wait for the second payment.",
+    text: "Because Happy Pay settles your full order today, your packs are dispatched immediately — you don’t wait for the second payment.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
@@ -259,91 +258,93 @@ export default async function HappyPayPage() {
 
   return (
     <>
-      <section className={styles.hero}>
-        <span className={styles.heroRing} aria-hidden="true" />
-        <div className={styles.heroInner}>
-          <p className={styles.heroEyebrow}>Buy Now Pay Later</p>
-          <h1 className={styles.heroTitle}>
+      <section className="relative overflow-hidden py-16 sm:py-24 lg:py-28 bg-[radial-gradient(1000px_460px_at_90%_-10%,rgba(255,111,89,0.35),transparent_62%),radial-gradient(800px_460px_at_-10%_115%,rgba(129,212,181,0.2),transparent_58%),linear-gradient(135deg,#135c5a_0%,#1a7a77_46%,#1a2a40_100%)] text-white text-center">
+        <span className="absolute w-[420px] h-[420px] -top-[200px] -right-[140px] rounded-full border border-white/15 pointer-events-none" aria-hidden="true" />
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-5">
+          <p className="m-0 text-[#ffd9d0] text-sm sm:text-[15px] font-extrabold tracking-wider uppercase">Buy Now Pay Later</p>
+          <h1 className="m-0 text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
             Split your school shop in 2.
-            <span className={styles.heroTitleAccent}> Interest-free.</span>
+            <span className="text-[#ffd9d0]"> Interest-free.</span>
           </h1>
-          <p className={styles.heroLead}>
+          <p className="m-0 max-w-2xl text-white/85 text-base sm:text-lg lg:text-[19px] leading-relaxed">
             Pay 50% today and the rest in 30 days with Happy Pay. Your full
             order is settled with Pexpacks right away, so your packs are
             dispatched immediately.
           </p>
 
-          <div className={styles.heroLogoRow}>
+          <div className="inline-flex items-center gap-3.5 px-4.5 py-2.5 rounded-full bg-white/10 border border-white/20">
             <HappyPayLogo tone="light" />
-            <span className={styles.heroLogoDivider} aria-hidden="true" />
-            <span className={styles.heroLogoNote}>Powered by Ozow</span>
+            <span className="w-px h-4.5 bg-white/30" aria-hidden="true" />
+            <span className="text-white/90 text-xs sm:text-[13px] font-bold">Powered by Ozow</span>
           </div>
 
-          <div className={styles.heroActions}>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-1.5 w-full sm:w-auto">
             <Button
               href="/schools"
               variant="primary"
               size="lg"
               iconDirection="right"
+              className="w-full sm:w-auto min-h-[48px]"
             >
               Split my pack in 2
             </Button>
-            <Button href="#how-it-works" variant="white" size="lg">
+            <Button href="#how-it-works" variant="white" size="lg" className="w-full sm:w-auto min-h-[48px]">
               See how it works
             </Button>
           </div>
 
-          <ul className={styles.heroBadges}>
-            <li>0% interest</li>
-            <li>No application fees</li>
-            <li>Approval in under 60 seconds</li>
-            <li>No impact on your credit score</li>
+          <ul className="flex flex-wrap justify-center gap-2 list-none m-0 mt-3 p-0">
+            <li className="px-3.5 py-1.5 rounded-full bg-white/12 border border-white/20 text-white text-xs sm:text-[13px] font-bold">0% interest</li>
+            <li className="px-3.5 py-1.5 rounded-full bg-white/12 border border-white/20 text-white text-xs sm:text-[13px] font-bold">No application fees</li>
+            <li className="px-3.5 py-1.5 rounded-full bg-white/12 border border-white/20 text-white text-xs sm:text-[13px] font-bold">Approval in under 60 seconds</li>
+            <li className="px-3.5 py-1.5 rounded-full bg-white/12 border border-white/20 text-white text-xs sm:text-[13px] font-bold">No impact on your credit score</li>
           </ul>
         </div>
       </section>
 
-      <section className={styles.section}>
-        <div className={styles.sectionInner}>
+      <section className="py-14 sm:py-20 lg:py-24">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="How it works"
-            title={"Two payments. That\u2019s the whole plan."}
+            title={"Two payments. That’s the whole plan."}
             text={
-              "From choosing your packs to paying the second instalment \u2014 here\u2019s exactly how Happy Pay works."
+              "From choosing your packs to paying the second instalment — here’s exactly how Happy Pay works."
             }
             headingId="how-it-works"
           />
-          <div className={styles.stepGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mt-10">
             {steps.map((step, i) => (
-              <article className={styles.stepCard} key={step.title}>
-                <span className={styles.stepBadge} aria-hidden="true">
+              <article className="relative flex flex-col gap-3.5 p-6 sm:p-7 rounded-[22px] sm:rounded-[24px] border border-slate-200 bg-white shadow-xs" key={step.title}>
+                <span className="absolute top-5 right-5 text-slate-400 text-xs font-extrabold tracking-wider" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className={styles.stepIcon}>{step.icon}</span>
-                <h3 className={styles.stepTitle}>{step.title}</h3>
-                <p className={styles.stepText}>{step.text}</p>
+                <span className="inline-flex items-center justify-center w-13 h-13 rounded-2xl bg-teal-600/10 text-teal-600 shrink-0 [&>svg]:w-6.5 [&>svg]:h-6.5">{step.icon}</span>
+                <h3 className="m-0 text-[#1a2a40] text-lg font-extrabold leading-snug">{step.title}</h3>
+                <p className="m-0 text-slate-500 text-sm leading-relaxed">{step.text}</p>
               </article>
             ))}
           </div>
-          <p className={styles.sectionNote}>
+          <p className="mt-7 mx-auto max-w-2xl text-center text-slate-500 text-sm leading-relaxed">
             {
-              "Your packs are dispatched as soon as they\u2019re packed \u2014 you don\u2019t wait for the second payment to be collected."
+              "Your packs are dispatched as soon as they’re packed — you don’t wait for the second payment to be collected."
             }
-          </p>        </div>
+          </p>
+        </div>
       </section>
 
-      <section className={styles.sectionSoft}>
-        <div className={styles.sectionInner}>
+      <section className="py-14 sm:py-20 lg:py-24 bg-slate-50">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Why Happy Pay"
             title="Everything you love about your packs, split in half."
-            text="Happy Pay is a smarter way to pay for back-to-school \u2014 built for parents, not credit."
+            text="Happy Pay is a smarter way to pay for back-to-school — built for parents, not credit."
           />
-          <div className={styles.benefitGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mt-10">
             {benefits.map((benefit) => (
-              <article className={styles.benefitCard} key={benefit.title}>
-                <span className={styles.benefitIcon}>{benefit.icon}</span>
-                <h3 className={styles.benefitTitle}>{benefit.title}</h3>
-                <p className={styles.benefitText}>{benefit.text}</p>
+              <article className="flex flex-col gap-3 p-6 sm:p-7 rounded-[22px] sm:rounded-[24px] border border-slate-200 bg-white shadow-xs" key={benefit.title}>
+                <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#ff6f59] to-[#e85a44] text-white shrink-0 [&>svg]:w-6 [&>svg]:h-6">{benefit.icon}</span>
+                <h3 className="m-0 text-[#1a2a40] text-base sm:text-[17px] font-extrabold">{benefit.title}</h3>
+                <p className="m-0 text-slate-500 text-sm leading-relaxed">{benefit.text}</p>
               </article>
             ))}
           </div>
@@ -359,25 +360,25 @@ export default async function HappyPayPage() {
         />
       </div>
 
-      <section className={styles.sectionSoft}>
-        <div className={styles.sectionInner}>
+      <section className="py-14 sm:py-20 lg:py-24 bg-slate-50">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Security &amp; safety"
             title="Your money and data are protected."
             text="We work with established, regulated partners so you can split with confidence."
           />
-          <div className={styles.securityGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mt-10">
             {security.map((item) => (
-              <article className={styles.securityCard} key={item.title}>
-                <h3 className={styles.securityTitle}>{item.title}</h3>
-                <p className={styles.securityText}>{item.text}</p>
+              <article className="p-6 sm:p-7 rounded-[22px] sm:rounded-[24px] border border-teal-600/20 bg-white shadow-xs" key={item.title}>
+                <h3 className="m-0 mb-2.5 text-[#1a2a40] text-base sm:text-[17px] font-extrabold">{item.title}</h3>
+                <p className="m-0 text-slate-500 text-sm leading-relaxed">{item.text}</p>
               </article>
             ))}
           </div>
-          <p className={styles.termsLink}>
+          <p className="mt-8 text-center text-slate-500 text-sm">
             Full legal detail on how Happy Pay works with Pexpacks is available
             in our{" "}
-            <Link href="/happy-pay-terms" className={styles.termsLinkAnchor}>
+            <Link href="/happy-pay-terms" className="text-teal-600 font-extrabold underline underline-offset-3 hover:text-teal-700">
               Happy Pay Terms
             </Link>
             .
@@ -385,25 +386,26 @@ export default async function HappyPayPage() {
         </div>
       </section>
 
-      <section className={styles.ctaSection}>
-        <div className={styles.ctaInner}>
-          <h2 className={styles.ctaTitle}>
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center gap-4">
+          <h2 className="m-0 text-[#1a2a40] text-2xl sm:text-4xl font-extrabold leading-tight">
             Ready to split your pack in 2?
           </h2>
-          <p className={styles.ctaText}>
+          <p className="m-0 max-w-lg text-slate-500 text-base leading-relaxed">
             Add your packs to the tray and choose Happy Pay at checkout.
             Interest-free, no fees, approval in seconds.
           </p>
-          <div className={styles.ctaActions}>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-2 w-full sm:w-auto">
             <Button
               href="/schools"
               variant="primary"
               size="lg"
               iconDirection="right"
+              className="w-full sm:w-auto min-h-[48px]"
             >
               Split my pack in 2
             </Button>
-            <Button href="/schools#schools-search" variant="white" size="lg">
+            <Button href="/schools#schools-search" variant="white" size="lg" className="w-full sm:w-auto min-h-[48px]">
               Find my school pack
             </Button>
           </div>

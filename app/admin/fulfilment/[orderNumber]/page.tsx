@@ -12,7 +12,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";
 
 interface FulfilmentDetailPageProps {
   params: Promise<{ orderNumber: string }>;

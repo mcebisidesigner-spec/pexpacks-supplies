@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { Database } from "@/lib/supabase/types";
 import { randomUUID } from "node:crypto";
 import {
   getAdminUser,
@@ -93,25 +94,36 @@ async function assertCan(permission: PermissionKey): Promise<AdminSession> {
   return session;
 }
 
-export type MasterProductRow = {
+export type MasterProductBaseRow =
+  Database["public"]["Tables"]["master_products"]["Row"];
+
+export type MasterProductSupplierJoined = {
   id: string;
-  sku: string;
   name: string;
-  description: string | null;
-  category: string | null;
-  brand: string | null;
-  unit: string | null;
-  packaging: string | null;
-  availability: string;
-  current_selling_price: number;
-  latest_verified_cost: number | null;
-  pricing_status: string;
-  last_verified_at: string | null;
-  active: boolean;
-  preferred_supplier_id: string | null;
+  code: string;
+};
+
+export type MasterProductRow = Pick<
+  MasterProductBaseRow,
+  | "id"
+  | "sku"
+  | "name"
+  | "description"
+  | "category"
+  | "brand"
+  | "unit"
+  | "packaging"
+  | "availability"
+  | "current_selling_price"
+  | "latest_verified_cost"
+  | "pricing_status"
+  | "last_verified_at"
+  | "active"
+  | "preferred_supplier_id"
+> & {
   requires_pexcover?: boolean;
   icon?: string | null;
-  supplier?: { id: string; name: string; code: string } | null;
+  supplier?: MasterProductSupplierJoined | null;
 };
 
 export async function listMasterProducts(

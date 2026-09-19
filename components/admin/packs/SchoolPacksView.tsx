@@ -19,9 +19,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import styles from "./SchoolPacksView.module.css";
-import adminStyles from "@/app/admin/admin.module.css";
-import dtStyles from "@/components/admin/shared/DataTable/DataTablePagination.module.css";
+
 
 export interface SchoolPackRowData {
   id: string;
@@ -45,7 +43,7 @@ function SparklineWave({ color, direction = "up" }: { color: string; direction?:
       ? "M 0 18 Q 15 22 30 14 T 50 8 T 72 2"
       : "M 0 4 Q 15 2 30 10 T 50 16 T 72 22";
   return (
-    <svg className={adminStyles.kpiSparkline} viewBox="0 0 72 24" fill="none">
+    <svg className="w-[72px] h-[24px]" viewBox="0 0 72 24" fill="none">
       <path d={path} stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -170,26 +168,26 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
   }, [filteredSchools, currentPage, pageSize]);
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col gap-5 min-w-0 w-full text-slate-300 font-sans tracking-tight">
       {/* ===================================================
           1. PAGE HEADER
           =================================================== */}
-      <div className={styles.pageHeader}>
-        <div className={styles.headerTitleGroup}>
-          <div className={styles.headerTexts}>
-            <h1 className={styles.headerTitle}>
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-0.5">
+            <h1 className="m-0 text-2xl md:text-[28px] font-extrabold text-white tracking-tight leading-tight flex items-baseline gap-2">
               School Packs{" "}
-              <span className={styles.headerCount} suppressHydrationWarning>
+              <span className="text-2xl md:text-[28px] font-extrabold text-white tracking-tight" suppressHydrationWarning>
                 ({formatNumber(totalCount)})
               </span>
             </h1>
-            <p className={styles.headerSubtitle}>
+            <p className="m-0 text-xs md:text-[13px] text-slate-400">
               Manage and publish school packs for each school and grade.
             </p>
           </div>
         </div>
 
-        <button className={adminStyles.datePickerBtn}>
+        <button className="inline-flex items-center gap-2 px-3 py-2 bg-slate-900/80 border border-slate-700/60 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition-colors">
           <Calendar size={14} />
           <span>{currentDateStr}</span>
         </button>
@@ -198,20 +196,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       {/* ===================================================
           2. 5 KPI SPARKLINE CARDS
           =================================================== */}
-      <div className={styles.kpiGrid5}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 w-full">
         {/* Card 1: Total Schools */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconTeal}`}>
+        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-teal-500/10 text-teal-400 border border-teal-500/20">
               <GraduationCap size={18} />
             </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Total Schools</span>
-              <span className={adminStyles.kpiValue} suppressHydrationWarning>{formatNumber(totalCount)}</span>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Total Schools</span>
+              <span className="text-xl font-bold text-white tracking-tight" suppressHydrationWarning>{formatNumber(totalCount)}</span>
             </div>
           </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
+          <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
               <TrendingUp size={12} /> 6 vs last 7 days
             </span>
             <SparklineWave color="#2dd4bf" direction="up" />
@@ -219,20 +217,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 2: Active Packs */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconCyan}`}>
+        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
               <Package size={18} />
             </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Active Packs</span>
-              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Active Packs</span>
+              <span className="text-xl font-bold text-white tracking-tight" suppressHydrationWarning>
                 {formatNumber(initialData?.activePacksCount ?? 0)}
               </span>
             </div>
           </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
+          <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
               <TrendingUp size={12} /> Live catalog
             </span>
             <SparklineWave color="#06b6d4" direction="up" />
@@ -240,20 +238,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 3: Stationery Items */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconBlue}`}>
+        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-blue-500/10 text-blue-400 border border-blue-500/20">
               <FileText size={18} />
             </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Stationery Items</span>
-              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Stationery Items</span>
+              <span className="text-xl font-bold text-white tracking-tight" suppressHydrationWarning>
                 {formatNumber(initialData?.totalPackItems ?? 0)}
               </span>
             </div>
           </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
+          <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
               <TrendingUp size={12} /> In active packs
             </span>
             <SparklineWave color="#3b82f6" direction="up" />
@@ -261,20 +259,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 4: Active (based on Status column) */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconEmerald}`}>
+        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <CheckCircle2 size={18} />
             </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Active</span>
-              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Active</span>
+              <span className="text-xl font-bold text-white tracking-tight" suppressHydrationWarning>
                 {formatNumber(activeCount)}
               </span>
             </div>
           </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendUp}`}>
+          <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-400">
               <TrendingUp size={12} /> Active school packs
             </span>
             <SparklineWave color="#10b981" direction="up" />
@@ -282,20 +280,20 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 5: Inactive (based on Status column) */}
-        <div className={adminStyles.kpiCard}>
-          <div className={adminStyles.kpiTop}>
-            <div className={`${adminStyles.kpiIconWrapper} ${adminStyles.kpiIconSlate}`}>
+        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-slate-500/10 text-slate-400 border border-slate-500/20">
               <EyeOff size={18} />
             </div>
-            <div className={adminStyles.kpiHeaderInfo}>
-              <span className={adminStyles.kpiLabel}>Inactive</span>
-              <span className={adminStyles.kpiValue} suppressHydrationWarning>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Inactive</span>
+              <span className="text-xl font-bold text-white tracking-tight" suppressHydrationWarning>
                 {formatNumber(inactiveCount)}
               </span>
             </div>
           </div>
-          <div className={adminStyles.kpiFooter}>
-            <span className={`${adminStyles.kpiTrend} ${adminStyles.kpiTrendDown}`}>
+          <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-rose-400">
               <TrendingDown size={12} /> Inactive school packs
             </span>
             <SparklineWave color="#64748b" direction="down" />
@@ -306,21 +304,21 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       {/* ===================================================
           3. FILTER & ACTION TOOLBAR
           =================================================== */}
-      <div className={styles.toolbar}>
-        <div className={styles.toolbarLeft}>
-          <div className={styles.searchBox}>
-            <Search />
+      <div className="flex items-center justify-between flex-wrap gap-3 py-1">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="relative w-full sm:w-[250px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[15px] h-[15px] text-slate-400 pointer-events-none" />
             <input
               type="text"
               placeholder="Search by school name..."
-              className={styles.searchInput}
+              className="w-full h-[38px] pl-9 pr-3 bg-slate-900/80 border border-slate-700/60 rounded-lg text-slate-100 text-xs outline-none transition-all duration-150 focus:border-emerald-500 focus:bg-slate-900"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           <select
-            className={adminStyles.filterSelect}
+            className="h-[38px] px-3 bg-slate-900/80 border border-slate-700/60 rounded-lg text-slate-200 text-xs font-medium outline-none cursor-pointer hover:border-slate-600 focus:border-emerald-500"
             value={selectedSeason}
             onChange={(e) => setSelectedSeason(e.target.value)}
           >
@@ -331,7 +329,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </select>
 
           <select
-            className={adminStyles.filterSelect}
+            className="h-[38px] px-3 bg-slate-900/80 border border-slate-700/60 rounded-lg text-slate-200 text-xs font-medium outline-none cursor-pointer hover:border-slate-600 focus:border-emerald-500"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
           >
@@ -345,35 +343,35 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
       {/* ===================================================
           4. MAIN 2-COLUMN GRID (TABLE + RIGHT PANELS)
           =================================================== */}
-      <div className={styles.mainGrid}>
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_280px] gap-3.5 items-start w-full max-w-full">
         {/* Left Column: Primary Data Table */}
-        <div className={styles.tableCard}>
-          <div className={styles.tableWrapper}>
-            <table className={styles.dataTable}>
-              <thead>
+        <div className="bg-[#070d18] border border-white/10 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.25)] overflow-hidden flex flex-col">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[700px] border-collapse text-left text-[13px]">
+              <thead className="sticky top-0 z-10 bg-slate-900/90 border-b border-slate-800">
                 <tr>
-                  <th>
-                    <div className={styles.headerContent}>
+                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                    <div className="flex items-center gap-1.5">
                       <span>School &amp; ID</span>
-                      <span className={styles.sortIcon}>↑↓</span>
+                      <span className="text-[10px] text-slate-500">↑↓</span>
                     </div>
                   </th>
-                  <th>
-                    <div className={styles.headerContent}>
+                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                    <div className="flex items-center gap-1.5">
                       <span>Total Packs</span>
-                      <span className={styles.sortIcon}>↑↓</span>
+                      <span className="text-[10px] text-slate-500">↑↓</span>
                     </div>
                   </th>
-                  <th>
-                    <div className={styles.headerContent}>
+                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                    <div className="flex items-center gap-1.5">
                       <span>Season</span>
-                      <span className={styles.sortIcon}>↑↓</span>
+                      <span className="text-[10px] text-slate-500">↑↓</span>
                     </div>
                   </th>
-                  <th>
-                    <div className={styles.headerContent}>
+                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                    <div className="flex items-center gap-1.5">
                       <span>Status</span>
-                      <span className={styles.sortIcon}>↑↓</span>
+                      <span className="text-[10px] text-slate-500">↑↓</span>
                     </div>
                   </th>
                 </tr>
@@ -382,7 +380,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 {paginatedSchools.map((school) => (
                   <tr
                     key={school.id}
-                    className={styles.dataRow}
+                    className="cursor-pointer transition-colors duration-150 border-b border-slate-800/60 hover:bg-slate-800/40"
                     onClick={() =>
                       router.push(
                         `/admin/packs/${school.name
@@ -392,29 +390,29 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       )
                     }
                   >
-                    <td>
-                      <div className={styles.schoolCell}>
+                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
+                      <div className="flex items-center gap-3 min-w-[180px]">
                         <div
-                          className={styles.schoolAvatar}
+                          className="flex items-center justify-center w-8.5 h-8.5 rounded-lg shrink-0"
                           style={{ background: school.avatarColor }}
                         >
                           <GraduationCap size={16} color="#2dd4bf" />
                         </div>
-                        <div className={styles.schoolInfo}>
-                          <span className={styles.schoolName}>{school.name}</span>
-                          <span className={styles.schoolId}>{school.code}</span>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-sm font-bold text-white whitespace-nowrap">{school.name}</span>
+                          <span className="text-xs font-medium text-slate-400 tracking-wide">{school.code}</span>
                         </div>
                       </div>
                     </td>
-                    <td>
-                      <span className={styles.textMuted}>
+                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
+                      <span className="text-xs text-slate-400 font-medium">
                         {school.gradePacksCount} {school.gradePacksCount === 1 ? "pack" : "packs"}
                       </span>
                     </td>
-                    <td>
-                      <span className={styles.seasonBadge}>{school.season}</span>
+                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
+                      <span className="inline-flex px-2.5 py-1 bg-slate-900/60 border border-white/10 text-slate-300 rounded-md text-xs font-semibold">{school.season}</span>
                     </td>
-                    <td>
+                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
                       <StatusBadge
                         status={school.status}
                         tone={school.status === "Active" ? "emerald" : "slate"}
@@ -428,16 +426,16 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           </div>
 
           {/* Table Pagination Footer */}
-          <div className={styles.paginationFooter}>
-            <div className={dtStyles.paginationLeft}>
-              <div className={dtStyles.pageSizePill}>
+          <div className="flex items-center justify-between flex-wrap gap-3 px-4 py-3 border-t border-slate-800 bg-slate-900/40 text-xs text-slate-400">
+            <div className="flex items-center gap-3">
+              <div className="relative inline-flex items-center">
                 <select
                   value={pageSize}
                   onChange={(e) => {
                     setPageSize(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className={dtStyles.pageSizeSelect}
+                  className="appearance-none bg-slate-900 border border-slate-700/60 rounded-lg text-slate-200 text-xs font-semibold py-1.5 pl-3 pr-8 cursor-pointer outline-none hover:border-slate-600 focus:border-emerald-500"
                   aria-label="Records per page"
                 >
                   <option value={10}>10 per page</option>
@@ -449,19 +447,19 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                   <option value={1000}>1000 per page</option>
                   <option value={totalCount || 3342}>All per page</option>
                 </select>
-                <ChevronDown size={14} className={dtStyles.pageSizeChevron} aria-hidden="true" />
+                <ChevronDown size={14} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
               </div>
             </div>
 
-            <div className={styles.paginationRight}>
-              <span suppressHydrationWarning className={dtStyles.rangeText}>
-                Showing <span className={dtStyles.rangeHighlight}>{totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1}</span> to{" "}
-                <span className={dtStyles.rangeHighlight}>{Math.min(currentPage * pageSize, totalCount)}</span> of{" "}
-                <span className={dtStyles.rangeHighlight}>{formatNumber(totalCount)}</span> schools
+            <div className="flex items-center gap-3 flex-wrap">
+              <span suppressHydrationWarning className="text-xs text-slate-400 font-medium">
+                Showing <span className="text-slate-200 font-semibold">{totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1}</span> to{" "}
+                <span className="text-slate-200 font-semibold">{Math.min(currentPage * pageSize, totalCount)}</span> of{" "}
+                <span className="text-slate-200 font-semibold">{formatNumber(totalCount)}</span> schools
               </span>
-              <div className={styles.paginationControls}>
+              <div className="flex items-center gap-1">
                 <button
-                  className={styles.pageBtn}
+                  className="flex items-center justify-center min-w-7 h-7 px-1.5 rounded-md text-slate-400 text-xs font-semibold transition-colors duration-150 hover:bg-slate-800 hover:text-white disabled:opacity-40 disabled:pointer-events-none"
                   disabled={currentPage <= 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 >
@@ -471,8 +469,8 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 {visiblePageNumbers.map((pageNum) => (
                   <button
                     key={pageNum}
-                    className={`${styles.pageBtn} ${
-                      currentPage === pageNum ? styles.pageBtnActive : ""
+                    className={`flex items-center justify-center min-w-7 h-7 px-1.5 rounded-md text-slate-400 text-xs font-semibold transition-colors duration-150 hover:bg-slate-800 hover:text-white ${
+                      currentPage === pageNum ? "!bg-emerald-500 !text-slate-950 font-bold" : ""
                     }`}
                     onClick={() => setCurrentPage(pageNum)}
                   >
@@ -481,7 +479,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 ))}
 
                 <button
-                  className={styles.pageBtn}
+                  className="flex items-center justify-center min-w-7 h-7 px-1.5 rounded-md text-slate-400 text-xs font-semibold transition-colors duration-150 hover:bg-slate-800 hover:text-white disabled:opacity-40 disabled:pointer-events-none"
                   disabled={currentPage >= totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 >
@@ -493,116 +491,116 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Right Column: Stacked Panels */}
-        <div className={styles.rightPanels}>
+        <div className="flex flex-col gap-4">
           {/* Panel 1: What needs attention */}
-          <div className={adminStyles.panel}>
-            <div className={adminStyles.panelHeader}>
-              <h2 className={adminStyles.panelTitle}>What needs attention</h2>
-              <Link href="/admin/tasks" className={styles.panelLink}>
+          <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800/60">
+              <h2 className="text-sm font-bold text-white tracking-tight m-0">What needs attention</h2>
+              <Link href="/admin/tasks" className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
                 View all <ArrowRight size={12} />
               </Link>
             </div>
 
-            <div className={adminStyles.exceptionList}>
+            <div className="flex flex-col gap-2">
               {/* 1. 9 packs awaiting approval */}
-              <div className={adminStyles.exceptionItem}>
-                <div className={adminStyles.exceptionLeft}>
+              <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/50 hover:bg-slate-800/50 transition-colors">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconRed}`}
+                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-rose-500/10 text-rose-400"
                   >
                     <AlertTriangle size={15} />
                   </div>
-                  <div className={adminStyles.exceptionDetails}>
-                    <span className={adminStyles.exceptionHeadline}>9 packs awaiting approval</span>
-                    <span className={adminStyles.exceptionSubtext}>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-semibold text-slate-200 truncate">9 packs awaiting approval</span>
+                    <span className="text-[11px] text-slate-400 truncate">
                       Require final review before publishing
                     </span>
                   </div>
                 </div>
-                <div className={adminStyles.exceptionRight}>
-                  <span className={styles.exceptionCount}>9</span>
-                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityHigh}`}>High</span>
-                  <span className={adminStyles.exceptionTime}>32m ago</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-semibold text-slate-300">9</span>
+                  <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 border border-rose-500/30">High</span>
+                  <span className="text-[10px] text-slate-500">32m ago</span>
                 </div>
               </div>
 
               {/* 2. 14 packs are drafts */}
-              <div className={adminStyles.exceptionItem}>
-                <div className={adminStyles.exceptionLeft}>
+              <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/50 hover:bg-slate-800/50 transition-colors">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconAmber}`}
+                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-amber-500/10 text-amber-400"
                   >
                     <Clock size={15} />
                   </div>
-                  <div className={adminStyles.exceptionDetails}>
-                    <span className={adminStyles.exceptionHeadline}>14 packs are drafts</span>
-                    <span className={adminStyles.exceptionSubtext}>Not yet published</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-semibold text-slate-200 truncate">14 packs are drafts</span>
+                    <span className="text-[11px] text-slate-400 truncate">Not yet published</span>
                   </div>
                 </div>
-                <div className={adminStyles.exceptionRight}>
-                  <span className={styles.exceptionCount}>14</span>
-                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityMedium}`}>Medium</span>
-                  <span className={adminStyles.exceptionTime}>1h ago</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-semibold text-slate-300">14</span>
+                  <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">Medium</span>
+                  <span className="text-[10px] text-slate-500">1h ago</span>
                 </div>
               </div>
 
               {/* 3. 6 packs missing prices */}
-              <div className={adminStyles.exceptionItem}>
-                <div className={adminStyles.exceptionLeft}>
+              <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/50 hover:bg-slate-800/50 transition-colors">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconAmber}`}
+                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-amber-500/10 text-amber-400"
                   >
                     <AlertTriangle size={15} />
                   </div>
-                  <div className={adminStyles.exceptionDetails}>
-                    <span className={adminStyles.exceptionHeadline}>6 packs missing prices</span>
-                    <span className={adminStyles.exceptionSubtext}>Items without pricing</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-semibold text-slate-200 truncate">6 packs missing prices</span>
+                    <span className="text-[11px] text-slate-400 truncate">Items without pricing</span>
                   </div>
                 </div>
-                <div className={adminStyles.exceptionRight}>
-                  <span className={styles.exceptionCount}>6</span>
-                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityMedium}`}>Medium</span>
-                  <span className={adminStyles.exceptionTime}>1h ago</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-semibold text-slate-300">6</span>
+                  <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">Medium</span>
+                  <span className="text-[10px] text-slate-500">1h ago</span>
                 </div>
               </div>
 
               {/* 4. 3 schools updated */}
-              <div className={adminStyles.exceptionItem}>
-                <div className={adminStyles.exceptionLeft}>
+              <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/50 hover:bg-slate-800/50 transition-colors">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconBlue}`}
+                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-blue-500/10 text-blue-400"
                   >
                     <FileText size={15} />
                   </div>
-                  <div className={adminStyles.exceptionDetails}>
-                    <span className={adminStyles.exceptionHeadline}>3 schools updated</span>
-                    <span className={adminStyles.exceptionSubtext}>School lists changed</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-semibold text-slate-200 truncate">3 schools updated</span>
+                    <span className="text-[11px] text-slate-400 truncate">School lists changed</span>
                   </div>
                 </div>
-                <div className={adminStyles.exceptionRight}>
-                  <span className={styles.exceptionCount}>3</span>
-                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityInfo}`}>Info</span>
-                  <span className={adminStyles.exceptionTime}>2h ago</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-semibold text-slate-300">3</span>
+                  <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/15 text-blue-400 border border-blue-500/30">Info</span>
+                  <span className="text-[10px] text-slate-500">2h ago</span>
                 </div>
               </div>
 
               {/* 5. 10 packs are hidden */}
-              <div className={adminStyles.exceptionItem}>
-                <div className={adminStyles.exceptionLeft}>
+              <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/50 hover:bg-slate-800/50 transition-colors">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className={`${adminStyles.exceptionIcon} ${adminStyles.iconSlate}`}
+                    className="w-7 h-7 rounded-md flex items-center justify-center shrink-0 bg-slate-500/10 text-slate-400"
                   >
                     <EyeOff size={15} />
                   </div>
-                  <div className={adminStyles.exceptionDetails}>
-                    <span className={adminStyles.exceptionHeadline}>10 packs are hidden</span>
-                    <span className={adminStyles.exceptionSubtext}>Currently not visible to users</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-xs font-semibold text-slate-200 truncate">10 packs are hidden</span>
+                    <span className="text-[11px] text-slate-400 truncate">Currently not visible to users</span>
                   </div>
                 </div>
-                <div className={adminStyles.exceptionRight}>
-                  <span className={styles.exceptionCount}>10</span>
-                  <span className={`${adminStyles.severityBadge} ${adminStyles.severityLow}`}>Low</span>
-                  <span className={adminStyles.exceptionTime}>2h ago</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-semibold text-slate-300">10</span>
+                  <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-500/15 text-slate-400 border border-slate-500/30">Low</span>
+                  <span className="text-[10px] text-slate-500">2h ago</span>
                 </div>
               </div>
             </div>

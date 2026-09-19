@@ -69,6 +69,16 @@ function getEdgeLimiters() {
   return { authLimiter, adminLimiter };
 }
 
+function isLoopbackIp(ip: string): boolean {
+  return (
+    ip === "127.0.0.1" ||
+    ip === "::1" ||
+    ip === "localhost" ||
+    ip === "0.0.0.0" ||
+    ip.startsWith("127.")
+  );
+}
+
 function getClientIp(request: NextRequest): string {
   const forwardedFor = request.headers.get("x-forwarded-for");
   const realIp = request.headers.get("x-real-ip");
@@ -128,12 +138,22 @@ export async function proxy(request: NextRequest) {
   }
 
   // 2. Edge Rate Limiting: Strict Auth / Stealth Gateway Tier (5 attempts / 10 min)
-  if (
+  // Auth submissions (POST) & /api/auth use strict 5 attempts / 10 min window.
+  // Page views (GET) on console gateway use the back-office 60 req / 1 min window to prevent false lockouts.
+  const isDev = process.env.NODE_ENV === "development";
+  const isLocalClient = isDev && isLoopbackIp(clientIp);
+
+  const isAuthSubmission =
     pathname.startsWith("/api/auth") ||
-    pathname === "/pex-console-secure" ||
-    pathname === "/pex-console"
-  ) {
-    if (authGate) {
+    ((pathname === "/pex-console-secure" || pathname === "/pex-console") &&
+      request.method !== "GET");
+
+  const isConsolePageView =
+    (pathname === "/pex-console-secure" || pathname === "/pex-console") &&
+    request.method === "GET";
+
+  if (isAuthSubmission) {
+    if (authGate && !isLocalClient) {
       try {
         const rateResult = await authGate.limit(clientIp);
         if (!rateResult.success) {
@@ -150,8 +170,8 @@ export async function proxy(request: NextRequest) {
   }
 
   // 3. Edge Rate Limiting: Back-office Admin Tier (60 req / 1 min)
-  if (pathname.startsWith("/admin")) {
-    if (adminGate) {
+  if (pathname.startsWith("/admin") || isConsolePageView) {
+    if (adminGate && !isLocalClient) {
       try {
         const rateResult = await adminGate.limit(clientIp);
         if (!rateResult.success) {

@@ -10,7 +10,6 @@ import {
 } from "@/lib/analytics";
 import { usePackTrayStore, type TrayPackItem, type TrayPackLineItem } from "@/store/usePackTrayStore";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
-import styles from "./CartReview.module.css";
 
 interface MatchedItem {
   id: string;
@@ -182,12 +181,12 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
 
   if (isLoading) {
     return (
-      <main className={styles.page}>
-        <div className={styles.container}>
-          <div className={styles.loadingState}>
-            <div className={styles.spinner} />
-            <h2>Loading your matched stationery list...</h2>
-            <p>Verifying catalog pricing and book cover eligibility.</p>
+      <main className="py-[clamp(32px,5vw,64px)] bg-[var(--pex-bg)] min-h-[calc(100vh-80px)]">
+        <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
+          <div className="text-center py-16 px-4 bg-white rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm max-w-lg mx-auto flex flex-col items-center justify-center">
+            <div className="w-10 h-10 border-2 border-[var(--pex-border)] border-t-[var(--pex-keppel)] rounded-full animate-spin mb-4" />
+            <h2 className="text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">Loading your matched stationery list...</h2>
+            <p className="text-sm text-[var(--pex-muted)]">Verifying catalog pricing and book cover eligibility.</p>
           </div>
         </div>
       </main>
@@ -196,12 +195,12 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
 
   if (error || !draft) {
     return (
-      <main className={styles.page}>
-        <div className={styles.container}>
-          <div className={styles.errorState}>
-            <h2>Could not load your cart draft</h2>
-            <p>{error || "This draft cart may have expired or does not exist."}</p>
-            <Link href="/order" className={styles.backLink}>
+      <main className="py-[clamp(32px,5vw,64px)] bg-[var(--pex-bg)] min-h-[calc(100vh-80px)]">
+        <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
+          <div className="text-center py-16 px-4 bg-white rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm max-w-lg mx-auto flex flex-col items-center justify-center">
+            <h2 className="text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">Could not load your cart draft</h2>
+            <p className="text-sm text-[var(--pex-muted)] mb-6">{error || "This draft cart may have expired or does not exist."}</p>
+            <Link href="/order" className="inline-flex items-center gap-2 text-[var(--pex-keppel)] text-sm font-bold hover:text-[var(--pex-navy)] transition-colors">
               ← Return to List Converter
             </Link>
           </div>
@@ -211,11 +210,11 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
   }
 
   return (
-    <main className={styles.page}>
-      <div className={styles.container}>
+    <main className="py-[clamp(32px,5vw,64px)] bg-[var(--pex-bg)] min-h-[calc(100vh-80px)]">
+      <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
         {/* Navigation / Header */}
-        <div className={styles.headerRow}>
-          <Link href="/order" className={styles.backLink}>
+        <div className="flex justify-between items-center mb-6">
+          <Link href="/order" className="inline-flex items-center gap-2 text-[var(--pex-keppel)] text-sm font-bold hover:text-[var(--pex-navy)] transition-colors">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
@@ -224,30 +223,30 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
           </Link>
         </div>
 
-        <div className={styles.titleArea}>
-          <div className={styles.eyebrow}>AI Stationery Review</div>
-          <h1 className={styles.pageTitle}>Review Your Matched Pack</h1>
-          <p className={styles.pageSubtitle}>
+        <div className="mb-8">
+          <div className="text-[var(--pex-keppel)] text-xs font-bold uppercase tracking-wider mb-2">AI Stationery Review</div>
+          <h1 className="text-[var(--pex-navy)] font-[family-name:var(--font-heading)] text-[clamp(28px,4vw,40px)] font-extrabold m-0 mb-2 leading-tight">Review Your Matched Pack</h1>
+          <p className="text-[var(--pex-muted)] text-sm sm:text-base m-0 max-w-2xl">
             Review the catalogue matches below, adjust quantities, and add optional book covering before
             continuing to checkout.
           </p>
         </div>
 
         {/* Main Content Grid */}
-        <div className={styles.contentGrid}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
           {/* Left Column: Items */}
-          <div className={styles.itemsCard}>
+          <div className="bg-white rounded-[var(--radius-card)] p-5 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
             {hasUnmatchedItems && (
-              <div className={styles.conciergeAlertBanner}>
-                <div className={styles.alertIcon}>
+              <div className="flex gap-3 p-4 mb-6 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-left">
+                <div className="text-[var(--pex-coral)] shrink-0 mt-0.5">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                   </svg>
                 </div>
-                <div className={styles.alertContent}>
-                  <div className={styles.alertTitle}>Items need catalogue confirmation</div>
+                <div className="text-xs text-[var(--pex-navy)] leading-relaxed">
+                  <div className="font-bold text-[var(--pex-coral)] mb-0.5">Items need catalogue confirmation</div>
                   <div>
                     Remove any unmatched line or return to the list converter with clearer item details. Unmatched items are not priced and cannot proceed to payment.
                   </div>
@@ -255,48 +254,48 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
               </div>
             )}
 
-            <div className={styles.itemsHeader}>
-              <h3>Stationery Line Items</h3>
-              <span className={styles.itemCountBadge}>
+            <div className="flex justify-between items-center pb-4 border-b border-[var(--pex-border)] mb-5">
+              <h3 className="m-0 text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)]">Stationery Line Items</h3>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">
                 {items.reduce((s, it) => s + it.quantity, 0)} Items
               </span>
             </div>
 
             {items.length === 0 ? (
-              <p>Your cart is empty. Please upload a stationery list.</p>
+              <p className="text-sm text-[var(--pex-muted)] py-8 text-center">Your cart is empty. Please upload a stationery list.</p>
             ) : (
-              <div className={styles.itemList}>
+              <div className="divide-y divide-[var(--pex-border)]">
                 {items.map((item) => (
-                  <div key={item.id} className={styles.itemRow}>
-                    <div className={styles.itemInfo}>
-                      <div className={styles.itemName}>{item.name}</div>
-                      <div className={styles.itemMeta}>
+                  <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-sm sm:text-base text-[var(--pex-navy)] mb-1 leading-snug">{item.name}</div>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--pex-muted)]">
                         {item.productId ? (
-                          <span className={styles.catalogBadge}>Catalog Verified</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">Catalog Verified</span>
                         ) : (
-                          <span className={styles.estimatedBadge}>Estimated • Concierge Review</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(235,94,85,0.1)] text-[var(--pex-coral)]">Estimated • Concierge Review</span>
                         )}
                         {item.requiresPexcover && (
-                          <span className={styles.coverBadge}>Cover Eligible</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(240,165,0,0.12)] text-[#b87d00]">Cover Eligible</span>
                         )}
                         {item.specifications && <span>{item.specifications}</span>}
                       </div>
                     </div>
 
                     {/* Quantity Controls */}
-                    <div className={styles.qtyControls}>
+                    <div className="flex items-center border border-[var(--pex-border)] rounded-[var(--radius-sm)] bg-[var(--pex-bg)] self-start sm:self-center">
                       <button
                         type="button"
-                        className={styles.qtyBtn}
+                        className="w-8 h-8 flex items-center justify-center text-sm font-bold text-[var(--pex-navy)] hover:bg-white transition-colors cursor-pointer select-none active:scale-95"
                         onClick={() => handleUpdateQty(item.id, -1)}
                         aria-label="Decrease quantity"
                       >
                         −
                       </button>
-                      <span className={styles.qtyNum}>{item.quantity}</span>
+                      <span className="w-9 text-center text-xs font-bold text-[var(--pex-navy)]">{item.quantity}</span>
                       <button
                         type="button"
-                        className={styles.qtyBtn}
+                        className="w-8 h-8 flex items-center justify-center text-sm font-bold text-[var(--pex-navy)] hover:bg-white transition-colors cursor-pointer select-none active:scale-95"
                         onClick={() => handleUpdateQty(item.id, 1)}
                         aria-label="Increase quantity"
                       >
@@ -305,18 +304,18 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                     </div>
 
                     {/* Price */}
-                    <div className={styles.itemPrice}>
-                      <div className={styles.lineTotal}>R{item.lineTotal.toFixed(2)}</div>
-                      <div className={styles.unitPrice}>
+                    <div className="text-left sm:text-right min-w-[90px]">
+                      <div className="font-bold text-sm sm:text-base text-[var(--pex-navy)]">R{item.lineTotal.toFixed(2)}</div>
+                      <div className="text-xs text-[var(--pex-muted)]">
                         R{item.unitPrice.toFixed(2)} ea
-                        {!item.productId && <span className={styles.estNotice}> (est.)</span>}
+                        {!item.productId && <span className="text-[var(--pex-coral)] font-semibold"> (est.)</span>}
                       </div>
                     </div>
 
                     {/* Remove */}
                     <button
                       type="button"
-                      className={styles.removeBtn}
+                      className="p-2 text-[var(--pex-muted)] hover:text-[var(--pex-coral)] transition-colors self-end sm:self-center cursor-pointer rounded-[var(--radius-sm)] hover:bg-[rgba(235,94,85,0.08)]"
                       onClick={() => handleRemoveItem(item.id)}
                       title="Remove item"
                     >
@@ -332,26 +331,26 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
 
             {/* Pexcover Dynamic Book Covering Option */}
             {pexcoverCalc.hasEligibleBooks && (
-              <div className={styles.pexcoverCard}>
-                <div className={styles.pexcoverHeader}>
+              <div className="mt-6 p-4 sm:p-5 rounded-[var(--radius-md)] bg-[rgba(33,158,154,0.04)] border border-[rgba(33,158,154,0.2)]">
+                <div className="flex items-start gap-3.5">
                   <input
                     type="checkbox"
                     id="pexcover-toggle"
-                    className={styles.checkbox}
+                    className="mt-1 w-4 h-4 rounded text-[var(--pex-keppel)] focus:ring-[var(--pex-keppel)] cursor-pointer accent-[var(--pex-keppel)]"
                     checked={wantsPexcover}
                     onChange={(e) => setWantsPexcover(e.target.checked)}
                   />
-                  <div className={styles.pexcoverText}>
+                  <div className="flex-1">
                     <label htmlFor="pexcover-toggle">
-                      <h4>Add Professional Book Covering (Pexcover™)</h4>
+                      <h4 className="m-0 mb-1 text-sm font-bold text-[var(--pex-navy)] cursor-pointer">Add Professional Book Covering (Pexcover™)</h4>
                     </label>
-                    <p>
+                    <p className="m-0 mb-2 text-xs text-[var(--pex-muted)] leading-relaxed">
                       Arrives pre-covered with heavy-duty 80-micron clear slip covers and printed learner name
                       labels.
                     </p>
-                    <div className={styles.pexcoverPrice}>
+                    <div className="text-xs text-[var(--pex-keppel)] font-medium">
                       Covers {pexcoverCalc.coverableItemCount} eligible books for{" "}
-                      <strong>R{pexcoverCalc.pexcoverTotalRands.toFixed(2)}</strong>
+                      <strong className="font-bold">R{pexcoverCalc.pexcoverTotalRands.toFixed(2)}</strong>
                     </div>
                   </div>
                 </div>
@@ -360,34 +359,34 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
           </div>
 
           {/* Right Column: Order Summary */}
-          <aside className={styles.summaryCard}>
-            <h3 className={styles.summaryTitle}>Order Summary</h3>
+          <aside className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] lg:sticky lg:top-24">
+            <h3 className="m-0 mb-5 text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] pb-3 border-b border-[var(--pex-border)]">Order Summary</h3>
 
-            <div className={styles.summaryRow}>
+            <div className="flex justify-between items-center text-sm text-[var(--pex-muted)] mb-3">
               <span>Stationery Items</span>
-              <span>R{itemsSubtotal.toFixed(2)}</span>
+              <span className="font-medium text-[var(--pex-navy)]">R{itemsSubtotal.toFixed(2)}</span>
             </div>
 
             {wantsPexcover && (
-              <div className={styles.summaryRow}>
+              <div className="flex justify-between items-center text-sm text-[var(--pex-muted)] mb-3">
                 <span>Pexcover™ ({pexcoverCalc.coverableItemCount} books)</span>
-                <span>R{pexcoverCalc.pexcoverTotalRands.toFixed(2)}</span>
+                <span className="font-medium text-[var(--pex-navy)]">R{pexcoverCalc.pexcoverTotalRands.toFixed(2)}</span>
               </div>
             )}
 
-            <div className={styles.summaryRow}>
+            <div className="flex justify-between items-center text-sm text-[var(--pex-muted)] mb-3">
               <span>Courier Delivery</span>
-              <span>Calculated at checkout</span>
+              <span className="text-xs text-[var(--pex-muted)]">Calculated at checkout</span>
             </div>
 
-            <div className={styles.summaryRowStrong}>
+            <div className="flex justify-between items-center text-base font-bold text-[var(--pex-navy)] pt-4 mt-3 border-t border-[var(--pex-border)] mb-6">
               <span>Current Total</span>
               <span>R{grandTotal.toFixed(2)}</span>
             </div>
 
             <button
               type="button"
-              className={styles.checkoutBtn}
+              className="w-full min-h-[50px] px-6 py-3.5 rounded-[var(--radius-sm)] bg-[var(--pex-keppel)] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all hover:bg-[var(--pex-primary)] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_rgba(33,158,154,0.3)] cursor-pointer"
               onClick={handleProceedToCheckout}
               disabled={items.length === 0 || hasUnmatchedItems}
             >
@@ -398,7 +397,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
               </svg>
             </button>
 
-            <div className={styles.securityNote}>
+            <div className="flex items-center justify-center gap-2 mt-4 text-[11px] text-[var(--pex-muted)] text-center">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />

@@ -2,7 +2,7 @@ import { requireAdmin } from "@/lib/admin/rbac";
 import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { createSchoolAction } from "../actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {
   title: "Add School | Admin | Pexpacks",

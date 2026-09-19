@@ -6,9 +6,7 @@ import {
   phoneNumber,
 } from "@/data/contact";
 import { officialSocialLinks } from "@/data/social";
-import { FooterHappyPayLink } from "./FooterHappyPayLink";
 import { FooterNav } from "./FooterNav";
-import styles from "./Footer.module.css";
 
 export type FooterContent = {
   company?: {
@@ -69,7 +67,6 @@ const policyGroups = [
     links: [
       { label: "Delivery Policy", href: "/delivery-policy" },
       { label: "Returns & Refunds Policy", href: "/returns-refunds-policy" },
-      { label: "Happy Pay Terms", href: "/happy-pay-terms" },
       { label: "Social Media Guidelines", href: "/social-media-guidelines" },
       { label: "Contact / Complaints", href: "/contact" },
     ],
@@ -97,7 +94,7 @@ function formatPhoneNumber(value: string) {
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
   if (icon === "instagram") {
     return (
-      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <svg className="w-3 h-3 fill-none stroke-current stroke-[1.8] stroke-round" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
         <rect x="2" y="2" width="20" height="20" rx="5" />
         <circle cx="12" cy="12" r="5" />
         <circle cx="17.5" cy="6.5" r="1.5" />
@@ -107,7 +104,7 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
 
   if (icon === "whatsapp") {
     return (
-      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <svg className="w-3 h-3 fill-current stroke-none" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
       </svg>
     );
@@ -115,7 +112,7 @@ function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
 
   /* Facebook */
   return (
-    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+    <svg className="w-3 h-3 fill-current stroke-none" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
   );
@@ -130,61 +127,60 @@ export function Footer({ company }: FooterContent) {
   const phoneHrefLocal = phone ? telHref(phone) : "#";
 
   return (
-    <footer className={styles.footer} id="site-footer">
-      <div className={styles.footerInner}>
-        <div className={styles.topSection}>
-          <div className={styles.brandBlock}>
+    <footer className="bg-[var(--pex-navy,#1a2a40)] text-[var(--pex-bg,#fbfdfd)]" id="site-footer">
+      <div className="w-full max-w-[1280px] mx-auto py-[38px] px-4 sm:px-6 lg:py-11 lg:px-[clamp(24px,4vw,56px)] pb-[34px] lg:pb-9">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(380px,1fr)_auto] gap-5 sm:gap-6 lg:gap-8 items-start">
+          <div className="flex items-start justify-between gap-4 sm:gap-[18px] w-full min-w-0 m-0 p-0">
             <Link
               href="/"
-              className={styles.logoLink}
+              className="inline-flex items-start leading-none w-fit m-0 p-0"
               aria-label={`${siteName} home`}
             >
-              <Logo variant="white" className={styles.logoImage} />
+              <Logo variant="white" className="block w-[clamp(88px,20vw,106px)] lg:w-[124px] h-auto m-0 p-0" />
             </Link>
-            <FooterHappyPayLink className={styles.happyPayMobile} />
           </div>
 
-          <div className={styles.navGroup}>
+          <div className="grid gap-4 lg:gap-4 justify-items-start lg:justify-items-end min-w-0 w-full">
             <FooterNav />
 
-            <div className={styles.infoRow}>
+            <div className="flex items-start sm:items-center gap-3 sm:gap-[clamp(12px,2.5vw,24px)] flex-wrap justify-start lg:justify-end w-full">
               <address
-                className={styles.contactDetails}
+                className="flex items-center flex-wrap gap-2 m-0 text-white not-italic"
                 aria-label={`${siteName} contact details`}
               >
                 {phone ? (
                   <>
-                    <a href={phoneHrefLocal} className={styles.contactLink}>
+                    <a href={phoneHrefLocal} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                       {formatPhoneNumber(phone)}
                     </a>
-                    <span className={styles.contactDivider} aria-hidden="true">
+                    <span className="text-[var(--pex-keppel,#1a7a77)] opacity-50 text-base font-medium leading-none" aria-hidden="true">
                       |
                     </span>
                   </>
                 ) : null}
-                <a href={emailHref} className={styles.contactLink}>
+                <a href={emailHref} className="relative text-[#7fd4cf] text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   {email}
                 </a>
               </address>
 
               <details
-                className={styles.policyDisclosure}
+                className="w-full max-w-full lg:max-w-[760px] text-left lg:text-right group/policy"
                 suppressHydrationWarning
               >
-                <summary className={styles.policySummary}>
-                  <span>{siteName} policies &amp; information:</span>
-                  <span className={styles.policyChevron} aria-hidden="true" />
+                <summary className="relative inline-flex items-center justify-start lg:justify-end gap-2.5 max-w-full cursor-pointer text-[#dae2eb]/60 text-xs sm:text-sm font-normal leading-[1.3] list-none transition-colors duration-200 hover:text-[#f1f6f8]/90 focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full [&::-webkit-details-marker]:hidden after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                  <span className="min-w-0 overflow-wrap-anywhere">{siteName} policies &amp; information:</span>
+                  <span className="w-2 h-2 border-r-2 border-b-2 border-current rotate-45 -translate-y-0.5 origin-center shrink-0 transition-transform duration-200 group-open/policy:rotate-[225deg]" aria-hidden="true" />
                 </summary>
-                <div className={styles.policyPanel}>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-[18px] mt-4 sm:mt-[18px] p-4 sm:p-[18px] text-left bg-white/[0.06] border border-white/[0.12] rounded-[14px] sm:rounded-[18px]">
                   {policyGroups.map((group) => (
-                    <section className={styles.policyGroup} key={group.title}>
+                    <section className="min-w-0 [&_h2]:m-0 [&_h2]:mb-2.5 [&_h2]:text-white [&_h2]:text-[11px] [&_h2]:font-extrabold [&_h2]:leading-[1.2] [&_ul]:grid [&_ul]:gap-2 [&_ul]:m-0 [&_ul]:p-0 [&_ul]:list-none" key={group.title}>
                       <h2>{group.title}</h2>
                       <ul>
                         {group.links.map((link) => (
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                              className={styles.policyLink}
+                            className="relative text-white/45 text-[11px] font-normal leading-[1.3] no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                             >
                               {link.label}
                             </Link>
@@ -199,31 +195,29 @@ export function Footer({ company }: FooterContent) {
           </div>
         </div>
 
-        <hr className={styles.divider} />
+        <hr className="border-none h-[1px] bg-white/[0.14] my-6 sm:my-[30px] mb-5" />
 
-        <div className={styles.bottomSection}>
-          <p className={styles.copyright}>
+        <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:gap-[18px]">
+          <p className="min-w-0 m-0 text-white/70 text-[11px] sm:text-xs font-semibold leading-[1.3]">
             &copy; {currentYear} Pexpacks (Pty) Ltd. All rights reserved.
             Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.designerLink}
+              className="relative text-white font-extrabold no-underline transition-colors duration-200 hover:text-[var(--pex-coral,#ff6f59)] hover:underline hover:underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
             >
               McebisiH
             </a>
           </p>
 
-          <div className={styles.bottomActions}>
-            <FooterHappyPayLink className={styles.happyPayDesktop} />
-
-            <nav className={styles.socialNav} aria-label="Social media">
+          <div className="flex items-center justify-end">
+            <nav className="flex items-center justify-end gap-2.5" aria-label="Social media">
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className={styles.socialLink}
+                  className="relative grid place-items-center w-6 h-6 text-white bg-white/10 border border-white/[0.12] rounded-full transition-all duration-200 hover:bg-[var(--pex-coral,#ff6f59)] hover:brightness-110 hover:scale-105 focus-visible:outline-2 focus-visible:outline-[var(--pex-coral,#ff6f59)] focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -238,3 +232,4 @@ export function Footer({ company }: FooterContent) {
     </footer>
   );
 }
+

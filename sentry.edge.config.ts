@@ -6,4 +6,12 @@ Sentry.init({
   environment: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
   sendDefaultPii: false,
   tracesSampleRate: 0.05,
+  beforeSend(event) {
+    if (event.request?.headers) {
+      delete event.request.headers["authorization"];
+      delete event.request.headers["cookie"];
+      delete event.request.headers["x-supabase-auth"];
+    }
+    return event;
+  },
 });

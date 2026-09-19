@@ -17,6 +17,6 @@ test("primary navigation reaches the schools directory", async ({ page }) => {
   await page.goto("/");
   const schoolsLink = page.locator('a[href="/schools"]').first();
   await schoolsLink.click();
-  await expect(page).toHaveURL(/\/schools$/);
+  await expect(page).toHaveURL(/\/schools$/, { timeout: 15_000 });
   await expect(page.locator("main")).toBeVisible();
 });

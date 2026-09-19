@@ -44,3 +44,28 @@ export const WalletIcon = () => (
     <path d="M16 14h.01" />
   </svg>
 );
+
+/** Classic shopping cart icon — single source of truth for cart UI across the site. */
+export const ShoppingCartIcon = ({ size = 24, ...props }: SVGProps<SVGSVGElement> & { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    focusable="false"
+    {...props}
+  >
+    {/* Handle bar */}
+    <path d="M1 1h3l1.5 8" />
+    {/* Cart body — tapered trapezoid */}
+    <path d="M5.5 9h13.9a1 1 0 0 1 .97 1.24l-1.54 6a1 1 0 0 1-.97.76H8a1 1 0 0 1-.97-.76L5.5 9z" />
+    {/* Wheels */}
+    <circle cx="9" cy="20" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="17" cy="20" r="1.2" fill="currentColor" stroke="none" />
+  </svg>
+);

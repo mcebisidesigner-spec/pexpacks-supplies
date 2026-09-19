@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import styles from "./SchoolSearchWidget.module.css";
 
 type SchoolSearchResult = {
@@ -106,7 +106,7 @@ export function SchoolSearchWidget({
 
   return (
     <article
-      className={clsx(styles.widgetCard, compact && styles.compactWidget)}
+      className={cn(styles.widgetCard, compact && styles.compactWidget)}
       data-results-open={open ? "true" : undefined}
     >
       <span className={styles.eyebrow}>Skip the queue</span>

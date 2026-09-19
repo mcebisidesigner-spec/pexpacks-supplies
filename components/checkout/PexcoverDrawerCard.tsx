@@ -2,7 +2,7 @@
 
 import React, { useCallback, useId, useState } from "react";
 import Image from "next/image";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { Check, Sparkles, Shield } from "lucide-react";
 import {
   PEXCOVER_PAPER_STYLES,
@@ -273,7 +273,7 @@ export function PexcoverDrawerCard({
 
   return (
     <div
-      className={clsx(
+      className={cn(
         styles.card,
         enabled && !isDisabled && styles.cardActive,
         isDisabled && styles.cardDisabled,
@@ -283,7 +283,7 @@ export function PexcoverDrawerCard({
     >
       {/* ── Top Row Summary (Clickable Checkbox + Details + Price) ── */}
       <div
-        className={clsx(styles.topRow, isDisabled && styles.topRowDisabled)}
+        className={cn(styles.topRow, isDisabled && styles.topRowDisabled)}
         onClick={handleRowClick}
         role="button"
         tabIndex={isDisabled ? -1 : 0}
@@ -310,7 +310,7 @@ export function PexcoverDrawerCard({
             aria-label="Add Book Covering by Pexcover"
           />
           <div
-            className={clsx(
+            className={cn(
               styles.customCheckbox,
               enabled && !isDisabled && styles.customCheckboxChecked,
             )}
@@ -320,12 +320,10 @@ export function PexcoverDrawerCard({
           </div>
         </div>
 
-        <div className={styles.serviceDetails}>
-          <div className={styles.serviceHeaderRow}>
-            <span className={styles.serviceTitle}>
-              Book Covering by Pexcover
-            </span>
-            <span className={styles.brandBadge}>Pexcover™</span>
+        <div className={styles.serviceInfo}>
+          <div className={styles.serviceTitleRow}>
+            <span className={styles.serviceTitle}>Pexcover</span>
+            <span className={styles.serviceBadge}>Done-For-You</span>
           </div>
           <span className={styles.serviceSubtitle}>
             {isDisabled
@@ -335,7 +333,7 @@ export function PexcoverDrawerCard({
         </div>
 
         <div
-          className={clsx(
+          className={cn(
             styles.priceTag,
             isDisabled && styles.priceTagDisabled,
           )}
@@ -347,7 +345,7 @@ export function PexcoverDrawerCard({
       {/* ── Expandable Accordion Drawer (Directly beneath top row) ── */}
       <div
         id={`pexcover-accordion-${packId}`}
-        className={clsx(
+        className={cn(
           styles.accordion,
           enabled && !isDisabled && styles.accordionOpen,
         )}
@@ -381,7 +379,7 @@ export function PexcoverDrawerCard({
                     role="radio"
                     aria-checked={isSelected}
                     tabIndex={enabled && !isDisabled ? 0 : -1}
-                    className={clsx(
+                    className={cn(
                       styles.swatchCard,
                       isSelected && styles.swatchCardSelected,
                     )}

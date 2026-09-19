@@ -5,7 +5,7 @@ import { SchoolForm } from "@/components/admin/schools/SchoolForm";
 import { updateSchoolAction } from "../../actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface EditSchoolPageProps {
   params: Promise<{ id: string }>;

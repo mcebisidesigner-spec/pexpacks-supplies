@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
-import styles from "./DataTablePagination.module.css";
+import { cn } from "@/lib/utils";
 import { useTableParams } from "./useTableParams";
 
 export interface DataTablePaginationProps {
@@ -82,8 +82,13 @@ export function DataTablePagination({
   };
 
   return (
-    <div className={`${styles.paginationFooter} ${className || ""}`}>
-      <div className={styles.paginationLeft}>
+    <div
+      className={cn(
+        "flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-[#040812] border-t border-slate-800/60 text-xs text-slate-400 w-full gap-4 flex-wrap",
+        className,
+      )}
+    >
+      <div className="flex items-center w-full sm:w-auto justify-between sm:justify-start">
         <AdminDropdown
           value={pageSize}
           options={[10, 20, 25, 50, 100].map((opt) => ({
@@ -97,28 +102,31 @@ export function DataTablePagination({
         />
       </div>
 
-      <div className={styles.paginationRight}>
-        <div className={styles.rangeText}>
-          Showing <span className={styles.rangeHighlight}>{formatCount(fromRecord)}</span> to{" "}
-          <span className={styles.rangeHighlight}>{formatCount(toRecord)}</span> of{" "}
-          <span className={styles.rangeHighlight}>{formatCount(total)}</span> records
+      <div className="flex items-center justify-between sm:justify-end gap-5 flex-wrap w-full sm:w-auto sm:ml-auto">
+        <div className="text-xs font-medium text-slate-400 whitespace-nowrap">
+          Showing <span className="text-white font-bold">{formatCount(fromRecord)}</span> to{" "}
+          <span className="text-white font-bold">{formatCount(toRecord)}</span> of{" "}
+          <span className="text-white font-bold">{formatCount(total)}</span> records
         </div>
 
-        <div className={styles.controls}>
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => handlePageClick(currentPage - 1)}
             disabled={currentPage <= 1}
-            className={styles.pageBtn}
+            className="w-8 h-8 rounded-full border border-slate-800 bg-transparent text-slate-400 hover:text-white hover:border-slate-700 flex items-center justify-center transition-colors disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer"
             aria-label="Previous Page"
           >
-            <ChevronLeft size={13} />
+            <ChevronLeft size={14} />
           </button>
 
           {pageNumbers.map((p, idx) => {
             if (p === "...") {
               return (
-                <span key={`ellipsis-${idx}`} className={styles.ellipsis}>
+                <span
+                  key={`ellipsis-${idx}`}
+                  className="px-1.5 text-slate-500 text-xs select-none"
+                >
                   ...
                 </span>
               );
@@ -132,7 +140,11 @@ export function DataTablePagination({
                 key={`page-${pageNum}`}
                 type="button"
                 onClick={() => handlePageClick(pageNum)}
-                className={`${styles.pageBtn} ${isActive ? styles.pageBtnActive : ""}`}
+                className={cn(
+                  "w-8 h-8 rounded-full border border-slate-800 bg-transparent text-slate-300 text-xs font-medium flex items-center justify-center transition-colors hover:border-slate-700 hover:text-white cursor-pointer",
+                  isActive &&
+                    "w-9 h-9 border-2 border-[#00dfb6] bg-transparent text-[#00dfb6] font-bold shadow-[0_0_12px_rgba(0,223,182,0.25)] hover:border-[#00dfb6] hover:text-[#00dfb6]",
+                )}
               >
                 {pageNum}
               </button>
@@ -143,10 +155,10 @@ export function DataTablePagination({
             type="button"
             onClick={() => handlePageClick(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            className={styles.pageBtn}
+            className="w-8 h-8 rounded-full border border-slate-800 bg-transparent text-slate-400 hover:text-white hover:border-slate-700 flex items-center justify-center transition-colors disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer"
             aria-label="Next Page"
           >
-            <ChevronRight size={13} />
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>

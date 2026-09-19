@@ -28,7 +28,7 @@ import {
   deleteQuotationAction,
 } from "@/app/admin/quotations/actions";
 import type { QuotationRow, QuotationStatus } from "@/lib/admin/quotations";
-import styles from "./Quotations.module.css";
+import { quotationStyles as styles } from "./quotationStyles";
 
 function formatZAR(amount: number): string {
   const formatted = Number(amount || 0).toLocaleString("en-ZA", {

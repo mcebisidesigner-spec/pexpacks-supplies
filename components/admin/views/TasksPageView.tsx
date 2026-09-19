@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { Clock, Eye, LayoutGrid, List, Plus, CheckSquare, AlertTriangle, CheckCircle2 } from "lucide-react";
-import styles from "./CorePagesView.module.css";
+import { corePages as styles } from "./CorePagesView";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";

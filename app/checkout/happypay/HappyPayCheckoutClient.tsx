@@ -10,10 +10,8 @@ import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { buildWhatsAppHref } from "@/data/contact";
-import styles from "./HappyPayCheckout.module.css";
-import checkoutStyles from "@/app/checkout/Checkout.module.css";
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -274,14 +272,14 @@ export function HappyPayCheckoutClient() {
 
   if (packs.length === 0) {
     return (
-      <div className={checkoutStyles.checkoutShell}>
-        <div className={checkoutStyles.emptyCheckout}>
-          <p className={checkoutStyles.checkoutKicker}>Happy Pay</p>
-          <h1>No packs in your order.</h1>
-          <p>
+      <div className="w-full min-h-screen py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] flex items-center justify-center font-[family-name:var(--font-body)]">
+        <div className="max-w-md w-full mx-auto text-center bg-white p-6 sm:p-8 rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Happy Pay</p>
+          <h1 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-3">No packs in your order.</h1>
+          <p className="text-sm text-[var(--pex-muted)] leading-relaxed mb-6">
             Choose a school pack before splitting your payment with Happy Pay.
           </p>
-          <Button href="/schools" variant="primary" size="lg">
+          <Button href="/schools" variant="primary" size="lg" className="w-full sm:w-auto">
             Find a school pack
           </Button>
         </div>
@@ -290,14 +288,14 @@ export function HappyPayCheckoutClient() {
   }
 
   return (
-    <div className={checkoutStyles.checkoutShell}>
-      <header className={checkoutStyles.checkoutHeader}>
+    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] font-[family-name:var(--font-body)] text-[var(--pex-navy)] pb-24 lg:pb-12">
+      <header className="flex justify-between items-center max-w-[var(--layout-max-width)] mx-auto mb-8">
         <button
           type="button"
-          className={checkoutStyles.backToOrder}
+          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pex-keppel)] hover:text-[var(--pex-navy)] transition-colors cursor-pointer bg-transparent border-0 p-0"
           onClick={handleBackToOrder}
         >
-          Back to order
+          ← Back to order
         </button>
         <a
           href={buildWhatsAppHref(
@@ -305,66 +303,60 @@ export function HappyPayCheckoutClient() {
           )}
           target="_blank"
           rel="noopener noreferrer"
-          className={checkoutStyles.helpLink}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-keppel)] transition-colors"
         >
           Need help?
         </a>
       </header>
 
-      <div className={checkoutStyles.checkoutGrid}>
-        <section
-          className={clsx(
-            checkoutStyles.stepCard,
-            checkoutStyles.checkoutHero,
-            styles.hero,
-          )}
-        >
-          <div className={styles.heroTop}>
-            <p className={checkoutStyles.checkoutKicker}>Buy Now Pay Later</p>
-            <HappyPayLogo tone="dark" className={styles.heroLogo} />
+      <div className="max-w-[var(--layout-max-width)] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
+        <section className="col-span-1 lg:col-span-2 bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
+          <div className="flex items-center justify-between gap-4 mb-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-0">Buy Now Pay Later</p>
+            <HappyPayLogo tone="dark" className="h-6 w-auto" />
           </div>
-          <h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-2 leading-tight max-w-2xl">
             Split in 2 with Happy Pay &mdash; Pay {formatInstalment(instalment)}{" "}
             Today
           </h1>
-          <p>
+          <p className="text-sm sm:text-base text-[var(--pex-muted)] m-0 max-w-xl leading-relaxed">
             Pay 50% now and the rest in 30 days. Interest-free, no hidden fees.
             Happy Pay settles your full order with Pexpacks today so your packs
             are dispatched right away.
           </p>
 
-          <ol className={styles.schedule}>
-            <li className={styles.scheduleItem}>
-              <span className={styles.scheduleBadge}>Payment 1</span>
-              <span className={styles.scheduleMeta}>
-                <strong>Today</strong>
-                <span>{formatInstalment(instalment)}</span>
+          <ol className="list-none m-0 p-0 grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-xl mt-6">
+            <li className="grid gap-1.5 p-3.5 sm:p-4 border border-[var(--pex-border)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)]">
+              <span className="w-fit px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.12)] text-[var(--pex-keppel)] text-[11px] font-extrabold tracking-wider uppercase">Payment 1</span>
+              <span className="grid gap-0.5">
+                <strong className="text-[var(--pex-navy)] text-sm font-semibold">Today</strong>
+                <span className="text-[var(--pex-coral)] font-[family-name:var(--font-heading)] text-lg sm:text-xl font-black">{formatInstalment(instalment)}</span>
               </span>
             </li>
-            <li className={styles.scheduleItem}>
-              <span className={styles.scheduleBadge}>Payment 2</span>
-              <span className={styles.scheduleMeta}>
-                <strong>In 30 days</strong>
-                <span>{formatInstalment(instalment)}</span>
+            <li className="grid gap-1.5 p-3.5 sm:p-4 border border-[var(--pex-border)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)]">
+              <span className="w-fit px-2.5 py-1 rounded-full bg-[rgba(235,94,85,0.12)] text-[var(--pex-coral)] text-[11px] font-extrabold tracking-wider uppercase">Payment 2</span>
+              <span className="grid gap-0.5">
+                <strong className="text-[var(--pex-navy)] text-sm font-semibold">In 30 days</strong>
+                <span className="text-[var(--pex-coral)] font-[family-name:var(--font-heading)] text-lg sm:text-xl font-black">{formatInstalment(instalment)}</span>
               </span>
             </li>
           </ol>
         </section>
 
         <form
-          className={styles.mainColumn}
+          className="flex flex-col gap-8"
           aria-label="Happy Pay customer details"
           onSubmit={(e) => e.preventDefault()}
         >
           <section
-            className={styles.detailsSection}
+            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-labelledby="hp-details-heading"
           >
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionNumber}>1</span>
+            <div className="flex items-start gap-4 mb-6">
+              <span className="w-8 h-8 rounded-full bg-[rgba(33,158,154,0.12)] text-[var(--pex-keppel)] text-sm font-bold flex items-center justify-center shrink-0">1</span>
               <div>
-                <h2 id="hp-details-heading">Your details</h2>
-                <p>
+                <h2 id="hp-details-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Your details</h2>
+                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
                   Happy Pay needs these details to set up your split payment.
                   Your pack is only reserved after you approve the first
                   payment.
@@ -372,7 +364,7 @@ export function HappyPayCheckoutClient() {
               </div>
             </div>
 
-            <div className={styles.formGrid}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <Input
                 id="fullName"
                 label="Full name"
@@ -420,21 +412,21 @@ export function HappyPayCheckoutClient() {
 
           {/* ── Learner details ─────────────────────────────────────── */}
           <section
-            className={styles.detailsSection}
+            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-labelledby="hp-learners-heading"
           >
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionNumber}>2</span>
+            <div className="flex items-start gap-4 mb-6">
+              <span className="w-8 h-8 rounded-full bg-[rgba(33,158,154,0.12)] text-[var(--pex-keppel)] text-sm font-bold flex items-center justify-center shrink-0">2</span>
               <div>
-                <h2 id="hp-learners-heading">Learner details</h2>
-                <p>
+                <h2 id="hp-learners-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Learner details</h2>
+                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
                   Add a name for each learner so we know which pack belongs to
                   whom.
                 </p>
               </div>
             </div>
 
-            <div className={styles.formGrid}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {packs.map((pack, index) => (
                 <div key={pack.id}>
                   <Input
@@ -465,10 +457,10 @@ export function HappyPayCheckoutClient() {
           </section>
 
           <section
-            className={styles.consentCard}
+            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-label="Happy Pay consent"
           >
-            <label className={styles.consentField}>
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel)] [&_a]:underline [&_a]:font-medium hover:[&_a]:text-[var(--pex-primary)]">
               <input
                 type="checkbox"
                 id="hp-consent"
@@ -478,6 +470,7 @@ export function HappyPayCheckoutClient() {
                   clearFieldError("consent");
                 }}
                 aria-invalid={!!errors.consent}
+                className="mt-1 w-4 h-4 accent-[var(--pex-keppel)] rounded shrink-0 cursor-pointer"
               />
               <span>
                 I understand that by paying with Happy Pay, I will be
@@ -500,41 +493,41 @@ export function HappyPayCheckoutClient() {
               </span>
             </label>
             {errors.consent ? (
-              <p className={checkoutStyles.fieldError}>{errors.consent}</p>
+              <p className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.consent}</p>
             ) : null}
           </section>
 
           {submitError ? (
-            <p className={checkoutStyles.formStatusError} role="alert">
+            <p className="p-4 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs sm:text-sm text-[var(--pex-coral)] font-semibold leading-relaxed" role="alert">
               {submitError}
             </p>
           ) : null}
         </form>
 
         <aside
-          className={checkoutStyles.summaryColumn}
+          className="w-full lg:sticky lg:top-24"
           aria-labelledby="hp-summary-heading"
         >
-          <div className={checkoutStyles.summaryCard}>
-            <div className={styles.summaryHeader}>
+          <div className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
+            <div className="flex justify-between items-start pb-4 border-b border-[var(--pex-border)] mb-5">
               <div>
-                <p className={checkoutStyles.checkoutKicker}>Happy Pay plan</p>
-                <h2 id="hp-summary-heading">Your split</h2>
+                <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Happy Pay plan</p>
+                <h2 id="hp-summary-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0">Your split</h2>
               </div>
-              <span>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">
                 {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>
 
-            <div className={styles.summaryPacks}>
+            <div className="flex flex-col gap-3 mb-6 divide-y divide-[var(--pex-border)]">
               {packs.map((pack, index) => {
                 const lName = learnerInputs[index]?.trim();
                 const learnerLabel = lName
                   ? `Learner ${index + 1}: ${lName}`
                   : `Learner ${index + 1}: Add name`;
                 return (
-                  <div key={pack.id} className={styles.summaryPack}>
-                    <div className={styles.summaryPackTop}>
+                  <div key={pack.id} className="pt-3 first:pt-0">
+                    <div className="flex justify-between items-start gap-4 mb-1">
                       <div>
                         {editNameIndex === index ? (
                           <Input
@@ -557,10 +550,10 @@ export function HappyPayCheckoutClient() {
                         ) : (
                           <button
                             type="button"
-                            className={clsx(
-                              styles.learnerLabel,
+                            className={cn(
+                              "text-xs font-bold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
                               errors[`learner_${index}`] &&
-                                styles.learnerLabelError,
+                                "text-[var(--pex-coral)] underline",
                             )}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
@@ -569,9 +562,9 @@ export function HappyPayCheckoutClient() {
                           </button>
                         )}
                       </div>
-                      <span>{formatCurrency(getPackTotal(pack))}</span>
+                      <span className="text-sm font-bold text-[var(--pex-navy)] shrink-0">{formatCurrency(getPackTotal(pack))}</span>
                     </div>
-                    <p>
+                    <p className="text-xs text-[var(--pex-muted)] m-0">
                       {pack.schoolName || "School pack"}
                       {pack.grade ? ` · ${pack.grade}` : ""}
                     </p>
@@ -580,20 +573,20 @@ export function HappyPayCheckoutClient() {
               })}
             </div>
 
-            <div className={styles.splitSummary}>
+            <div className="space-y-2.5 py-4 border-t border-b border-[var(--pex-border)] mb-6 text-xs sm:text-sm text-[var(--pex-muted)] [&>div]:flex [&>div]:justify-between [&>div]:items-center [&>div>strong]:text-[var(--pex-navy)] [&>div>strong]:font-semibold">
               <div>
                 <span>Total order</span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
               <div>
                 <span>Today (50%)</span>
-                <strong>{formatInstalment(instalment)}</strong>
+                <strong className="text-[var(--pex-coral)] font-bold">{formatInstalment(instalment)}</strong>
               </div>
               <div>
                 <span>In 30 days (50%)</span>
-                <strong>{formatInstalment(instalment)}</strong>
+                <strong className="text-[var(--pex-coral)] font-bold">{formatInstalment(instalment)}</strong>
               </div>
-              <div className={styles.splitNote}>
+              <div className="!text-[11px] !text-[var(--pex-keppel)] !font-semibold pt-1">
                 0% interest. No application fees.
               </div>
             </div>
@@ -602,10 +595,7 @@ export function HappyPayCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className={clsx(
-                checkoutStyles.fullWidth,
-                styles.desktopPayButton,
-              )}
+              className="w-full mb-3 hidden lg:flex"
               onClick={handlePay}
               disabled={!canSubmit}
               aria-busy={submitting}
@@ -618,13 +608,13 @@ export function HappyPayCheckoutClient() {
             <Button
               type="button"
               variant="outline"
-              className={checkoutStyles.fullWidth}
+              className="w-full"
               onClick={handleBackToOrder}
             >
               Edit order
             </Button>
 
-            <p className={checkoutStyles.summarySecurity}>
+            <p className="text-[11px] text-[var(--pex-muted)] text-center mt-3 leading-relaxed">
               Your details are secure. Happy Pay handles the payment on behalf
               of Pexpacks.
             </p>
@@ -632,11 +622,11 @@ export function HappyPayCheckoutClient() {
         </aside>
       </div>
 
-      <div className={checkoutStyles.mobileStickyCta}>
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[var(--pex-border)] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40 lg:hidden">
         <Button
           type="button"
           variant="primary"
-          className={checkoutStyles.fullWidth}
+          className="w-full min-h-[48px] text-base font-bold shadow-md"
           onClick={handlePay}
           disabled={!canSubmit}
           aria-busy={submitting}

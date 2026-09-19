@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import styles from "./FaqAccordion.module.css";
 import { FAQ, getFaqLinks } from "@/data/faqs";
 import { trackFaqOpened } from "@/lib/analytics";
@@ -48,7 +48,7 @@ export function FaqAccordion({
           return (
             <div
               key={faq.id}
-              className={clsx(styles.accordionItem, isOpen && styles.open)}
+              className={cn(styles.accordionItem, isOpen && styles.open)}
             >
               <button
                 className={styles.accordionButton}

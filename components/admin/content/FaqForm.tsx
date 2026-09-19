@@ -9,7 +9,7 @@ import { FAQ_CATEGORIES } from "@/lib/admin/content-constants";
 import type { ContentFormState } from "@/lib/admin/content";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "./content-form.module.css";
+import { cmsStyles as styles } from "./cmsStyles";
 
 export interface FaqLinkDefaults {
   label: string;

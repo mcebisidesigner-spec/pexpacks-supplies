@@ -15,10 +15,9 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { PEXCO_CLASSIFICATIONS } from "@/lib/admin/system-settings-shared";
 import type { MasterPricingConfig } from "@/lib/admin/items";
 import { AdminDropdown } from "@/components/admin/ui/AdminDropdown";
-import adminStyles from "@/app/admin/admin.module.css";
-import styles from "./ItemForm.module.css";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 import { MASTER_PRODUCT_CATEGORIES } from "@/lib/admin/item-constants";
+import adminStyles from "@/app/admin/admin.module.css";
 
 interface ItemFormProps {
   item: ItemRow | null;
@@ -407,11 +406,11 @@ export function ItemForm({
                 <label className={adminStyles.formLabel} htmlFor="sku">
                   SKU
                 </label>
-                <div className={styles.skuInputRow}>
+                <div className="relative flex items-center">
                   <input
                     id="sku"
                     name="sku"
-                    className={`${adminStyles.inputField} ${styles.skuInput}`}
+                    className={`${adminStyles.inputField} pr-24 font-mono`}
                     value={sku}
                     onChange={handleSkuChange}
                     placeholder="Auto-generated"
@@ -424,8 +423,10 @@ export function ItemForm({
                         ? "Custom SKU (Click to Auto-sync)"
                         : "Auto-synced (Click to Refresh)"
                     }
-                    className={`${styles.skuButtonAdornment} ${
-                      isCustomSku ? styles.skuButtonLocked : ""
+                    className={`absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-semibold transition-colors cursor-pointer ${
+                      isCustomSku
+                        ? "bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700"
+                        : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
                     }`}
                   >
                     {isCustomSku ? (
@@ -437,7 +438,7 @@ export function ItemForm({
                   </button>
                 </div>
                 {state?.errors?.sku && (
-                  <span className={styles.fieldError}>{state.errors.sku}</span>
+                  <span className="text-xs text-rose-400 mt-1 block">{state.errors.sku}</span>
                 )}
               </div>
               <div>
@@ -466,7 +467,7 @@ export function ItemForm({
                   }}
                 />
                 {state?.errors?.category && (
-                  <span className={styles.fieldError}>
+                  <span className="text-xs text-rose-400 mt-1 block">
                     {state.errors.category}
                   </span>
                 )}
@@ -489,7 +490,7 @@ export function ItemForm({
                     required
                   />
                   {state?.errors?.name && (
-                    <span className={styles.fieldError}>{state.errors.name}</span>
+                    <span className="text-xs text-rose-400 mt-1 block">{state.errors.name}</span>
                   )}
                 </div>
 
@@ -520,10 +521,10 @@ export function ItemForm({
                     }}
                   />
                   {state?.errors?.brand && (
-                    <span className={styles.fieldError}>{state.errors.brand}</span>
+                    <span className="text-xs text-rose-400 mt-1 block">{state.errors.brand}</span>
                   )}
                   {!item && (
-                    <span className={styles.fieldHint}>
+                    <span className="text-[11px] text-slate-400 mt-1 block leading-relaxed">
                       Products with the same name across different brands are stored as separate catalogue products.
                     </span>
                   )}
@@ -545,21 +546,21 @@ export function ItemForm({
                     required
                   />
                   {state?.errors?.name && (
-                    <span className={styles.fieldError}>{state.errors.name}</span>
+                    <span className="text-xs text-rose-400 mt-1 block">{state.errors.name}</span>
                   )}
                 </div>
               </div>
             )}
 
             {isBrandChanged && (
-              <div className={styles.brandVariantNotice}>
-                <div className={styles.brandVariantHeader}>
-                  <span className={styles.brandVariantBadge}>Brand Changed</span>
-                  <span className={styles.brandVariantArrow}>
+              <div className="mt-3.5 p-3.5 bg-emerald-500/10 border border-emerald-500/35 rounded-lg flex flex-col gap-2">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/40">Brand Changed</span>
+                  <span className="text-xs text-slate-100">
                     <strong>{originalBrand}</strong> &rarr; <strong>{brand}</strong>
                   </span>
                 </div>
-                <div className={styles.brandVariantText}>
+                <div className="text-xs text-slate-300 leading-relaxed">
                   {saveMode === "new_variant" ? (
                     <span>
                       Saving will create a separate <strong>{brand}</strong> product with these details &amp; pricing. The original <strong>{originalBrand}</strong> product will not be overridden.
@@ -570,24 +571,26 @@ export function ItemForm({
                     </span>
                   )}
                 </div>
-                <div className={styles.brandVariantOptions}>
-                  <label className={styles.brandVariantOption}>
+                <div className="flex gap-4 flex-wrap mt-0.5 pt-2 border-t border-emerald-500/20">
+                  <label className="flex items-center gap-1.5 text-xs font-medium text-slate-100 cursor-pointer">
                     <input
                       type="radio"
                       name="save_mode_selector"
                       value="new_variant"
                       checked={saveMode === "new_variant"}
                       onChange={() => setSaveMode("new_variant")}
+                      className="accent-emerald-500 cursor-pointer"
                     />
                     <span>Save as new {brand} product (Preserve {originalBrand})</span>
                   </label>
-                  <label className={styles.brandVariantOption}>
+                  <label className="flex items-center gap-1.5 text-xs font-medium text-slate-100 cursor-pointer">
                     <input
                       type="radio"
                       name="save_mode_selector"
                       value="update_existing"
                       checked={saveMode === "update_existing"}
                       onChange={() => setSaveMode("update_existing")}
+                      className="accent-emerald-500 cursor-pointer"
                     />
                     <span>Rename brand on current product</span>
                   </label>
@@ -608,7 +611,7 @@ export function ItemForm({
                   placeholder="Product description, material, and specifications..."
                 />
                 {state?.errors?.description && (
-                  <span className={styles.fieldError}>
+                  <span className="text-xs text-rose-400 mt-1 block">
                     {state.errors.description}
                   </span>
                 )}
@@ -631,7 +634,7 @@ export function ItemForm({
                   placeholder="e.g. Pack of 10"
                 />
                 {state?.errors?.specification && (
-                  <span className={styles.fieldError}>
+                  <span className="text-xs text-rose-400 mt-1 block">
                     {state.errors.specification}
                   </span>
                 )}
@@ -649,7 +652,7 @@ export function ItemForm({
                   placeholder="1"
                 />
                 {state?.errors?.quantity && (
-                  <span className={styles.fieldError}>
+                  <span className="text-xs text-rose-400 mt-1 block">
                     {state.errors.quantity}
                   </span>
                 )}
@@ -668,7 +671,7 @@ export function ItemForm({
                   classification.
                 </p>
                 <label
-                  className={styles.checkboxLabel}
+                  className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-200"
                   htmlFor="requires_pexcover"
                 >
                   <input
@@ -716,7 +719,7 @@ export function ItemForm({
                         ))}
                       </select>
                       {state?.errors?.pexco_code && (
-                        <span className={styles.fieldError}>
+                        <span className="text-xs text-rose-400 mt-1 block">
                           {state.errors.pexco_code}
                         </span>
                       )}
@@ -732,7 +735,7 @@ export function ItemForm({
                 <span className={adminStyles.formLabel}>Item Icon Symbol</span>
                 <div className={adminStyles.stackRow}>
                   {icon ? (
-                    <div className={styles.iconSelectedPreview}>
+                    <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-emerald-500/15 text-emerald-400 rounded-md text-xs font-semibold border border-emerald-500/30">
                       <ItemIcon name={icon} size={16} />
                       <span>Selected: {icon}</span>
                     </div>
@@ -743,7 +746,7 @@ export function ItemForm({
                   )}
                 </div>
                 <div
-                  className={styles.iconGrid}
+                  className="flex flex-wrap gap-2 mt-2"
                   role="group"
                   aria-label="Pick an icon"
                 >
@@ -751,8 +754,10 @@ export function ItemForm({
                     <button
                       key={option.key}
                       type="button"
-                      className={`${styles.iconOption} ${
-                        icon === option.key ? styles.iconOptionActive : ""
+                      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-colors cursor-pointer ${
+                        icon === option.key
+                          ? "!border-emerald-500 !bg-emerald-500/20 !text-emerald-300"
+                          : "border-slate-700/60 bg-slate-800 text-slate-300 hover:border-slate-500 hover:text-white"
                       }`}
                       onClick={() =>
                         setIcon(icon === option.key ? "" : option.key)
@@ -801,24 +806,24 @@ export function ItemForm({
                   placeholder="0.00"
                 />
                 {state?.errors?.price && (
-                  <span className={styles.fieldError}>
+                  <span className="text-xs text-rose-400 mt-1 block">
                     {state.errors.price}
                   </span>
                 )}
                 {masterMode && (
                   <div
-                    className={styles.sellingPreview}
+                    className="mt-2 p-2.5 bg-slate-900 border border-slate-700/60 rounded-lg flex flex-col gap-1"
                     data-testid="selling-preview"
                   >
-                    <span className={styles.sellingPreviewLabel}>
+                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
                       Calculated Selling Price
                     </span>
-                    <span className={styles.sellingPreviewValue}>
+                    <span className="text-base font-bold text-emerald-400">
                       {computedSellingPrice != null
                         ? `R ${computedSellingPrice.toFixed(2)}`
                         : "—"}
                     </span>
-                    <span className={styles.sellingPreviewHint}>
+                    <span className="text-[11px] text-slate-400">
                       = Cost + Target Margin (auto)
                     </span>
                   </div>
@@ -856,7 +861,7 @@ export function ItemForm({
 
             <div className={adminStyles.formField}>
               <div>
-                <label className={styles.checkboxLabel} htmlFor="visible">
+                <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-200" htmlFor="visible">
                   <input
                     id="visible"
                     type="checkbox"
@@ -998,10 +1003,7 @@ export function ItemForm({
                 }}
               />
               {brandModalError && (
-                <span
-                  className={styles.fieldError}
-                  style={{ marginTop: "6px", display: "block" }}
-                >
+                <span className="text-xs text-rose-400 mt-1.5 block">
                   {brandModalError}
                 </span>
               )}

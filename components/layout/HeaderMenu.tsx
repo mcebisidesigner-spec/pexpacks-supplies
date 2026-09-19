@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MobileMenu } from "./MobileMenu";
-import styles from "./Header.module.css";
+import { cn } from "@/lib/utils";
 
 export function HeaderMenu() {
   const pathname = usePathname();
@@ -142,22 +142,37 @@ export function HeaderMenu() {
     <>
       <button
         ref={menuButtonRef}
-        className={[
-          styles.menuButton,
-          showCloseIcon ? styles.menuButtonOpen : "",
-          iconClosing ? styles.menuButtonClosing : "",
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className="relative grid lg:hidden place-items-center w-10 h-10 min-w-10 min-h-10 border-0 p-0 bg-transparent rounded-full text-[var(--pex-navy,#1a2a40)] cursor-pointer z-10 select-none transition-colors focus:outline-none"
         type="button"
         onClick={() => (mobileOpen ? closeMobileMenu() : openMobileMenu())}
         aria-label={mobileOpen ? "Close menu" : "Open menu"}
         aria-controls="mobile-menu"
         aria-expanded={mobileOpen}
       >
-        <span />
-        <span />
-        <span />
+        <span
+          className={cn(
+            "absolute top-1/2 left-1/2 w-5 h-0.5 rounded-full bg-current origin-center will-change-[transform,opacity] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none",
+            showCloseIcon
+              ? "-translate-x-1/2 -translate-y-1/2 rotate-45 delay-90"
+              : "-translate-x-1/2 -translate-y-[calc(50%+6.5px)] delay-0"
+          )}
+        />
+        <span
+          className={cn(
+            "absolute top-1/2 left-1/2 w-5 h-0.5 rounded-full bg-current origin-center will-change-[transform,opacity] transition-all duration-200 ease-[cubic-bezier(0.4,0,1,1)] motion-reduce:transition-none",
+            showCloseIcon
+              ? "-translate-x-1/2 -translate-y-1/2 opacity-0 scale-x-[0.2] delay-90"
+              : "-translate-x-1/2 -translate-y-1/2 opacity-100 scale-x-100 delay-0"
+          )}
+        />
+        <span
+          className={cn(
+            "absolute top-1/2 left-1/2 w-5 h-0.5 rounded-full bg-current origin-center will-change-[transform,opacity] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none",
+            showCloseIcon
+              ? "-translate-x-1/2 -translate-y-1/2 -rotate-45 delay-90"
+              : "-translate-x-1/2 -translate-y-[calc(50%-6.5px)] delay-0"
+          )}
+        />
       </button>
       <MobileMenu
         open={mobileOpen}
@@ -167,3 +182,4 @@ export function HeaderMenu() {
     </>
   );
 }
+

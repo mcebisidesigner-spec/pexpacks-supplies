@@ -8,7 +8,6 @@ import {
   importMasterProductsAction,
 } from "../../operations-actions";
 import adminStyles from "@/app/admin/admin.module.css";
-import itemStyles from "@/components/admin/packs/ItemsManager.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -169,7 +168,7 @@ export default async function AddItemPage() {
         <section
           id="bulk-stationery-import"
           aria-label="Bulk CSV stationery import"
-          className={itemStyles.csvBannerTiles}
+          className="mt-4"
         >
           <CSVStationeryImporter
             packs={await listPacksForFilter()}

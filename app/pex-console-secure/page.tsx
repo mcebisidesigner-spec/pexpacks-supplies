@@ -307,8 +307,10 @@ export default function PexConsoleGateway() {
             <div className={styles.fieldsStack}>
               <FloatingInput
                 id="email"
+                name="email"
                 type="email"
                 label="Administrative Email"
+                aria-label="Administrative Email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -319,8 +321,10 @@ export default function PexConsoleGateway() {
 
               <FloatingInput
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 label="Password"
+                aria-label="Password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

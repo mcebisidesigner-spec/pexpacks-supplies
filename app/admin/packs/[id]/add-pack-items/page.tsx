@@ -4,7 +4,7 @@ import { getSchool } from "@/lib/admin/schools";
 import { SchoolPackCreateForm } from "@/components/admin/packs/SchoolPackCreateForm";
 import { createSchoolPackAction } from "../../actions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 export const metadata = {
   title: "Add Pack Items | Admin | Pexpacks",

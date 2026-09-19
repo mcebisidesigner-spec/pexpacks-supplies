@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import styles from "./HappyPayBanner.module.css";
 
 type HappyPayBannerProps = {
@@ -37,7 +37,7 @@ export function HappyPayBanner({
   return (
     <section
       id="happy-pay-banner"
-      className={clsx(styles.banner, className)}
+      className={cn(styles.banner, className)}
       aria-labelledby="happy-pay-banner-title"
     >
       <span className={styles.ringTop} aria-hidden="true" />
@@ -138,10 +138,10 @@ export function HappyPayBanner({
             </div>
           </div>
 
-          <span className={clsx(styles.floatingChip, styles.floatingChipCoral)}>
+          <span className={cn(styles.floatingChip, styles.floatingChipCoral)}>
             0% interest
           </span>
-          <span className={clsx(styles.floatingChip, styles.floatingChipTeal)}>
+          <span className={cn(styles.floatingChip, styles.floatingChipTeal)}>
             No fees
           </span>
         </div>

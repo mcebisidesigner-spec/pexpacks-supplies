@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import styles from "./DataTableToolbar.module.css";
+import { cn } from "@/lib/utils";
 import { useTableParams } from "./useTableParams";
 
 export interface DataTableToolbarProps {
@@ -38,23 +38,31 @@ export function DataTableToolbar({
   }, [searchTerm, params.q, setParams]);
 
   return (
-    <div className={`${styles.toolbar} ${className || ""}`}>
-      <div className={styles.leftGroup}>
+    <div
+      className={cn(
+        "flex items-center justify-between gap-4 mb-4 w-full flex-wrap",
+        className,
+      )}
+    >
+      <div className="flex items-center gap-3 flex-1 max-w-[440px] min-w-[260px]">
         {showSearch && (
-          <div className={styles.searchContainer}>
-            <Search size={15} className={styles.searchIcon} />
+          <div className="relative w-full">
+            <Search
+              size={15}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+            />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={searchPlaceholder}
-              className={styles.searchInput}
+              className="w-full h-10 bg-slate-900/75 border border-slate-800/85 rounded-full pl-10 pr-4 font-inherit text-[13px] font-medium text-slate-100 placeholder:text-slate-500 outline-none transition-colors transition-shadow focus:border-emerald-500 focus:ring-3 focus:ring-emerald-500/20"
             />
           </div>
         )}
       </div>
       {(filters || actions) && (
-        <div className={styles.rightGroup}>
+        <div className="flex items-center gap-3 ml-auto flex-wrap">
           {filters}
           {actions}
         </div>

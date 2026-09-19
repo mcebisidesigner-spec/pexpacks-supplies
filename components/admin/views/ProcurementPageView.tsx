@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react";
 import { AlertTriangle, Clock, MoreVertical, Truck, CheckCircle2 } from "lucide-react";
-import styles from "./ProcurementPageView.module.css";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { ZarIcon } from "@/components/admin/ui/ZarIcon";
@@ -63,7 +62,7 @@ export function ProcurementPageView({ initialData }: ProcurementPageViewProps) {
   }, [cards]);
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col gap-6 w-full text-slate-200">
       <AdminPageHeader
         title="Procurement & Purchase Orders"
         count={cards.length}
@@ -112,46 +111,68 @@ export function ProcurementPageView({ initialData }: ProcurementPageViewProps) {
         ]}
       />
 
-      <div className={styles.kanbanGrid}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
         {STAGES.map((stage) => {
           const stageCards = cards.filter((card) => card.stage === stage);
           return (
-            <div key={stage} className={styles.kanbanColumn}>
-              <div className={styles.kanbanColumnHeader}>
-                <span className={styles.columnTitle}>{stage}</span>
-                <span className={styles.columnCount}>{stageCards.length}</span>
+            <div key={stage} className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col gap-3 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                  {stage}
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-slate-950 text-slate-400 text-[10px] font-bold border border-slate-800">
+                  {stageCards.length}
+                </span>
               </div>
-              <div className={styles.kanbanCardsList}>
+              <div className="flex flex-col gap-2 min-h-[80px]">
                 {stageCards.map((card) => (
-                  <div key={card.id} className={styles.kanbanCard}>
-                    <div className={styles.cardZoneTop}>
-                      <span className={styles.poNumber}>{card.sku || card.product_name}</span>
+                  <div
+                    key={card.id}
+                    className="bg-slate-950/70 border border-slate-800 rounded-xl p-3 transition-all duration-150 flex flex-col gap-2 hover:-translate-y-0.5 hover:border-slate-700 shadow-sm"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-slate-100 truncate min-w-0">
+                        {card.sku || card.product_name}
+                      </span>
                       <button
                         type="button"
-                        className={styles.optionsButton}
+                        className="inline-flex items-center justify-center w-6 h-6 border-0 bg-transparent text-slate-500 hover:text-slate-200 hover:bg-slate-800 rounded-md cursor-pointer transition-colors"
                         aria-label={`Options for ${card.product_name}`}
                       >
                         <MoreVertical size={14} />
                       </button>
                     </div>
-                    <div className={styles.cardZoneMiddle}>
-                      <span className={styles.supplierName}>{card.product_name}</span>
-                      <span className={styles.supplierMeta}>{card.category || card.status}</span>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <span className="text-xs font-semibold text-slate-200 truncate leading-snug">
+                        {card.product_name}
+                      </span>
+                      <span className="text-[11px] text-slate-400 truncate">
+                        {card.category || card.status}
+                      </span>
                     </div>
-                    <div className={styles.cardZoneFooter}>
-                      <span className={styles.footerMeta}>
-                        <span className={styles.footerAvatar} aria-hidden="true">
+                    <div className="flex items-center justify-between gap-2 mt-1">
+                      <span className="inline-flex items-center gap-1.5 shrink-0 min-w-0">
+                        <span
+                          className="inline-flex items-center justify-center shrink-0 w-5.5 h-5.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold border border-emerald-500/25"
+                          aria-hidden="true"
+                        >
                           {Math.round(card.procurement_coverage_percent)}%
                         </span>
-                        <span className={styles.footerDate}>{dueLabel(card.updated_at)}</span>
+                        <span className="text-[10px] text-slate-400 whitespace-nowrap">
+                          {dueLabel(card.updated_at)}
+                        </span>
                       </span>
-                      <span className={styles.cardValue}>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-900 border border-slate-800 rounded-full text-[10px] font-semibold text-slate-200 whitespace-nowrap shrink-0">
                         {card.outstanding_quantity} open / {card.required_quantity} units
                       </span>
                     </div>
                   </div>
                 ))}
-                {stageCards.length === 0 && <div className={styles.kanbanEmpty}>No procurement requirements</div>}
+                {stageCards.length === 0 && (
+                  <div className="py-6 text-center text-xs text-slate-500">
+                    No procurement requirements
+                  </div>
+                )}
               </div>
             </div>
           );

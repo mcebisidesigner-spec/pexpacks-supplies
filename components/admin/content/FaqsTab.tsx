@@ -17,7 +17,7 @@ import {
   deleteCmsFaqAction,
   toggleCmsFaqPublishedAction,
 } from "@/app/admin/content/actions";
-import styles from "./CmsContentManager.module.css";
+import { cmsStyles as styles } from "./cmsStyles";
 
 type FaqPageKey =
   | "all"

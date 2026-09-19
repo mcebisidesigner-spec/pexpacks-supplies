@@ -8,7 +8,7 @@ import {
   deleteCmsResourceAction,
   toggleCmsResourcePublicAction,
 } from "@/app/admin/content/actions";
-import styles from "./CmsContentManager.module.css";
+import { cmsStyles as styles } from "./cmsStyles";
 
 interface ResourcesTabProps {
   initialResources: CmsResourceRow[];

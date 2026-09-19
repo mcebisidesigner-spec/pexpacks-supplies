@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import styles from "./HeroBase.module.css";
+import { cn } from "@/lib/utils";
 
 type PageHeroProps = {
   eyebrow: string;
@@ -25,25 +25,49 @@ export function PageHero({
   variant = "default",
 }: PageHeroProps) {
   return (
-    <section className={variant === "navy" ? styles.heroNavy : styles.pageHero}>
-      <div className={styles.pageHeroInner}>
-        <div className={styles.pageHeroCompact}>
-          <p className={styles.eyebrow}>{eyebrow}</p>
-          <h1 className={styles.pageTitle}>{title}</h1>
-          {text ? <p className={styles.pageLead}>{text}</p> : null}
+    <section
+      className={cn(
+        "bg-[var(--pex-navy)]",
+        variant === "navy"
+          ? "pt-[clamp(52px,8vw,96px)] pb-[clamp(58px,8vw,108px)]"
+          : "pt-[clamp(36px,6vw,52px)] pb-[clamp(44px,8vw,72px)] md:pt-[clamp(52px,8vw,96px)] md:pb-[clamp(58px,8vw,108px)]"
+      )}
+    >
+      <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-[clamp(38px,6vw,76px)] items-center">
+        <div className="max-w-[850px] min-w-0">
+          <p className="m-0 mb-4 text-teal-400 font-extrabold text-sm tracking-normal">
+            {eyebrow}
+          </p>
+          <h1 className="m-0 text-white font-[family-name:var(--font-heading)] text-[clamp(28px,10vw,34px)] sm:text-[clamp(32px,9vw,42px)] lg:text-[clamp(38px,5.4vw,64px)] font-extrabold leading-[1.06] tracking-tight [overflow-wrap:anywhere]">
+            {title}
+          </h1>
+          {text ? (
+            <p className="max-w-[530px] my-[18px] mb-6 text-white/80 text-[clamp(15px,2.5vw,16px)] lg:text-[clamp(15.5px,1.8vw,17px)] leading-[1.55]">
+              {text}
+            </p>
+          ) : null}
           {children}
         </div>
         {panelChildren || panelTitle || panelText ? (
           <aside
-            className={[styles.heroPanel, panelClassName]
-              .filter(Boolean)
-              .join(" ")}
+            className={cn(
+              "border border-[rgba(26,42,64,0.08)] rounded-[24px] p-[22px] md:p-[32px_34px] bg-white shadow-[0_16px_44px_rgba(0,0,0,0.16)]",
+              panelClassName
+            )}
             aria-label={`${eyebrow} summary`}
           >
             {panelChildren || (
               <>
-                {panelText ? <p>{panelText}</p> : null}
-                {panelTitle ? <strong>{panelTitle}</strong> : null}
+                {panelText ? (
+                  <p className="m-0 mb-2.5 text-[#64748b] text-[13.5px] font-semibold leading-[1.4] tracking-tight">
+                    {panelText}
+                  </p>
+                ) : null}
+                {panelTitle ? (
+                  <strong className="block text-[var(--pex-primary)] text-[clamp(22px,2.4vw,28px)] font-extrabold leading-[1.25] tracking-tight">
+                    {panelTitle}
+                  </strong>
+                ) : null}
               </>
             )}
           </aside>
@@ -52,3 +76,4 @@ export function PageHero({
     </section>
   );
 }
+

@@ -23,7 +23,6 @@ import { AdminButton } from "@/components/admin/ui/AdminButton";
 import { MetricCard } from "@/components/admin/ui/AdminCard";
 import { DbNotice } from "@/components/admin/ui/DbNotice";
 import adminStyles from "@/app/admin/admin.module.css";
-import itemStyles from "./ItemsManager.module.css";
 
 const PAGE_SIZE = 4;
 const GRADES = [
@@ -308,16 +307,16 @@ export function SchoolPackCreateForm({
         </aside>
       </div>
 
-      <div className={itemStyles.tableWrap}>
-        <table className={itemStyles.table}>
+      <div className="overflow-x-auto w-full border border-slate-800 rounded-lg bg-[#070d18] mt-4">
+        <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr>
-              <th>ITEM CODE</th>
-              <th>ITEM NAME</th>
-              <th>DESCRIPTION</th>
-              <th>QTY</th>
-              <th>PRICE</th>
-              <th>ACTIONS</th>
+            <tr className="border-b border-slate-800 bg-slate-900/60">
+              <th className="px-3.5 py-2.5 font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">ITEM CODE</th>
+              <th className="px-3.5 py-2.5 font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">ITEM NAME</th>
+              <th className="px-3.5 py-2.5 font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">DESCRIPTION</th>
+              <th className="px-3.5 py-2.5 font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">QTY</th>
+              <th className="px-3.5 py-2.5 font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">PRICE</th>
+              <th className="px-3.5 py-2.5 font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -326,18 +325,18 @@ export function SchoolPackCreateForm({
                 const unitPrice = line.unit_price ?? line.price ?? 0;
                 const itemName = line.title || line.name;
                 return (
-                  <tr key={line.id}>
-                    <td>{line.sku || line.category || "Single"}</td>
-                    <td>
-                      <span className={itemStyles.itemName}>{itemName}</span>
+                  <tr key={line.id} className="border-b border-slate-800/60 hover:bg-slate-800/30 transition-colors">
+                    <td className="px-3.5 py-2.5 text-slate-300 align-middle">{line.sku || line.category || "Single"}</td>
+                    <td className="px-3.5 py-2.5 text-slate-300 align-middle">
+                      <span className="font-semibold text-slate-100">{itemName}</span>
                     </td>
-                    <td>{line.description || "-"}</td>
-                    <td>{line.quantity}</td>
-                    <td className={itemStyles.priceCell}>
+                    <td className="px-3.5 py-2.5 text-slate-300 align-middle">{line.description || "-"}</td>
+                    <td className="px-3.5 py-2.5 text-slate-300 align-middle">{line.quantity}</td>
+                    <td className="px-3.5 py-2.5 font-semibold text-slate-200 whitespace-nowrap align-middle">
                       {formatCurrency(unitPrice)}
                     </td>
-                    <td>
-                      <div className={itemStyles.actions}>
+                    <td className="px-3.5 py-2.5 text-slate-300 align-middle">
+                      <div className="flex items-center gap-1">
                         <AdminButton
                           type="button"
                           variant="danger"
@@ -362,15 +361,15 @@ export function SchoolPackCreateForm({
         </table>
       </div>
 
-      <div className={itemStyles.pager}>
+      <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 text-xs text-slate-400 mt-2">
         <span>
           Page {currentPage} of {pageCount} - {lines.length}{" "}
           {lines.length === 1 ? "item" : "items"}
         </span>
-        <div className={itemStyles.pagerButtons}>
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
-            className={itemStyles.pageButton}
+            className="px-2.5 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
             onClick={() => setPage((value) => Math.max(1, value - 1))}
             disabled={currentPage <= 1}
           >
@@ -378,7 +377,7 @@ export function SchoolPackCreateForm({
           </button>
           <button
             type="button"
-            className={itemStyles.pageButton}
+            className="px-2.5 py-1 rounded bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
             onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
             disabled={currentPage >= pageCount}
           >
@@ -389,7 +388,7 @@ export function SchoolPackCreateForm({
 
       {showImporter ? (
         <section
-          className={itemStyles.csvBannerTiles}
+          className="mt-4"
           aria-label="Bulk CSV stationery import"
         >
           <CSVStationeryImporter onStageItems={stageCsvItems} variant="tiles" />

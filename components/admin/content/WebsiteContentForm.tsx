@@ -11,7 +11,7 @@ import type {
 } from "@/lib/admin/content";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
 import adminStyles from "@/app/admin/admin.module.css";
-import styles from "./content-form.module.css";
+import { cmsStyles as styles } from "./cmsStyles";
 
 function SubmitButton() {
   const { pending } = useFormStatus();

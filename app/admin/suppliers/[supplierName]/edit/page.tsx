@@ -7,7 +7,7 @@ import {
 } from "@/lib/admin/supplier-slug";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { SupplierEditForm } from "@/components/admin/suppliers/SupplierEditForm";
-import styles from "@/components/admin/views/CorePagesView.module.css";
+import { corePages as styles } from "@/components/admin/views/CorePagesView";;
 
 interface EditSupplierPageProps {
   params: Promise<{ supplierName: string }>;

@@ -9,7 +9,6 @@ import { updateSupplierAction } from "@/app/admin/suppliers/actions";
 import type { SupplierFormState } from "@/lib/admin/suppliers";
 import adminStyles from "@/app/admin/admin.module.css";
 import { AdminButton } from "@/components/admin/ui/AdminButton";
-import formStyles from "./supplier-form.module.css";
 
 export interface SupplierFormDefaults {
   slug: string;
@@ -41,7 +40,7 @@ function SubmitButton() {
 
 const err = (state: SupplierFormState, field: string) =>
   state?.errors?.[field] ? (
-    <span className={formStyles.fieldError} role="alert">
+    <span className="block text-xs text-rose-400 mt-1" role="alert">
       {state.errors[field]}
     </span>
   ) : null;

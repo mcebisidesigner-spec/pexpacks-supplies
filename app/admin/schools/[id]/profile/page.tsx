@@ -18,7 +18,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getSchoolProfile } from "@/lib/admin/school-profile";
-import styles from "./SchoolProfile.module.css";
 
 interface SchoolProfilePageProps {
   params: Promise<{ id: string }>;
@@ -40,6 +39,17 @@ interface AttentionItem {
   tone: "clear" | "warning" | "danger";
 }
 
+const toneIconStyles = {
+  green: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
+  amber: "bg-amber-500/15 text-amber-400 border border-amber-500/30",
+  blue: "bg-blue-500/15 text-blue-400 border border-blue-500/30",
+};
+
+const toneValueStyles = {
+  green: "text-emerald-400",
+  amber: "text-amber-400",
+};
+
 function ProfileCard({
   label,
   value,
@@ -50,19 +60,21 @@ function ProfileCard({
   compact = false,
 }: ProfileCardProps) {
   return (
-    <article className={styles.profileCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.cardLabel}>{label}</span>
-        <span className={`${styles.cardIcon} ${styles[`cardIcon${tone}`]}`} aria-hidden="true">
+    <article className="flex flex-col min-w-0 min-h-[154px] sm:min-h-[174px] p-5 border border-slate-800 rounded-lg bg-[#070d18]">
+      <div className="flex items-center justify-between gap-3 mb-4.5">
+        <span className="text-slate-400 text-[11px] font-extrabold leading-tight uppercase tracking-wider">{label}</span>
+        <span className={`inline-flex items-center justify-center w-10 h-10 rounded-lg shrink-0 ${toneIconStyles[tone]}`} aria-hidden="true">
           <Icon size={19} strokeWidth={1.9} />
         </span>
       </div>
       <strong
-        className={`${styles.cardValue} ${compact ? styles.cardValueCompact : ""} ${valueTone ? styles[`cardValue${valueTone}`] : ""}`}
+        className={`text-white font-black overflow-hidden text-ellipsis break-words leading-tight ${
+          compact ? "text-[15px] leading-snug" : "text-xl sm:text-2xl"
+        } ${valueTone ? toneValueStyles[valueTone] : ""}`}
       >
         {value}
       </strong>
-      <span className={styles.cardDetail}>{detail}</span>
+      <span className="mt-2 text-slate-400 text-xs leading-relaxed break-words">{detail}</span>
     </article>
   );
 }
@@ -132,24 +144,30 @@ export default async function SchoolProfilePage({ params }: SchoolProfilePagePro
   const addressDetail = [school.city, school.province].filter(Boolean).join(", ");
   const profileHref = `/admin/schools/${school.slug || school.id}`;
 
+  const toneAttentionIconStyles = {
+    clear: "text-emerald-400",
+    warning: "text-amber-400",
+    danger: "text-rose-400",
+  };
+
   return (
-    <div className={styles.page}>
-      <header className={styles.profileHeader}>
-        <div className={styles.identity}>
-          <span className={styles.kicker}>
+    <div className="w-full max-w-[1240px] mx-auto pb-6">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-7 min-h-[132px] p-4.5 sm:px-4.5 pb-6 border-b border-slate-800">
+        <div className="min-w-0">
+          <span className="inline-flex items-center gap-1.5 mb-3.5 text-emerald-400 text-[13px] font-extrabold uppercase tracking-wide">
             <ShieldCheck size={16} aria-hidden="true" />
             School profile
           </span>
-          <h1>{school.name}</h1>
-          <p>This information is private and used for business with the school.</p>
+          <h1 className="m-0 text-white text-2xl sm:text-3xl md:text-[38px] font-black leading-tight tracking-tight uppercase break-words">{school.name}</h1>
+          <p className="mt-2.5 text-slate-400 text-[13px] leading-relaxed">This information is private and used for business with the school.</p>
         </div>
-        <Link href={profileHref} className={styles.editButton}>
+        <Link href={profileHref} className="inline-flex items-center justify-center gap-2.5 min-w-[146px] min-h-[44px] px-5 border border-slate-700/80 rounded-lg bg-slate-900/60 text-slate-200 text-sm font-extrabold hover:border-emerald-500 hover:text-emerald-400 transition-colors w-full sm:w-auto">
           <Pencil size={16} aria-hidden="true" />
           Edit Info
         </Link>
       </header>
 
-      <section className={styles.profileGrid} aria-label="School information and activity">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4.5 pt-7 px-0 sm:px-4.5" aria-label="School information and activity">
         <ProfileCard
           label="Principal name"
           value={school.principal || "Not recorded"}
@@ -224,12 +242,12 @@ export default async function SchoolProfilePage({ params }: SchoolProfilePagePro
         />
       </section>
 
-      <section className={styles.attentionSection} aria-labelledby="attention-heading">
-        <div className={styles.attentionHeading}>
-          <h2 id="attention-heading">What needs attention</h2>
-          <span>Actionable alerts for this school.</span>
+      <section className="pt-8 px-0 sm:px-4.5" aria-labelledby="attention-heading">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4 mb-4">
+          <h2 id="attention-heading" className="m-0 text-white text-xl font-bold tracking-tight">What needs attention</h2>
+          <span className="text-slate-400 text-xs">Actionable alerts for this school.</span>
         </div>
-        <div className={styles.attentionList}>
+        <div className="border border-dashed border-slate-700/80 rounded-lg bg-[#070d18] divide-y divide-slate-800">
           {attention.map((item) => {
             const Icon =
               item.tone === "clear"
@@ -238,15 +256,15 @@ export default async function SchoolProfilePage({ params }: SchoolProfilePagePro
                   ? CircleAlert
                   : TriangleAlert;
             return (
-              <div className={styles.attentionItem} key={`${item.title}-${item.detail}`}>
+              <div className="flex items-start gap-4 min-h-[82px] p-4.5 sm:px-5.5" key={`${item.title}-${item.detail}`}>
                 <Icon
-                  className={`${styles.attentionIcon} ${styles[`attentionIcon${item.tone}`]}`}
+                  className={`shrink-0 mt-0.5 ${toneAttentionIconStyles[item.tone]}`}
                   size={22}
                   aria-hidden="true"
                 />
                 <div>
-                  <strong>{item.title}</strong>
-                  <span>{item.detail}</span>
+                  <strong className="block text-white text-sm font-semibold">{item.title}</strong>
+                  <span className="block mt-1 text-slate-400 text-xs leading-relaxed">{item.detail}</span>
                 </div>
               </div>
             );
