@@ -54,24 +54,24 @@ const resultLimit = 12;
 
 /* ─── Shared search-card card shell classes ────────────────────────────────── */
 const CARD_CLASSES =
-  "relative z-[11] w-full p-3.5 sm:p-4 md:pl-5 " +
-  "border border-pex-keppel/10 " +
+  "relative z-[11] w-full p-4 sm:p-5 " +
+  "border border-pex-keppel/15 " +
   "rounded-[28px] md:rounded-[34px] " +
   "bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,252,252,0.94))] " +
   "shadow-[0_24px_58px_rgba(26,42,64,0.13),inset_0_1px_0_rgba(255,255,255,0.95)] " +
   "flex flex-col min-w-0 transition-all duration-200";
 
 const INPUT_CLASSES =
-  "min-w-0 w-full min-h-[58px] md:min-h-[72px] " +
-  "border-2 border-pex-border focus:border-pex-keppel " +
-  "rounded-xl md:rounded-[22px] outline-none " +
-  "bg-pex-bg text-pex-navy " +
-  "text-lg md:text-2xl font-bold leading-tight " +
-  "px-4 sm:px-5 pr-11 " +
+  "min-w-0 w-full min-h-[64px] sm:min-h-[70px] " +
+  "border-2 border-slate-200/90 hover:border-pex-keppel/60 focus:border-pex-keppel " +
+  "rounded-2xl md:rounded-[22px] outline-none " +
+  "bg-white text-pex-navy " +
+  "text-lg sm:text-xl font-bold leading-tight " +
+  "px-5 sm:px-6 pr-12 " +
   "transition-all duration-200 " +
-  "shadow-[inset_0_2px_4px_rgba(26,42,64,0.04)] " +
+  "shadow-[0_2px_8px_rgba(26,42,64,0.04),inset_0_1px_2px_rgba(26,42,64,0.02)] " +
   "focus:ring-4 focus:ring-pex-keppel/15 " +
-  "placeholder:text-foreground/40 placeholder:font-medium " +
+  "placeholder:text-pex-navy/40 placeholder:text-base sm:placeholder:text-lg placeholder:font-normal " +
   "[&::-webkit-search-cancel-button]:hidden " +
   "[&::-webkit-search-decoration]:hidden " +
   "[&::-webkit-search-results-button]:hidden " +
@@ -80,10 +80,10 @@ const INPUT_CLASSES =
 const CHIP_CLASSES =
   "shrink-0 snap-start inline-flex items-center gap-2 " +
   "py-2 px-3.5 rounded-2xl " +
-  "bg-pex-bg border border-pex-border " +
-  "text-pex-navy hover:text-pex-keppel hover:border-pex-keppel " +
-  "transition-all hover:-translate-y-0.5 hover:shadow-md " +
-  "cursor-pointer no-underline";
+  "bg-pex-bg border-2 border-pex-border " +
+  "text-pex-navy hover:text-pex-keppel hover:border-pex-keppel hover:bg-white " +
+  "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md " +
+  "cursor-pointer no-underline select-none";
 
 /* ─── Component ────────────────────────────────────────────────────────────── */
 
@@ -281,7 +281,7 @@ export function SchoolSearchBox({
             {query ? (
               <button
                 type="button"
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 border-none bg-transparent hover:bg-pex-navy/10 text-pex-navy cursor-pointer rounded-full z-10 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-8 h-8 border-none bg-transparent hover:bg-pex-navy/10 text-pex-navy cursor-pointer rounded-full z-10 transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -305,12 +305,12 @@ export function SchoolSearchBox({
         {/* Trending chips */}
         {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
           <div className="mt-3 min-w-0">
-            <span className="block mb-2 px-1 text-pex-navy/50 text-xs font-extrabold uppercase tracking-wider">
+            <span className="block mb-1.5 px-1 text-pex-navy/50 text-xs font-extrabold uppercase tracking-wider">
               Trending Near You
             </span>
-            {/* Scrollable chip strip */}
+            {/* Scrollable chip strip with vertical padding to prevent hover border clipping */}
             <div className="relative">
-              <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pt-2.5 pb-3 px-1.5 -mx-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {trendingSchools.map((school, index) => (
                   <Link
                     key={school.slug}
@@ -588,7 +588,7 @@ export function SchoolSearchBox({
                       <div className="flex justify-center">
                         <Link
                           href="/order"
-                          className="inline-flex items-center min-h-[44px] sm:min-h-[48px] py-2.5 px-5 rounded-full bg-pex-coral hover:bg-pex-coral/90 text-white font-heading text-sm font-extrabold no-underline transition-all hover:scale-[1.02]"
+                          className="inline-flex items-center min-h-[44px] sm:min-h-[48px] py-2.5 px-5 rounded-full bg-pex-coral hover:bg-pex-coral/90 !text-white font-heading text-sm font-extrabold no-underline transition-all hover:scale-[1.02]"
                           data-conversion-event={`${source}_upload_list`}
                           onClick={() => {
                             trackSchoolNoResultsRecovery({ source });

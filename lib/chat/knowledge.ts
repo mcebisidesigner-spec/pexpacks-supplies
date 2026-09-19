@@ -5,10 +5,10 @@ export type PexKnowledgeCard = { id: string; question: string; answer: string; h
 function pageForPath(pathname?: string): CmsFaqTargetPage | undefined {
   if (!pathname) return undefined;
   if (pathname.startsWith("/schools")) return "schools";
-  if (pathname.startsWith("/track-order")) return "track_order";
+  if (pathname.startsWith("/track-order") || pathname.startsWith("/track")) return "track_order";
   if (pathname.startsWith("/happy-pay")) return "happy_pay";
   if (pathname.startsWith("/add-your-school")) return "add_your_school";
-  if (pathname.startsWith("/partnership")) return "partnership";
+  if (pathname.startsWith("/partnership") || pathname.startsWith("/partner")) return "partnership";
   return "homepage";
 }
 

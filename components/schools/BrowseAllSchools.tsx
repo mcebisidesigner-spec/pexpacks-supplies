@@ -338,3 +338,4 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
     </section>
   );
 }
+

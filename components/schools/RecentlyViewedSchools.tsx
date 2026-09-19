@@ -125,7 +125,7 @@ export function RecentlyViewedSchools() {
               </div>
               <Link
                 href={`/schools/${visit.schoolSlug}`}
-                className="inline-flex items-center justify-center w-full min-h-[38px] px-4 rounded-full bg-pex-navy hover:bg-pex-navy/90 text-white font-heading text-xs sm:text-sm font-extrabold no-underline transition-all mt-2"
+                className="inline-flex items-center justify-center w-full min-h-[38px] px-4 rounded-full bg-pex-navy hover:bg-pex-navy/90 !text-white font-heading text-xs sm:text-sm font-extrabold no-underline transition-all mt-2"
               >
                 View pack
               </Link>

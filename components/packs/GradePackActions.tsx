@@ -518,7 +518,7 @@ export function GradePackActions({
           </div>
           <button
             type="button"
-            className="w-full min-h-[52px] border-0 rounded-[var(--radius-pill)] px-5 bg-[var(--pex-coral)] text-white text-[17px] font-extrabold flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:brightness-110 hover:[transform:var(--button-hover-transform)] hover:[box-shadow:var(--button-hover-shadow)] active:brightness-100 active:[transform:var(--button-active-transform)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:filter-none disabled:shadow-none focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:hover:filter-none motion-reduce:hover:shadow-none"
+            className="w-full min-h-[52px] border-0 rounded-[var(--radius-pill)] px-5 bg-pex-coral !text-white text-[17px] font-extrabold flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:brightness-110 hover:[transform:var(--button-hover-transform)] hover:[box-shadow:var(--button-hover-shadow)] active:brightness-100 active:[transform:var(--button-active-transform)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:filter-none disabled:shadow-none focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:hover:filter-none motion-reduce:hover:shadow-none"
             onClick={handleSaveCustomPack}
             disabled={selectedCount === 0 || isPricingTotal}
           >
@@ -526,7 +526,7 @@ export function GradePackActions({
           </button>
           <button
             type="button"
-            className="w-full min-h-[48px] border border-[var(--pex-border)] rounded-[var(--radius-pill)] px-5 bg-[var(--pex-bg)] text-[var(--pex-primary)] text-[15px] font-bold flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] hover:[transform:var(--button-hover-transform)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none motion-reduce:hover:transform-none"
+            className="w-full min-h-[48px] border border-[var(--pex-border)] rounded-[var(--radius-pill)] px-5 bg-white !text-pex-navy text-[15px] font-bold flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] hover:[transform:var(--button-hover-transform)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none motion-reduce:hover:transform-none"
             onClick={resetToFullPack}
           >
             Reset to Full Pack

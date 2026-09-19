@@ -58,8 +58,8 @@ export default async function SchoolsPage() {
         <PageHero
           eyebrow={heroEyebrow}
           title={heroTitle}
-          panelTitle="Your school&rsquo;s exact list, packed for you"
-          panelText={`Packed to your school&rsquo;s official list and delivered for ${season.academicYear}.`}
+          panelTitle="Your school’s exact list, packed for you"
+          panelText={`Packed to your school’s official list and delivered for ${season.academicYear}.`}
           panelClassName="self-start mt-0 lg:mt-[clamp(112px,9vw,132px)]"
         >
           <SchoolSearchPanel readQueryFromUrl />

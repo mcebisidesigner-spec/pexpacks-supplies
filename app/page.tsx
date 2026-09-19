@@ -43,44 +43,98 @@ export default async function HomePage() {
     <>
       <section
         id="home-hero"
-        className="bg-pex-navy pt-[clamp(36px,6vw,52px)] pb-[clamp(44px,8vw,72px)] md:pt-[clamp(52px,8vw,96px)] md:pb-[clamp(58px,8vw,108px)]"
+        className="relative overflow-hidden bg-pex-navy bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(33,158,154,0.32),transparent_72%),radial-gradient(circle_at_90%_25%,rgba(255,111,89,0.14),transparent_48%),radial-gradient(circle_at_10%_80%,rgba(33,158,154,0.16),transparent_45%)] pt-[clamp(40px,6vw,60px)] pb-[clamp(48px,8vw,80px)] md:pt-[clamp(56px,8vw,104px)] md:pb-[clamp(64px,8vw,116px)]"
       >
-        <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] items-center gap-[clamp(38px,6vw,76px)]">
+        {/* Subtle decorative glow orb */}
+        <div
+          className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-pex-keppel/10 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute top-1/2 -right-32 w-[420px] h-[420px] rounded-full bg-pex-coral/10 blur-3xl"
+          aria-hidden="true"
+        />
+
+        <div className="relative w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] items-center gap-[clamp(40px,6vw,76px)]">
           <div className="min-w-0">
-            <p className="m-0 mb-4 text-pex-keppel font-extrabold text-sm tracking-normal">
-              {heroEyebrow}
-            </p>
-            <h1 className="m-0 text-white font-heading text-[clamp(36px,16vw,42px)] sm:text-[clamp(40px,10.7vw,44px)] lg:text-[clamp(42px,6.4vw,76px)] font-extrabold leading-[1.02] lg:leading-[0.98] tracking-normal break-normal lg:break-words">
-              Stationery sorted. Time saved.
+            {/* Glassmorphic Eyebrow Badge */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/15 text-pex-keppel text-xs sm:text-sm font-extrabold uppercase tracking-wider mb-5 shadow-[0_4px_16px_rgba(0,0,0,0.12)]">
+              <span className="w-2 h-2 rounded-full bg-pex-keppel shadow-[0_0_8px_var(--pex-keppel)] animate-pulse" />
+              <span>{heroEyebrow}</span>
+            </div>
+
+            <h1 className="m-0 text-white font-heading text-[clamp(38px,12vw,46px)] sm:text-[clamp(44px,8vw,56px)] lg:text-[clamp(48px,5.4vw,74px)] font-extrabold leading-[1.04] lg:leading-[0.98] tracking-tight text-balance">
+              Stationery sorted.{" "}
+              <span className="block mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-white/95 to-slate-200">
+                Time saved.
+              </span>
             </h1>
-            <p className="max-w-[530px] my-[18px] mb-6 text-white/80 text-[clamp(15px,4vw,16px)] lg:text-[clamp(15.5px,1.8vw,17px)] leading-[1.55] line-clamp-2">
+
+            <p className="max-w-[530px] my-5 mb-7 text-white/85 text-[clamp(15px,4vw,16.5px)] lg:text-[clamp(16px,1.8vw,18px)] leading-[1.6]">
               {heroLead}
             </p>
+
             <HeroSearch />
           </div>
 
-          <div className="relative min-h-[390px] md:min-h-[440px] lg:min-h-[560px] rounded-card lg:rounded-[30px] overflow-hidden bg-[linear-gradient(135deg,rgba(26,42,64,0.94),rgba(21,34,56,0.88))] shadow-[0_28px_70px_rgba(26,42,64,0.18)] lg:[animation:floatAnimation_6s_ease-in-out_infinite] transition-transform duration-300 motion-reduce:animate-none min-w-0">
-            <span className="absolute inset-0">
-              <Image
-                src="/images/hero-school-stationery-delivery.webp"
-                alt="Pexpacks Stationery Delivery Packs"
-                fill
-                priority
-                placeholder="blur"
-                blurDataURL={IMAGE_BLUR_DATA_URL}
-                sizes="(min-width: 1024px) 44vw, 100vw"
-                className="object-cover"
-              />
-            </span>
+          {/* Hero Visual Showcase */}
+          <div className="relative group min-w-0">
+            {/* Ambient colorful backlight glow */}
+            <div
+              className="absolute -inset-2.5 rounded-[38px] bg-gradient-to-tr from-pex-keppel/25 via-pex-coral/15 to-pex-keppel/10 blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              aria-hidden="true"
+            />
+            <div className="relative min-h-[390px] md:min-h-[450px] lg:min-h-[570px] rounded-[28px] lg:rounded-[34px] overflow-hidden border border-white/15 bg-[linear-gradient(135deg,rgba(26,42,64,0.95),rgba(21,34,56,0.9))] shadow-[0_32px_80px_rgba(0,0,0,0.38)] lg:[animation:floatAnimation_6s_ease-in-out_infinite] transition-transform duration-300 motion-reduce:animate-none">
+              <span className="absolute inset-0">
+                <Image
+                  src="/images/hero-school-stationery-delivery.webp"
+                  alt="Pexpacks Stationery Delivery Packs"
+                  fill
+                  priority
+                  placeholder="blur"
+                  blurDataURL={IMAGE_BLUR_DATA_URL}
+                  sizes="(min-width: 1024px) 44vw, 100vw"
+                  className="object-cover"
+                />
+              </span>
+
+              {/* Floating Verified Badge */}
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-[320px] p-3.5 sm:p-4 rounded-2xl bg-pex-navy/90 backdrop-blur-xl border border-white/20 shadow-[0_16px_36px_rgba(0,0,0,0.35)] flex items-center gap-3.5 z-10">
+                <div className="w-10 h-10 rounded-xl bg-pex-keppel/20 border border-pex-keppel/40 flex items-center justify-center shrink-0 text-pex-keppel">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-white text-xs sm:text-sm font-bold m-0 truncate">
+                    100% School-Accurate Lists
+                  </p>
+                  <p className="text-slate-300 text-[11px] sm:text-xs m-0">
+                    Pre-packed & learner-labelled
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Brand logo marquee with soft edge masking */}
       <div
-        className="overflow-hidden bg-pex-bg-soft py-[18px] border-y border-pex-border"
+        className="overflow-hidden bg-pex-bg-soft/90 py-5 border-y border-pex-border relative [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
         aria-hidden="true"
       >
-        <div className="flex gap-[60px] w-max [animation:marqueeScroll_40s_linear_infinite] hover:[animation-play-state:paused] motion-reduce:animate-none">
+        <div className="flex gap-[60px] w-max [animation:marqueeScroll_40s_linear_infinite] hover:[animation-play-state:paused] motion-reduce:animate-none items-center">
           {[
             "croxley",
             "bic",

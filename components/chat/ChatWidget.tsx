@@ -10,32 +10,29 @@ import {
   trackPexActionSelected,
   trackPexHumanHandoff,
   trackPexIntentResolved,
-  trackPexQuickReplySelected,
   trackPexRequestFailed,
-  trackInitiatePreOrder,
   trackWhatsAppClicked,
 } from "@/lib/analytics";
 import type { PexChatResponse } from "@/lib/chat/pex";
-import { createFullTrayPack } from "@/lib/order/createTrayPack";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { cn } from "@/lib/utils";
 
 const CHATBOT_LOGO = "/images/chatbot.webp";
-const STARTER_REPLIES = [
+const STARTER_LINKS = [
   {
     id: "find-school",
     label: "Find my school",
-    message: "Help me find my school pack",
+    href: "/schools",
   },
   {
     id: "upload-list",
     label: "Upload a list",
-    message: "I need to upload a stationery list",
+    href: "/upload-a-list",
   },
   {
     id: "track-order",
     label: "Track an order",
-    message: "I want to track my order",
+    href: "/track",
   },
 ] as const;
 
@@ -43,19 +40,19 @@ type ChatMessage =
   | { id: string; role: "user"; text: string }
   | { id: string; role: "assistant"; response: PexChatResponse };
 
-function starterRepliesForPath(pathname: string | null) {
+function starterLinksForPath(pathname: string | null) {
   if (pathname?.startsWith("/checkout")) {
     return [
       {
         id: "checkout-help",
         label: "Checkout help",
-        message: "I need help with checkout",
+        href: "/checkout",
       },
-      { id: "open-tray", label: "Open my tray", message: "Open my cart" },
+      { id: "open-tray", label: "Open my tray", href: "/checkout" },
       {
         id: "pexcover",
         label: "About Pexcover",
-        message: "How does Pexcover work?",
+        href: "/blog/what-is-pexcover-book-covering",
       },
     ];
   }
@@ -64,59 +61,59 @@ function starterRepliesForPath(pathname: string | null) {
       {
         id: "find-pack",
         label: "Find my grade pack",
-        message: "Help me find a grade pack",
+        href: "/schools",
       },
       {
         id: "pexcover",
         label: "About Pexcover",
-        message: "How does Pexcover work?",
+        href: "/blog/what-is-pexcover-book-covering",
       },
       {
         id: "upload-list",
         label: "Upload a list",
-        message: "I need to upload a stationery list",
+        href: "/upload-a-list",
       },
     ];
   }
-  if (pathname?.startsWith("/track-order")) {
+  if (pathname?.startsWith("/track-order") || pathname?.startsWith("/track")) {
     return [
       {
         id: "track-order",
         label: "Track an order",
-        message: "I want to track my order",
+        href: "/track",
       },
       {
         id: "delivery",
         label: "Delivery help",
-        message: "I need delivery information",
+        href: "/track",
       },
       {
         id: "talk-to-team",
         label: "Talk to Pexpacks",
-        message: "I need help from the Pexpacks team",
+        href: "/contact",
       },
     ];
   }
-  if (pathname?.startsWith("/order")) {
+  if (pathname?.startsWith("/order") || pathname?.startsWith("/upload-a-list")) {
     return [
       {
         id: "upload-list",
         label: "Upload a list",
-        message: "I need to upload a stationery list",
+        href: "/upload-a-list",
       },
       {
         id: "find-school",
         label: "Find my school",
-        message: "Help me find my school pack",
+        href: "/schools",
       },
       {
         id: "pexcover",
         label: "About Pexcover",
-        message: "How does Pexcover work?",
+        href: "/blog/what-is-pexcover-book-covering",
       },
     ];
   }
-  return STARTER_REPLIES;
+  return STARTER_LINKS;
 }
 function newId() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -126,7 +123,7 @@ function newId() {
 
 export function ChatWidget() {
   const pathname = usePathname();
-  const starterReplies = starterRepliesForPath(pathname);
+  const starterLinks = starterLinksForPath(pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [input, setInput] = useState("");
@@ -134,7 +131,6 @@ export function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const addPack = usePackTrayStore((state) => state.addPack);
   const openTray = usePackTrayStore((state) => state.openTray);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -227,7 +223,7 @@ export function ChatWidget() {
         ]);
       } catch {
         setError(
-          "Pex could not respond just now. Please try again or contact the Pexpacks team.",
+          "Bro Pex could not respond just now. Please try again or contact the Pexpacks team.",
         );
       } finally {
         setIsLoading(false);
@@ -236,44 +232,6 @@ export function ChatWidget() {
     [isLoading, messages],
   );
 
-  const addFullPack = useCallback(
-    (pack: PexChatResponse["packCards"][number]) => {
-      if (pack.items.length === 0) return;
-
-      addPack(
-        createFullTrayPack({
-          packId: pack.id,
-          basePackId: pack.id,
-          packName: pack.title,
-          schoolId: pack.schoolId,
-          schoolSlug: pack.schoolSlug,
-          schoolName: pack.schoolName,
-          grade: pack.grade,
-          gradeSlug: pack.gradeSlug,
-          items: pack.items.map(({ unitPrice, ...item }) => ({
-            ...item,
-            unitPrice: unitPrice ?? undefined,
-          })),
-          totalPrice: pack.price,
-          sourcePath: window.location.pathname,
-        }),
-      );
-      trackInitiatePreOrder({
-        school: pack.schoolName,
-        grade: pack.grade,
-        packMode: "full",
-        totalPrice: pack.price,
-      });
-      trackPexActionSelected({
-        actionId: "pex_add_full_pack",
-        destination: pack.href,
-        sourcePath: window.location.pathname,
-      });
-      openTray();
-      setIsOpen(false);
-    },
-    [addPack, openTray],
-  );
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     void sendMessage(input);
@@ -292,26 +250,26 @@ export function ChatWidget() {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          aria-label="Open Ask Pex Assistant"
-          className="flex items-center gap-3 rounded-full border border-white/15 bg-brand-navy py-2 pl-2 pr-5 text-left text-white shadow-[0_14px_30px_rgba(13,31,56,0.24)] transition hover:-translate-y-0.5 hover:bg-[#203755] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+          aria-label="Open Ask Bro Pex Assistant"
+          className="flex items-center gap-3 rounded-full border border-white/15 bg-brand-navy py-2 pl-2 pr-5 text-left !text-white shadow-[0_14px_30px_rgba(13,31,56,0.24)] transition hover:-translate-y-0.5 hover:bg-[#203755] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
         >
           <Avatar size="h-11 w-11" />
           <span className="flex flex-col">
-            <span className="text-sm font-semibold leading-tight">Ask Pex</span>
+            <span className="text-sm font-semibold leading-tight">Ask Bro Pex</span>
             <span className="text-xs text-slate-300">Help with your pack</span>
           </span>
         </button>
       ) : (
         <section
           className="flex h-[min(640px,calc(100dvh-32px))] w-[min(420px,calc(100vw-24px))] flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-surface shadow-[0_24px_70px_rgba(15,35,61,0.24)]"
-          aria-label="Pex Assistant"
+          aria-label="Bro Pex Assistant"
         >
           <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-5 py-4 text-white">
             <div className="flex items-center gap-3">
               <Avatar size="h-10 w-10" />
               <div>
                 <h2 className="m-0 text-sm font-semibold leading-tight">
-                  Ask Pex
+                  Ask Bro Pex
                 </h2>
                 <p className="m-0 mt-1 flex items-center gap-1.5 text-xs text-slate-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-teal" />
@@ -322,7 +280,7 @@ export function ChatWidget() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              aria-label="Close Ask Pex Assistant"
+              aria-label="Close Ask Bro Pex Assistant"
               className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-slate-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <X size={18} aria-hidden="true" />
@@ -342,15 +300,15 @@ export function ChatWidget() {
                 checkout guidance.
               </p>
             </AssistantMessage>
-            <QuickReplies
-              replies={starterReplies}
-              disabled={isLoading}
-              onSelect={(reply) => {
-                trackPexQuickReplySelected({
-                  quickReplyId: reply.id,
+            <StarterLinks
+              links={starterLinks}
+              onNavigate={(linkId, destination) => {
+                trackPexActionSelected({
+                  actionId: linkId,
+                  destination,
                   sourcePath: window.location.pathname,
                 });
-                void sendMessage(reply.message);
+                setIsOpen(false);
               }}
             />
 
@@ -372,7 +330,6 @@ export function ChatWidget() {
                         actions={message.response.actions}
                         knowledgeCards={message.response.knowledgeCards}
                         response={message.response}
-                        onAddFullPack={addFullPack}
                         onNavigate={(actionId, destination) => {
                           trackPexActionSelected({
                             actionId,
@@ -405,19 +362,6 @@ export function ChatWidget() {
                         </a>
                       )}
                     </AssistantMessage>
-                    {message.response.quickReplies.length > 0 && (
-                      <QuickReplies
-                        replies={message.response.quickReplies}
-                        disabled={isLoading}
-                        onSelect={(reply) => {
-                          trackPexQuickReplySelected({
-                            quickReplyId: reply.id,
-                            sourcePath: window.location.pathname,
-                          });
-                          void sendMessage(reply.message);
-                        }}
-                      />
-                    )}{" "}
                   </div>
                 </div>
               ),
@@ -454,7 +398,7 @@ export function ChatWidget() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
-                placeholder="Ask Pex about your order..."
+                placeholder="Ask Bro Pex about your order..."
                 className="min-w-0 flex-1 border-0 bg-transparent py-2 text-sm text-ink outline-none placeholder:text-text-muted"
               />
               <button
@@ -511,7 +455,7 @@ function Avatar({ size }: { size: string }) {
     >
       <Image
         src={CHATBOT_LOGO}
-        alt="Pex"
+        alt="Bro Pex"
         width={44}
         height={44}
         className="h-full w-full object-cover"
@@ -520,42 +464,38 @@ function Avatar({ size }: { size: string }) {
   );
 }
 
-function QuickReplies({
-  replies,
-  disabled,
-  onSelect,
+function StarterLinks({
+  links,
+  onNavigate,
 }: {
-  replies: ReadonlyArray<{ id: string; label: string; message: string }>;
-  disabled: boolean;
-  onSelect: (reply: { id: string; label: string; message: string }) => void;
+  links: ReadonlyArray<{ id: string; label: string; href: string }>;
+  onNavigate: (linkId: string, destination: string) => void;
 }) {
   return (
-    <div className="mt-2 flex flex-wrap gap-2">
-      {replies.map((reply) => (
-        <button
-          key={reply.id}
-          type="button"
-          disabled={disabled}
-          onClick={() => onSelect(reply)}
-          className="rounded-full border border-brand-teal/30 bg-white px-3.5 py-2 text-xs font-semibold text-brand-teal shadow-sm transition hover:-translate-y-px hover:border-brand-teal hover:bg-teal-50 disabled:cursor-not-allowed disabled:opacity-50"
+    <div className="mt-2 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-relaxed">
+      {links.map((link) => (
+        <Link
+          key={link.id}
+          href={link.href}
+          onClick={() => onNavigate(link.id, link.href)}
+          className="font-semibold text-brand-teal underline decoration-brand-teal/40 underline-offset-2 transition hover:text-brand-teal-dark hover:decoration-brand-teal"
         >
-          {reply.label}
-        </button>
+          {link.label}
+        </Link>
       ))}
     </div>
   );
 }
+
 function InlineReplyLinks({
   actions,
   knowledgeCards,
   response,
-  onAddFullPack,
   onNavigate,
 }: {
   actions: PexChatResponse["actions"];
   knowledgeCards: PexChatResponse["knowledgeCards"];
   response: PexChatResponse;
-  onAddFullPack: (pack: PexChatResponse["packCards"][number]) => void;
   onNavigate: (actionId: string, destination: string) => void;
 }) {
   const hasLinks =
@@ -612,15 +552,6 @@ function InlineReplyLinks({
           >
             {pack.title} (R {pack.price.toFixed(2)})
           </Link>
-          {pack.items.length > 0 && (
-            <button
-              type="button"
-              onClick={() => onAddFullPack(pack)}
-              className="font-semibold text-brand-accent underline decoration-brand-accent/40 underline-offset-2 transition hover:decoration-brand-accent focus-visible:outline-2 focus-visible:outline-brand-accent"
-            >
-              Add full pack
-            </button>
-          )}
         </span>
       ))}
       {response.productCards.map((product) => (
