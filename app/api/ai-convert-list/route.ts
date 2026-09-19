@@ -42,6 +42,9 @@ type CatalogueMatch = {
   pexco_rate_active?: boolean | null;
   similarity: number | string | null;
 };
+type CatalogueMatchResult = CatalogueMatch & {
+  query_index: number;
+};
 interface MatchedCartItem {
   id: string;
   productId: string | null;
@@ -421,27 +424,40 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Database service unavailable." }, { status: 503 });
   }
 
-  const matchedItems: MatchedCartItem[] = [];
+  const matchesByIndex = new Map<number, CatalogueMatch>();
+  try {
+    const { data: rpcMatches, error: matchError } = await supabase.rpc(
+      "match_stationery_products" as never,
+      {
+        query_texts: extractedItems.map((item) => item.item_name),
+        match_threshold: 0.55,
+      } as never,
+    );
 
+    if (matchError) throw matchError;
+    for (const candidate of (rpcMatches ?? []) as CatalogueMatchResult[]) {
+      if (
+        Number.isInteger(candidate.query_index) &&
+        candidate.id &&
+        Number(candidate.similarity) >= 0.55
+      ) {
+        matchesByIndex.set(candidate.query_index, candidate);
+      }
+    }
+  } catch (matchErr) {
+    reportException(matchErr, "ai-convert-list.catalog-match");
+    console.error("[ai-convert-list] Catalog matching failed:", matchErr);
+    return NextResponse.json(
+      { error: "The product catalogue is temporarily unavailable. Please try again." },
+      { status: 503 },
+    );
+  }
+
+  const matchedItems: MatchedCartItem[] = [];
   for (let i = 0; i < extractedItems.length; i++) {
     const item = extractedItems[i];
     const itemId = `item_${Date.now()}_${i}`;
-
-    let match: CatalogueMatch | null = null;
-
-    try {
-      const { data: rpcMatches } = await supabase.rpc("match_stationery_product", {
-        query_text: item.item_name,
-        match_threshold: 0.55,
-        match_limit: 1,
-      });
-
-      if (rpcMatches && rpcMatches.length > 0 && Number(rpcMatches[0].similarity) >= 0.55) {
-        match = rpcMatches[0];
-      }
-    } catch (matchErr) {
-      console.warn(`[ai-convert-list] Catalog search warning for "${item.item_name}":`, matchErr);
-    }
+    const match = matchesByIndex.get(i) ?? null;
 
     if (match) {
       const unitPrice = Number(match.current_selling_price) || 0;

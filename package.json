@@ -30,6 +30,7 @@
     "test:a11y": "playwright test e2e/a11y.spec.ts",
     "analyze": "cross-env ANALYZE=true next build",
     "db:smoke": "node scripts/db-performance-smoke.cjs",
+    "ai:converter:smoke": "node scripts/ai-list-converter-smoke.cjs",
     "db:storage:report": "node scripts/db-storage-report.cjs",
     "db:security:advisors": "node scripts/db-security-advisor.cjs",
     "db:preflight": "npm run db:link && node scripts/db-schema-preflight.cjs && npm run db:smoke",
