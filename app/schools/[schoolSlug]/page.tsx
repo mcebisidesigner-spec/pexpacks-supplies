@@ -235,7 +235,7 @@ export default async function SchoolDetailPage({
       ) : (
         <>
           <div className="w-full max-w-[var(--content-max-width)] mx-auto px-4 md:px-8 pt-5">
-            <p className="m-0 py-3 px-4.5 rounded-field bg-pex-keppel/10 text-pex-navy text-sm font-semibold leading-[1.5]">
+            <p className="m-0 py-3 px-4.5 rounded-field bg-pex-bg-mint text-pex-navy text-sm font-semibold leading-[1.5]">
               Every pack is an exact 100% match to {school.name}&apos;s official
               requirements. Simply select your grade, and you can easily add or
               minus quantities of the required items before checkout.
@@ -245,7 +245,7 @@ export default async function SchoolDetailPage({
           {/* Subtle Pexcover Advertisement Banner */}
           <div className="w-full max-w-[var(--content-max-width)] mx-auto px-4 md:px-8 pt-5 sm:pt-6 md:pt-10">
             <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-stretch md:items-start p-5 bg-pex-bg-soft border border-pex-border rounded-card hover:border-pex-keppel hover:shadow-[0_10px_30px_rgba(26,42,64,0.04)] transition-all duration-200">
-              <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-pex-keppel/10 text-pex-keppel grid place-items-center">
+              <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-pex-bg-mint text-pex-keppel grid place-items-center">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

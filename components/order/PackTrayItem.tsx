@@ -76,7 +76,7 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
 
   return (
     <article className="border border-pex-border rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-      <div className="p-4 sm:p-4.5 grid gap-2.5">
+      <div className="p-4 sm:p-6 grid gap-3">
         <div className="grid grid-cols-[1fr_auto] gap-2 items-start">
           <div>
             {pack.schoolName ? (
@@ -91,7 +91,7 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
           <div className="flex gap-1.5 items-start">
             <span
               className={cn(
-                "inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-extrabold leading-none",
+                "inline-flex px-2.5 py-1 rounded-full border border-current/15 text-[11px] font-semibold leading-none",
                 pack.packMode === "full"
                   ? "bg-pex-keppel/10 text-pex-keppel"
                   : "bg-pex-coral/10 text-pex-coral"
@@ -148,7 +148,7 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
               ? ` + ${pack.addOns.length} add-on${pack.addOns.length === 1 ? "" : "s"}`
               : ""}
           </span>
-          <span className="text-pex-navy text-base sm:text-lg font-extrabold">
+          <span className="text-pex-navy text-base sm:text-lg font-semibold tabular-nums">
             {formatCurrency(lineItemTotal)}
           </span>
         </div>

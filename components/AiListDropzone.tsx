@@ -246,7 +246,7 @@ export function AiListDropzone() {
 
   return (
     <div
-      className="bg-background rounded-3xl p-5 sm:p-7 md:p-9 shadow-md hover:shadow-xl border border-[#219e9a]/20 relative overflow-hidden transition-shadow duration-300"
+      className="bg-background rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm hover:shadow-md border border-[#219e9a]/20 relative overflow-hidden transition-shadow duration-300"
       id="ai-list-converter"
     >
       {/* Header */}
@@ -360,7 +360,7 @@ export function AiListDropzone() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="bg-white text-red-700 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-red-500"
+                className="bg-white text-red-700 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-red-500"
               >
                 Try Again with Clearer Photo
               </button>
@@ -442,7 +442,7 @@ export function AiListDropzone() {
                 <div className="flex gap-2.5 flex-wrap justify-center" onClick={(e) => e.stopPropagation()}>
                   <button
                     type="button"
-                    className="bg-pex-keppel hover:bg-pex-keppel/90 active:scale-[0.98] !text-white border-0 py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
+                    className="bg-pex-keppel hover:bg-pex-keppel/90 active:scale-[0.98] !text-white border-0 h-11 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -455,7 +455,7 @@ export function AiListDropzone() {
 
                   <button
                     type="button"
-                    className="bg-white hover:bg-pex-keppel/5 active:scale-[0.98] !text-pex-navy hover:text-pex-keppel border border-pex-border hover:border-pex-keppel py-2.5 px-4.5 rounded-full text-xs sm:text-sm font-bold cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
+                    className="bg-white hover:bg-pex-keppel/5 active:scale-[0.98] !text-pex-navy hover:text-pex-keppel border border-pex-border hover:border-pex-keppel h-11 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => cameraInputRef.current?.click()}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -497,7 +497,7 @@ export function AiListDropzone() {
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="bg-white text-red-700 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-red-500"
+                    className="bg-white text-red-700 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-red-500"
                   >
                     Try Another File
                   </button>
@@ -526,7 +526,7 @@ export function AiListDropzone() {
 
               <button
                 type="button"
-                className="bg-pex-coral hover:bg-pex-coral-hover active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed !text-white border-0 py-3.5 px-6 rounded-full text-sm sm:text-base font-bold cursor-pointer transition-all flex items-center justify-center gap-2 w-full shadow-md"
+                className="bg-pex-coral hover:bg-pex-coral-hover active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed !text-white border-0 h-11 py-2.5 px-5 rounded-xl text-sm sm:text-base font-medium cursor-pointer transition-all flex items-center justify-center gap-2 w-full shadow-md"
                 disabled={!pastedText.trim()}
                 onClick={() => startConversion(null, pastedText)}
               >

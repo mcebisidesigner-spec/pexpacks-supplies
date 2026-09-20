@@ -15,7 +15,7 @@ export function SchoolsHowItWorks({ className }: SchoolsHowItWorksProps) {
     >
       <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-1.5 sm:gap-3 p-3 sm:py-3.5 sm:px-5 rounded-card bg-card border border-pex-border shadow-card">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="shrink-0 w-8 h-8 sm:w-[38px] sm:h-[38px] rounded-full bg-pex-keppel/10 text-pex-keppel grid place-items-center">
+          <div className="shrink-0 w-8 h-8 sm:w-[38px] sm:h-[38px] rounded-full bg-pex-bg-mint text-pex-keppel grid place-items-center">
             <Search className="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]" />
           </div>
           <div className="flex flex-col gap-px">
@@ -31,7 +31,7 @@ export function SchoolsHowItWorks({ className }: SchoolsHowItWorksProps) {
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
         </div>
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="shrink-0 w-8 h-8 sm:w-[38px] sm:h-[38px] rounded-full bg-pex-keppel/10 text-pex-keppel grid place-items-center">
+          <div className="shrink-0 w-8 h-8 sm:w-[38px] sm:h-[38px] rounded-full bg-pex-bg-mint text-pex-keppel grid place-items-center">
             <SlidersHorizontal className="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]" />
           </div>
           <div className="flex flex-col gap-px">
@@ -47,7 +47,7 @@ export function SchoolsHowItWorks({ className }: SchoolsHowItWorksProps) {
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
         </div>
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="shrink-0 w-8 h-8 sm:w-[38px] sm:h-[38px] rounded-full bg-pex-keppel/10 text-pex-keppel grid place-items-center">
+          <div className="shrink-0 w-8 h-8 sm:w-[38px] sm:h-[38px] rounded-full bg-pex-bg-mint text-pex-keppel grid place-items-center">
             <Truck className="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px]" />
           </div>
           <div className="flex flex-col gap-px">

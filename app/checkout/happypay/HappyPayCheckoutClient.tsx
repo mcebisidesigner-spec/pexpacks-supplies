@@ -460,7 +460,7 @@ export function HappyPayCheckoutClient() {
             className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-label="Happy Pay consent"
           >
-            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel)] [&_a]:underline [&_a]:font-medium hover:[&_a]:text-[var(--pex-primary)]">
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel-dark)] [&_a]:underline [&_a]:underline-offset-2 [&_a]:decoration-1.5 [&_a]:font-semibold hover:[&_a]:text-[var(--pex-keppel)]">
               <input
                 type="checkbox"
                 id="hp-consent"

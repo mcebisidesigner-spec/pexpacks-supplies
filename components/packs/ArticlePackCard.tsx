@@ -56,7 +56,7 @@ export function ArticlePackCard({
       >
         <span className="relative z-[2] rounded-full py-1.5 px-3.5 bg-white text-pex-navy text-[13px] font-extrabold leading-none shadow-[0_4px_12px_rgba(0,0,0,0.12)]">{gradeLabel}</span>
         <svg
-          className="absolute right-3.5 sm:right-[18px] top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 text-white opacity-[0.32] pointer-events-none z-[1]"
+          className="absolute right-3.5 sm:right-[18px] top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 text-white opacity-60 pointer-events-none z-[1]"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

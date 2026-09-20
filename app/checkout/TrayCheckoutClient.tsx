@@ -10,9 +10,10 @@ import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
+import { AddressAutocomplete } from "@/components/checkout/AddressAutocomplete";
 import { buildWhatsAppHref } from "@/data/contact";
 import { cn } from "@/lib/utils";
-import { Layers, MapPin, Truck } from "lucide-react";
+import { ArrowLeft, Layers, MapPin, Truck } from "lucide-react";
 import {
   trackCheckoutValidationFailed,
   trackPaymentFailed,
@@ -563,10 +564,11 @@ export function TrayCheckoutClient() {
       <header className="flex justify-between items-center max-w-[var(--layout-max-width)] mx-auto mb-8">
         <button
           type="button"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pex-keppel)] hover:text-[var(--pex-navy)] transition-colors cursor-pointer bg-transparent border-0 p-0"
+          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pex-navy)] hover:text-[var(--pex-keppel)] transition-colors cursor-pointer bg-transparent border-0 p-0"
           onClick={handleBackToOrder}
         >
-          ← Back to order
+          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>Back to order</span>
         </button>
         <a
           href={buildWhatsAppHref("Hi Pexpacks, I need help with checkout.")}
@@ -770,12 +772,12 @@ export function TrayCheckoutClient() {
                 <legend className="sr-only">
                   Delivery or collection method
                 </legend>
-                <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
                   {availableFulfilmentOptions.map((option) => (
                     <label
                       key={option.value}
                       className={cn(
-                        "flex flex-col p-4 sm:p-5 rounded-[var(--radius-md)] border-2 border-[var(--pex-border)] bg-white cursor-pointer transition-all hover:border-[rgba(33,158,154,0.4)] relative",
+                        "flex h-full flex-col p-4 sm:p-5 rounded-[var(--radius-md)] border-2 border-[var(--pex-border)] bg-white cursor-pointer transition-all hover:border-[rgba(33,158,154,0.4)] relative",
                         fulfilmentOption === option.value &&
                           "border-[var(--pex-keppel)] bg-[var(--pex-bg-mint)] shadow-sm",
                       )}
@@ -852,92 +854,125 @@ export function TrayCheckoutClient() {
               ) : null}
 
               {deliveryExpanded ? (
-                <div className="mt-6 pt-6 border-t border-[var(--pex-border)] grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    id="address"
-                    ref={(node) => {
-                      fieldRefs.current.address = node;
-                    }}
-                    label="Address line"
-                    type="text"
-                    value={address}
-                    onChange={(e) => {
-                      setAddress(e.target.value);
+                <div className="mt-6 pt-6 border-t border-[var(--pex-border)] space-y-6">
+                  {/* Real-time Address Auto-search & Predictions */}
+                  <AddressAutocomplete
+                    initialValue={address}
+                    onSelectAddress={(selected) => {
+                      setAddress(selected.address);
+                      setSuburb(selected.suburb);
+                      setCity(selected.city);
+                      setProvince(selected.province);
+                      setPostalCode(selected.postalCode);
                       clearFieldError("address");
-                    }}
-                    placeholder="e.g. 42 Main Road"
-                    error={errors.address}
-                    autoComplete="street-address"
-                  />
-                  <Input
-                    id="suburb"
-                    ref={(node) => {
-                      fieldRefs.current.suburb = node;
-                    }}
-                    label="Suburb"
-                    type="text"
-                    autoComplete="address-level2"
-                    value={suburb}
-                    onChange={(e) => {
-                      setSuburb(e.target.value);
                       clearFieldError("suburb");
-                    }}
-                    placeholder="e.g. Gardens"
-                    error={errors.suburb}
-                  />
-                  <Input
-                    id="city"
-                    ref={(node) => {
-                      fieldRefs.current.city = node;
-                    }}
-                    label="City"
-                    type="text"
-                    autoComplete="address-level2"
-                    value={city}
-                    onChange={(e) => {
-                      setCity(e.target.value);
                       clearFieldError("city");
-                    }}
-                    placeholder="e.g. Cape Town"
-                    error={errors.city}
-                  />
-                  <Input
-                    id="province"
-                    ref={(node) => {
-                      fieldRefs.current.province = node;
-                    }}
-                    label="Province"
-                    type="text"
-                    autoComplete="address-level1"
-                    value={province}
-                    onChange={(e) => {
-                      setProvince(e.target.value);
                       clearFieldError("province");
                     }}
-                    placeholder="e.g. Western Cape"
-                    error={errors.province}
                   />
-                  <Input
-                    id="postalCode"
-                    label="Postal code"
-                    type="text"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    placeholder="e.g. 8001"
-                    autoComplete="postal-code"
-                  />
+
+                  {/* Address Details Fields */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[var(--pex-muted)]">
+                        Address Details
+                      </span>
+                      <span className="text-[11px] text-[var(--pex-muted)] font-medium">
+                        Auto-filled from search or edit manually
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        id="address"
+                        ref={(node) => {
+                          fieldRefs.current.address = node;
+                        }}
+                        label="Address line"
+                        type="text"
+                        value={address}
+                        onChange={(e) => {
+                          setAddress(e.target.value);
+                          clearFieldError("address");
+                        }}
+                        placeholder="e.g. 42 Main Road"
+                        error={errors.address}
+                        autoComplete="street-address"
+                      />
+                      <Input
+                        id="suburb"
+                        ref={(node) => {
+                          fieldRefs.current.suburb = node;
+                        }}
+                        label="Suburb"
+                        type="text"
+                        autoComplete="address-level2"
+                        value={suburb}
+                        onChange={(e) => {
+                          setSuburb(e.target.value);
+                          clearFieldError("suburb");
+                        }}
+                        placeholder="e.g. Gardens"
+                        error={errors.suburb}
+                      />
+                      <Input
+                        id="city"
+                        ref={(node) => {
+                          fieldRefs.current.city = node;
+                        }}
+                        label="City"
+                        type="text"
+                        autoComplete="address-level2"
+                        value={city}
+                        onChange={(e) => {
+                          setCity(e.target.value);
+                          clearFieldError("city");
+                        }}
+                        placeholder="e.g. Cape Town"
+                        error={errors.city}
+                      />
+                      <Input
+                        id="province"
+                        ref={(node) => {
+                          fieldRefs.current.province = node;
+                        }}
+                        label="Province"
+                        type="text"
+                        autoComplete="address-level1"
+                        value={province}
+                        onChange={(e) => {
+                          setProvince(e.target.value);
+                          clearFieldError("province");
+                        }}
+                        placeholder="e.g. Western Cape"
+                        error={errors.province}
+                      />
+                      <Input
+                        id="postalCode"
+                        label="Postal code"
+                        type="text"
+                        value={postalCode}
+                        onChange={(e) => setPostalCode(e.target.value)}
+                        placeholder="e.g. 8001"
+                        autoComplete="postal-code"
+                      />
+                    </div>
+                  </div>
                 </div>
               ) : null}
 
-              <Textarea
-                id="deliveryNotes"
-                label="Delivery notes (optional)"
-                helper="Add gate codes, collection notes, or anything the Pexpacks team should know."
-                value={deliveryNotes}
-                onChange={(e) => setDeliveryNotes(e.target.value)}
-                rows={4}
-                className="mt-4 w-full"
-              />
+              {/* Delivery notes with clear gap above and below */}
+              <div className="mt-8 sm:mt-10 mb-4 pt-6 sm:pt-8 border-t border-[var(--pex-border)]">
+                <Textarea
+                  id="deliveryNotes"
+                  label="Delivery notes (optional)"
+                  helper="Add gate codes, collection notes, or anything the Pexpacks team should know."
+                  value={deliveryNotes}
+                  onChange={(e) => setDeliveryNotes(e.target.value)}
+                  rows={4}
+                  className="w-full"
+                />
+              </div>
             </div>
           </section>
 
@@ -947,7 +982,7 @@ export function TrayCheckoutClient() {
             className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-label="Consent"
           >
-            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel)] [&_a]:underline [&_a]:font-medium hover:[&_a]:text-[var(--pex-primary)]">
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel-dark)] [&_a]:underline [&_a]:underline-offset-2 [&_a]:decoration-1.5 [&_a]:font-semibold hover:[&_a]:text-[var(--pex-keppel)]">
               <input
                 ref={(node) => {
                   fieldRefs.current.consent = node;
@@ -1066,7 +1101,7 @@ export function TrayCheckoutClient() {
                           </button>
                         )}
                       </div>
-                      <strong className="text-sm font-bold text-[var(--pex-navy)] shrink-0">
+                      <strong className="text-sm font-semibold text-[var(--pex-navy)] shrink-0 tabular-nums tabular-nums">
                         {formatCurrency(getPackTotal(pack))}
                       </strong>
                     </div>
@@ -1127,7 +1162,7 @@ export function TrayCheckoutClient() {
                         {pack.wantsPexcover ? (
                           <li className="text-[var(--pex-keppel)] font-medium">
                             <span>
-                              Pexcover <em>(Book covering)</em>
+                              Pexcover
                             </span>
                           </li>
                         ) : null}
@@ -1149,9 +1184,9 @@ export function TrayCheckoutClient() {
                 <strong>{formatCurrency(itemsTotal)}</strong>
               </div>
               {pexcoverCount > 0 ? (
-                <div className="text-[var(--pex-keppel)]">
+                <div className="text-[var(--pex-keppel)] text-xs sm:text-sm font-bold">
                   <span>
-                    Pexcover <em>(Book covering)</em> x{pexcoverCount}
+                    Pexcover x{pexcoverCount}
                   </span>
                   <strong>{formatCurrency(pexcoverTotal)}</strong>
                 </div>
@@ -1162,7 +1197,7 @@ export function TrayCheckoutClient() {
                   <strong>To confirm</strong>
                 </div>
               ) : null}
-              <div className="!text-base !font-bold !text-[var(--pex-navy)] pt-2 border-t border-dashed border-[var(--pex-border)]">
+              <div className="!text-base !font-semibold !text-[var(--pex-navy)] tabular-nums pt-2 border-t border-dashed border-[var(--pex-border)]">
                 <span>
                   {fulfilmentOption === "home_delivery"
                     ? "Pack total payable now"
@@ -1189,7 +1224,7 @@ export function TrayCheckoutClient() {
               type="button"
               variant="primary"
               size="lg"
-              className="w-full mb-3 hidden lg:flex"
+              className="w-full mb-3 hidden lg:flex text-lg sm:text-xl font-bold"
               onClick={handlePay}
               disabled={!canSubmit}
               aria-busy={submitting}
@@ -1222,7 +1257,7 @@ export function TrayCheckoutClient() {
         <Button
           type="button"
           variant="primary"
-          className="w-full min-h-[48px] text-base font-bold shadow-md"
+          className="w-full min-h-[48px] text-lg font-bold shadow-md"
           onClick={handlePay}
           disabled={!canSubmit}
           aria-busy={submitting}

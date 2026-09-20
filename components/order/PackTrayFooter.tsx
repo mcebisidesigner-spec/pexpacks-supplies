@@ -58,14 +58,14 @@ export function PackTrayFooter() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className="flex-1 min-w-[130px] min-h-[44px] border border-pex-border hover:border-pex-keppel rounded-full bg-white text-pex-navy hover:text-pex-keppel text-sm font-bold cursor-pointer transition-colors"
+              className="flex-1 min-w-[130px] min-h-[44px] border border-pex-border hover:border-pex-keppel rounded-xl bg-white text-pex-navy hover:text-pex-keppel text-sm font-medium cursor-pointer transition-colors"
               onClick={handleSameSchool}
             >
               Same school
             </button>
             <button
               type="button"
-              className="flex-1 min-w-[130px] min-h-[44px] border border-pex-border hover:border-pex-keppel rounded-full bg-white text-pex-navy hover:text-pex-keppel text-sm font-bold cursor-pointer transition-colors"
+              className="flex-1 min-w-[130px] min-h-[44px] border border-pex-border hover:border-pex-keppel rounded-xl bg-white text-pex-navy hover:text-pex-keppel text-sm font-medium cursor-pointer transition-colors"
               onClick={handleDifferentSchool}
             >
               Different school
@@ -82,21 +82,21 @@ export function PackTrayFooter() {
         <span className="text-pex-navy text-sm sm:text-base font-bold">
           {packs.length === 1 ? "Total" : "Combined total"}
         </span>
-        <span className="text-pex-keppel-dark text-xl sm:text-2xl font-heading font-black leading-none">
+        <span className="text-pex-keppel-dark text-xl sm:text-2xl font-heading font-semibold leading-none tabular-nums">
           {formatCurrency(total)}
         </span>
       </div>
       <div className="grid gap-2.5">
         <button
           type="button"
-          className="w-full min-h-[52px] border-0 rounded-full bg-pex-coral hover:bg-pex-coral-hover active:scale-[0.99] !text-white font-heading text-base sm:text-[17px] font-extrabold cursor-pointer flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-11 min-h-11 border-0 rounded-xl bg-pex-coral hover:bg-pex-coral-hover active:scale-[0.99] !text-white font-heading text-sm sm:text-base font-semibold cursor-pointer flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleCheckout}
         >
           Checkout &amp; Pay Now
         </button>
         <button
           type="button"
-          className="w-full min-h-[48px] border border-pex-border hover:border-pex-keppel rounded-full bg-white !text-pex-navy hover:text-pex-keppel font-heading text-sm sm:text-base font-bold cursor-pointer flex items-center justify-center gap-2 transition-all"
+          className="w-full min-h-[48px] border border-pex-border hover:border-pex-keppel rounded-xl bg-white !text-pex-navy hover:text-pex-keppel font-heading text-sm font-medium cursor-pointer flex items-center justify-center gap-2 transition-all"
           onClick={handleAddAnotherLearner}
         >
           Add Another Learner

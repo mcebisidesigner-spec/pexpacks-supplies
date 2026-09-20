@@ -227,6 +227,40 @@ a:not([class*="rounded-full"]):not([class*="rounded-2xl"]):not([class*="rounded-
   transition: color 150ms ease;
 }
 
+/* 7. All text links in the entire website must be slightly bold and visible clear */
+p a,
+li a,
+label a,
+span a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]),
+article a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]),
+form a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]),
+td a,
+dd a,
+a[class*="underline"],
+a.text-link {
+  font-weight: 600 !important;
+  color: var(--pex-keppel-dark, #156966);
+  text-decoration: underline !important;
+  text-decoration-thickness: 1.5px !important;
+  text-underline-offset: 2.5px !important;
+  text-decoration-color: var(--pex-keppel, #1a7a77) !important;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+p a:hover,
+li a:hover,
+label a:hover,
+span a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
+article a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
+form a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
+td a:hover,
+dd a:hover,
+a[class*="underline"]:hover,
+a.text-link:hover {
+  color: var(--pex-keppel, #1a7a77) !important;
+  text-decoration-color: var(--pex-keppel-dark, #156966) !important;
+}
+
 /* 7. Mobile Header Hamburger Toggle - Remove greenish border, outline, and tap ring */
 button[aria-controls="mobile-menu"],
 button[aria-label="Open menu"],

@@ -48,7 +48,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "w-full min-h-[50px] sm:min-h-[54px] rounded-field border border-pex-border px-4 bg-white text-pex-navy font-sans text-sm sm:text-[15px] placeholder:text-pex-muted/50 transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
+              "w-full h-11 min-h-11 rounded-xl border border-pex-border px-4 bg-white text-pex-navy font-sans text-sm sm:text-[15px] placeholder:text-pex-muted/50 transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
               error &&
                 "border-destructive focus:border-destructive ring-4 ring-destructive/10",
               className
