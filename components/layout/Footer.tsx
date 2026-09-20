@@ -94,7 +94,7 @@ function formatPhoneNumber(value: string) {
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
   if (icon === "instagram") {
     return (
-      <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] fill-none stroke-current stroke-[2.1] stroke-round" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] fill-none stroke-current stroke-[2.2] stroke-round" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
         <rect x="2" y="2" width="20" height="20" rx="5" />
         <circle cx="12" cy="12" r="5" />
         <circle cx="17.5" cy="6.5" r="1.5" />
@@ -212,12 +212,12 @@ export function Footer({ company }: FooterContent) {
           </p>
 
           <div className="flex items-center justify-end">
-            <nav className="flex items-center justify-end gap-2.5" aria-label="Social media">
+            <nav className="flex items-center justify-end gap-2 sm:gap-2.5" aria-label="Social media">
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="relative grid place-items-center w-8 h-8 sm:w-9 sm:h-9 text-pex-navy bg-white border border-white rounded-full transition-all duration-200 hover:bg-pex-keppel hover:brightness-110 hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                  className="relative grid place-items-center w-8 h-8 sm:w-9 sm:h-9 text-pex-navy bg-pex-coral border border-pex-coral rounded-full shadow-[0_4px_12px_rgba(255,111,89,0.18)] transition-all duration-200 hover:bg-pex-coral-hover hover:border-pex-coral-hover hover:shadow-[0_7px_16px_rgba(255,111,89,0.28)] hover:-translate-y-px hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"
