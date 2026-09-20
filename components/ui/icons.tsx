@@ -45,27 +45,33 @@ export const WalletIcon = () => (
   </svg>
 );
 
-/** Classic shopping cart icon — single source of truth for cart UI across the site. */
-export const ShoppingCartIcon = ({ size = 24, ...props }: SVGProps<SVGSVGElement> & { size?: number }) => (
+/** Modern shopping bag icon with handle and grommets matching reference */
+export const ShoppingBagIcon = ({
+  size = 24,
+  strokeWidth = 2,
+  ...props
+}: SVGProps<SVGSVGElement> & { size?: number; strokeWidth?: number }) => (
   <svg
     width={size}
     height={size}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.9"
+    strokeWidth={strokeWidth}
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden="true"
     focusable="false"
     {...props}
   >
-    {/* Handle bar */}
-    <path d="M1 1h3l1.5 8" />
-    {/* Cart body — tapered trapezoid */}
-    <path d="M5.5 9h13.9a1 1 0 0 1 .97 1.24l-1.54 6a1 1 0 0 1-.97.76H8a1 1 0 0 1-.97-.76L5.5 9z" />
-    {/* Wheels */}
-    <circle cx="9" cy="20" r="1.2" fill="currentColor" stroke="none" />
-    <circle cx="17" cy="20" r="1.2" fill="currentColor" stroke="none" />
+    {/* Trapezoidal bag body */}
+    <path d="M5.5 8h13l1.5 12.3c.08.68-.45 1.2-1.12 1.2H5.12c-.67 0-1.2-.52-1.12-1.2L5.5 8z" />
+    {/* Handle arch */}
+    <path d="M8.5 10V6.2a3.5 3.5 0 0 1 7 0V10" />
+    {/* Handle attachment eyelets / grommets */}
+    <circle cx="8.5" cy="10" r="1.3" fill="currentColor" stroke="none" />
+    <circle cx="15.5" cy="10" r="1.3" fill="currentColor" stroke="none" />
   </svg>
 );
+
+export const ShoppingCartIcon = ShoppingBagIcon;

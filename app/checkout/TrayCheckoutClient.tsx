@@ -341,9 +341,6 @@ export function TrayCheckoutClient() {
 
     if (
       field === "address" ||
-      field === "suburb" ||
-      field === "city" ||
-      field === "province" ||
       field === "multiSchoolDrop"
     ) {
       return "delivery";
@@ -414,11 +411,9 @@ export function TrayCheckoutClient() {
     }
 
     if (deliveryExpanded) {
-      if (!address.trim())
-        nextErrors.address = "Please enter the delivery address.";
-      if (!suburb.trim()) nextErrors.suburb = "Please enter the suburb.";
-      if (!city.trim()) nextErrors.city = "Please enter the city.";
-      if (!province.trim()) nextErrors.province = "Please enter the province.";
+      if (!address.trim() || address.trim().length < 5) {
+        nextErrors.address = "Please enter your delivery address.";
+      }
     }
 
     if (
@@ -854,110 +849,27 @@ export function TrayCheckoutClient() {
               ) : null}
 
               {deliveryExpanded ? (
-                <div className="mt-6 pt-6 border-t border-[var(--pex-border)] space-y-6">
+                <div className="mt-6 pt-6 border-t border-[var(--pex-border)]">
                   {/* Real-time Address Auto-search & Predictions */}
                   <AddressAutocomplete
+                    ref={(node) => {
+                      fieldRefs.current.address = node;
+                    }}
                     initialValue={address}
+                    error={errors.address}
+                    onChange={(val) => {
+                      setAddress(val);
+                      clearFieldError("address");
+                    }}
                     onSelectAddress={(selected) => {
-                      setAddress(selected.address);
+                      setAddress(selected.fullAddress || selected.address);
                       setSuburb(selected.suburb);
                       setCity(selected.city);
                       setProvince(selected.province);
                       setPostalCode(selected.postalCode);
                       clearFieldError("address");
-                      clearFieldError("suburb");
-                      clearFieldError("city");
-                      clearFieldError("province");
                     }}
                   />
-
-                  {/* Address Details Fields */}
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold uppercase tracking-wider text-[var(--pex-muted)]">
-                        Address Details
-                      </span>
-                      <span className="text-[11px] text-[var(--pex-muted)] font-medium">
-                        Auto-filled from search or edit manually
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input
-                        id="address"
-                        ref={(node) => {
-                          fieldRefs.current.address = node;
-                        }}
-                        label="Address line"
-                        type="text"
-                        value={address}
-                        onChange={(e) => {
-                          setAddress(e.target.value);
-                          clearFieldError("address");
-                        }}
-                        placeholder="e.g. 42 Main Road"
-                        error={errors.address}
-                        autoComplete="street-address"
-                      />
-                      <Input
-                        id="suburb"
-                        ref={(node) => {
-                          fieldRefs.current.suburb = node;
-                        }}
-                        label="Suburb"
-                        type="text"
-                        autoComplete="address-level2"
-                        value={suburb}
-                        onChange={(e) => {
-                          setSuburb(e.target.value);
-                          clearFieldError("suburb");
-                        }}
-                        placeholder="e.g. Gardens"
-                        error={errors.suburb}
-                      />
-                      <Input
-                        id="city"
-                        ref={(node) => {
-                          fieldRefs.current.city = node;
-                        }}
-                        label="City"
-                        type="text"
-                        autoComplete="address-level2"
-                        value={city}
-                        onChange={(e) => {
-                          setCity(e.target.value);
-                          clearFieldError("city");
-                        }}
-                        placeholder="e.g. Cape Town"
-                        error={errors.city}
-                      />
-                      <Input
-                        id="province"
-                        ref={(node) => {
-                          fieldRefs.current.province = node;
-                        }}
-                        label="Province"
-                        type="text"
-                        autoComplete="address-level1"
-                        value={province}
-                        onChange={(e) => {
-                          setProvince(e.target.value);
-                          clearFieldError("province");
-                        }}
-                        placeholder="e.g. Western Cape"
-                        error={errors.province}
-                      />
-                      <Input
-                        id="postalCode"
-                        label="Postal code"
-                        type="text"
-                        value={postalCode}
-                        onChange={(e) => setPostalCode(e.target.value)}
-                        placeholder="e.g. 8001"
-                        autoComplete="postal-code"
-                      />
-                    </div>
-                  </div>
                 </div>
               ) : null}
 
@@ -1047,7 +959,7 @@ export function TrayCheckoutClient() {
                 <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Your order</p>
                 <h2 id="order-summary-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0">Order summary</h2>
               </div>
-              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#0B5C50] text-white shadow-sm">
                 {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>
@@ -1232,7 +1144,7 @@ export function TrayCheckoutClient() {
               {submitting
                 ? "Preparing your order..."
                 : fulfilmentOption === "home_delivery"
-                  ? `Pay Pack Total ${formatCurrency(total)}`
+                  ? `Pay Now ${formatCurrency(total)}`
                   : `Pay Now ${formatCurrency(total)}`}
             </Button>
 
@@ -1265,7 +1177,7 @@ export function TrayCheckoutClient() {
           {submitting
             ? "Preparing..."
             : fulfilmentOption === "home_delivery"
-              ? `Pay Pack Total ${formatCurrency(total)}`
+              ? `Pay Now ${formatCurrency(total)}`
               : `Pay Now ${formatCurrency(total)}`}
         </Button>
       </div>

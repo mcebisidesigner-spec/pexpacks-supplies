@@ -74,7 +74,7 @@ export function FaqAccordion({
                 </span>
                 <div className="flex items-center gap-3 shrink-0">
                   {showCategory && faq.category ? (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-pex-keppel/10 text-pex-keppel text-xs font-bold whitespace-nowrap tracking-tight">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#0B5C50] text-white text-xs font-bold whitespace-nowrap tracking-tight shadow-sm">
                       {faq.category}
                     </span>
                   ) : null}

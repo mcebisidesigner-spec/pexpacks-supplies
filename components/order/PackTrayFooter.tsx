@@ -82,7 +82,7 @@ export function PackTrayFooter() {
         <span className="text-pex-navy text-sm sm:text-base font-bold">
           {packs.length === 1 ? "Total" : "Combined total"}
         </span>
-        <span className="text-pex-keppel-dark text-xl sm:text-2xl font-heading font-semibold leading-none tabular-nums">
+        <span className="text-pex-keppel-dark text-xl sm:text-2xl font-heading font-bold leading-none tabular-nums">
           {formatCurrency(total)}
         </span>
       </div>

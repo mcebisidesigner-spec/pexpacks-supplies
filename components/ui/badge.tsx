@@ -19,11 +19,11 @@ export const badgeVariants = cva(
         muted:
           "border-transparent bg-muted text-muted-foreground",
         success:
-          "border-transparent bg-emerald-500/10 text-emerald-700 font-bold",
+          "border-transparent bg-emerald-800 text-white font-bold shadow-sm",
         keppel:
-          "border-transparent bg-pex-keppel/10 text-pex-keppel font-bold",
+          "border-transparent bg-[#0B5C50] text-white font-bold shadow-sm",
         coral:
-          "border-transparent bg-pex-coral/10 text-pex-coral font-bold",
+          "border-transparent bg-[#B8321D] text-white font-bold shadow-sm",
       },
     },
     defaultVariants: {

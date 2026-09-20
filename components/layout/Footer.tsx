@@ -150,7 +150,7 @@ export function Footer({ company }: FooterContent) {
               >
                 {phone ? (
                   <>
-                    <a href={phoneHrefLocal} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                    <a href={phoneHrefLocal} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                       {formatPhoneNumber(phone)}
                     </a>
                     <span className="text-pex-keppel opacity-50 text-base font-medium leading-none" aria-hidden="true">
@@ -158,7 +158,7 @@ export function Footer({ company }: FooterContent) {
                     </span>
                   </>
                 ) : null}
-                <a href={emailHref} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                <a href={emailHref} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   {email}
                 </a>
               </address>
@@ -167,7 +167,7 @@ export function Footer({ company }: FooterContent) {
                 className="w-full max-w-full lg:max-w-[760px] text-left lg:text-right group/policy"
                 suppressHydrationWarning
               >
-                <summary className="relative inline-flex items-center justify-start lg:justify-end gap-2.5 max-w-full cursor-pointer text-[#dae2eb]/60 text-xs sm:text-sm font-normal leading-[1.3] list-none transition-colors duration-200 hover:text-[#f1f6f8]/90 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full [&::-webkit-details-marker]:hidden after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                <summary className="relative inline-flex items-center justify-start lg:justify-end gap-2.5 max-w-full cursor-pointer text-white text-xs sm:text-sm font-normal leading-[1.3] list-none transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full [&::-webkit-details-marker]:hidden after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   <span className="min-w-0 overflow-wrap-anywhere">{siteName} policies &amp; information:</span>
                   <span className="w-2 h-2 border-r-2 border-b-2 border-current rotate-45 -translate-y-0.5 origin-center shrink-0 transition-transform duration-200 group-open/policy:rotate-[225deg]" aria-hidden="true" />
                 </summary>
@@ -180,7 +180,7 @@ export function Footer({ company }: FooterContent) {
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                            className="relative text-white/45 text-[11px] font-normal leading-[1.3] no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                            className="relative !text-white text-[11px] font-normal leading-[1.3] no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                             >
                               {link.label}
                             </Link>
@@ -198,14 +198,14 @@ export function Footer({ company }: FooterContent) {
         <hr className="border-none h-[1px] bg-white/[0.14] my-6 sm:my-[30px] mb-5" />
 
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:gap-[18px]">
-          <p className="min-w-0 m-0 text-white/70 text-[11px] sm:text-xs font-semibold leading-[1.3]">
+          <p className="min-w-0 m-0 text-white text-[11px] sm:text-xs font-semibold leading-[1.3]">
             &copy; {currentYear} Pexpacks (Pty) Ltd. All rights reserved.
             Design:{"  "}
             <a
               href="https://mcebisih.co.za/"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative text-white font-extrabold no-underline transition-colors duration-200 hover:text-pex-coral hover:underline hover:underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+              className="relative !text-pex-keppel font-extrabold no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
             >
               McebisiH
             </a>

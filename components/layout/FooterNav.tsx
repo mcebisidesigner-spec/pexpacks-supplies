@@ -8,7 +8,7 @@ export function FooterNav() {
         <span key={link.label} className="inline-flex items-center">
           <Link
             href={link.href}
-            className="relative text-white font-sans text-sm sm:text-base font-extrabold leading-none tracking-normal no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+            className="relative !text-white font-sans text-sm sm:text-base font-extrabold leading-none tracking-normal no-underline transition-colors duration-200 hover:!text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
             data-conversion-event={`footer_${link.label.toLowerCase().replaceAll(" ", "_")}`}
           >
             {link.label}

@@ -327,7 +327,7 @@ export function PexcoverDrawerCard({
         <div className="flex-1 min-w-0 flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="m-0 text-[13px] font-bold text-slate-900 leading-snug tracking-tight">Pexcover</span>
-            <span className="inline-flex items-center px-1.5 py-px rounded-full bg-pex-keppel/10 text-pex-keppel text-[10px] font-bold uppercase tracking-wider">Done-For-You</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#0B5C50] text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">Done-For-You</span>
           </div>
           <span className="m-0 text-[11.5px] text-slate-500 leading-snug">
             {isDisabled
@@ -418,7 +418,7 @@ export function PexcoverDrawerCard({
             </div>
 
             {/* Selection Confirmation Pill */}
-            <div className="flex items-center justify-between px-2.5 py-1.5 bg-pex-keppel/10 rounded-md text-[10.5px] text-pex-keppel-dark font-medium">
+            <div className="flex items-center justify-between px-2.5 py-1.5 bg-teal-50 border border-teal-200/80 rounded-md text-[10.5px] text-teal-900 font-medium">
               <span className="flex items-center gap-1">
                 Selected:{" "}
                 <span className="font-bold">

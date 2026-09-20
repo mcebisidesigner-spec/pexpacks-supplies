@@ -47,88 +47,43 @@ export async function generateAndSendOtpEmail(
     const resend = new Resend(apiKey);
     const from = process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
     
-    // Digits array for 3x2 grid matching exact sample spec
+    // Keep each digit in its own tile so the code is easy to scan and copy.
     const digits = otpCode.split("");
+    const digitCells = digits
+      .map(
+        (digit) =>
+          `<td align="center" width="${Math.floor(100 / digits.length)}%" style="padding:0 4px;"><span style="display:block;background:#ffffff;border-radius:4px;color:#20252b;font-size:25px;line-height:46px;font-family:'Courier New',Courier,monospace;min-width:36px;height:46px;text-align:center;">${digit}</span></td>`
+      )
+      .join("");
 
     const htmlBody = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Pexpacks Security Token</title>
+  <title>Your Pexpacks verification code</title>
 </head>
-<body style="margin:0;padding:0;background:#05080f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#e2e8f0;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#05080f;padding:48px 16px;">
+<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#20252b;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;padding:14px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:440px;background:#0b111e;border:1px solid #162032;border-radius:20px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,0.6);">
-          <!-- Header Card Content -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:1080px;background:#edf2f8;border-radius:14px;">
           <tr>
-            <td style="padding:40px 32px 20px;text-align:center;background:#0b111e;">
-              <!-- Capsule Top Badge -->
-              <div style="display:inline-block;padding:6px 18px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.4);border-radius:999px;color:#2dd4bf;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;">
-                TWO-FACTOR AUTHENTICATION
-              </div>
-
-              <!-- Main Title -->
-              <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;font-family:Arial,Helvetica,sans-serif;">
-                Your Security Token
-              </h1>
-
-              <!-- Subtitle -->
-              <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5;font-family:Arial,Helvetica,sans-serif;">
-                Enter this 6-digit code on the <strong style="color:#ffffff;">/pex-console-secure</strong> login gateway:
-              </p>
-            </td>
-          </tr>
-
-          <!-- Inner Code Box (Exact 3x2 Grid Matching Sample Image) -->
-          <tr>
-            <td style="padding:0 32px 24px;">
-              <div style="background:#060a14;border:1px solid #182438;border-radius:16px;padding:32px 24px;text-align:center;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 auto;max-width:260px;">
-                  <tr>
-                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[0]}</td>
-                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[1]}</td>
-                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[2]}</td>
-                  </tr>
-                  <tr>
-                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[3]}</td>
-                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[4]}</td>
-                    <td align="center" width="33%" style="padding:12px 0;font-size:36px;font-weight:800;color:#10b981;font-family:'Courier New',Courier,monospace,sans-serif;letter-spacing:2px;user-select:all;-webkit-user-select:all;">${digits[5]}</td>
-                  </tr>
-                </table>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Expiration Notice -->
-          <tr>
-            <td style="padding:0 32px 28px;text-align:center;">
-              <p style="margin:0;font-size:12px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">
-                This code expires in <strong style="color:#ffffff;">5 minutes</strong> and can only be used once.
-              </p>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding:24px 32px;background:rgba(10,16,28,0.8);border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#64748b;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">
-              <p style="margin:0 0 8px;">
-                If you did not request this administrative login token, please ignore this email or contact system security immediately.
-              </p>
-              <p style="margin:0;">
-                &copy; Pexpacks Supplies &bull; Back-Office Security
-              </p>
+            <td style="padding:16px 20px 20px;text-align:left;">
+              <p style="margin:0 0 16px;font-size:18px;line-height:24px;color:#20252b;font-family:Arial,Helvetica,sans-serif;">Code Requested</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                <tr>${digitCells}</tr>
+              </table>
+              <a href="#copy-code" role="button" aria-label="Copy verification code" onclick="event.preventDefault();navigator.clipboard&amp;&amp;navigator.clipboard.writeText('${otpCode}').then(function(){this.textContent='Code copied';}.bind(this));return false;" style="display:inline-block;background:#0876ad;border-radius:999px;color:#ffffff;font-size:16px;font-weight:700;line-height:50px;padding:0 30px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Copy code</a>
             </td>
           </tr>
         </table>
+        <p style="max-width:1080px;margin:14px auto 0;text-align:left;font-size:12px;line-height:18px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">This code expires in <strong>5 minutes</strong> and can only be used once. If you did not request it, you can safely ignore this email.</p>
       </td>
     </tr>
   </table>
 </body>
 </html>`;
-
     const { error: emailError } = await resend.emails.send({
       from,
       to: [email.trim()],

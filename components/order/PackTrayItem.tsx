@@ -93,8 +93,8 @@ export function PackTrayItem({ pack }: PackTrayItemProps) {
               className={cn(
                 "inline-flex px-2.5 py-1 rounded-full border border-current/15 text-[11px] font-semibold leading-none",
                 pack.packMode === "full"
-                  ? "bg-pex-keppel/10 text-pex-keppel"
-                  : "bg-pex-coral/10 text-pex-coral"
+                  ? "bg-pex-keppel text-white border-pex-keppel"
+                  : "bg-pex-coral text-white border-pex-coral"
               )}
             >
               {pack.packMode === "full" ? "Full Pack" : "Customised"}

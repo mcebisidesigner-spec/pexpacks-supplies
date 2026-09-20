@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { ShoppingCartIcon } from "@/components/ui/icons";
+import { ShoppingBagIcon } from "@/components/ui/icons";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { useHasMounted } from "@/hooks/useHasMounted";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -35,7 +35,7 @@ export function HeaderOrderIcon() {
         aria-label="Fill up your Backpack"
         disabled
       >
-        <ShoppingCartIcon size={22} />
+        <ShoppingBagIcon className="h-[22px] w-[22px]" />
       </button>
     );
   }
@@ -51,7 +51,7 @@ export function HeaderOrderIcon() {
         onClick={handleClick}
         aria-label={`Fill up your Backpack (${packCount} pack${packCount === 1 ? "" : "s"})`}
       >
-        <ShoppingCartIcon size={22} />
+        <ShoppingBagIcon className="h-[22px] w-[22px]" />
         <span
           className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 rounded-full bg-pex-coral text-white text-[10px] font-extrabold leading-4 text-center flex items-center justify-center pointer-events-none shadow-[0_1px_3px_rgba(0,0,0,0.15)] select-none"
           aria-hidden="true"

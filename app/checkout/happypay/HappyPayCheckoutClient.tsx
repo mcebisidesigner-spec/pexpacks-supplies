@@ -353,7 +353,7 @@ export function HappyPayCheckoutClient() {
             aria-labelledby="hp-details-heading"
           >
             <div className="flex items-start gap-4 mb-6">
-              <span className="w-8 h-8 rounded-full bg-[rgba(33,158,154,0.12)] text-[var(--pex-keppel)] text-sm font-bold flex items-center justify-center shrink-0">1</span>
+              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
               <div>
                 <h2 id="hp-details-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Your details</h2>
                 <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
@@ -416,7 +416,7 @@ export function HappyPayCheckoutClient() {
             aria-labelledby="hp-learners-heading"
           >
             <div className="flex items-start gap-4 mb-6">
-              <span className="w-8 h-8 rounded-full bg-[rgba(33,158,154,0.12)] text-[var(--pex-keppel)] text-sm font-bold flex items-center justify-center shrink-0">2</span>
+              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
               <div>
                 <h2 id="hp-learners-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Learner details</h2>
                 <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
@@ -514,7 +514,7 @@ export function HappyPayCheckoutClient() {
                 <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Happy Pay plan</p>
                 <h2 id="hp-summary-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0">Your split</h2>
               </div>
-              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#0B5C50] text-white shadow-sm">
                 {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>

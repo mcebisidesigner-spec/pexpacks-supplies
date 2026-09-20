@@ -115,8 +115,8 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
                     className={cn(
                       "inline-grid min-w-[30px] h-[30px] place-items-center rounded-full text-xs font-bold",
                       isActive
-                        ? "bg-white/15 text-white"
-                        : "bg-pex-keppel/10 text-pex-keppel"
+                        ? "bg-white/20 text-white"
+                        : "bg-[#0B5C50] text-white shadow-sm"
                     )}
                   >
                     {count}
