@@ -72,13 +72,13 @@ export function Header({ announcement }: HeaderProps = {}) {
     <HeaderScrollWrapper>
       <div
         className={cn(
-          "relative z-[2] h-[68px] sm:h-[70px] lg:h-[84px] w-full max-w-[1280px] mx-auto px-4 sm:px-[clamp(16px,4vw,28px)] lg:px-[clamp(24px,4vw,56px)] flex items-center justify-between lg:grid lg:grid-cols-[0.75fr_auto_1.25fr]",
+          "relative z-[2] h-[68px] sm:h-[70px] lg:h-[110px] w-full max-w-none mx-auto px-4 sm:px-[clamp(16px,4vw,28px)] lg:px-[clamp(32px,3.6vw,56px)] flex items-center justify-between lg:grid lg:grid-cols-[0.75fr_auto_1.25fr]",
           isAdmin && "lg:grid-cols-[1fr_auto]"
         )}
       >
         <div className="inline-flex items-center gap-2 sm:gap-3 lg:gap-3.5 justify-self-start min-w-0 shrink-0">
-          <Link className="inline-flex items-center w-fit [&_img]:w-[92px] sm:[&_img]:w-[clamp(92px,24vw,106px)] lg:[&_img]:w-[124px] [&_img]:h-auto [&_img]:block" href="/" aria-label="Pexpacks home" data-mobile-menu-close>
-            <Logo priority />
+          <Link className="inline-flex items-center w-fit [&_img]:w-[92px] sm:[&_img]:w-[clamp(92px,24vw,106px)] lg:[&_img]:w-[132px] [&_img]:h-auto [&_img]:block" href="/" aria-label="Pexpacks home" data-mobile-menu-close>
+            <Logo loading="eager" />
           </Link>
           {isAdmin && (
             <span className="font-sans text-[17px] font-extrabold leading-none tracking-normal text-pex-navy whitespace-nowrap overflow-hidden text-ellipsis max-w-[min(280px,38vw)]">
@@ -87,7 +87,7 @@ export function Header({ announcement }: HeaderProps = {}) {
           )}
         </div>
         {!isAdmin && (
-          <nav className="hidden lg:flex items-center justify-center mx-auto gap-[clamp(14px,1.8vw,24px)] xl:gap-[clamp(20px,2.5vw,40px)]" aria-label="Primary navigation">
+          <nav className="hidden lg:flex items-baseline justify-center mx-auto gap-[28px]" aria-label="Primary navigation">
             {mainNavLinks.map((link) => (
               <HeaderActiveLink href={link.href} label={link.label} key={link.href} />
             ))}
@@ -101,12 +101,12 @@ export function Header({ announcement }: HeaderProps = {}) {
           />
           {!isAdmin && (
             <Link
-              className="min-h-[42px] pl-[18px] pr-[7px] rounded-full inline-flex items-center justify-center gap-2.5 bg-pex-navy text-white font-sans text-[15px] font-bold leading-none shadow-[0_10px_20px_rgba(26,42,64,0.12)] transition-all duration-200 hover:brightness-110 hover:shadow-[0_12px_24px_rgba(26,42,64,0.18)] hover:-translate-y-0.5 active:translate-y-0 active:brightness-100 group"
+              className="min-h-[52px] min-w-[205px] pl-5 pr-2 rounded-full inline-flex items-center justify-center gap-2.5 bg-pex-navy text-white font-sans text-base font-bold leading-none shadow-[0_10px_20px_rgba(26,42,64,0.12)] transition-all duration-200 hover:brightness-110 hover:shadow-[0_12px_24px_rgba(26,42,64,0.18)] hover:-translate-y-0.5 active:translate-y-0 active:brightness-100 group"
               href="/track-order"
               data-conversion-event="header_track_pack"
             >
               <span className="text-white">Track Your Pack</span>
-              <span className="w-7 h-7 rounded-full bg-pex-coral text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]" aria-hidden="true">
+              <span className="w-9 h-9 rounded-full bg-pex-coral text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-4 [&_svg]:h-4 [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]" aria-hidden="true">
                 <TrackPackIcon />
               </span>
             </Link>

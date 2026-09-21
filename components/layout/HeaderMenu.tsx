@@ -55,7 +55,7 @@ export function HeaderMenu() {
     setIconClosing(false);
   }, [clearClosingTimer]);
 
-  /* ── Body scroll lock (iOS-safe) ── */
+  /* Body scroll lock (iOS-safe) */
   useEffect(() => {
     mobileOpenRef.current = mobileOpen;
 
@@ -89,17 +89,17 @@ export function HeaderMenu() {
     };
   }, [mobileOpen]);
 
-  /* ── Reset on route change ── */
+  /* Reset on route change */
   useEffect(() => {
     resetMobileMenu();
   }, [pathname, resetMobileMenu]);
 
-  /* ── Cleanup closing timer on unmount ── */
+  /* Cleanup closing timer on unmount */
   useEffect(() => {
     return () => clearClosingTimer();
   }, [clearClosingTimer]);
 
-  /* ── Logo click closes menu (targeted, only when open) ── */
+  /* Logo click closes menu when open */
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -113,7 +113,7 @@ export function HeaderMenu() {
     return () => logoLink.removeEventListener("click", handler);
   }, [mobileOpen, closeMobileMenu]);
 
-  /* ── Escape key closes menu ── */
+  /* Escape key closes menu */
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -125,7 +125,7 @@ export function HeaderMenu() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [closeMobileMenu]);
 
-  /* ── Focus management ── */
+  /* Focus management */
   useEffect(() => {
     if (mobileOpen) {
       const menu = document.getElementById("mobile-menu");
@@ -182,4 +182,3 @@ export function HeaderMenu() {
     </>
   );
 }
-

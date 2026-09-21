@@ -27,8 +27,8 @@ export function HeaderActiveLink({ href, label }: HeaderActiveLinkProps) {
   return (
     <Link
       className={cn(
-        "relative text-pex-navy border-b-2 border-transparent py-1.5 font-sans text-base xl:text-[17px] font-extrabold leading-none tracking-[0.02em] whitespace-nowrap transition-colors duration-200 hover:text-pex-keppel hover:border-pex-keppel",
-        active && "text-pex-keppel border-pex-keppel"
+        "relative border-b-2 border-transparent py-1.5 font-sans text-[18px] font-extrabold leading-none tracking-normal whitespace-nowrap !text-pex-navy transition-colors duration-200 hover:!text-pex-keppel hover:underline hover:decoration-2 hover:underline-offset-4",
+        active && "!text-pex-keppel border-pex-keppel"
       )}
       href={href}
       aria-current={active ? "page" : undefined}

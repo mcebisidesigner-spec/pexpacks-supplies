@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -103,19 +104,7 @@ export function SchoolSearchWidget({
     router.push(`/schools/${result.slug}`);
   }
 
-  const checkIconSvg = (
-    <svg
-      className="w-[16px] h-[16px] text-[var(--pex-keppel)] shrink-0 mt-[2px]"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
+  const checkIconSvg = <Check className="size-4 shrink-0 mt-0.5 text-[var(--pex-keppel)]" strokeWidth={3} aria-hidden="true" />;
 
   return (
     <article

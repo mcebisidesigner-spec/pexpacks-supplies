@@ -53,18 +53,18 @@ export default async function BlogIndex() {
             <SchoolSearchWidget headingLevel="h3" />
 
             {resources.length > 0 ? (
-              <div className="resourceHubCard rounded-[20px] border border-teal-600/20 bg-white p-5 grid gap-4 shadow-sm">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-teal-600">Resource Hub</span>
-                <h3 className="text-lg font-extrabold text-[#1a2a40] leading-tight m-0">Live parent resources</h3>
+              <div className="resourceHubCard rounded-2xl border border-slate-200/80 bg-white p-5 grid gap-4 shadow-sm">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-pex-keppel">Resource Hub</span>
+                <h3 className="text-lg font-extrabold text-pex-navy leading-tight m-0">Live parent resources</h3>
                 <div className="grid gap-2.5">
                   {resources.slice(0, 4).map((resource) => (
                     <Link
                       key={resource.id}
                       href={resource.file_url}
-                      className="group grid grid-cols-[1fr_auto] items-center gap-3 py-3 border-t border-slate-100 text-[#1a2a40] no-underline hover:text-teal-600 transition-colors"
+                      className="group grid grid-cols-[1fr_auto] items-center gap-3 py-3 border-t border-slate-100 text-pex-navy no-underline hover:text-pex-keppel transition-colors"
                     >
                       <span className="min-w-0">
-                        <strong className="block min-w-0 text-[13.5px] font-extrabold leading-snug group-hover:text-teal-600 transition-colors">{resource.title}</strong>
+                        <strong className="block min-w-0 text-[13.5px] font-extrabold leading-snug group-hover:text-pex-keppel transition-colors">{resource.title}</strong>
                         {resource.description ? <small className="block min-w-0 text-slate-500 text-xs leading-normal mt-1">{resource.description}</small> : null}
                       </span>
                       <em className="rounded-full bg-teal-600/10 text-teal-700 text-[10px] not-italic font-extrabold px-2.5 py-1 uppercase tracking-wide shrink-0">{resource.file_type}</em>
@@ -75,10 +75,10 @@ export default async function BlogIndex() {
             ) : null}
 
             {/* WIDGET 2: 100% CORRECT PACK GUARANTEE */}
-            <div className="rounded-[20px] border border-teal-600/15 bg-gradient-to-br from-teal-600/[0.04] to-slate-900/[0.02] p-5 flex flex-col gap-3.5 shadow-sm">
+            <div className="rounded-2xl border border-pex-keppel/20 bg-pex-keppel/[0.04] p-5 flex flex-col gap-3.5 shadow-sm">
               <div className="flex items-center gap-3">
-                <ShieldCheck className="w-6 h-6 text-teal-600 shrink-0" />
-                <h3 className="text-[15px] font-extrabold text-[#1a2a40] m-0">Teacher-Approved Guarantee</h3>
+                <ShieldCheck className="w-6 h-6 text-pex-keppel shrink-0" />
+                <h3 className="text-[15px] font-extrabold text-pex-navy m-0">Teacher-Approved Guarantee</h3>
               </div>
               <p className="text-[13.5px] text-slate-600 leading-relaxed m-0">
                 We strictly cross-reference official, teacher-submitted stationery lists. You receive the exact brand, size, and quantity requested by your school—100% guaranteed.
@@ -86,7 +86,7 @@ export default async function BlogIndex() {
             </div>
 
             {/* WIDGET 3: PEXCOVER BOOK COVERING PROMOTION */}
-            <div className="relative overflow-hidden rounded-[20px] bg-[#1a2a40] text-white p-6 sm:p-7 flex flex-col gap-4 shadow-[0_10px_30px_rgba(15,37,55,0.12)]">
+            <div className="relative overflow-hidden rounded-2xl bg-pex-navy text-white p-6 sm:p-7 flex flex-col gap-4 shadow-sm">
               <div className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-teal-500/15 pointer-events-none" />
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">Time-Saving Add-on</span>
               <h3 className="text-lg font-extrabold text-white m-0 leading-snug">Exercise Books Neatly Covered & Named</h3>
@@ -95,7 +95,7 @@ export default async function BlogIndex() {
               </p>
               <Link
                 href="/blog/what-is-pexcover-book-covering"
-                className="mt-1 text-[13.5px] font-bold text-white underline underline-offset-4 hover:text-teal-300 transition-colors w-fit"
+                className="mt-1 text-[13.5px] font-bold text-white no-underline hover:text-pex-keppel transition-colors w-fit"
                 data-conversion-event="blog_pexcover_guide"
               >
                 Learn how Pexcover works
@@ -104,7 +104,7 @@ export default async function BlogIndex() {
           </div>
         </aside>
       </div>
-      <section className="py-12 sm:py-20 bg-gradient-to-b from-slate-50 to-white" id="blog-subscribe">
+      <section className="py-12 sm:py-20 bg-slate-50/50" id="blog-subscribe">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SubscribeForm />
         </div>

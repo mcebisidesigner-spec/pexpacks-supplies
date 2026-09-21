@@ -1,5 +1,7 @@
 "use client";
 
+import { Check, FileText, Paperclip } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
@@ -165,7 +167,7 @@ export function OrderForm() {
   if (isSuccess) {
     return (
       <div className="bg-[var(--pex-card-bg)] rounded-[var(--radius-md)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[0_4px_20px_rgba(26,42,64,0.06)] text-center flex flex-col items-center justify-center py-12">
-        <div className="w-14 h-14 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] grid place-items-center text-2xl font-bold mb-4">✓</div>
+        <div className="w-14 h-14 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] grid place-items-center text-2xl font-bold mb-4"><Check className="size-7" strokeWidth={2.5} aria-hidden="true" /></div>
         <h2 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">List Received!</h2>
         <p className="text-[var(--pex-muted)] text-sm leading-relaxed max-w-md mb-6">
           Thanks {name.split(" ")[0]}! We have received your stationery list.
@@ -220,11 +222,12 @@ export function OrderForm() {
                 <button
                   type="button"
                   key={cat}
+                  aria-pressed={category === cat}
                   className={cn(
-                    "w-full min-h-[52px] px-5 py-4 rounded-[var(--radius-sm)] border text-[var(--pex-navy)] font-semibold text-base text-left transition-all active:scale-[0.99]",
+                    "w-full h-12 min-h-12 px-5 rounded-xl border text-pex-navy font-semibold text-base text-left transition-all duration-150 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 active:scale-[0.99]",
                     category === cat
-                      ? "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.08)] text-[var(--pex-keppel)] shadow-sm"
-                      : "border-[var(--pex-border)] bg-white hover:border-[var(--pex-keppel)] hover:bg-[rgba(33,158,154,0.04)]"
+                      ? "border-pex-keppel bg-pex-keppel/10 !text-pex-keppel shadow-sm hover:-translate-y-px"
+                      : "border-slate-200 bg-white hover:border-pex-keppel hover:bg-pex-keppel/[0.04] hover:-translate-y-px"
                   )}
                   onClick={() => {
                     setCategory(cat);
@@ -242,11 +245,9 @@ export function OrderForm() {
             </div>
 
             <div className="mt-6 pt-4 border-t border-[var(--pex-border)] text-sm">
-              <Link href="/add-your-school" className="inline-flex items-center gap-2 text-[var(--pex-keppel)] hover:text-[var(--pex-primary)] font-medium transition-colors">
+              <Link href="/add-your-school" className="group inline-flex items-center gap-2 text-[var(--pex-keppel)] hover:text-[var(--pex-primary)] font-medium transition-colors">
                 <span>Would you like to add your school?</span>
-                <svg className="w-4 h-4 stroke-current stroke-2 fill-none" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <ArrowRight className="size-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
 
@@ -258,17 +259,19 @@ export function OrderForm() {
         {step === 2 && (
           <div className="animate-in fade-in duration-300">
             <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Share your stationery list</h2>
-            <div className="flex rounded-[var(--radius-sm)] bg-[var(--pex-bg)] p-1 mb-6 border border-[var(--pex-border)]">
+            <div className="flex h-12 rounded-xl bg-slate-50 p-1 mb-6 border border-slate-200">
               <button 
                 type="button"
-                className={cn("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "upload" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
+                aria-pressed={inputMethod === "upload"}
+                className={cn("flex-1 h-10 px-4 text-sm font-semibold rounded-lg transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-1", inputMethod === "upload" ? "bg-white !text-pex-navy shadow-sm" : "text-slate-600 hover:text-pex-navy")}
                 onClick={() => setInputMethod("upload")}
               >
                 Upload Photo/PDF
               </button>
               <button 
                 type="button"
-                className={cn("flex-1 py-2.5 px-4 text-sm font-semibold rounded-[var(--radius-sm)] transition-all", inputMethod === "type" ? "bg-white text-[var(--pex-navy)] shadow-sm" : "text-[var(--pex-muted)]")}
+                aria-pressed={inputMethod === "type"}
+                className={cn("flex-1 h-10 px-4 text-sm font-semibold rounded-lg transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-1", inputMethod === "type" ? "bg-white !text-pex-navy shadow-sm" : "text-slate-600 hover:text-pex-navy")}
                 onClick={() => setInputMethod("type")}
               >
                 Paste / Type List
@@ -278,7 +281,7 @@ export function OrderForm() {
             {inputMethod === "upload" ? (
               fileName ? (
                 <div className="flex flex-col items-center gap-3 p-6 rounded-[var(--radius-sm)] border-2 border-dashed border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] text-center">
-                  <div className="text-3xl">📎</div>
+                  <div className="text-3xl"><Paperclip className="size-8" strokeWidth={1.8} aria-hidden="true" /></div>
                   <div>
                     <strong className="text-sm font-semibold text-[var(--pex-navy)] block max-w-xs truncate">{fileName}</strong>
                     <span className="text-xs text-[var(--pex-muted)]">File attached successfully</span>
@@ -315,7 +318,7 @@ export function OrderForm() {
                     }
                   }}
                 >
-                  <div className="text-3xl mb-2">📄</div>
+                  <div className="text-3xl mb-2"><FileText className="size-8" strokeWidth={1.8} aria-hidden="true" /></div>
                   <strong className="text-sm text-[var(--pex-navy)] mb-1">Click to upload or drag and drop</strong>
                   <span className="text-xs text-[var(--pex-muted)] max-w-xs">All file types supported (PNG, JPG, PDF, Word, Excel, etc. Max 10MB)</span>
                   <input 
@@ -347,7 +350,7 @@ export function OrderForm() {
             {errors.list && <span className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.list}</span>}
 
             <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-[var(--pex-border)]">
-              <button type="button" onClick={prevStep} className="text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3">← Back</button>
+              <button type="button" onClick={prevStep} className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3"><ArrowLeft className="size-4" strokeWidth={2} aria-hidden="true" /> Back</button>
               <Button 
                 onClick={nextStep} 
                 disabled={inputMethod === "upload" ? !fileName : !listText.trim()}
@@ -454,7 +457,7 @@ export function OrderForm() {
               {errors.consent && <span id="quote-consent-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1 ml-6 block">{errors.consent}</span>}
 
               <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-[var(--pex-border)]">
-                <button type="button" onClick={prevStep} className="text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3">← Back</button>
+                <button type="button" onClick={prevStep} className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3"><ArrowLeft className="size-4" strokeWidth={2} aria-hidden="true" /> Back</button>
                 <Button 
                   type="submit" 
                   variant="primary" 

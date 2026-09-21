@@ -111,11 +111,11 @@ export default async function PartnerWithSchoolsPage() {
         panelTitle="What your school gets"
         panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"
       >
-        <div className="flex flex-wrap gap-3">
-          <Button href="#partnership-enquiry" variant="primary">
+        <div className="flex flex-col sm:flex-row gap-3 mt-5 items-stretch sm:items-center">
+          <Button href="#partnership-enquiry" variant="primary" className="w-full sm:w-auto min-h-[44px]">
             Apply to Partner
           </Button>
-          <Button href="#how-it-works" variant="white">
+          <Button href="#how-it-works" variant="white" className="w-full sm:w-auto min-h-[44px]">
             How It Works
           </Button>
         </div>

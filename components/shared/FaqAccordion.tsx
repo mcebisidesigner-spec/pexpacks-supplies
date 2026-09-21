@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -79,18 +80,7 @@ export function FaqAccordion({
                     </span>
                   ) : null}
                   <span className="relative w-[22px] h-[22px] shrink-0 text-pex-navy flex items-center justify-center">
-                    <svg
-                      viewBox="0 0 24 24"
-                      className={cn(
-                        "w-5 h-5 transition-transform duration-200 stroke-current stroke-[2.5]",
-                        isOpen && "rotate-45"
-                      )}
-                      fill="none"
-                      strokeLinecap="round"
-                    >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
+                    <Plus className={cn("size-5 transition-transform duration-200", isOpen && "rotate-45")} strokeWidth={2.5} aria-hidden="true" />
                   </span>
                 </div>
               </button>
@@ -114,7 +104,7 @@ export function FaqAccordion({
                         >
                           <span>
                             {link.label
-                              .replace(/\s*→\s*$/, "")
+                              .replace(/\s*\u2192\s*$/, "")
                               .replace(/\s*->\s*$/, "")}
                           </span>
                           <span

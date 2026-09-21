@@ -7,6 +7,7 @@ import { logoutAction } from "@/app/actions/auth";
 import { HeaderOrderIcon } from "@/components/order/HeaderOrderIcon";
 import { TrackPackIcon } from "@/components/ui/icons";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { LogOut, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type AdminUser = {
@@ -86,10 +87,7 @@ export function HeaderAccountControls({
             </span>
           ) : (
             <span className="w-[30px] h-[30px] xl:w-[34px] xl:h-[34px] rounded-full bg-pex-bg-soft text-pex-navy inline-grid place-items-center [&_svg]:w-5 [&_svg]:h-5 [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8] [&_svg]:stroke-round">
-              <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                <circle cx="12" cy="8" r="3.5" />
-                <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
-              </svg>
+              <UserRound className="size-5" aria-hidden="true" />
             </span>
           )}
         </button>
@@ -112,11 +110,7 @@ export function HeaderAccountControls({
               onClick={() => startLogoutTransition(() => logoutAction())}
               disabled={isLoggingOut}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <path d="M16 17l5-5-5-5" />
-                <path d="M21 12H9" />
-              </svg>
+              <LogOut className="size-4" aria-hidden="true" />
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>
           </div>

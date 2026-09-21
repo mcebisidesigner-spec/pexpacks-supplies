@@ -51,6 +51,7 @@ import {
   Image,
   Laptop,
   Headphones,
+  CircleDot,
   Clock,
   Bell,
   Award,
@@ -107,27 +108,6 @@ import {
   SquarePen,
 } from "lucide-react";
 
-function TapeIcon({ size = 20, className = "", ...rest }: { size?: number; className?: string; [key: string]: unknown }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...rest}
-    >
-      <circle cx="9" cy="12" r="7" />
-      <circle cx="9" cy="12" r="2.5" />
-      <path d="M9 19h11a2 2 0 0 0 2-2v-3" />
-    </svg>
-  );
-}
-
 type ItemIconProps = {
   name?: string;
   className?: string;
@@ -138,7 +118,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
   const props = { size, className };
 
   switch (name) {
-    // ── Books & Paper ────────────────────────────────────────
+// Section
     case "notebook":
       return <BookOpen {...props} />;
     case "book-copy":
@@ -186,7 +166,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "clipboard-check":
       return <ClipboardCheck {...props} />;
 
-    // ── Writing & Drawing ────────────────────────────────────
+// Section
     case "pencil":
       return <Pencil {...props} />;
     case "pen":
@@ -220,7 +200,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "square-pen":
       return <SquarePen {...props} />;
 
-    // ── Math & Measurement ───────────────────────────────────
+// Section
     case "ruler":
       return <Ruler {...props} />;
     case "calculator":
@@ -236,7 +216,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "pi":
       return <Pi {...props} />;
 
-    // ── Cutting & Adhesive ───────────────────────────────────
+// Section
     case "scissors":
       return <Scissors {...props} />;
     case "glue":
@@ -246,11 +226,11 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "pin":
       return <Pin {...props} />;
     case "tape":
-      return <TapeIcon {...props} />;
+      return <CircleDot {...props} />;
     case "stamp":
       return <Stamp {...props} />;
 
-    // ── Bags & Cases ─────────────────────────────────────────
+// Section
     case "bag":
       return <Briefcase {...props} />;
     case "backpack":
@@ -280,7 +260,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "package":
       return <Package {...props} />;
 
-    // ── STEM & Science ───────────────────────────────────────
+// Section
     case "flask":
       return <FlaskConical {...props} />;
     case "microscope":
@@ -302,7 +282,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "glasses":
       return <Glasses {...props} />;
 
-    // ── Art, Music & Tech ────────────────────────────────────
+// Section
     case "music":
       return <Music {...props} />;
     case "image":
@@ -340,7 +320,7 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "tablet":
       return <Tablet {...props} />;
 
-    // ── School ───────────────────────────────────────────────
+// Section
     case "graduation-cap":
       return <GraduationCap {...props} />;
     case "school":
@@ -352,13 +332,13 @@ export function ItemIcon({ name, className = "", size = 20 }: ItemIconProps) {
     case "trophy":
       return <Trophy {...props} />;
 
-    // ── Tags & Markers ───────────────────────────────────────
+// Section
     case "tags":
       return <Tags {...props} />;
     case "map-pin":
       return <MapPin {...props} />;
 
-    // ── Layout & Text ────────────────────────────────────────
+// Section
     case "grid-3x3":
       return <Grid3x3 {...props} />;
     case "layout-grid":

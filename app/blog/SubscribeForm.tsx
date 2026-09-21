@@ -35,7 +35,7 @@ export function SubscribeForm() {
 
   if (submitted) {
     return (
-      <div className="bg-white/85 backdrop-blur-md border border-white/40 rounded-[28px] sm:rounded-[32px] p-6 sm:p-12 shadow-[0_24px_48px_rgba(26,42,64,0.06)] max-w-[640px] mx-auto text-center">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm max-w-xl mx-auto text-center">
         <div className="text-center py-3">
           <p className="text-emerald-600 font-extrabold text-lg m-0">
             You&rsquo;re in! Check your inbox soon.
@@ -46,8 +46,8 @@ export function SubscribeForm() {
   }
 
   return (
-    <div className="bg-white/85 backdrop-blur-md border border-white/40 rounded-[28px] sm:rounded-[32px] p-6 sm:p-12 shadow-[0_24px_48px_rgba(26,42,64,0.06)] max-w-[640px] mx-auto text-center">
-      <h2 className="text-2xl sm:text-[28px] font-extrabold text-[#1a2a40] m-0 mb-2.5">Stay Equipped</h2>
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm max-w-xl mx-auto text-center">
+      <h2 className="text-2xl sm:text-[28px] font-extrabold text-pex-navy m-0 mb-2.5">Stay Equipped</h2>
       <p className="text-slate-600 text-sm sm:text-base leading-relaxed m-0 mb-7 max-w-[480px] mx-auto">
         Get fresh resources and restock reminders delivered to your inbox.
       </p>
@@ -62,7 +62,7 @@ export function SubscribeForm() {
             placeholder="parent@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full min-h-[44px] rounded-xl border border-slate-200 bg-white px-3.5 text-[15px] text-slate-800 placeholder:text-slate-400 focus-visible:outline-none focus-visible:border-teal-600 focus-visible:ring-2 focus-visible:ring-teal-600/20 transition-all"
+            className="w-full h-11 rounded-xl border border-slate-300 bg-white px-3.5 text-[15px] text-slate-800 placeholder:text-slate-400 focus-visible:outline-none focus-visible:border-teal-600 focus-visible:ring-2 focus-visible:ring-teal-600/20 transition-all"
           />
         </div>
         <Button type="submit" variant="primary" size="md" disabled={loading} className="w-full sm:w-auto shrink-0 min-h-[44px]">

@@ -76,7 +76,7 @@ export function FeaturedSchoolCard({
           />
         )}
         {school.isPartner && (
-          <span className="bg-pex-keppel/10 text-pex-keppel py-1 px-2.5 rounded-full text-[11px] font-extrabold inline-flex items-center gap-1">★ Official Partner ★</span>
+          <span className="bg-pex-keppel/10 text-pex-keppel py-1 px-2.5 rounded-full text-[11px] font-extrabold inline-flex items-center gap-1">Official Partner</span>
         )}
       </div>
       <span className="text-pex-keppel text-[11px] font-extrabold">{school.region}</span>
@@ -94,4 +94,3 @@ export function FeaturedSchoolCard({
     </Link>
   );
 }
-

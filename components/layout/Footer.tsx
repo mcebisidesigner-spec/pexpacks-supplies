@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Camera, ChevronDown, Globe2, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import {
   hasWhatsAppNumber,
@@ -53,7 +54,7 @@ const FOOTER_EMAIL = "helpme@pexpacks.co.za";
 
 const policyGroups = [
   {
-    title: "Legal",
+    title: "LEGAL",
     links: [
       { label: "Terms of Use", href: "/terms" },
       { label: "Privacy Policy", href: "/privacy-policy" },
@@ -63,7 +64,7 @@ const policyGroups = [
     ],
   },
   {
-    title: "Customer Support",
+    title: "CUSTOMER SUPPORT",
     links: [
       { label: "Delivery Policy", href: "/delivery-policy" },
       { label: "Returns & Refunds Policy", href: "/returns-refunds-policy" },
@@ -72,7 +73,7 @@ const policyGroups = [
     ],
   },
   {
-    title: "Business Partners",
+    title: "BUSINESS PARTNERS",
     links: [
       { label: "School Partnership Terms", href: "/school-partnership-terms" },
       { label: "Supplier Terms", href: "/supplier-terms" },
@@ -92,30 +93,11 @@ function formatPhoneNumber(value: string) {
 }
 
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
-  if (icon === "instagram") {
-    return (
-      <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] fill-none stroke-current stroke-[2.2] stroke-round" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-        <rect x="2" y="2" width="20" height="20" rx="5" />
-        <circle cx="12" cy="12" r="5" />
-        <circle cx="17.5" cy="6.5" r="1.5" />
-      </svg>
-    );
-  }
+  const iconClassName = "size-4 sm:size-[18px]";
 
-  if (icon === "whatsapp") {
-    return (
-      <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] fill-current stroke-none" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-      </svg>
-    );
-  }
-
-  /* Facebook */
-  return (
-    <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px] fill-current stroke-none" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-    </svg>
-  );
+  if (icon === "instagram") return <Camera className={iconClassName} strokeWidth={2} aria-hidden="true" />;
+  if (icon === "whatsapp") return <MessageCircle className={iconClassName} strokeWidth={2} aria-hidden="true" />;
+  return <Globe2 className={iconClassName} strokeWidth={2} aria-hidden="true" />;
 }
 
 export function Footer({ company }: FooterContent) {
@@ -169,18 +151,18 @@ export function Footer({ company }: FooterContent) {
               >
                 <summary className="relative inline-flex items-center justify-start lg:justify-end gap-2.5 max-w-full cursor-pointer text-white text-xs sm:text-sm font-normal leading-[1.3] list-none transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full [&::-webkit-details-marker]:hidden after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   <span className="min-w-0 overflow-wrap-anywhere">{siteName} policies &amp; information:</span>
-                  <span className="w-2 h-2 border-r-2 border-b-2 border-current rotate-45 -translate-y-0.5 origin-center shrink-0 transition-transform duration-200 group-open/policy:rotate-[225deg]" aria-hidden="true" />
+                  <ChevronDown className="size-4 shrink-0 transition-transform duration-200 group-open/policy:rotate-180" aria-hidden="true" />
                 </summary>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-[18px] mt-4 sm:mt-[18px] p-4 sm:p-[18px] text-left bg-white/[0.06] border border-white/[0.12] rounded-[14px] sm:rounded-[18px]">
                   {policyGroups.map((group) => (
-                    <section className="min-w-0 [&_h2]:m-0 [&_h2]:mb-2.5 [&_h2]:text-white [&_h2]:text-[11px] [&_h2]:font-extrabold [&_h2]:leading-[1.2] [&_ul]:grid [&_ul]:gap-2 [&_ul]:m-0 [&_ul]:p-0 [&_ul]:list-none" key={group.title}>
+                    <section className="min-w-0 [&_h2]:m-0 [&_h2]:mb-2.5 [&_h2]:text-white [&_h2]:text-xs [&_h2]:font-extrabold [&_h2]:uppercase [&_h2]:tracking-[0.02em] [&_h2]:leading-[1.2] [&_ul]:grid [&_ul]:gap-2 [&_ul]:m-0 [&_ul]:p-0 [&_ul]:list-none" key={group.title}>
                       <h2>{group.title}</h2>
                       <ul>
                         {group.links.map((link) => (
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                            className="relative !text-white text-[11px] font-normal leading-[1.3] no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                            className="footer-legal-link relative !text-white text-[11px] font-medium leading-[1.3] transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                             >
                               {link.label}
                             </Link>
@@ -212,12 +194,12 @@ export function Footer({ company }: FooterContent) {
           </p>
 
           <div className="flex items-center justify-end">
-            <nav className="flex items-center justify-end gap-2 sm:gap-2.5" aria-label="Social media">
+            <nav className="flex items-center justify-end gap-1 sm:gap-2" aria-label="Social media">
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="relative grid place-items-center w-8 h-8 sm:w-9 sm:h-9 text-pex-navy bg-pex-coral border border-pex-coral rounded-full shadow-[0_4px_12px_rgba(255,111,89,0.18)] transition-all duration-200 hover:bg-pex-coral-hover hover:border-pex-coral-hover hover:shadow-[0_7px_16px_rgba(255,111,89,0.28)] hover:-translate-y-px hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+                  className="relative inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 text-pex-keppel transition-all duration-200 hover:text-pex-coral hover:-translate-y-px hover:scale-105 focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -232,4 +214,3 @@ export function Footer({ company }: FooterContent) {
     </footer>
   );
 }
-

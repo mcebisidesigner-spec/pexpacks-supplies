@@ -1,5 +1,6 @@
 "use client";
 
+import { Camera, Check, FileImage, FileText, Sparkles, Upload } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -268,7 +269,7 @@ export function AiListDropzone() {
       {isSuccess && (
         <div className="text-center py-6 px-2.5">
           <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 grid place-items-center text-2xl mx-auto mb-4 border-2 border-emerald-200 [animation:scaleSuccess_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)]">
-            ✓
+            <Check className="size-8" strokeWidth={2.5} aria-hidden="true" />
           </div>
           <h3 className="text-pex-navy font-heading text-xl font-extrabold m-0 mb-1.5">
             Catalog Matched!
@@ -293,20 +294,7 @@ export function AiListDropzone() {
               />
             ) : (
               <div className="flex flex-col items-center justify-center text-white gap-2 p-4 text-center">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                  <polyline points="10 9 9 9 8 9" />
-                </svg>
+                <FileText className="size-10" strokeWidth={1.5} aria-hidden="true" />
                 <span className="text-xs font-semibold max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
                   {file ? file.name : "Stationery Text Document"}
                 </span>
@@ -341,7 +329,7 @@ export function AiListDropzone() {
                       !isCompleted && !isActive && "bg-slate-100 text-pex-muted border-pex-border"
                     )}
                   >
-                    {isCompleted ? "✓" : step.id}
+                    {isCompleted ? <Check className="size-4" strokeWidth={2.5} aria-hidden="true" /> : step.id}
                   </div>
                   <span>{step.label}</span>
                 </div>
@@ -385,11 +373,7 @@ export function AiListDropzone() {
                 setErrorMessage(null);
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
+              <Upload className="size-[18px]" strokeWidth={2} aria-hidden="true" />
               Photo or PDF Upload
             </button>
             <button
@@ -403,12 +387,7 @@ export function AiListDropzone() {
                 setErrorMessage(null);
               }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
+              <FileText className="size-[18px]" strokeWidth={2} aria-hidden="true" />
               Paste / Type List
             </button>
           </div>
@@ -426,11 +405,7 @@ export function AiListDropzone() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-pex-keppel/10 text-pex-keppel grid place-items-center mb-4 transition-transform duration-200">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
-                    <path d="M12 12v9" />
-                    <path d="m16 16-4-4-4 4" />
-                  </svg>
+                  <Upload className="size-8" strokeWidth={1.75} aria-hidden="true" />
                 </div>
                 <span className="block text-sm sm:text-base font-bold text-pex-navy mb-1.5">
                   Click to browse or drag &amp; drop
@@ -445,11 +420,7 @@ export function AiListDropzone() {
                     className="bg-pex-keppel hover:bg-pex-keppel/90 active:scale-[0.98] !text-white border-0 h-11 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                      <circle cx="8.5" cy="8.5" r="1.5" />
-                      <polyline points="21 15 16 10 5 21" />
-                    </svg>
+                    <FileImage className="size-4" strokeWidth={2} aria-hidden="true" />
                     Browse Files
                   </button>
 
@@ -458,10 +429,7 @@ export function AiListDropzone() {
                     className="bg-white hover:bg-pex-keppel/5 active:scale-[0.98] !text-pex-navy hover:text-pex-keppel border border-pex-border hover:border-pex-keppel h-11 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium cursor-pointer inline-flex items-center gap-1.5 transition-all shadow-sm"
                     onClick={() => cameraInputRef.current?.click()}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                      <circle cx="12" cy="13" r="4" />
-                    </svg>
+                    <Camera className="size-4" strokeWidth={2} aria-hidden="true" />
                     Take Photo
                   </button>
                 </div>
@@ -530,16 +498,7 @@ export function AiListDropzone() {
                 disabled={!pastedText.trim()}
                 onClick={() => startConversion(null, pastedText)}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z" />
-                  <path d="m14 7 3 3" />
-                  <path d="M5 6v4" />
-                  <path d="M19 14v4" />
-                  <path d="M10 2v2" />
-                  <path d="M7 8H3" />
-                  <path d="M21 16h-4" />
-                  <path d="M11 3H9" />
-                </svg>
+                <Sparkles className="size-[18px]" strokeWidth={2} aria-hidden="true" />
                 Match with AI &amp; Generate Cart
               </button>
             </div>

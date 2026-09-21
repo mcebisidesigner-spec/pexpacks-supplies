@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRef, useCallback } from "react";
 import type { ReactNode, RefObject } from "react";
 import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
@@ -90,7 +91,7 @@ export function Drawer({
               aria-label={`Close ${title}`}
               ref={closeBtnRef}
             >
-              &times;
+              <X className="size-5" strokeWidth={2} aria-hidden="true" />
             </button>
           </div>
         </div>

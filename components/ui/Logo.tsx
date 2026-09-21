@@ -11,6 +11,7 @@ export function Logo({
   alt = "Pexpacks",
   width,
   height,
+  unoptimized = true,
   ...props
 }: LogoProps) {
   const isIcon = variant === "icon";
@@ -23,6 +24,7 @@ export function Logo({
       alt={alt}
       width={width ?? defaultWidth}
       height={height ?? defaultHeight}
+      unoptimized={unoptimized}
       {...props}
     />
   );

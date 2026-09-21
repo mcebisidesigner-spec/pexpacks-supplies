@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import type { InputHTMLAttributes } from "react";
 import { forwardRef, useId } from "react";
 import { cn } from "@/lib/utils";
@@ -62,15 +63,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-600 pointer-events-none"
               aria-hidden="true"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                className="w-full h-full"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <Check className="size-full" strokeWidth={3} aria-hidden="true" />
             </span>
           ) : null}
         </div>

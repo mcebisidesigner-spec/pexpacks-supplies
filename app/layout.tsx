@@ -230,8 +230,12 @@ export default async function RootLayout({
           <ClientRuntimeWidgets />
           <TrayProviders />
         </div>
-        <Analytics mode="production" />
-        <SpeedInsights />
+        {process.env.NODE_ENV === "production" ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

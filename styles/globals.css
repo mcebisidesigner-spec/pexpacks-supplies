@@ -16,7 +16,7 @@
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #128c7e;
 
-  /* First-class pex-* aliases — eliminates all [var(--pex-*)] arbitrary strings */
+/* First-class pex-* aliases eliminate arbitrary var(--pex-*) strings */
   --color-pex-navy: var(--pex-navy);
   --color-pex-keppel: var(--pex-keppel);
   --color-pex-keppel-dark: var(--pex-keppel-dark);
@@ -72,7 +72,7 @@
   --breakpoint-kanban: 1100px;
 }
 
-/* ── Reset & base ── */
+/* Reset and base styles */
 * {
   box-sizing: border-box;
 }
@@ -182,41 +182,41 @@ body.menu-open [aria-label*="Bro Pex"] {
    6. All linking text must hover with TEAL.
    ========================================================================== */
 
-/* 1. Orange buttons -> White text */
-button[class*="bg-pex-coral"],
-a[class*="bg-pex-coral"],
-[class*="bg-pex-coral"][class*="rounded"] {
+/* 1. Solid orange buttons -> White text */
+button[class~="bg-pex-coral"],
+a[class~="bg-pex-coral"],
+[class~="bg-pex-coral"][class*="rounded"] {
   color: #ffffff !important;
 }
 
-/* 2. White buttons -> Navy text */
-button[class*="bg-white"][class*="rounded"],
-a[class*="bg-white"][class*="rounded"],
-button[class*="border-pex-navy"][class*="rounded"],
-a[class*="border-pex-navy"][class*="rounded"] {
+/* 2. Solid white buttons -> Navy text */
+button[class~="bg-white"][class*="rounded"],
+a[class~="bg-white"][class*="rounded"],
+button[class~="border-pex-navy"][class*="rounded"],
+a[class~="border-pex-navy"][class*="rounded"] {
   color: var(--pex-navy) !important;
 }
 
-/* 3. Navy buttons -> White text */
-button[class*="bg-pex-navy"],
-a[class*="bg-pex-navy"],
-[class*="bg-pex-navy"][class*="rounded"] {
+/* 3. Solid navy buttons -> White text */
+button[class~="bg-pex-navy"],
+a[class~="bg-pex-navy"],
+[class~="bg-pex-navy"][class*="rounded"] {
   color: #ffffff !important;
 }
 
 /* 4. Green / WhatsApp buttons -> White text */
-button[class*="bg-[#25d366]"],
-a[class*="bg-[#25d366]"],
-button[class*="bg-whatsapp"],
-a[class*="bg-whatsapp"],
-[class*="bg-[#25d366]"][class*="rounded"] {
+button[class~="bg-[#25d366]"],
+a[class~="bg-[#25d366]"],
+button[class~="bg-whatsapp"],
+a[class~="bg-whatsapp"],
+[class~="bg-[#25d366]"][class*="rounded"] {
   color: #ffffff !important;
 }
 
-/* 5. Teal / Keppel buttons -> White text */
-button[class*="bg-pex-keppel"],
-a[class*="bg-pex-keppel"],
-[class*="bg-pex-keppel"][class*="rounded"] {
+/* 5. Solid teal / Keppel buttons -> White text */
+button[class~="bg-pex-keppel"],
+a[class~="bg-pex-keppel"],
+[class~="bg-pex-keppel"][class*="rounded"] {
   color: #ffffff !important;
 }
 
@@ -227,37 +227,27 @@ a:not([class*="rounded-full"]):not([class*="rounded-2xl"]):not([class*="rounded-
   transition: color 150ms ease;
 }
 
-/* 7. Text links stay clear without decorative underlines. */
-p a,
-li a,
-label a,
-span a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]),
-article a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]),
-form a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]),
-td a,
-dd a,
-a[class~="underline"],
-a.text-link {
-  font-weight: 600 !important;
+/* 7. Text links use a consistent medium-weight treatment. Legal links opt into underlining below. */
+a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]) {
+  font-weight: 500 !important;
   color: var(--pex-keppel-dark, #156966);
   text-decoration: none !important;
   transition: color 150ms ease;
 }
 
-p a:hover,
-li a:hover,
-label a:hover,
-span a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
-article a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
-form a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
-td a:hover,
-dd a:hover,
-a[class~="underline"]:hover,
-a.text-link:hover {
+a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover {
   color: var(--pex-keppel, #1a7a77) !important;
   text-decoration: none !important;
 }
 
+.footer-legal-link {
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.footer-legal-link:hover {
+  color: var(--pex-keppel, #1a7a77) !important;
+}
 /* 7. Mobile Header Hamburger Toggle - Remove greenish border, outline, and tap ring */
 button[aria-controls="mobile-menu"],
 button[aria-label="Open menu"],
@@ -334,13 +324,13 @@ button:disabled {
   }
 }
 
-/* ── Focus ring (uses brand keppel token) ── */
+/* Focus ring using the brand keppel token */
 :focus-visible {
   outline: var(--focus-ring);
   outline-offset: 4px;
 }
 
-/* ── Accessibility utilities ── */
+/* Accessibility utilities */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -353,7 +343,7 @@ button:disabled {
   border: 0;
 }
 
-/* ── Skip-to-content link ── */
+/* Skip-to-content link */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -375,7 +365,7 @@ button:disabled {
   outline-offset: 2px;
 }
 
-/* ── Site layout shell ── */
+/* Site layout shell */
 .site-shell {
   min-height: 100vh;
   min-height: 100svh;
@@ -453,7 +443,7 @@ button:disabled {
   }
 }
 
-/* ── Universal Brand Hover Popups (Design System) ── */
+/* Universal brand hover popups */
 [data-tooltip] {
   position: relative;
 }
@@ -544,7 +534,7 @@ button:disabled {
   }
 }
 
-/* ── Suppress external / browser extension injected assistant controls ── */
+/* Suppress external or browser-extension assistant controls */
 body > fieldset,
 .site-shell > fieldset,
 fieldset[class*="assistant" i],
@@ -556,7 +546,7 @@ div[id*="assistant-control" i] {
   pointer-events: none !important;
 }
 
-/* ── Keyframes for interactive controls ── */
+/* Keyframes for interactive controls */
 @keyframes iconPop {
   0% {
     transform: scale(1);

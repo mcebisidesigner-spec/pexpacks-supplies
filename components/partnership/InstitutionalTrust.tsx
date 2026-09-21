@@ -36,14 +36,14 @@ const TRUST_POINTS = [
 
 export function InstitutionalTrust() {
   return (
-    <section className="py-[clamp(54px,7vw,96px)] relative bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-[var(--pex-border,#e1e7ea)]" aria-labelledby="trust-section-title">
-      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
+    <section className="py-12 sm:py-20 bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-slate-200/80" aria-labelledby="trust-section-title">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-[760px] mb-[34px] text-left flex flex-col items-start">
-          <p className="mb-[14px] text-[var(--pex-keppel,#1a7a77)] text-sm font-extrabold text-left">Operational excellence</p>
-          <h2 id="trust-section-title" className="mb-[14px] text-[var(--pex-navy,#1a2a40)] font-heading text-[clamp(32px,4.6vw,56px)] font-extrabold leading-[1.05] tracking-[-0.01em] text-left">
+          <p className="mb-3 text-pex-keppel text-sm font-extrabold text-left">Operational excellence</p>
+          <h2 id="trust-section-title" className="mb-3 text-pex-navy font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-left">
             Built for Schools. Managed by Pexpacks.
           </h2>
-          <p className="max-w-[760px] mb-[34px] text-[var(--pex-text-muted,#64748b)] text-lg leading-[1.45] text-left">
+          <p className="max-w-[760px] mb-[34px] text-slate-600 text-lg leading-[1.45] text-left">
             Grounded in rigorous logistics, dependable institutional governance, and
             uncompromising educational standards.
           </p>
@@ -53,11 +53,11 @@ export function InstitutionalTrust() {
           {TRUST_POINTS.map((pt) => {
             const Icon = pt.icon;
             return (
-              <div key={pt.title} className="bg-white border border-[var(--pex-border,#e1e7ea)] rounded-2xl p-[22px_20px] flex gap-3.5 items-start">
-                <Icon size={22} className="text-[var(--pex-keppel,#1a7a77)] shrink-0 mt-0.5" />
+              <div key={pt.title} className="bg-white border border-slate-200/80 rounded-2xl p-[22px_20px] flex gap-3.5 items-start">
+                <Icon size={22} className="text-pex-keppel shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-[15px] font-bold text-[var(--pex-navy,#1a2a40)] m-0 mb-1">{pt.title}</h3>
-                  <p className="text-[13px] text-[var(--pex-muted,#4d5a5d)] leading-[1.5] m-0">{pt.desc}</p>
+                  <h3 className="text-[15px] font-bold text-pex-navy m-0 mb-1">{pt.title}</h3>
+                  <p className="text-[13px] text-slate-600 leading-[1.5] m-0">{pt.desc}</p>
                 </div>
               </div>
             );

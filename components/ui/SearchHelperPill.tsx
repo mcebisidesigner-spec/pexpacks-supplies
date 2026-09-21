@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SearchHelperPillProps = {
@@ -152,11 +153,7 @@ export function SearchHelperPill({
         className="w-5 h-5 shrink-0 text-pex-coral inline-flex items-center justify-center"
         aria-hidden="true"
       >
-        <svg viewBox="0 0 20 20" focusable="false" className="w-5 h-5 fill-none stroke-current stroke-[1.8] stroke-linecap-round stroke-linejoin-round">
-          <circle cx="10" cy="10" r="8" />
-          <path d="M10 9v5" />
-          <path d="M10 6h.01" />
-        </svg>
+<Info className="size-5" strokeWidth={1.8} aria-hidden="true" />
       </span>
       <span className="flex-1 min-w-0 break-words">{message}</span>
       <button
@@ -165,7 +162,7 @@ export function SearchHelperPill({
         onClick={dismiss}
         aria-label="Dismiss Gauteng schools notice"
       >
-        {"\u00d7"}
+        <X className="size-4" strokeWidth={2} aria-hidden="true" />
       </button>
     </div>
   );

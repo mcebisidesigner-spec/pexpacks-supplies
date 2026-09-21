@@ -1,11 +1,13 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { trackTrayOpened } from "@/lib/analytics";
 import { PackTrayItem } from "./PackTrayItem";
 import { PackTrayFooter } from "./PackTrayFooter";
+import { ShoppingBagIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 export function GlobalPackTray() {
@@ -135,12 +137,12 @@ export function GlobalPackTray() {
 
   return (
     <div
-      className="fixed inset-0 z-[var(--z-drawer,60)] bg-black/50 flex justify-end overflow-hidden [animation:fadeInOverlay_0.25s_ease-out_forwards]"
+      className="fixed inset-0 z-[1000] isolation-isolate bg-black/50 flex justify-end overflow-hidden [animation:fadeInOverlay_0.25s_ease-out_forwards]"
       role="presentation"
       onMouseDown={handleOverlayClick}
     >
       <div
-        className="w-full sm:max-w-[480px] h-screen h-[100dvh] overflow-x-hidden overflow-y-auto bg-white shadow-[0_24px_64px_rgba(15,37,55,0.25)] flex flex-col [animation:slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards]"
+        className="w-full sm:max-w-[480px] h-screen h-[100dvh] max-h-[100dvh] overflow-x-hidden overflow-y-auto bg-white shadow-[0_24px_64px_rgba(15,37,55,0.25)] flex flex-col [animation:slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="pack-tray-title"
@@ -175,7 +177,7 @@ export function GlobalPackTray() {
               aria-label="Close your order"
               ref={closeButtonRef}
             >
-              &times;
+              <X className="size-5" strokeWidth={2} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -210,16 +212,7 @@ export function GlobalPackTray() {
                 className="w-16 h-16 rounded-full bg-slate-100 text-pex-muted grid place-items-center"
                 aria-hidden="true"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  className="w-8 h-8 stroke-current stroke-[1.5]"
-                >
-                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <path d="M16 10a4 4 0 01-8 0" />
-                </svg>
+                <ShoppingBagIcon className="size-8" strokeWidth={1.5} aria-hidden="true" />
               </div>
               <p className="m-0 text-pex-muted text-sm sm:text-base leading-relaxed max-w-[280px]">
                 No packs saved yet. Choose a school pack and add it to your

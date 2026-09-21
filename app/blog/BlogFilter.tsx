@@ -47,11 +47,12 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
               key={cat.key}
               type="button"
               onClick={() => setActive(cat.key)}
+              aria-pressed={active === cat.key}
               className={cn(
-                "px-4 py-2 rounded-full border text-xs sm:text-sm font-semibold transition-all cursor-pointer",
+                "inline-flex h-11 min-h-11 items-center justify-center whitespace-nowrap px-4 rounded-xl border text-xs sm:text-sm font-semibold transition-all duration-150 ease-in-out cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 active:translate-y-0",
                 active === cat.key
-                  ? "bg-[var(--pex-navy)] text-white border-[var(--pex-navy)]"
-                  : "border-[var(--pex-border)] bg-white text-[var(--pex-muted)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)]"
+                  ? "bg-pex-navy !text-white border-pex-navy shadow-sm hover:bg-[#152238] hover:-translate-y-px"
+                  : "border-slate-200 bg-white !text-pex-navy shadow-sm hover:border-pex-keppel hover:!text-pex-keppel hover:bg-pex-bg-soft hover:-translate-y-px"
               )}
             >
               {cat.label}
@@ -66,10 +67,10 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
           return (
             <Link
               href={`/blog/${post.slug}`}
-              className="group flex flex-col bg-white rounded-[var(--radius-card)] p-5 sm:p-6 border border-[var(--pex-border)] shadow-sm hover:shadow-[var(--shadow-card)] hover:border-[rgba(33,158,154,0.3)] transition-all"
+              className="group flex flex-col bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm hover:shadow-md hover:border-pex-keppel/30 transition-all"
               key={post.id}
             >
-              <div className="relative w-full aspect-[16/9] rounded-[var(--radius-sm)] overflow-hidden mb-4 bg-[var(--pex-bg-soft)]">
+              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-4 bg-slate-50">
                 <Image
                   src={post.image}
                   alt={post.title}
@@ -78,9 +79,9 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <span className="text-xs font-extrabold uppercase tracking-wider text-[var(--pex-keppel)] mb-1.5">{fmt.tag}</span>
-              <h2 className="text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-3 group-hover:text-[var(--pex-keppel)] transition-colors line-clamp-2">{post.title}</h2>
-              <span className="mt-auto text-xs font-bold text-[var(--pex-keppel)] inline-flex items-center gap-1">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-pex-keppel mb-1.5">{fmt.tag}</span>
+              <h2 className="text-lg font-bold text-pex-navy font-heading m-0 mb-3 group-hover:text-pex-keppel transition-colors line-clamp-2">{post.title}</h2>
+              <span className="mt-auto text-xs font-bold text-pex-keppel inline-flex items-center gap-1">
                 {fmt.action} <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
               </span>
             </Link>

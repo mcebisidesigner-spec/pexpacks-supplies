@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +8,6 @@ import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
 import { SchoolLogoPlaceholder } from "@/components/schools/SchoolLogoPlaceholder";
-import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { formatSchoolSearchLocation } from "@/lib/schools/searchPresentation";
 import {
   trackSchoolNoResultsRecovery,
@@ -16,7 +16,7 @@ import {
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import { cn } from "@/lib/utils";
 
-/* ─── Utility ─────────────────────────────────────────────────────────────── */
+/* --- Utility ------------------------------------------------------------- */
 
 function HighlightMatch({ text, query }: { text: string; query: string }) {
   if (!query.trim()) return <>{text}</>;
@@ -33,16 +33,16 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
   );
 }
 
-/* ─── Types ────────────────────────────────────────────────────────────────── */
+/* --- Types --------------------------------------------------------------- */
 
 export type SchoolSearchSource = "home" | "tray" | "schools";
 
 export type SchoolSearchBoxProps = {
-  /** Which surface this box lives on — controls analytics & search options. */
+  /** Which surface this box lives on - controls analytics and search options. */
   source?: SchoolSearchSource;
   /** Called when a result is selected (e.g. close the tray). */
   onResultClick?: () => void;
-  /** Show the "Can't remember…Browse all schools" pill link below the card. */
+  /** Show the browse-all-schools link below the card. */
   showBrowseLink?: boolean;
   /** Pre-populate the query from the URL `?q=` param (schools page). */
   readQueryFromUrl?: boolean;
@@ -52,9 +52,9 @@ export type SchoolSearchBoxProps = {
 
 const resultLimit = 12;
 
-/* ─── Shared search-card card shell classes ────────────────────────────────── */
+/* Shared search-card shell classes */
 const CARD_CLASSES =
-  "relative z-[11] w-full p-4 sm:p-5 " +
+  "relative z-[1201] w-full p-4 sm:p-5 " +
   "border border-pex-keppel/15 " +
   "rounded-[28px] md:rounded-[34px] " +
   "bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(244,252,252,0.94))] " +
@@ -78,14 +78,17 @@ const INPUT_CLASSES =
   "[&::-webkit-search-results-decoration]:hidden";
 
 const CHIP_CLASSES =
-  "shrink-0 snap-start inline-flex items-center gap-2 " +
-  "py-2 px-3.5 rounded-2xl " +
-  "bg-pex-bg border-2 border-pex-border " +
-  "text-pex-navy hover:text-pex-keppel hover:border-pex-keppel hover:bg-white " +
-  "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md " +
+  "shrink-0 snap-start inline-flex items-center gap-2.5 " +
+  "py-2 px-3.5 sm:px-4 rounded-2xl " +
+  "bg-white border-2 border-slate-200/90 " +
+  "text-pex-navy font-bold text-xs sm:text-[13px] " +
+  "shadow-[0_2px_6px_rgba(26,42,64,0.04)] " +
+  "hover:!border-pex-keppel hover:text-pex-navy hover:bg-white hover:shadow-[0_4px_14px_rgba(26,122,119,0.18)] " +
+  "transition-all duration-200 hover:-translate-y-0.5 " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel/40 focus-visible:!border-pex-keppel " +
   "cursor-pointer no-underline select-none";
 
-/* ─── Component ────────────────────────────────────────────────────────────── */
+/* Section */
 
 export function SchoolSearchBox({
   source = "home",
@@ -225,17 +228,26 @@ export function SchoolSearchBox({
   return (
     <div
       className={cn(
-        "relative w-full max-w-[760px] mt-6 md:mt-[26px] flex flex-col min-w-0",
+        "relative z-0 w-full max-w-[760px] mt-6 md:mt-[26px] flex flex-col min-w-0",
         source === "schools" && "max-w-[1120px] mt-6",
+        searchActive && "z-[1200]",
         className,
       )}
     >
       {/* Mobile overlay */}
       {searchActive && (
-        <div className="fixed inset-0 z-[119] lg:z-10 bg-white/80 backdrop-blur-sm transition-opacity duration-300" />
+        <div
+          className="fixed inset-0 z-[1100] bg-slate-900/35 backdrop-blur-sm transition-opacity duration-300 hidden max-lg:block"
+          onClick={() => {
+            setPanelOpen(false);
+            setIsInputFocused(false);
+            setTrendingVisible(false);
+          }}
+          aria-hidden="true"
+        />
       )}
 
-      {/* ── Search card ──────────────────────────────────────────────────── */}
+      {/* Search card */}
       <div
         ref={searchRef}
         role="search"
@@ -244,7 +256,7 @@ export function SchoolSearchBox({
           CARD_CLASSES,
           "order-1",
           searchActive &&
-            "max-lg:fixed max-lg:top-[max(4px,env(safe-area-inset-top))] max-lg:left-2.5 max-lg:right-2.5 max-lg:z-[1000] max-lg:w-auto max-lg:p-3.5 sm:max-lg:p-[18px] max-lg:rounded-3xl max-lg:shadow-[0_18px_42px_rgba(12,26,43,0.22)]",
+            "max-lg:fixed max-lg:top-[max(4px,env(safe-area-inset-top))] max-lg:left-2.5 max-lg:right-2.5 max-lg:z-[1205] max-lg:w-auto max-lg:p-3.5 sm:max-lg:p-[18px] max-lg:rounded-3xl max-lg:shadow-[0_18px_42px_rgba(12,26,43,0.22)]",
         )}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
@@ -289,14 +301,7 @@ export function SchoolSearchBox({
                 }}
                 aria-label="Clear school name"
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  focusable="false"
-                  className="w-3.5 h-3.5 stroke-current stroke-[2.6] stroke-linecap-round"
-                >
-                  <path d="m6 6 12 12M18 6 6 18" />
-                </svg>
+                <X className="size-3.5" strokeWidth={2.6} aria-hidden="true" />
               </button>
             ) : null}
           </div>
@@ -361,9 +366,9 @@ export function SchoolSearchBox({
             aria-live="polite"
             data-school-results-scroll
             className={cn(
-              "absolute z-[12] inset-x-0 top-[calc(100%+10px)] md:top-[calc(100%+12px)] w-full max-h-[min(70dvh,520px)] overflow-y-auto p-3 sm:p-4 border border-pex-border/80 rounded-3xl bg-pex-bg shadow-[0_24px_58px_rgba(26,42,64,0.16)] [animation:schoolResultsIn_0.2s_ease-out_both]",
+              "absolute z-[1210] inset-x-0 top-[calc(100%+10px)] md:top-[calc(100%+12px)] w-full max-h-[min(70dvh,520px)] overflow-y-auto p-3 sm:p-4 border border-pex-border/80 rounded-3xl bg-pex-bg shadow-[0_24px_58px_rgba(26,42,64,0.16)] [animation:schoolResultsIn_0.2s_ease-out_both]",
               searchActive &&
-                "max-lg:fixed max-lg:top-[calc(max(4px,env(safe-area-inset-top))+80px)] max-lg:bottom-[max(10px,env(safe-area-inset-bottom))] max-lg:inset-x-2.5 max-lg:w-auto max-lg:max-h-none max-lg:p-4 max-lg:pt-3 max-lg:pb-5 max-lg:rounded-3xl max-lg:shadow-[0_16px_48px_rgba(12,26,43,0.18)] max-lg:overscroll-contain",
+                "max-lg:fixed max-lg:top-[calc(max(4px,env(safe-area-inset-top))+80px)] max-lg:bottom-[max(10px,env(safe-area-inset-bottom))] max-lg:inset-x-2.5 max-lg:z-[1210] max-lg:w-auto max-lg:max-h-none max-lg:p-4 max-lg:pt-3 max-lg:pb-5 max-lg:rounded-3xl max-lg:shadow-[0_16px_48px_rgba(12,26,43,0.18)] max-lg:overscroll-contain",
             )}
           >
             {/* Mobile close button */}
@@ -377,14 +382,7 @@ export function SchoolSearchBox({
                 setTrendingVisible(false);
               }}
             >
-              <svg
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
-                className="w-3.5 h-3.5 stroke-slate-900 stroke-[2.2] stroke-linecap-round fill-none"
-              >
-                <path d="m6 6 12 12M18 6 6 18" />
-              </svg>
+              <X className="size-3.5 text-slate-900" strokeWidth={2.2} aria-hidden="true" />
             </button>
 
             {!hasSearched && isLoading ? (
@@ -432,8 +430,6 @@ export function SchoolSearchBox({
                                   className="shrink-0 w-9 h-9 rounded-lg object-contain bg-pex-bg mt-0.5"
                                   width={36}
                                   height={36}
-                                  placeholder="blur"
-                                  blurDataURL={IMAGE_BLUR_DATA_URL}
                                 />
                               ) : (
                                 <SchoolLogoPlaceholder
@@ -526,7 +522,7 @@ export function SchoolSearchBox({
                                 </span>
                                 {school.isPartner && (
                                   <span className="bg-[#e0f5f2] text-[#0d9488] border border-teal-500/35 py-1 px-2.5 rounded-full text-xs font-extrabold">
-                                    ★ Official Partner ★
+                                    Official Partner
                                   </span>
                                 )}
                               </div>
@@ -618,7 +614,7 @@ export function SchoolSearchBox({
         )}
       />
 
-      {/* "Browse all schools" link — schools page only */}
+{/* Section */}
       {showBrowseLink && (
         <a
           href="#browse-schools-heading"
@@ -628,18 +624,7 @@ export function SchoolSearchBox({
             Can&rsquo;t remember the exact name?
           </span>
           Browse all schools
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            className="w-4 h-4 text-pex-keppel group-hover:translate-y-0.5 transition-transform duration-150"
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
+          <ChevronDown className="size-4 text-pex-keppel transition-transform duration-150 group-hover:translate-y-0.5" aria-hidden="true" />
         </a>
       )}
     </div>

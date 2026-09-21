@@ -1,10 +1,11 @@
 import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cva } from "class-variance-authority";
+import { ArrowLeft, ArrowRight, CircleX, Menu, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-medium font-sans leading-none text-center rounded-xl border border-transparent max-w-full origin-center select-none transition-all duration-150 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none aria-disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:transform-none aria-disabled:shadow-none",
+  "group inline-flex items-center justify-center gap-2 font-medium font-sans leading-none text-center rounded-xl border border-transparent max-w-full origin-center select-none transition-all duration-150 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none aria-disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:transform-none aria-disabled:shadow-none",
   {
     variants: {
       variant: {
@@ -13,7 +14,7 @@ export const buttonVariants = cva(
         secondary:
           "bg-white border-pex-navy/20 !text-pex-navy shadow-[inset_0_0_0_1px_rgba(26,42,64,0.02)] hover:bg-pex-bg-soft hover:border-pex-coral hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
         tertiary:
-          "bg-transparent text-pex-muted underline underline-offset-4 decoration-[1.5px] hover:text-pex-navy hover:transform-none hover:shadow-none",
+          "bg-transparent text-pex-muted no-underline hover:text-pex-navy hover:transform-none hover:shadow-none",
         navy:
           "bg-pex-navy !text-white shadow-[0_10px_20px_rgba(26,42,64,0.12)] hover:bg-[#152238] hover:brightness-110 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_rgba(26,42,64,0.16)] active:brightness-100 active:translate-y-0 active:scale-[0.99]",
         keppel:
@@ -81,18 +82,15 @@ export function Button({
     />
   ) : (
     <>
-      {iconDirection === "left" ? (
-        <span
-          className="inline-block w-[0.8em] h-[0.8em] rounded-full bg-current shrink-0"
-          aria-hidden="true"
-        />
-      ) : null}
+      {iconDirection === "left" ? <ArrowLeft className="size-4 shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5" aria-hidden="true" /> : null}
       <span className="min-w-0 break-words text-center">{children}</span>
       {iconDirection && iconDirection !== "left" && iconDirection !== "none" ? (
-        <span
-          className="inline-block w-[0.8em] h-[0.8em] rounded-full bg-current shrink-0 transition-transform duration-200 group-hover:scale-110"
-          aria-hidden="true"
-        />
+        <span className="inline-flex shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
+          {iconDirection === "right" ? <ArrowRight className="size-4" /> : null}
+          {iconDirection === "search" ? <Search className="size-4" /> : null}
+          {iconDirection === "menu" ? <Menu className="size-4" /> : null}
+          {iconDirection === "close" ? <CircleX className="size-4" /> : null}
+        </span>
       ) : null}
     </>
   );

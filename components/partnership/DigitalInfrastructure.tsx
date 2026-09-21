@@ -32,9 +32,9 @@ export function DigitalInfrastructure() {
   );
 
   return (
-    <section className="py-[clamp(54px,7vw,96px)] relative" aria-labelledby="digital-infra-heading">
-      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
-        <div className="bg-[var(--pex-navy,#1a2a40)] rounded-[24px] p-[clamp(32px,6vw,64px)] text-white relative overflow-hidden">
+    <section className="py-12 sm:py-20" aria-labelledby="digital-infra-heading">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-pex-navy rounded-2xl p-[clamp(32px,6vw,64px)] text-white relative overflow-hidden">
           <div className="grid grid-cols-1 min-[981px]:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)] gap-[clamp(32px,5vw,60px)] items-center">
             <div>
               <p className="mb-[14px] text-[#5eead4] text-sm font-extrabold tracking-normal text-left">Digital infrastructure suite</p>

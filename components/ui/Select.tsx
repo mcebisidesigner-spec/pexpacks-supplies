@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, ChevronDown } from "lucide-react";
 import type { SelectHTMLAttributes } from "react";
 import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -164,7 +165,7 @@ export default function Select({
           id={selectId}
           type="button"
           className={cn(
-            "w-full min-h-[50px] sm:min-h-[54px] rounded-field border border-pex-border px-4 pr-11 bg-white text-pex-navy font-sans text-sm sm:text-[15px] flex items-center justify-between text-left cursor-pointer transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
+            "w-full h-11 min-h-11 rounded-xl border border-pex-border px-4 pr-11 bg-white text-pex-navy font-sans text-sm sm:text-[15px] flex items-center justify-between text-left cursor-pointer transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
             open &&
               "border-pex-keppel ring-4 ring-pex-keppel/15",
             !hasSelection && "text-pex-muted/50",
@@ -212,14 +213,7 @@ export default function Select({
           )}
           aria-hidden="true"
         >
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          <ChevronDown className="size-full" strokeWidth={2} aria-hidden="true" />
         </span>
 
         {open ? (

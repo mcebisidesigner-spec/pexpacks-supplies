@@ -183,9 +183,10 @@ export default async function HomePage() {
                 alt={`${brand} logo`}
                 width={80}
                 height={40}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
-                style={{ objectFit: "contain", display: "block" }}
+                className="w-20 h-10 aspect-[2/1] object-contain block"
+                style={{ width: "80px", height: "40px", aspectRatio: "2 / 1", objectFit: "contain", display: "block" }}
               />
             </span>
           ))}
@@ -212,11 +213,12 @@ export default async function HomePage() {
               <Image
                 src="/images/pex-stationery-box-v2.webp"
                 alt="Learners holding Pexpacks Stationery Box"
-                fill
+                width={700}
+                height={560}
                 placeholder="blur"
                 blurDataURL={IMAGE_BLUR_DATA_URL}
                 sizes="(min-width: 1280px) 700px, (min-width: 820px) 55vw, 100vw"
-                className="object-cover object-[center_top] lg:object-center"
+                className="w-full h-full object-cover object-[center_top] lg:object-center"
               />
               <div
                 className="absolute left-6 bottom-3.5 lg:left-[clamp(18px,3vw,34px)] lg:bottom-[clamp(18px,3vw,34px)] z-1 w-[78px] h-[78px] lg:w-[138px] lg:h-[138px] rounded-full border border-white/60 bg-white/90 text-pex-navy grid place-items-center content-center text-center shadow-[0_10px_24px_rgba(26,42,64,0.16)] lg:shadow-[0_16px_36px_rgba(26,42,64,0.18)] backdrop-blur-[10px]"

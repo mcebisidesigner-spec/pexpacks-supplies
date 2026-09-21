@@ -54,29 +54,29 @@ const ADVANTAGES = [
 
 export function PartnershipBenefits() {
   return (
-    <section className="py-[clamp(54px,7vw,96px)] relative bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-[var(--pex-border,#e1e7ea)]" aria-labelledby="advantages-title">
-      <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6">
-        <div className="max-w-[760px] mb-[34px] text-left flex flex-col items-start">
-          <p className="mb-[14px] text-[var(--pex-keppel,#1a7a77)] text-sm font-extrabold text-left">The institutional proposition</p>
-          <h2 id="advantages-title" className="mb-[14px] text-[var(--pex-navy,#1a2a40)] font-heading text-[clamp(32px,4.6vw,56px)] font-extrabold leading-[1.05] tracking-[-0.01em] text-left">
+    <section className="py-12 sm:py-20 bg-slate-50/50 border-y border-slate-200/80" aria-labelledby="advantages-title">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mb-8 text-left flex flex-col items-start">
+          <p className="mb-3 text-pex-keppel text-sm font-extrabold text-left">The institutional proposition</p>
+          <h2 id="advantages-title" className="mb-3 text-pex-navy font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-left">
             One Partnership. Four Institutional Advantages.
           </h2>
-          <p className="max-w-[760px] mb-[34px] text-[var(--pex-text-muted,#64748b)] text-lg leading-[1.45] text-left">
+          <p className="max-w-3xl mb-8 text-slate-600 text-base sm:text-lg leading-relaxed text-left">
             A comprehensive operational and financial model engineered specifically
             for leading South African educational institutions.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-md:gap-[18px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {ADVANTAGES.map((adv) => (
-            <div key={adv.number} className="bg-white border border-[#e1e7ea] rounded-[24px] p-[clamp(24px,4vw,36px)] shadow-[0_12px_32px_rgba(26,42,64,0.05)] transition-all duration-180 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(26,42,64,0.08)] flex flex-col">
-              <div className="text-[13px] font-extrabold text-[var(--pex-keppel,#1a7a77)] tracking-[0.05em] mb-3 uppercase">ADVANTAGE {adv.number}</div>
-              <h3 className="text-[clamp(19px,2.2vw,23px)] font-extrabold text-[var(--pex-navy,#1a2a40)] m-0 mb-3 leading-[1.25]">{adv.title}</h3>
-              <p className="text-[var(--pex-muted,#4d5a5d)] text-[15px] leading-[1.6] m-0 mb-5 grow">{adv.description}</p>
-              <ul className="list-none p-0 m-0 flex flex-col gap-[9px] border-t border-[var(--pex-border,#e1e7ea)] pt-[18px]" aria-label={`${adv.title} key highlights`}>
+            <div key={adv.number} className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md flex flex-col">
+              <div className="text-xs font-extrabold text-pex-keppel tracking-wider mb-3 uppercase">ADVANTAGE {adv.number}</div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-pex-navy m-0 mb-3 leading-tight">{adv.title}</h3>
+              <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed m-0 mb-5 grow">{adv.description}</p>
+              <ul className="list-none p-0 m-0 flex flex-col gap-2 border-t border-slate-200 pt-4" aria-label={`${adv.title} key highlights`}>
                 {adv.points.map((point) => (
-                  <li key={point} className="flex items-center gap-2 text-[13.5px] font-semibold text-[var(--pex-navy,#1a2a40)]">
-                    <Check size={16} className="text-[var(--pex-keppel,#1a7a77)] shrink-0" />
+                  <li key={point} className="flex items-center gap-2 text-sm font-semibold text-pex-navy">
+                    <Check size={16} className="text-pex-keppel shrink-0" />
                     <span>{point}</span>
                   </li>
                 ))}
