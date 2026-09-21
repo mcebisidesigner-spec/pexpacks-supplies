@@ -101,12 +101,12 @@ export function Header({ announcement }: HeaderProps = {}) {
           />
           {!isAdmin && (
             <Link
-              className="min-h-[52px] min-w-[205px] pl-5 pr-2 rounded-full inline-flex items-center justify-center gap-2.5 bg-pex-navy text-white font-sans text-base font-bold leading-none shadow-[0_10px_20px_rgba(26,42,64,0.12)] transition-all duration-200 hover:brightness-110 hover:shadow-[0_12px_24px_rgba(26,42,64,0.18)] hover:-translate-y-0.5 active:translate-y-0 active:brightness-100 group"
+              className="min-h-[40px] h-[40px] pl-4 pr-1.5 rounded-full inline-flex items-center justify-center gap-2 bg-pex-navy text-white font-sans text-sm font-bold leading-none shadow-[0_4px_14px_rgba(26,42,64,0.10)] transition-all duration-200 hover:brightness-110 hover:shadow-[0_6px_18px_rgba(26,42,64,0.15)] hover:-translate-y-0.5 active:translate-y-0 active:brightness-100 group"
               href="/track-order"
               data-conversion-event="header_track_pack"
             >
-              <span className="text-white">Track Your Pack</span>
-              <span className="w-9 h-9 rounded-full bg-pex-coral text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-4 [&_svg]:h-4 [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.8]" aria-hidden="true">
+              <span className="text-white whitespace-nowrap">Track Your Pack</span>
+              <span className="w-7 h-7 rounded-full bg-pex-coral text-white inline-grid place-items-center shrink-0 transition-transform duration-200 group-hover:scale-105 [&_svg]:w-3.5 [&_svg]:h-3.5 [&_svg]:fill-none [&_svg]:stroke-current [&_svg]:stroke-[1.9]" aria-hidden="true">
                 <TrackPackIcon />
               </span>
             </Link>

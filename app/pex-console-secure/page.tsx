@@ -274,7 +274,13 @@ export default function PexConsoleGateway() {
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-2">
           <div className="flex items-center justify-center mb-1">
-            <Logo variant="white" />
+            <Logo
+              variant="white"
+              width={124}
+              height={49}
+              className="w-[124px] h-auto block"
+              loading="eager"
+            />
           </div>
 
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--db-brand-subtle)] border border-[rgba(16,185,129,0.3)] rounded-full text-[var(--db-brand)] text-[0.6875rem] font-bold tracking-[0.05em] uppercase">
