@@ -4,6 +4,7 @@ import { ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
 import { SearchHelperPill } from "@/components/ui/SearchHelperPill";
@@ -97,6 +98,7 @@ export function SchoolSearchBox({
   readQueryFromUrl = false,
   className,
 }: SchoolSearchBoxProps) {
+  const [mounted, setMounted] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [trendingSchools, setTrendingSchools] = useState<
@@ -105,6 +107,10 @@ export function SchoolSearchBox({
   const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
   const urlQueryApplied = useRef(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     query,
@@ -230,21 +236,22 @@ export function SchoolSearchBox({
       className={cn(
         "relative z-0 w-full max-w-[760px] mt-6 md:mt-[26px] flex flex-col min-w-0",
         source === "schools" && "max-w-[1120px] mt-6",
-        searchActive && "z-[1200]",
+        searchActive && "relative z-[1200]",
         className,
       )}
     >
-      {/* Mobile overlay */}
-      {searchActive && (
+      {/* Full-screen backdrop overlay for homepage and schools directory */}
+      {mounted && searchActive && source !== "tray" && createPortal(
         <div
-          className="fixed inset-0 z-[1100] bg-slate-900/35 backdrop-blur-sm transition-opacity duration-300 hidden max-lg:block"
+          className="fixed inset-0 z-[1100] bg-slate-950/65 backdrop-blur-[3px] transition-opacity duration-300 animate-in fade-in cursor-pointer"
           onClick={() => {
             setPanelOpen(false);
             setIsInputFocused(false);
             setTrendingVisible(false);
           }}
           aria-hidden="true"
-        />
+        />,
+        document.body,
       )}
 
       {/* Search card */}
@@ -366,7 +373,7 @@ export function SchoolSearchBox({
             aria-live="polite"
             data-school-results-scroll
             className={cn(
-              "absolute z-[1210] inset-x-0 top-[calc(100%+10px)] md:top-[calc(100%+12px)] w-full max-h-[min(70dvh,520px)] overflow-y-auto p-3 sm:p-4 border border-pex-border/80 rounded-3xl bg-pex-bg shadow-[0_24px_58px_rgba(26,42,64,0.16)] [animation:schoolResultsIn_0.2s_ease-out_both]",
+              "absolute z-[1210] inset-x-0 top-[calc(100%+10px)] md:top-[calc(100%+12px)] w-full max-h-[min(70dvh,520px)] overflow-y-auto p-3 sm:p-4 border border-pex-border/80 rounded-3xl bg-white md:bg-[linear-gradient(180deg,#ffffff,#f9fcfc)] shadow-[0_24px_58px_rgba(26,42,64,0.18)] [animation:schoolResultsIn_0.2s_ease-out_both] [scrollbar-color:var(--pex-keppel)_#f1f5f9] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-pex-keppel [&::-webkit-scrollbar-thumb]:rounded-full",
               searchActive &&
                 "max-lg:fixed max-lg:top-[calc(max(4px,env(safe-area-inset-top))+80px)] max-lg:bottom-[max(10px,env(safe-area-inset-bottom))] max-lg:inset-x-2.5 max-lg:z-[1210] max-lg:w-auto max-lg:max-h-none max-lg:p-4 max-lg:pt-3 max-lg:pb-5 max-lg:rounded-3xl max-lg:shadow-[0_16px_48px_rgba(12,26,43,0.18)] max-lg:overscroll-contain",
             )}
@@ -419,7 +426,7 @@ export function SchoolSearchBox({
                       {results.map((school, index) => (
                         <article
                           key={school.id}
-                          className="p-3.5 sm:p-4 md:px-4.5 rounded-2xl bg-[#f5f9fb] border border-slate-200/60 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto] items-stretch md:items-center gap-3 md:gap-4 hover:border-pex-keppel transition-colors"
+                          className="p-3.5 sm:p-4 md:px-4.5 rounded-2xl bg-white border-2 border-slate-200/80 shadow-[0_2px_8px_rgba(26,42,64,0.04)] grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto] items-stretch md:items-center gap-3 md:gap-4 hover:border-pex-keppel transition-all"
                         >
                           <div className="min-w-0 grid gap-2.5 md:gap-2">
                             <div className="flex items-start gap-3">
@@ -517,12 +524,12 @@ export function SchoolSearchBox({
                                 </div>
                               </div>
                               <div className="flex flex-wrap items-center gap-1.5">
-                                <span className="bg-[#faeedd] text-[#0f766e] border border-[#f0dfc6] py-1 px-3 rounded-full text-xs font-extrabold">
+                                <span className="bg-[#faeedd] text-[#0f766e] border border-[#f0dfc6] py-1 px-3 rounded-full text-xs font-extrabold whitespace-nowrap">
                                   {school.customBadge || DEFAULT_PACKS_BADGE}
                                 </span>
                                 {school.isPartner && (
-                                  <span className="bg-[#e0f5f2] text-[#0d9488] border border-teal-500/35 py-1 px-2.5 rounded-full text-xs font-extrabold">
-                                    Official Partner
+                                  <span className="bg-[#e0f5f2] text-[#0d9488] border border-teal-500/35 py-1 px-2.5 rounded-full text-xs font-extrabold inline-flex items-center gap-1 whitespace-nowrap">
+                                    ★ Official Partner ★
                                   </span>
                                 )}
                               </div>
@@ -531,7 +538,7 @@ export function SchoolSearchBox({
 
                           <Link
                             href={`/schools/${school.slug}`}
-                            className="w-full md:w-auto min-h-[44px] md:min-h-[48px] px-5 rounded-full bg-pex-navy hover:bg-pex-navy/90 !text-white font-heading text-sm md:text-[15px] font-extrabold no-underline inline-flex items-center justify-center whitespace-nowrap transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full md:w-auto min-h-[44px] md:min-h-[48px] px-5 rounded-full bg-pex-navy hover:bg-pex-navy/90 !text-white font-heading text-sm md:text-[15px] font-extrabold no-underline inline-flex items-center justify-center whitespace-nowrap transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                             aria-label={`View ${school.name} packs in ${formatSchoolSearchLocation(school)}`}
                             data-conversion-event={`${source}_school_result`}
                             onClick={() =>

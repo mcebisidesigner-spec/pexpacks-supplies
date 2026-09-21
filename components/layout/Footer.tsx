@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Camera, ChevronDown, Globe2, MessageCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import {
   hasWhatsAppNumber,
@@ -93,13 +93,32 @@ function formatPhoneNumber(value: string) {
 }
 
 function SocialIcon({ icon }: { icon: (typeof socialLinks)[number]["icon"] }) {
-  const iconClassName = "size-4 sm:size-[18px]";
+  const className = "size-4 sm:size-[18px]";
 
-  if (icon === "instagram") return <Camera className={iconClassName} strokeWidth={2} aria-hidden="true" />;
-  if (icon === "whatsapp") return <MessageCircle className={iconClassName} strokeWidth={2} aria-hidden="true" />;
-  return <Globe2 className={iconClassName} strokeWidth={2} aria-hidden="true" />;
+  if (icon === "facebook") {
+    return (
+      <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M24 12.073C24 5.446 18.627.073 12 .073S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235V7.95h-1.515c-1.492 0-1.956.926-1.956 1.875v2.252h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073Z" />
+      </svg>
+    );
+  }
+
+  if (icon === "instagram") {
+    return (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4.25" />
+        <circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.52 3.48A11.86 11.86 0 0 0 12.08 0C5.52 0 .19 5.34.19 11.9c0 2.1.55 4.14 1.59 5.94L.06 24l6.31-1.65a11.9 11.9 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.9 0-3.18-1.24-6.17-3.43-8.42ZM12.06 21.8h-.01a9.88 9.88 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88a9.82 9.82 0 0 1 6.99 2.9 9.85 9.85 0 0 1 2.89 7c0 5.44-4.44 9.87-9.88 9.87Zm5.42-7.39c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35Z" />
+    </svg>
+  );
 }
-
 export function Footer({ company }: FooterContent) {
   const currentYear = new Date().getFullYear();
   const siteName = company?.site_name || "Pexpacks";

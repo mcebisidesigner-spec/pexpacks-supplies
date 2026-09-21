@@ -77,7 +77,7 @@ export function Header({ announcement }: HeaderProps = {}) {
         )}
       >
         <div className="inline-flex items-center gap-2 sm:gap-3 lg:gap-3.5 justify-self-start min-w-0 shrink-0">
-          <Link className="inline-flex items-center w-fit [&_img]:w-[92px] sm:[&_img]:w-[clamp(92px,24vw,106px)] lg:[&_img]:w-[132px] [&_img]:h-auto [&_img]:block" href="/" aria-label="Pexpacks home" data-mobile-menu-close>
+          <Link className="inline-flex items-center w-fit [&_img]:w-[92px] sm:[&_img]:w-[clamp(92px,24vw,106px)] lg:[&_img]:w-[116px] [&_img]:h-auto [&_img]:block" href="/" aria-label="Pexpacks home" data-mobile-menu-close>
             <Logo loading="eager" />
           </Link>
           {isAdmin && (

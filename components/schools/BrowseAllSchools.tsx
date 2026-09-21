@@ -203,10 +203,11 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
       >
         <button
           type="button"
+          aria-label="Show all schools"
           className={
             activeLetter === null
-              ? "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-navy bg-pex-navy text-white text-sm font-extrabold shadow-sm cursor-pointer transition-all duration-150"
-              : "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-border bg-pex-bg text-pex-navy text-sm font-extrabold cursor-pointer hover:border-pex-keppel hover:text-pex-keppel disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
+              ? "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-navy bg-pex-navy !text-white text-center text-sm font-extrabold inline-flex items-center justify-center shadow-sm cursor-pointer transition-all duration-150"
+              : "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-border bg-pex-bg !text-pex-navy text-center text-sm font-extrabold inline-flex items-center justify-center cursor-pointer hover:border-pex-keppel hover:!text-pex-keppel disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
           }
           onClick={() => {
             setActiveLetter(null);
@@ -226,8 +227,8 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
               aria-label={`Schools starting with ${letter}`}
               className={
                 activeLetter === letter
-                  ? "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-navy bg-pex-navy text-white text-sm font-extrabold shadow-sm cursor-pointer transition-all duration-150"
-                  : "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-border bg-pex-bg text-pex-navy text-sm font-extrabold cursor-pointer hover:border-pex-keppel hover:text-pex-keppel disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
+                  ? "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-navy bg-pex-navy !text-white text-center text-sm font-extrabold inline-flex items-center justify-center shadow-sm cursor-pointer transition-all duration-150"
+                  : "min-w-[44px] h-[44px] px-3 rounded-full border border-pex-border bg-pex-bg !text-pex-navy text-center text-sm font-extrabold inline-flex items-center justify-center cursor-pointer hover:border-pex-keppel hover:!text-pex-keppel disabled:opacity-35 disabled:cursor-not-allowed transition-all duration-150"
               }
               onClick={() => handleLetter(letter)}
             >

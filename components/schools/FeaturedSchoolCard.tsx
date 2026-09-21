@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { ArrowUpRight } from "lucide-react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -90,7 +91,7 @@ export function FeaturedSchoolCard({
       <span className="bg-amber-50 text-amber-900 border border-amber-200/80 py-1 px-3.5 rounded-full text-[12.5px] font-extrabold leading-[1.2] inline-flex items-center w-fit my-0.5 mb-1 tracking-[0.01em]">
         {schoolBadge(school) || DEFAULT_PACKS_BADGE}
       </span>
-      <span className="w-fit min-h-[44px] mt-2.5 py-2 pr-2 pl-5 rounded-full bg-pex-coral !text-white inline-flex items-center justify-center gap-2.5 font-sans text-[15px] font-extrabold leading-none shadow-[0_10px_20px_rgba(255,111,89,0.18)] transition-all duration-300 group-hover/school:bg-pex-coral-hover group-hover/school:-translate-y-0.5 after:content-[''] after:w-7 after:h-7 after:rounded-full after:bg-white after:bg-[url('data:image/svg+xml,%3Csvg_viewBox=%270_0_24_24%27_xmlns=%27http://www.w3.org/2000/svg%27_fill=%27none%27_stroke=%27%23ff6f59%27_stroke-width=%272%27_stroke-linecap=%27round%27_stroke-linejoin=%27round%27%3E%3Cpath_d=%27M7_17_17_7M9_7h8v8%27/%3E%3C/svg%3E')] after:bg-center after:bg-no-repeat after:bg-[length:14px_14px] after:shrink-0 after:transition-transform after:duration-300 group-hover/school:after:scale-105">View packs</span>
+      <span className="w-fit min-h-[44px] mt-2.5 py-2 pr-2 pl-5 rounded-full bg-pex-coral !text-white inline-flex items-center justify-center gap-2.5 font-sans text-[15px] font-extrabold leading-none shadow-[0_10px_20px_rgba(255,111,89,0.18)] transition-all duration-300 group-hover/school:bg-pex-coral-hover group-hover/school:-translate-y-0.5">View packs<span className="w-7 h-7 rounded-full bg-white text-pex-coral inline-flex items-center justify-center shrink-0 transition-transform duration-300 group-hover/school:scale-105" aria-hidden="true"><ArrowUpRight className="size-4" strokeWidth={2.4} /></span></span>
     </Link>
   );
 }

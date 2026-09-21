@@ -45,17 +45,17 @@ export default async function HomePage() {
     <>
       <section
         id="home-hero"
-        className="relative overflow-hidden bg-pex-navy bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(33,158,154,0.32),transparent_72%),radial-gradient(circle_at_90%_25%,rgba(255,111,89,0.14),transparent_48%),radial-gradient(circle_at_10%_80%,rgba(33,158,154,0.16),transparent_45%)] pt-[clamp(40px,6vw,60px)] pb-[clamp(48px,8vw,80px)] md:pt-[clamp(56px,8vw,104px)] md:pb-[clamp(64px,8vw,116px)]"
+        className="relative overflow-visible bg-pex-navy bg-[radial-gradient(ellipse_80%_60%_at_50%_-15%,rgba(33,158,154,0.32),transparent_72%),radial-gradient(circle_at_90%_25%,rgba(255,111,89,0.14),transparent_48%),radial-gradient(circle_at_10%_80%,rgba(33,158,154,0.16),transparent_45%)] pt-[clamp(40px,6vw,60px)] pb-[clamp(48px,8vw,80px)] md:pt-[clamp(56px,8vw,104px)] md:pb-[clamp(64px,8vw,116px)]"
       >
-        {/* Subtle decorative glow orb */}
-        <div
-          className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-pex-keppel/10 blur-3xl"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute top-1/2 -right-32 w-[420px] h-[420px] rounded-full bg-pex-coral/10 blur-3xl"
-          aria-hidden="true"
-        />
+        {/* Subtle decorative glow orb container - contained to prevent horizontal scrollbar */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div
+            className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-pex-keppel/10 blur-3xl"
+          />
+          <div
+            className="absolute top-1/2 -right-32 w-[420px] h-[420px] rounded-full bg-pex-coral/10 blur-3xl"
+          />
+        </div>
 
         <div className="relative w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] items-center gap-[clamp(40px,6vw,76px)]">
           <div className="min-w-0">
