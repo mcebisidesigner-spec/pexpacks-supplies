@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
-import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import { trackSchoolCardClicked, trackSchoolImpression } from "@/lib/analytics";
@@ -67,8 +66,6 @@ export function FeaturedSchoolCard({
             className="w-[54px] h-[54px] rounded-[18px] object-contain bg-white"
             width={54}
             height={54}
-            placeholder="blur"
-            blurDataURL={IMAGE_BLUR_DATA_URL}
           />
         ) : (
           <SchoolLogoPlaceholder

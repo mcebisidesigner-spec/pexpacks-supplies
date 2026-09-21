@@ -107,8 +107,8 @@ export function MobileMenu({ open, onClose, pathname }: MobileMenuProps) {
                 key={link.href}
                 onClick={onClose}
                 className={cn(
-                  "group w-full !text-pex-navy py-3 sm:py-3.5 px-4 rounded-xl font-sans text-base sm:text-lg font-medium leading-none min-h-[48px] sm:min-h-[52px] flex items-center bg-[#fbfdfd] border border-pex-border transition-all hover:!text-pex-keppel hover:border-pex-keppel hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
-                  active && "!bg-white !text-pex-keppel !border-pex-keppel font-medium shadow-sm hover:!text-pex-keppel hover:!border-pex-keppel"
+                  "group w-full !text-pex-navy py-3 sm:py-3.5 px-4 rounded-xl font-sans text-base sm:text-lg font-extrabold leading-none min-h-[48px] sm:min-h-[52px] flex items-center bg-[#fbfdfd] border border-pex-border transition-all hover:!text-pex-keppel hover:border-pex-keppel hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]",
+                  active && "!bg-white !text-pex-keppel !border-pex-keppel font-extrabold shadow-sm hover:!text-pex-keppel hover:!border-pex-keppel"
                 )}
                 aria-current={active ? "page" : undefined}
                 data-conversion-event={`mobile_nav_${link.label.toLowerCase().replaceAll(" ", "_")}`}
