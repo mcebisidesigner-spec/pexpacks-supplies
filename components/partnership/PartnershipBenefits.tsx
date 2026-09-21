@@ -4,50 +4,50 @@ import { Check } from "lucide-react";
 const ADVANTAGES = [
   {
     number: "01",
-    title: "Exact School-List Procurement",
+    title: "Teacher-verified stationery packs",
     description:
-      "Every grade stationery list is meticulously audited and digitised into an approved scholastic pack, guaranteeing full curriculum alignment and uniform classroom readiness.",
+      "Pexpacks helps turn the official school list into a clear stationery pack that parents can review and order.",
     points: [
-      "Official teacher-approved grade specifications",
-      "Department of Basic Education compliance checks",
-      "Strict premium brand vetting with zero unapproved substitutions",
-      "Parent convenience with exact curriculum parity",
+      "Official school-list requirements",
+      "Clear grade-by-grade pack information",
+      "Personal help when an item needs a closer look",
+      "Parents can order without working through a long list alone",
     ],
   },
   {
     number: "02",
-    title: "Managed Parent Fulfilment",
+    title: "Less stationery admin for the school",
     description:
-      "Eliminate manual paper order collection, cash handling, and frantic January stationery queues with an enterprise logistics ecosystem built around your school schedule.",
+      "Parents can choose and pay online while Pexpacks helps prepare and organise the stationery packs.",
     points: [
-      "Direct-to-learner or scheduled school-drop distribution",
-      "Individually pre-labelled and sorted by grade & student",
-      "Integrated Happy Pay BNPL interest-free split payment",
+      "Home delivery or a participating school drop",
+      "Packs organised for the learner and grade",
+      "Card, Ozow Instant EFT, and Happy Pay options",
       "Optional durable Pexcover™ protective book covering",
     ],
   },
   {
     number: "03",
-    title: "12-Month Digital Infrastructure Package",
+    title: "A simpler school ordering experience",
     description:
-      "Qualifying partner institutions receive an integrated digital presence featuring high-performance hosting, mobile optimization, and dedicated parent communication channels.",
+      "Partner schools can give parents a clear online place to find the right pack and understand what happens next.",
     points: [
-      "School-branded modern digital storefront",
-      "Secure SSL infrastructure & reliable uptime",
-      "Seamless integration with Pexpacks ordering systems",
-      "Zero monthly maintenance or server administration fees",
+      "A school-branded ordering page",
+      "Secure online ordering",
+      "A direct path into Pexpacks ordering",
+      "Less manual stationery administration for the school",
     ],
   },
   {
     number: "04",
-    title: "Institutional Development Rebate",
+    title: "A rebate that supports the school",
     description:
-      "Turn routine annual stationery purchasing into an ongoing financial asset that reinvests directly into your school development fund, bursaries, or sports facilities.",
+      "Qualifying school partnerships can return a rebate to support school priorities, with the details agreed in the partnership terms.",
     points: [
-      "Up to 3.0% rebate returned on qualifying completed sales",
-      "Deterministic adoption thresholds with transparent accounting",
-      "Annual settlement report provided directly to the Bursar / SGB",
-      "Zero financial risk, inventory liability, or upfront capital",
+      "A clear rebate structure for qualifying completed sales",
+      "Transparent reporting for the agreed arrangement",
+      "A statement can be provided for the school records",
+      "No need for the school to hold stationery stock",
     ],
   },
 ];

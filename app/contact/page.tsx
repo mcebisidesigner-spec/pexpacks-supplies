@@ -74,16 +74,16 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
       <PageHero
         eyebrow="We're here"
         title="Talk to Pexpacks"
-        text="Have a question about your order, school pack, or partnership enquiry? Our dedicated Gauteng support team is here to help you get quick answers."
-        panelText="Service area"
-        panelTitle="We currently service Gauteng"
+        text="Have a question about your order, school pack, or partnership enquiry? Send the details and I will help you work through the next step."
+        panelText="Personal help when you need it"
+        panelTitle="A clearer way to get help"
       >
         <div className="flex flex-col sm:flex-row gap-3 mt-5 items-stretch sm:items-center">
           <Button href="#contact-form" variant="primary" className="min-h-[44px]">
             Send a Message
           </Button>
           <Button href="/faq" variant="white" className="min-h-[44px]">
-            Contact FAQs
+            Browse FAQs
           </Button>
         </div>
       </PageHero>
@@ -101,10 +101,10 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 </div>
                 <div className="flex flex-col">
                   <h2 className="text-sm font-extrabold text-[#1a2a40] m-0">
-                    Gauteng Support Desk Active
+                    Pexpacks support is here
                   </h2>
                   <span className="text-xs text-slate-600 mt-0.5">
-                    Live chat active • WhatsApp response time &lt; 5 mins
+                    Send a message or chat on WhatsApp when you need a hand.
                   </span>
                 </div>
               </div>
@@ -112,17 +112,17 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               {/* SERVICE LEVEL AGREEMENTS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="rounded-2xl border border-slate-200/80 bg-white p-4 flex flex-col gap-1.5 shadow-xs">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">School Partners</span>
-                  <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">&lt; 2 Hours</h3>
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">School orders</span>
+                  <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">Send the details</h3>
                   <span className="text-[12.5px] text-slate-600 leading-snug">
-                    Dedicated School Relations Lead callback.
+                    I will review your enquiry and help with the next step.
                   </span>
                 </div>
                 <div className="rounded-2xl border border-slate-200/80 bg-white p-4 flex flex-col gap-1.5 shadow-xs">
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">Bulk / Quotes</span>
-                  <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">&lt; 4 Hours</h3>
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-700">Lists and quotes</span>
+                  <h3 className="text-lg font-extrabold text-[#1a2a40] m-0">Personal review</h3>
                   <span className="text-[12.5px] text-slate-600 leading-snug">
-                    Custom line-item quotation prepared.
+                    I will help clarify the items or information you need.
                   </span>
                 </div>
               </div>
@@ -130,15 +130,15 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
               {/* "WHAT HAPPENS NEXT?" TIMELINE */}
               <div className="rounded-[24px] border border-slate-200 bg-white p-6 sm:px-7 shadow-xs">
                 <h2 className="text-base font-extrabold text-[#1a2a40] mb-5">
-                  Your Response Timeline
+                  What happens next
                 </h2>
                 <div className="relative flex flex-col gap-5 pl-2 before:absolute before:left-[17px] before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
                   <div className="relative flex gap-4 items-start">
                     <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">1</span>
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">Submit Request</h3>
+                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">Send your message</h3>
                       <p className="text-xs text-slate-600 leading-relaxed m-0">
-                        Submit your contact form with your exact needs.
+                        Tell me what you need help with.
                       </p>
                     </div>
                   </div>
@@ -146,21 +146,19 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                     <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">2</span>
                     <div className="flex flex-col gap-1">
                       <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">
-                        Gauteng Fast-Track Router
+                        I review the details
                       </h3>
                       <p className="text-xs text-slate-600 leading-relaxed m-0">
-                        Your request is automatically fast-tracked to the
-                        correct department.
+                        I will read the details and point you to the right option.
                       </p>
                     </div>
                   </div>
                   <div className="relative flex gap-4 items-start">
                     <span className="w-5 h-5 rounded-full border-2 border-teal-600 bg-teal-600 text-white grid place-items-center z-10 shrink-0 mt-0.5 text-[11px] font-extrabold">3</span>
                     <div className="flex flex-col gap-1">
-                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">Direct Outreach</h3>
+                      <h3 className="text-[14.5px] font-bold text-[#1a2a40] m-0">A clear next step</h3>
                       <p className="text-xs text-slate-500 leading-relaxed m-0">
-                        A support representative contacts you on WhatsApp or
-                        phone to finalize details.
+                        If more detail is needed, I will get in touch on your chosen contact method.
                       </p>
                     </div>
                   </div>
@@ -172,7 +170,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
                 <SectionHeader
                   eyebrow="Reach out direct"
                   title="Contact details"
-                  text="Reach out directly through standard support paths."
+                  text="Choose the channel that suits you, and I will help where I can."
                 />
                 <div className="flex flex-col gap-3.5 pt-2">
                   <div className="flex items-start gap-3 text-[14.5px] text-slate-700 leading-snug">

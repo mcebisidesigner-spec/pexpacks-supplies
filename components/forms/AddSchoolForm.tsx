@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useNotification } from "@/components/ui/NotificationProvider";
 import {
   splitContactInput,
   isValidEmailAddress,
@@ -46,6 +47,7 @@ export function AddSchoolForm() {
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [consent, setConsent] = useState(false);
+  const { notify } = useNotification();
   const fieldErrors = status && !status.success ? status.errors ?? {} : {};
 
   function fieldError(...keys: string[]) {
@@ -102,15 +104,25 @@ export function AddSchoolForm() {
       const result = (await res.json()) as ApiResponse;
       setStatus(result);
       if (result.success) {
+        notify({
+          tone: "success",
+          title: "School request sent",
+          message: "Thanks - I have received the school details and will review the request.",
+        });
         form.reset();
         setConsent(false);
+      } else {
+        notify({
+          tone: "error",
+          title: "School request not sent",
+          message: result.message || "Something went wrong. Please try again.",
+        });
       }
     } catch {
-      setStatus({
-        success: false,
-        message:
-          "We could not submit your request right now. Please try again or contact us directly.",
-      });
+      const message =
+        "Something went wrong while sending the school request. Please try again, or send a message if it continues.";
+      notify({ tone: "error", title: "School request not sent", message });
+      setStatus({ success: false, message });
     } finally {
       setPending(false);
     }
@@ -294,7 +306,7 @@ export function AddSchoolForm() {
 
       <div className={formWideCls}>
         <Button type="submit" disabled={pending || !consent}>
-          {pending ? "Submitting..." : "Submit School Details"}
+          {pending ? "Sending your request..." : "Send school request"}
         </Button>
       </div>
 

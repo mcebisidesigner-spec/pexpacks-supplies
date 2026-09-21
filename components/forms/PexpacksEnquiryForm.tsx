@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useNotification } from "@/components/ui/NotificationProvider";
 import Select from "@/components/ui/Select";
 import { endpointPathForFormType, type FormType } from "@/lib/forms/types";
 import {
@@ -122,6 +123,7 @@ export function PexpacksEnquiryForm({
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<ApiResponse | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { notify } = useNotification();
 
   const isContact = mode === "contact";
   const showSchoolFields =
@@ -134,7 +136,7 @@ export function PexpacksEnquiryForm({
     const validationErrors: Record<string, string> = {};
 
     if (!fd.get("consent")) {
-      validationErrors.consent = "You must consent to process this request.";
+      validationErrors.consent = "Please tick the box so I can use these details to respond.";
     }
 
     const phoneVal = ((fd.get("phone") as string) || "").trim();
@@ -193,17 +195,28 @@ export function PexpacksEnquiryForm({
       setStatus(result);
       if (!result.success) {
         setErrors(result.errors ?? {});
+        notify({
+          tone: "error",
+          title: "Enquiry not sent",
+          message:
+            result.message ||
+            "Something went wrong. Please try again or send a WhatsApp message.",
+        });
         return;
       }
+      notify({
+        tone: "success",
+        title: isContact ? "Enquiry sent" : "Partnership enquiry sent",
+        message: "Thanks - I have received your message and will help with the next step.",
+      });
       form.reset();
       setEnquiryType(contactOptions[0] as ContactOption);
       setPartnerType(partnerOptions[0]);
     } catch {
-      setStatus({
-        success: false,
-        message:
-          "We could not submit your enquiry right now. Please try again or contact us directly.",
-      });
+      const message =
+        "Something went wrong while sending your enquiry. Please try again, or send a WhatsApp message if it continues.";
+      setStatus({ success: false, message });
+      notify({ tone: "error", title: "Enquiry not sent", message });
     } finally {
       setPending(false);
     }
@@ -403,7 +416,7 @@ export function PexpacksEnquiryForm({
         </label>
 
         <Button type="submit" disabled={pending}>
-          {pending ? "Submitting..." : submitLabel}
+          {pending ? "Sending your enquiry..." : submitLabel}
         </Button>
         {status ? (
           <p

@@ -3,11 +3,12 @@ import { AiListDropzone } from "@/components/AiListDropzone";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { buildWhatsAppHref } from "@/data/contact";
+import { PEXPACKS_CONTENT } from "@/lib/content/pexpacks";
 
 export const metadata: Metadata = {
-  title: "AI School List Converter | Pexpacks Supplies",
+  title: "Upload Your School List | Pexpacks Supplies",
   description:
-    "Upload or snap a photo of your school stationery list. Our instant AI matches your items to verified school stock in seconds.",
+    PEXPACKS_CONTENT.lists.detail,
 };
 
 const WHATSAPP_URL = buildWhatsAppHref(
@@ -30,10 +31,10 @@ export default function OrderPage() {
           <div className="p-4 mb-5 max-w-[480px] rounded-field bg-pex-keppel/10 border border-pex-keppel/30">
             <p className="m-0 text-pex-navy text-sm leading-[1.5]">
               <strong className="text-pex-keppel text-[15px] font-bold">
-                Wait! Did you check if we already have your school?
+                Already have a listed school?
               </strong>
               <br />
-              We have hundreds of standard packs ready to go.{" "}
+              You may already find a school pack ready to review.{" "}
               <Link
                 href="/schools"
                 className="text-pex-keppel font-bold underline underline-offset-4 hover:text-pex-navy transition-colors"
@@ -50,10 +51,10 @@ export default function OrderPage() {
               </div>
               <div>
                 <h3 className="m-0 mb-1.5 font-heading text-xl font-bold text-pex-navy">
-                  Upload or Snap
+                  Upload your list
                 </h3>
                 <p className="m-0 text-pex-muted text-[15px] leading-[1.4]">
-                  Snap a photo of your school list or upload a PDF document.
+                  Upload a PDF or clear photo of your school list.
                 </p>
               </div>
             </div>
@@ -64,11 +65,10 @@ export default function OrderPage() {
               </div>
               <div>
                 <h3 className="m-0 mb-1.5 font-heading text-xl font-bold text-pex-navy">
-                  Instant AI Matching
+                  Review suggested items
                 </h3>
                 <p className="m-0 text-pex-muted text-[15px] leading-[1.4]">
-                  Our AI parses your photo or PDF and matches our verified stationery catalog in
-                  seconds.
+                  Pex can help identify the items, then you can review the suggestions before ordering.
                 </p>
               </div>
             </div>
@@ -79,11 +79,10 @@ export default function OrderPage() {
               </div>
               <div>
                 <h3 className="m-0 mb-1.5 font-heading text-xl font-bold text-pex-navy">
-                  Packed &amp; Delivered
+                  Review and order
                 </h3>
                 <p className="m-0 text-pex-muted text-[15px] leading-[1.4]">
-                  Review your matched cart, add optional book covering, and your pack arrives at
-                  your door.
+                  Review the suggested items, add Pexcover if you need it, and continue to checkout.
                 </p>
               </div>
             </div>

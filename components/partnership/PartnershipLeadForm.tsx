@@ -12,6 +12,7 @@ import {
 import { formatZAR } from "./rebateCalculator";
 import { isValidEmailAddress, isValidSouthAfricanPhone } from "@/lib/forms/contact";
 import { CheckCircle2, X } from "lucide-react";
+import { useNotification } from "@/components/ui/NotificationProvider";
 
 interface PartnershipLeadFormProps {
   initialPrefill?: CalculatorPrefill | null;
@@ -26,6 +27,7 @@ export function PartnershipLeadForm({
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
+  const { notify } = useNotification();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -104,16 +106,25 @@ export function PartnershipLeadForm({
 
       const result = await res.json();
       if (!res.ok || !result.success) {
-        setServerError(result.message || "We could not process your enquiry right now. Please try again.");
+        const message = result.message || "Something went wrong while sending your enquiry. Please try again.";
+        setServerError(message);
+        notify({ tone: "error", title: "Partnership enquiry not sent", message });
         if (result.errors) setErrors(result.errors);
         return;
       }
 
       setSuccess(true);
+      notify({
+        tone: "success",
+        title: "Partnership enquiry sent",
+        message: "Thanks - I have received the school details and will help with the next step.",
+      });
       form.reset();
       if (onClearPrefill) onClearPrefill();
     } catch {
-      setServerError("A network error occurred. Please check your connection or contact our team directly.");
+      const message = "Something went wrong while sending your enquiry. Please try again, or send a message if it continues.";
+      setServerError(message);
+      notify({ tone: "error", title: "Partnership enquiry not sent", message });
     } finally {
       setPending(false);
     }
@@ -130,8 +141,7 @@ export function PartnershipLeadForm({
                 Explore a Pexpacks Partnership for Your School.
               </h2>
               <p className="max-w-[760px] text-slate-600 text-lg leading-[1.45] text-left mb-0">
-                Tell us a little about your institution and an executive member of our
-                partnership team will arrange a brief, consultative discussion.
+                Tell me a little about your school and what you would like to improve. I will help you understand the partnership options.
               </p>
             </div>
 
@@ -157,11 +167,9 @@ export function PartnershipLeadForm({
             {success ? (
               <div className="bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.3)] rounded-[14px] p-6 text-pex-navy text-center flex flex-col items-center gap-3" role="status">
                 <CheckCircle2 size={48} style={{ color: "var(--pex-keppel)" }} />
-                <h3 className="text-xl font-extrabold text-pex-navy m-0">Institutional Enquiry Received</h3>
+                <h3 className="text-xl font-extrabold text-pex-navy m-0">Partnership enquiry received</h3>
                 <p style={{ margin: 0, fontSize: "15px", color: "var(--pex-muted)", maxWidth: 500, lineHeight: 1.6 }}>
-                  Thank you for reaching out. A dedicated Pexpacks institutional manager has been assigned
-                  to your school profile and will contact you via your preferred communication method to schedule
-                  the briefing.
+                  Thanks for reaching out. I will review the details and contact you through your preferred method to discuss the next step.
                 </p>
                 <div style={{ marginTop: 12 }}>
                   <Button

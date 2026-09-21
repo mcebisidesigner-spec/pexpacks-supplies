@@ -23,8 +23,8 @@ type SchoolSearchWidgetProps = {
 
 export function SchoolSearchWidget({
   compact = false,
-  titleText = "Gauteng school pack finder",
-  bodyText = "Skip the retail store hopping. Search for your school to find and order their official pre-packed grade lists.",
+  titleText = "Find your school pack",
+  bodyText = "Search for your school to find its grade packs. If it is not listed, upload the school list and I will help you work through it.",
   headingLevel = "h3",
 }: SchoolSearchWidgetProps) {
   const [query, setQuery] = useState("");
@@ -67,7 +67,7 @@ export function SchoolSearchWidget({
       } catch {
         if (!controller.signal.aborted) {
           setResults([]);
-          setError("Could not search schools.");
+          setError("I could not search schools right now. Please try again.");
         }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
@@ -116,7 +116,7 @@ export function SchoolSearchWidget({
       style={{ border: "var(--card-border, 1px solid rgba(15,37,55,0.08))" }}
     >
       <span className="font-[var(--font-button)] text-[12px] font-extrabold text-[var(--pex-keppel)] uppercase tracking-[0.05em]">
-        Skip the queue
+        Find your pack
       </span>
       {headingLevel === "h2" ? (
         <h2 className="text-[var(--pex-navy)] text-[22px] font-extrabold leading-[1.25] m-0">
@@ -170,7 +170,7 @@ export function SchoolSearchWidget({
             >
               {loading ? (
                 <p className="m-0 px-[14px] py-[var(--space-3)] text-[var(--pex-text-muted,#5a6b7a)] text-[var(--text-sm)]">
-                  Searching schools...
+                  Searching school packs...
                 </p>
               ) : null}
               {!loading && results.length > 0
@@ -192,8 +192,7 @@ export function SchoolSearchWidget({
                 : null}
               {!loading && !results.length && query.trim() ? (
                 <p className="m-0 px-[14px] py-[var(--space-3)] text-[var(--pex-text-muted,#5a6b7a)] text-[var(--text-sm)]">
-                  No matching schools found. You can also{" "}
-                  <Link href="/schools">browse schools</Link>.
+                  I could not find a matching school. Try another name or{" "}<Link href="/schools">browse all schools</Link>.
                 </p>
               ) : null}
               {error ? (
@@ -215,15 +214,15 @@ export function SchoolSearchWidget({
           <ul className="list-none p-0 m-0 flex flex-col gap-[10px]">
             <li className="flex items-start gap-[10px] text-[13.5px] text-[var(--pex-text)] leading-[1.4]">
               {checkIconSvg}
-              <span>100% correct items packed per grade list</span>
+              <span>Packs prepared to match the available school list</span>
             </li>
             <li className="flex items-start gap-[10px] text-[13.5px] text-[var(--pex-text)] leading-[1.4]">
               {checkIconSvg}
-              <span>Teacher-preferred brands only</span>
+              <span>Clear grade-by-grade pack information</span>
             </li>
             <li className="flex items-start gap-[10px] text-[13.5px] text-[var(--pex-text)] leading-[1.4]">
               {checkIconSvg}
-              <span>Custom school development fund rebates</span>
+              <span>Personal help when something needs a closer look</span>
             </li>
           </ul>
         </>

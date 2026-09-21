@@ -52,7 +52,7 @@ export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   "homepage.hero": {
     eyebrow: "2027 School packs now available",
     title: "Your school stationery list, perfectly packed.",
-    lead: "Your official school stationery list, perfectly packed and delivered.",
+    lead: "School stationery made simpler, with convenient online tools and personal help when you need it.",
   },
   "schools.hero": {
     eyebrow: "Pack finder",
@@ -88,7 +88,7 @@ export const WEBSITE_CONTENT_DEFAULTS: WebsiteContentValue = {
   seo_defaults: {
     default_title: "Pexpacks | School Stationery Packs",
     default_description:
-      "School stationery made simple. Find your school pack, choose your grade, and get your learner's stationery delivered.",
+      "School stationery made simpler. Find a school pack, upload a stationery list, and get personal help when you need it.",
   },
 };
 

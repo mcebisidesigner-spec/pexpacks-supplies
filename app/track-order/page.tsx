@@ -11,7 +11,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = buildMetadata(
   "Track Order",
-  "Track your Pexpacks stationery order by order number, phone number or email address.",
+  "Track your Pexpacks stationery order with the details from your receipt.",
   "/track-order",
 );
 
@@ -61,7 +61,7 @@ export default async function TrackOrderPage() {
         eyebrow={heroEyebrow}
         title={heroTitle}
         panelTitle="Order Tracking"
-        panelText="Stay updated on your pack."
+        panelText="Check your order status in one place."
       />
       <section className={sectionCls}>
         <div className={innerCls}>
@@ -88,7 +88,7 @@ export default async function TrackOrderPage() {
       <CTASection
         eyebrow="Need another?"
         title="Start your order"
-        text="Find your school pack or have your school list packed exactly as specified."
+        text="Find your school pack or upload your school list for review."
         primaryHref="/schools"
         primaryLabel="Find School Packs"
         secondaryHref="/order"
@@ -102,15 +102,14 @@ export default async function TrackOrderPage() {
               <p className={sectionEyebrowCls}>Need help?</p>
               <h2>Contact Pexpacks</h2>
               <p>
-                If you cannot find your order status, reach out to the support
-                team for assistance.
+                If you cannot find your order status, send the details and I will help you work through it.
               </p>
               <div className={buttonRowCls}>
                 <Button href="/contact" variant="primary">
-                  Contact Support
+                  Need help?
                 </Button>
                 <Button href="/faq" variant="white">
-                  Read All FAQs
+                  Browse FAQs
                 </Button>
               </div>
             </div>
@@ -120,8 +119,7 @@ export default async function TrackOrderPage() {
               </div>
               <div className={packCardBodyCls}>
                 <p className={packDescriptionCls}>
-                  Ready to order? Find your school pack or have your school list
-                  packed exactly as specified.
+                  Ready to order? Find your school pack or upload your school list for review.
                 </p>
               </div>
               <div className={packCardButtonWrapCls}>

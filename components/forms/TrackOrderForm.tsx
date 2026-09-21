@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { Check, ExternalLink, Truck } from "lucide-react";
+import { useNotification } from "@/components/ui/NotificationProvider";
 
 type TrackingResult = {
   orderReference: string;
@@ -51,6 +53,7 @@ function formatDateDisplay(value: string | null): string {
 
 export function TrackOrderForm() {
   const searchParams = useSearchParams();
+  const { notify } = useNotification();
 
   const [orderRef, setOrderRef] = useState("");
   const [email, setEmail] = useState("");
@@ -78,12 +81,17 @@ export function TrackOrderForm() {
       if (!res.ok || !data.orderReference) {
         setError(
           data.message ||
-            "Order tracking record not found. Please check your order reference and receipt details."
+            "I could not find that order yet. Please check the details on your receipt and try again."
         );
         return;
       }
 
       setTrackingData(data);
+      notify({
+        tone: "success",
+        title: "Order details found",
+        message: "Your latest order status is ready to review.",
+      });
       if (data.orderReference) setOrderRef(data.orderReference);
     } catch {
       setError("Unable to connect to order tracking service. Please try again.");
@@ -116,7 +124,7 @@ export function TrackOrderForm() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!orderRef.trim() || !email.trim() || !uniqueId.trim()) {
-      setError("Please fill in Order Reference, Email Address, and Unique Customer ID.");
+      setError("Please enter your order reference, email, and customer ID from the receipt.");
       return;
     }
 
@@ -133,10 +141,10 @@ export function TrackOrderForm() {
     <div style={{ maxWidth: 860, margin: "0 auto", display: "grid", gap: 32 }}>
       {/* Manual Search Form */}
       <form className="rounded-[24px] sm:rounded-[28px] border border-slate-200 bg-white p-6 sm:p-8 shadow-xs grid gap-4.5" onSubmit={handleSubmit}>
-        <p className="text-xs font-extrabold uppercase tracking-wider text-teal-600 m-0 mb-1">Guest Order Tracker</p>
+        <p className="text-xs font-extrabold uppercase tracking-wider text-teal-600 m-0 mb-1">Order tracking</p>
         <h2>Track your stationery order</h2>
         <p style={{ fontSize: 14, color: "var(--pex-text-muted)", marginTop: -4 }}>
-          Enter your receipt proof details below to check live order status without logging in.
+          Enter the details from your receipt to check your order status.
         </p>
 
         <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", alignItems: "end" }}>
@@ -157,7 +165,7 @@ export function TrackOrderForm() {
 
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
             <label htmlFor="trackEmail" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
-              Customer Email
+              Email used for order
             </label>
             <input
               id="trackEmail"
@@ -174,7 +182,7 @@ export function TrackOrderForm() {
 
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
             <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
-              Unique Customer ID
+              Customer ID from receipt
             </label>
             <input
               id="trackUniqueId"
@@ -189,7 +197,7 @@ export function TrackOrderForm() {
         </div>
 
         <Button type="submit" disabled={loading} variant="primary" style={{ marginTop: 8 }}>
-          {loading ? "Searching order status..." : "Track My Order"}
+          {loading ? "Checking your order..." : "Track my order"}
         </Button>
 
         {error && (
@@ -240,7 +248,7 @@ export function TrackOrderForm() {
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
             <div>
               <span style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 800, color: "var(--pex-keppel)" }}>
-                Live Tracking Proof Verified
+                Order status
               </span>
               <h3 style={{ margin: "4px 0 0", fontSize: 24, fontWeight: 800, color: "var(--pex-navy)" }}>
                 Order #{trackingData.orderReference}
@@ -349,16 +357,16 @@ export function TrackOrderForm() {
             >
               <div>
                 <span style={{ fontSize: 12, textTransform: "uppercase", fontWeight: 700, color: "#64748b" }}>
-                  Logistics Partner &amp; Waybill
+                  Delivery details
                 </span>
                 <p style={{ margin: "4px 0 0", fontSize: 16, fontWeight: 800, color: "#0f172a" }}>
-                  {trackingData.courier || "Pexpacks Courier Network"}
+                  {trackingData.courier || "Courier details not yet available"}
                 </p>
               </div>
 
               {trackingData.waybillNumber ? (
                 <div>
-                  <span style={{ fontSize: 12, color: "#64748b", display: "block" }}>Waybill Reference</span>
+                  <span style={{ fontSize: 12, color: "#64748b", display: "block" }}>Courier reference</span>
                   <a
                     href={`https://thecourierguy.co.za/tracking?waybill=${encodeURIComponent(trackingData.waybillNumber)}`}
                     target="_blank"
@@ -372,7 +380,7 @@ export function TrackOrderForm() {
                       textDecoration: "underline",
                     }}
                   >
-                    {trackingData.waybillNumber} ↗
+                    {trackingData.waybillNumber} <ExternalLink size={14} className="ml-1 inline-block" aria-hidden="true" />
                   </a>
                 </div>
               ) : null}
@@ -389,7 +397,7 @@ export function TrackOrderForm() {
                 fontWeight: 600,
               }}
             >
-              🚚 Waybill details will be populated automatically as soon as your parcel is dispatched to courier.
+              <span className="inline-flex items-center gap-2"><Truck size={16} aria-hidden="true" /> Courier details will appear when your parcel is dispatched.</span>
             </div>
           )}
 

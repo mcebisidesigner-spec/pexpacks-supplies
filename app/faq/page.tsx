@@ -64,8 +64,8 @@ export default async function FAQPage() {
       <FAQExperience faqs={faqs} />
       <CTASection
         eyebrow="Still stuck?"
-        title="Send the team the details."
-        text="Tell us the school, grade, or order and Pexpacks will help you choose the next step."
+        title="Send the details and I will help."
+        text="Tell me the school, grade, or order and I will help you choose the next step."
         primaryHref="/contact"
         primaryLabel="Contact Pexpacks"
         secondaryHref="/schools"
@@ -110,8 +110,7 @@ export default async function FAQPage() {
               </div>
               <div className={packCardBodyCls}>
                 <p className={packDescriptionCls}>
-                  Still have questions? Reach out to the Pexpacks support team
-                  for help.
+                  Still have questions? Send the details and I will help you work through them.
                 </p>
               </div>
               <div className={packCardButtonWrapCls}>

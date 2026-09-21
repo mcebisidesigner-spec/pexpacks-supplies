@@ -78,7 +78,7 @@ const fallbackInstitutionalFaqs: FAQ[] = [
 
 export const metadata: Metadata = buildMetadata(
   "School Stationery Partnerships | Pexpacks Supplies",
-  "Institutional stationery procurement, customized learner packs, and up to 3% development rebate for Gauteng primary and high schools. Zero administrative load.",
+  "Teacher-verified stationery packs, easier parent ordering, and a school partnership rebate for participating schools.",
   "/partnership",
 );
 
@@ -107,9 +107,9 @@ export default async function PartnerWithSchoolsPage() {
       <PageHero
         eyebrow={heroEyebrow}
         title={heroTitle}
-        text="Empower your school with a free custom website, parent ordering portal, and a 1.5% fundraising rebate on every stationery pack sold."
+        text="Give parents a clearer way to order teacher-verified stationery packs, with less school administration and a partnership rebate for qualifying orders."
         panelTitle="What your school gets"
-        panelText="Free website, hosting, SSL, parent portal & 1.5% rebate"
+        panelText="School ordering page, secure checkout & rebate"
       >
         <div className="flex flex-col sm:flex-row gap-3 mt-5 items-stretch sm:items-center">
           <Button href="#partnership-enquiry" variant="primary" className="w-full sm:w-auto min-h-[44px]">

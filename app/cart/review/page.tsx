@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { CartReviewClient } from "./CartReviewClient";
 
 export const metadata: Metadata = {
-  title: "Review Your AI Matched Pack | Pexpacks Supplies",
-  description: "Review items matched from your uploaded school stationery list, customize quantities, and add optional book covering.",
+  title: "Review Your Uploaded List | Pexpacks Supplies",
+  description: "Review items from your uploaded school stationery list, adjust quantities, and add optional book covering.",
 };
 
 interface CartReviewPageProps {

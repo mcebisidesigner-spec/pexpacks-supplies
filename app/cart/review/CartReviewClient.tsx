@@ -10,6 +10,7 @@ import {
 } from "@/lib/analytics";
 import { usePackTrayStore, type TrayPackItem, type TrayPackLineItem } from "@/store/usePackTrayStore";
 import { calculatePexcoverTotal } from "@/lib/pricing/pexcover";
+import { AlertCircle, ArrowLeft, ArrowRight, LockKeyhole, Minus, Plus, Trash2 } from "lucide-react";
 
 interface MatchedItem {
   id: string;
@@ -159,7 +160,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
       id: packId,
       packId,
       basePackId: packId,
-      packName: "AI Matched Custom Pack",
+      packName: "Custom List Pack",
       source: "ai-list",
       packMode: "customised",
       items: trayItems,
@@ -185,7 +186,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
         <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">
           <div className="text-center py-16 px-4 bg-white rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm max-w-lg mx-auto flex flex-col items-center justify-center">
             <div className="w-10 h-10 border-2 border-[var(--pex-border)] border-t-[var(--pex-keppel)] rounded-full animate-spin mb-4" />
-            <h2 className="text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">Loading your matched stationery list...</h2>
+            <h2 className="text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">Loading your uploaded stationery list...</h2>
             <p className="text-sm text-[var(--pex-muted)]">Verifying catalog pricing and book cover eligibility.</p>
           </div>
         </div>
@@ -201,7 +202,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
             <h2 className="text-lg font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">Could not load your cart draft</h2>
             <p className="text-sm text-[var(--pex-muted)] mb-6">{error || "This draft cart may have expired or does not exist."}</p>
             <Link href="/order" className="inline-flex items-center gap-2 text-[var(--pex-keppel)] text-sm font-bold hover:text-[var(--pex-navy)] transition-colors">
-              ← Return to List Converter
+              <ArrowLeft size={18} aria-hidden="true" /> Return to school list
             </Link>
           </div>
         </div>
@@ -215,17 +216,13 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
         {/* Navigation / Header */}
         <div className="flex justify-between items-center mb-6">
           <Link href="/order" className="inline-flex items-center gap-2 text-[var(--pex-keppel)] text-sm font-bold hover:text-[var(--pex-navy)] transition-colors">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Back to List Converter
+            <ArrowLeft size={18} aria-hidden="true" /> Return to school list
           </Link>
         </div>
 
         <div className="mb-8">
-          <div className="text-[var(--pex-keppel)] text-xs font-bold uppercase tracking-wider mb-2">AI Stationery Review</div>
-          <h1 className="text-[var(--pex-navy)] font-[family-name:var(--font-heading)] text-[clamp(28px,4vw,40px)] font-extrabold m-0 mb-2 leading-tight">Review Your Matched Pack</h1>
+          <div className="text-[var(--pex-keppel)] text-xs font-bold uppercase tracking-wider mb-2">Stationery List Review</div>
+          <h1 className="text-[var(--pex-navy)] font-[family-name:var(--font-heading)] text-[clamp(28px,4vw,40px)] font-extrabold m-0 mb-2 leading-tight">Review Your Pack</h1>
           <p className="text-[var(--pex-muted)] text-sm sm:text-base m-0 max-w-2xl">
             Review the catalogue matches below, adjust quantities, and add optional book covering before
             continuing to checkout.
@@ -239,11 +236,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
             {hasUnmatchedItems && (
               <div className="flex gap-3 p-4 mb-6 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-left">
                 <div className="text-[var(--pex-coral)] shrink-0 mt-0.5">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
+                  <AlertCircle size={20} aria-hidden="true" />
                 </div>
                 <div className="text-xs text-[var(--pex-navy)] leading-relaxed">
                   <div className="font-bold text-[var(--pex-coral)] mb-0.5">Items need catalogue confirmation</div>
@@ -273,7 +266,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                         {item.productId ? (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)]">Catalog Verified</span>
                         ) : (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(235,94,85,0.1)] text-[var(--pex-coral)]">Estimated • Concierge Review</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(235,94,85,0.1)] text-[var(--pex-coral)]">Estimated - needs review</span>
                         )}
                         {item.requiresPexcover && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[rgba(240,165,0,0.12)] text-[#b87d00]">Cover Eligible</span>
@@ -290,7 +283,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                         onClick={() => handleUpdateQty(item.id, -1)}
                         aria-label="Decrease quantity"
                       >
-                        −
+                        <Minus size={16} aria-hidden="true" />
                       </button>
                       <span className="w-9 text-center text-xs font-bold text-[var(--pex-navy)]">{item.quantity}</span>
                       <button
@@ -299,7 +292,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                         onClick={() => handleUpdateQty(item.id, 1)}
                         aria-label="Increase quantity"
                       >
-                        +
+                        <Plus size={16} aria-hidden="true" />
                       </button>
                     </div>
 
@@ -319,10 +312,7 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                       onClick={() => handleRemoveItem(item.id)}
                       title="Remove item"
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                      </svg>
+                      <Trash2 size={18} aria-hidden="true" />
                     </button>
                   </div>
                 ))}
@@ -342,11 +332,10 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
                   />
                   <div className="flex-1">
                     <label htmlFor="pexcover-toggle">
-                      <h4 className="m-0 mb-1 text-sm font-bold text-[var(--pex-navy)] cursor-pointer">Add Professional Book Covering (Pexcover™)</h4>
+                      <h4 className="m-0 mb-1 text-sm font-bold text-[var(--pex-navy)] cursor-pointer">Add Pexcover book covering</h4>
                     </label>
                     <p className="m-0 mb-2 text-xs text-[var(--pex-muted)] leading-relaxed">
-                      Arrives pre-covered with heavy-duty 80-micron clear slip covers and printed learner name
-                      labels.
+                      Arrives with clear protective sleeves and printed learner name labels.
                     </p>
                     <div className="text-xs text-[var(--pex-keppel)] font-medium">
                       Covers {pexcoverCalc.coverableItemCount} eligible books for{" "}
@@ -369,13 +358,13 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
 
             {wantsPexcover && (
               <div className="flex justify-between items-center text-sm text-[var(--pex-muted)] mb-3">
-                <span>Pexcover™ ({pexcoverCalc.coverableItemCount} books)</span>
+                <span>Pexcover ({pexcoverCalc.coverableItemCount} books)</span>
                 <span className="font-medium text-[var(--pex-navy)]">R{pexcoverCalc.pexcoverTotalRands.toFixed(2)}</span>
               </div>
             )}
 
             <div className="flex justify-between items-center text-sm text-[var(--pex-muted)] mb-3">
-              <span>Courier Delivery</span>
+              <span>Delivery</span>
               <span className="text-xs text-[var(--pex-muted)]">Calculated at checkout</span>
             </div>
 
@@ -391,18 +380,12 @@ export function CartReviewClient({ draftId }: { draftId: string }) {
               disabled={items.length === 0 || hasUnmatchedItems}
             >
               {hasUnmatchedItems ? "Resolve unmatched items" : "Proceed to Checkout"}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <ArrowRight size={18} strokeWidth={2.5} aria-hidden="true" />
             </button>
 
             <div className="flex items-center justify-center gap-2 mt-4 text-[11px] text-[var(--pex-muted)] text-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span>Instant secure checkout with Happy Pay & Ozow</span>
+              <LockKeyhole size={14} aria-hidden="true" />
+              <span>Secure checkout with Happy Pay or Ozow</span>
             </div>
           </aside>
         </div>

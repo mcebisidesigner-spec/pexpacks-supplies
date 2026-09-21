@@ -6,6 +6,7 @@ import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { TrayProviders } from "@/components/order/TrayProviders";
+import { NotificationProvider } from "@/components/ui/NotificationProvider";
 import { buildMetadata } from "@/lib/seo";
 import { getWebsiteContent, getActiveAnnouncement } from "@/lib/cms";
 import {
@@ -215,21 +216,23 @@ export default async function RootLayout({
         <JsonLd data={organizationSchema()} />
         <JsonLd data={onlineStoreSchema()} />
         <JsonLd data={websiteSchema()} />
-        <div
-          className="site-shell"
-          style={
-            {
-              "--announcement-bar-height":
-                announcement?.enabled && announcement?.text ? "44px" : "0px",
-            } as React.CSSProperties
-          }
-        >
-          <SiteChrome announcement={announcement} company={company} footer={footer}>
-            {children}
-          </SiteChrome>
-          <ClientRuntimeWidgets />
-          <TrayProviders />
-        </div>
+        <NotificationProvider>
+          <div
+            className="site-shell"
+            style={
+              {
+                "--announcement-bar-height":
+                  announcement?.enabled && announcement?.text ? "44px" : "0px",
+              } as React.CSSProperties
+            }
+          >
+            <SiteChrome announcement={announcement} company={company} footer={footer}>
+              {children}
+            </SiteChrome>
+            <ClientRuntimeWidgets />
+            <TrayProviders />
+          </div>
+        </NotificationProvider>
         {process.env.NODE_ENV === "production" ? (
           <>
             <Analytics />

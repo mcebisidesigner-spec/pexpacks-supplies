@@ -10,19 +10,22 @@ import {
   trackAiConversionRetried,
 } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { PEXPACKS_CONTENT } from "@/lib/content/pexpacks";
+import { useNotification } from "@/components/ui/NotificationProvider";
 
 const MAX_SIZE_MB = 15;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
 const CONVERSION_STEPS = [
-  { id: 1, label: "Uploading document..." },
-  { id: 2, label: "Analyzing handwriting & line items..." },
-  { id: 3, label: "Matching Pexpacks stock catalog..." },
-  { id: 4, label: "Generating instant cart..." },
+  { id: 1, label: "Uploading your list..." },
+  { id: 2, label: "Reading the items on your list..." },
+  { id: 3, label: "Checking Pexpacks items..." },
+  { id: 4, label: "Preparing your review..." },
 ];
 
 export function AiListDropzone() {
   const router = useRouter();
+  const { notify } = useNotification();
 
   const [activeTab, setActiveTab] = useState<"upload" | "text">("upload");
   const [file, setFile] = useState<File | null>(null);
@@ -183,6 +186,11 @@ export function AiListDropzone() {
       setCurrentStepIndex(CONVERSION_STEPS.length - 1);
       setDraftId(data.draftId);
       setIsSuccess(true);
+      notify({
+        tone: "success",
+        title: "Your list is ready",
+        message: PEXPACKS_CONTENT.lists.review,
+      });
 
       trackAiConversionSucceeded({
         draftId: data.draftId,
@@ -199,6 +207,12 @@ export function AiListDropzone() {
         err instanceof Error ? err.message : "Something went wrong during conversion. Please try again.";
       setErrorMessage(message);
       setIsProcessing(false);
+      notify({
+        tone: "error",
+        title: "Your list was not ready",
+        message:
+          "Something went wrong while reading the list. Please try again, or send it on WhatsApp for personal help.",
+      });
       trackAiConversionFailed({ method, reason: message });
     }
   };
@@ -254,14 +268,13 @@ export function AiListDropzone() {
       <div className="mb-6 text-left">
         <div className="inline-flex items-center gap-1.5 bg-[#1a7a77]/10 text-[#1b6f6c] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2.5">
           <span className="w-2 h-2 rounded-full bg-[#1a7a77] [animation:pulseDot_2s_infinite_ease-in-out]" />
-          <span>Instant AI Vision</span>
+          <span>List support</span>
         </div>
         <h2 className="text-[#1a2a40] font-heading text-xl sm:text-2xl font-extrabold m-0 mb-1.5 leading-tight">
-          AI School List Converter
+          Organise your school list
         </h2>
         <p className="text-muted-foreground text-sm m-0 leading-relaxed">
-          Drop your stationery list or snap a photo. Our AI matches your school requirements to our verified
-          stock catalog in seconds.
+          Drop your stationery list or snap a photo. Pex can help organise the items, and you can review the suggestions before ordering.
         </p>
       </div>
 
@@ -272,10 +285,10 @@ export function AiListDropzone() {
             <Check className="size-8" strokeWidth={2.5} aria-hidden="true" />
           </div>
           <h3 className="text-pex-navy font-heading text-xl font-extrabold m-0 mb-1.5">
-            Catalog Matched!
+            Your list is ready
           </h3>
           <p className="text-pex-muted text-sm m-0">
-            Generating your personalized cart and opening your review page...
+            I have organised the items I could identify. Opening your review page now...
           </p>
         </div>
       )}
@@ -499,7 +512,7 @@ export function AiListDropzone() {
                 onClick={() => startConversion(null, pastedText)}
               >
                 <Sparkles className="size-[18px]" strokeWidth={2} aria-hidden="true" />
-                Match with AI &amp; Generate Cart
+                Review my list
               </button>
             </div>
           )}

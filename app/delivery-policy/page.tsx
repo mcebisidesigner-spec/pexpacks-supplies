@@ -40,18 +40,18 @@ const config: LegalDocumentConfig = {
   summaryKicker: "At a Glance",
   summaryTitle: "Reliable Nationwide Delivery & School Handover",
   summaryText:
-    "We keep delivery expectations completely straightforward and transparent. From annual seasonal school pre-orders dispatched straight to partner schools to year-round home and Paxi counter deliveries, you'll always know exactly when to expect your stationery pack.",
+    "We keep delivery expectations straightforward and transparent. Your available delivery or school handover option is shown as you place the order, with tracking details shared when a parcel is dispatched.",
   highlights: [
     {
-      title: "Real-Time SMS & Email Tracking",
+      title: "Tracking when your order is dispatched",
       content:
-        "Every order dispatched via our logistics partners includes automated SMS and email tracking links so you can follow your parcel step-by-step.",
+        "When a parcel is dispatched, the tracking details available from our delivery partner are shared with you so you can follow its progress.",
       tone: "accent",
     },
     {
       title: "Nationwide South Africa Coverage",
       content:
-        "We deliver to doorstep addresses, partner school campuses, and over 2,800 Paxi / PEP collection points nationwide.",
+        "We deliver to doorstep addresses, participating school campuses, and selected Paxi / PEP collection points.",
       tone: "warning",
     },
   ],
@@ -104,7 +104,7 @@ const config: LegalDocumentConfig = {
       eyebrow: "2",
       title: "Nominated Logistics Partners & Order Tracking",
       summary:
-        "Explicit courier details and automated tracking updates upon parcel dispatch.",
+        "Courier details and tracking guidance when your parcel is dispatched.",
       content: (
         <>
           <p>
@@ -119,7 +119,7 @@ const config: LegalDocumentConfig = {
             </li>
           </ul>
           <p>
-            <strong>Real-Time Tracking &amp; SMS Updates:</strong> As soon as your order is packed and handed over to our courier partner, you will automatically receive an <strong>SMS and email notification containing your unique tracking number</strong> and a direct link to track your shipment in real time. You can also trace your order anytime using our <Link href="/track-order">Order Tracking Portal</Link>.
+            <strong>Tracking after dispatch:</strong> Once your order is handed over to a courier partner, use the available tracking details to follow its progress. You can also check your order anytime in our <Link href="/track-order">Order Tracking Portal</Link>.
           </p>
         </>
       ),

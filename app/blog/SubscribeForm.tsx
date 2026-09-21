@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useNotification } from "@/components/ui/NotificationProvider";
 
 export function SubscribeForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const { notify } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ export function SubscribeForm() {
     setLoading(true);
 
     try {
-      await fetch("/api/forms/newsletter", {
+      const response = await fetch("/api/forms/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -25,11 +27,24 @@ export function SubscribeForm() {
           message: `New blog newsletter subscription request for: ${email}`,
         }),
       });
+      const result = (await response.json()) as { success?: boolean; message?: string };
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Something went wrong while subscribing.");
+      }
+      notify({
+        tone: "success",
+        title: "You are subscribed",
+        message: "Thanks - I will send useful school and stationery updates to your inbox.",
+      });
+      setSubmitted(true);
     } catch {
-      // Graceful fallback
+      notify({
+        tone: "error",
+        title: "Subscription not sent",
+        message: "Please try again, or check the email address and your connection.",
+      });
     } finally {
       setLoading(false);
-      setSubmitted(true);
     }
   };
 

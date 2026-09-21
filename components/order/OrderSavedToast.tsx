@@ -24,7 +24,7 @@ export function OrderSavedToast() {
         dismissSavedToast();
         setClosing(false);
       }, 250);
-    }, 4500);
+    }, 9750);
   }, [dismissSavedToast]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export function OrderSavedToast() {
   return (
     <div
       className={cn(
-        "fixed z-[9999] bottom-[86px] sm:bottom-6 right-4 sm:right-6 left-4 sm:left-auto max-w-none sm:max-w-[380px] p-[14px_18px] rounded-2xl bg-pex-navy text-white shadow-[0_16px_40px_rgba(26,42,64,0.25)] flex items-center gap-3 motion-reduce:animate-none",
+        "fixed z-[9999] bottom-[86px] right-4 left-4 sm:inset-0 sm:m-auto sm:h-fit sm:w-[380px] sm:max-w-[calc(100vw-3rem)] p-[14px_18px] rounded-2xl bg-pex-navy text-white shadow-[0_16px_40px_rgba(26,42,64,0.25)] flex items-center gap-3 motion-reduce:animate-none",
         closing
           ? "[animation:toastSlideDown_0.25s_ease-in_forwards]"
           : "[animation:toastSlideUp_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards]"

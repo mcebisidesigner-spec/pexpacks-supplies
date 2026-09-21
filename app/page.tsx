@@ -14,6 +14,7 @@ import {
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { getFaqs, getTestimonials, getWebsiteContent } from "@/lib/cms";
 import { testimonials as confirmedTestimonials } from "@/data/testimonials";
+import { PEXPACKS_CONTENT } from "@/lib/content/pexpacks";
 
 export const revalidate = 300;
 
@@ -37,7 +38,7 @@ export default async function HomePage() {
   const heroLead =
     typeof hero.lead === "string" && hero.lead
       ? hero.lead
-      : "Your official school stationery list, perfectly packed and delivered.";
+      : PEXPACKS_CONTENT.brand.promise;
   const featuredTestimonial = testimonials[0] ?? confirmedTestimonials[0];
   const visibleHomepageFaqs = allFaqs.slice(0, 5);
 
@@ -119,10 +120,10 @@ export default async function HomePage() {
                 </div>
                 <div className="min-w-0">
                   <p className="text-white text-xs sm:text-sm font-bold m-0 truncate">
-                    100% School-Accurate Lists
+                    School-list focused packs
                   </p>
                   <p className="text-slate-300 text-[11px] sm:text-xs m-0">
-                    Pre-packed & learner-labelled
+                    Packed with care for the learner
                   </p>
                 </div>
               </div>
@@ -241,7 +242,7 @@ export default async function HomePage() {
                 id="home-social-proof-heading"
                 className="m-0 text-pex-navy font-heading text-[clamp(28px,12vw,38px)] lg:text-[clamp(34px,4.5vw,62px)] font-extrabold leading-[0.98] tracking-normal"
               >
-                Real packs. Real schools. Real peace of mind.
+                A simpler way to get school stationery sorted.
               </h2>
               {featuredTestimonial ? (
                 <>

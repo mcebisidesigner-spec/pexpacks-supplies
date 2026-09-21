@@ -82,8 +82,8 @@ function normaliseQuery(query: string) {
     .replace(/\s+/g, " ");
 }
 
-const UNKNOWN_REPLY = "I do not understand your request yet. Please tell me if you need a school pack, list upload, tracking, payment help, or WhatsApp support.";
-const CLARIFY_REPLY = "Please explain a bit more so I can guide you properly.";
+const UNKNOWN_REPLY = "I am not quite sure what you mean yet. Are you looking for a school pack, list upload, order tracking, payment help, or WhatsApp support?";
+const CLARIFY_REPLY = "I may have missed your meaning. Could you explain what you need, or choose one of the options below?";
 
 const QUICK_REPLIES = [
   { id: "find-school", label: "Find my school", message: "Help me find my school pack" },
@@ -160,19 +160,19 @@ export function buildPexReply(
       break;
     case "find_school":
     case "find_school_pack":
-      reply = response(intent, "Search for your school, then choose the grade pack. Packs are packed to match official school lists.", [{ id: "browse-schools", label: "Find my school", description: "Search schools and grade packs", href: "/schools" }]);
+      reply = response(intent, "Search for your school, then choose the learner's grade. Packs are prepared to match the official school list where it is available.", [{ id: "browse-schools", label: "Find my school", description: "Search schools and grade packs", href: "/schools" }]);
       break;
     case "upload_stationery_list":
-      reply = response(intent, "Upload a PDF or clear photo of your school list. The Pexpacks team will help build your custom cart.", [{ id: "upload-list", label: "Upload a list", description: "Convert and review a stationery list", href: "/order" }]);
+      reply = response(intent, "Upload a PDF or clear photo of your school list. You can review the suggested items before ordering, and I can help if something needs a closer look.", [{ id: "upload-list", label: "Upload a list", description: "Convert and review a stationery list", href: "/upload-a-list" }]);
       break;
     case "product_search":
-      reply = response(intent, "You can search official school packs or upload your list if your school is not listed yet.", [{ id: "browse-schools", label: "Browse school packs", description: "Find grade-specific packs", href: "/schools" }, { id: "upload-list", label: "Upload a list", description: "Review a custom stationery list", href: "/order" }]);
+      reply = response(intent, "Search official school packs, or upload your list if your school is not listed yet. You can review the suggested items before ordering.", [{ id: "browse-schools", label: "Browse school packs", description: "Find grade-specific packs", href: "/schools" }, { id: "upload-list", label: "Upload a list", description: "Review a custom stationery list", href: "/upload-a-list" }]);
       break;
     case "pexcover_information":
       reply = response(intent, "Pexcover covers eligible books in durable 120-micron plastic sleeves with printed labels for name, grade, and subject.", [{ id: "pexcover-guide", label: "Learn about Pexcover", description: "See how optional book covering works", href: "/blog/what-is-pexcover-book-covering" }]);
       break;
     case "delivery_information":
-      reply = response(intent, "Standard courier delivery is 2-4 business days. Some partner schools also offer bulk school drops on orientation day.", [{ id: "track-order", label: "Track an order", description: "Check a current order securely", href: "/track" }]);
+      reply = response(intent, "Standard courier delivery is 2-4 business days. Participating partner schools may also offer a bulk school drop on orientation day.", [{ id: "track-order", label: "Track an order", description: "Check a current order securely", href: "/track" }]);
       break;
     case "payment_information":
       reply = response(intent, "You can pay by card, Ozow Instant EFT, or Happy Pay split payments. Payment options are shown at checkout with secure encryption.", [{ id: "checkout", label: "View checkout", description: "Review packs saved in your order tray", href: "/checkout" }]);
@@ -187,7 +187,7 @@ export function buildPexReply(
       reply = response(intent, "Schools can partner with Pexpacks for teacher-verified packs, less admin, and fundraising rebates.", [{ id: "partner", label: "Partner with us", description: "See school partnership options", href: "/partner" }]);
       break;
     case "human_support":
-      reply = response(intent, "No stress, a Pexpacks team member can help you on WhatsApp.", [], QUICK_REPLIES.slice(0, 3), true);
+      reply = response(intent, "No stress. WhatsApp Pexpacks for personal help if this needs a closer look.", [], QUICK_REPLIES.slice(0, 3), true);
       break;
     default:
       reply = response("unknown_intent", UNKNOWN_REPLY, [], QUICK_REPLIES);
