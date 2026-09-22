@@ -39,16 +39,34 @@ export function getFaqLinks(faq: FAQ): { label: string; href: string }[] {
       { label: "Happy Pay terms", href: "/happy-pay-terms" },
     ];
   }
-  if (category.includes("delivery") || question.includes("deliver") || question.includes("pack")) {
+  if (category === "schools" || category.includes("partnership") || question.includes("rebate") || question.includes("school website")) {
+    return [
+      { label: "School partnership", href: "/partnership" },
+      { label: "Add your school", href: "/add-your-school" },
+    ];
+  }
+  if (category.includes("school pack") || category === "school packs" || question.includes("grade pack") || question.includes("pexcover")) {
+    return [
+      { label: "Find your school pack", href: "/schools" },
+      { label: "Learn about Pexcover", href: "/blog/what-is-pexcover-book-covering" },
+    ];
+  }
+  if (category.includes("order") || question.includes("order status") || question.includes("track")) {
+    return [
+      { label: "Track an order", href: "/track-order" },
+      { label: "Find your school pack", href: "/schools" },
+    ];
+  }
+  if (category.includes("deliver") || question.includes("courier") || question.includes("shipping")) {
     return [
       { label: "Track an order", href: "/track-order" },
       { label: "Delivery policy", href: "/delivery-policy" },
     ];
   }
-  if (category.includes("payment") || question.includes("pay")) {
+  if (category.includes("payment") || question.includes("pay") || question.includes("card")) {
     return [
-      { label: "Start an order", href: "/order" },
-      { label: "Contact Pexpacks", href: "/contact" },
+      { label: "Find your school pack", href: "/schools" },
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
     ];
   }
   if (category.includes("school") || question.includes("school")) {
@@ -67,7 +85,7 @@ export function getFaqLinks(faq: FAQ): { label: string; href: string }[] {
 export const faqs: FAQ[] = [
   {
     id: "school-not-listed",
-    category: "School packs",
+    category: "Schools",
     question: "What if my child's school is not listed?",
     answer:
       "You can request the school and grade through the enquiry flow. Pexpacks will follow up and help prepare the closest correct stationery pack option.",

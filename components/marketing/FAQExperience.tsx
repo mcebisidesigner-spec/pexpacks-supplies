@@ -40,6 +40,28 @@ const quickPaths = [
   },
 ];
 
+export function matchesFaqCategory(
+  faqCategory: string | undefined | null,
+  targetCategory: string
+): boolean {
+  if (!targetCategory || targetCategory === "All") return true;
+  if (!faqCategory) return false;
+
+  const f = faqCategory.trim().toLowerCase();
+  const t = targetCategory.trim().toLowerCase();
+
+  if (f === t) return true;
+
+  if (t === "school packs" && (f === "school packs" || f === "school pack" || f === "packs")) return true;
+  if (t === "orders" && (f === "orders" || f === "ordering" || f === "order")) return true;
+  if (t === "delivery" && (f === "delivery" || f === "delivery & pickup" || f === "deliveries" || f === "pickup")) return true;
+  if (t === "payment" && (f === "payment" || f === "payments" || f === "pay")) return true;
+  if (t === "schools" && (f === "schools" || f === "school" || f === "partnership")) return true;
+  if (t === "happy pay (bnpl)" && (f.includes("happy pay") || f.includes("bnpl"))) return true;
+
+  return false;
+}
+
 export function FAQExperience({ faqs }: FAQExperienceProps) {
   const [activeCategory, setActiveCategory] = useState<Category>("All");
   const [query, setQuery] = useState("");
@@ -49,8 +71,7 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
     const search = query.trim().toLowerCase();
 
     return faqs.filter((faq) => {
-      const matchesCategory =
-        activeCategory === "All" || faq.category === activeCategory;
+      const matchesCategory = matchesFaqCategory(faq.category, activeCategory);
       const matchesSearch =
         !search ||
         faq.question.toLowerCase().includes(search) ||
@@ -64,7 +85,7 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
   function selectCategory(category: Category) {
     setActiveCategory(category);
     const firstMatch = faqs.find(
-      (faq) => category === "All" || faq.category === category
+      (faq) => matchesFaqCategory(faq.category, category)
     );
     setOpenId(firstMatch?.id ?? "");
   }
@@ -94,7 +115,7 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
               const count =
                 category === "All"
                   ? faqs.length
-                  : faqs.filter((faq) => faq.category === category).length;
+                  : faqs.filter((faq) => matchesFaqCategory(faq.category, category)).length;
               const isActive = category === activeCategory;
 
               return (

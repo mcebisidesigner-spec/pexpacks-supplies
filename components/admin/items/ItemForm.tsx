@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { RotateCw, Save, Sparkles, Package, Store, Tag, X } from "lucide-react";
+import { BookOpen, RotateCw, Save, Sparkles, Package, Tag, X } from "lucide-react";
 import type { ItemFormState, ItemRow } from "@/lib/admin/items";
 import { createItemAction, updateItemAction } from "@/app/admin/items/actions";
 import { ItemIcon } from "@/components/ui/ItemIcon";
@@ -659,78 +659,8 @@ export function ItemForm({
               </div>
             </div>
 
-            {/* Pexcover Classification */}
-            <div className={adminStyles.formField}>
-              <div>
-                <span className={adminStyles.formLabel}>
-                  📚 Pexcover™ Book-Covering Classification
-                </span>
-                <p className={adminStyles.muted}>
-                  Enable if this product is a book or exercise book that
-                  requires covering. The PEXCO code selects the covering
-                  classification.
-                </p>
-                <label
-                  className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-200"
-                  htmlFor="requires_pexcover"
-                >
-                  <input
-                    id="requires_pexcover"
-                    type="checkbox"
-                    name="requires_pexcover"
-                    checked={requiresPexcover}
-                    onChange={(e) => {
-                      setRequiresPexcover(e.target.checked);
-                      if (!e.target.checked) setPexcoCode("");
-                    }}
-                    className={adminStyles.checkbox}
-                  />
-                  Requires Pexcover™ covering
-                </label>
-                {requiresPexcover && (
-                  <div className={adminStyles.formField}>
-                    <div>
-                      <input
-                        type="hidden"
-                        name="pexco_code"
-                        value={pexcoCode}
-                      />
-                      <label
-                        className={adminStyles.formLabel}
-                        htmlFor="pexco_code_select"
-                      >
-                        PEXCO Classification Code
-                      </label>
-                      <select
-                        id="pexco_code_select"
-                        className={adminStyles.selectField}
-                        value={pexcoCode}
-                        onChange={(e) => setPexcoCode(e.target.value)}
-                        aria-label="PEXCO classification code"
-                      >
-                        <option value="">— Select PEXCO Code —</option>
-                        {PEXCO_CLASSIFICATIONS.map((classification) => (
-                          <option
-                            key={classification.code}
-                            value={classification.code}
-                          >
-                            {classification.code} — {classification.label}
-                          </option>
-                        ))}
-                      </select>
-                      {state?.errors?.pexco_code && (
-                        <span className="text-xs text-rose-400 mt-1 block">
-                          {state.errors.pexco_code}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
             {/* Icon Picker (for all stationery products and pack items) */}
-            <div className={adminStyles.formField}>
+            <div className="rounded-xl border border-[var(--db-border-strong)] bg-[var(--db-surface)] p-4 shadow-sm">
               <div>
                 <span className={adminStyles.formLabel}>Item Icon Symbol</span>
                 <div className={adminStyles.stackRow}>
@@ -746,15 +676,16 @@ export function ItemForm({
                   )}
                 </div>
                 <div
-                  className="flex flex-wrap gap-2 mt-2"
+                  className="mt-2 max-h-[4.5rem] overflow-y-auto overscroll-contain pr-1 [scrollbar-color:var(--db-brand)_transparent] [scrollbar-width:thin]"
                   role="group"
                   aria-label="Pick an icon"
                 >
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(1.75rem,1fr))] gap-2">
                   {PACK_ITEM_ICONS.map((option) => (
                     <button
                       key={option.key}
                       type="button"
-                      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-colors cursor-pointer ${
+                      className={`inline-flex items-center justify-center w-7 h-7 rounded-md border transition-colors cursor-pointer ${
                         icon === option.key
                           ? "!border-emerald-500 !bg-emerald-500/20 !text-emerald-300"
                           : "border-slate-700/60 bg-slate-800 text-slate-300 hover:border-slate-500 hover:text-white"
@@ -765,9 +696,10 @@ export function ItemForm({
                       data-db-tooltip={option.label}
                       aria-pressed={icon === option.key}
                     >
-                      <ItemIcon name={option.key} size={20} />
+                      <ItemIcon name={option.key} size={16} />
                     </button>
                   ))}
+                  </div>
                 </div>
                 <span className={adminStyles.muted}>
                   Stationery item emblem displayed alongside the product across
@@ -890,21 +822,87 @@ export function ItemForm({
             </div>
           </div>
 
-          <div className={adminStyles.sidebarCard}>
+          <div className="flex flex-col gap-4 rounded-[var(--db-radius-card)] border border-emerald-500/40 bg-[var(--db-surface-elevated)] p-5 shadow-[0_0_0_1px_rgba(16,185,129,0.08),var(--db-shadow-card)]">
             <div className={adminStyles.sidebarCardHeader}>
               <div className={adminStyles.sidebarHeaderTitle}>
-                <Store size={16} className={adminStyles.iconBlue} />
-                <span>Product Type</span>
+                <BookOpen size={16} className={adminStyles.iconTeal} />
+                <span>Pexcover Book Covering</span>
               </div>
-            </div>
-            <div className={adminStyles.stack}>
-              <span className={adminStyles.muted}>
-                {masterMode
-                  ? "Master catalogue product — reusable across school packs."
-                  : "Pack-specific item."}
+              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-[10px] font-semibold text-emerald-300">
+                Optional add-on
               </span>
             </div>
+            <div className={adminStyles.formField}>
+              <div>
+                <span className={adminStyles.formLabel}>
+                  Pexcover Book Covering Classification
+                </span>
+                <p className={adminStyles.muted}>
+                  Enable if this product is a book or exercise book that
+                  requires covering. The PEXCO code selects the covering
+                  classification.
+                </p>
+                <label
+                  className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-200"
+                  htmlFor="requires_pexcover"
+                >
+                  <input
+                    id="requires_pexcover"
+                    type="checkbox"
+                    name="requires_pexcover"
+                    checked={requiresPexcover}
+                    onChange={(e) => {
+                      setRequiresPexcover(e.target.checked);
+                      if (!e.target.checked) setPexcoCode("");
+                    }}
+                    className={adminStyles.checkbox}
+                  />
+                  Requires Pexcover covering
+                </label>
+                {requiresPexcover && (
+                  <div className={adminStyles.formField}>
+                    <div>
+                      <input
+                        type="hidden"
+                        name="pexco_code"
+                        value={pexcoCode}
+                      />
+                      <label
+                        className={adminStyles.formLabel}
+                        htmlFor="pexco_code_select"
+                      >
+                        PEXCO Classification Code
+                      </label>
+                      <select
+                        id="pexco_code_select"
+                        className={adminStyles.selectField}
+                        value={pexcoCode}
+                        onChange={(e) => setPexcoCode(e.target.value)}
+                        aria-label="PEXCO classification code"
+                      >
+                        <option value="">- Select PEXCO Code -</option>
+                        {PEXCO_CLASSIFICATIONS.map((classification) => (
+                          <option
+                            key={classification.code}
+                            value={classification.code}
+                          >
+                            {classification.code} - {classification.label}
+                          </option>
+                        ))}
+                      </select>
+                      {state?.errors?.pexco_code && (
+                        <span className="text-xs text-rose-400 mt-1 block">
+                          {state.errors.pexco_code}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
           </div>
+
         </aside>
       </div>
 
