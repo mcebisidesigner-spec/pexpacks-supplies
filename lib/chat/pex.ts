@@ -174,18 +174,41 @@ export function extractPexEntities(query: string, current: PexEntities = {}): Pe
   // School extraction: unlisted vs named school
   if (/\b(?:not on (?:your|the) site|unlisted|not listed|another school|dont see my school|cant find my school)\b/i.test(query)) {
     extracted.school = extracted.school ?? "Unlisted School";
-  } else {
-    const schoolAtMatch = query.match(/\b(?:at|for)\s+([A-Z][a-zA-Z0-9\s'-]{2,35}\s+(?:Primary|High|College|Academy|School|Preparatory|Pre-Primary))\b/i);
-    if (schoolAtMatch) {
-      extracted.school = schoolAtMatch[1].trim();
-    } else {
-      const informalSchoolMatch = query.match(/\b(st\.?\s*[a-z]+(?:\s+[a-z]+)?|curro(?:\s+[a-z]+)?|crawford(?:\s+[a-z]+)?|redhill|jeppe|kes|marist(?:\s+[a-z]+)?)\b/i);
-      if (informalSchoolMatch && !/\b(status|step|start|stock|store)\b/i.test(informalSchoolMatch[1])) {
-        let cleaned = informalSchoolMatch[1].trim().replace(/\bst\b/i, "St").replace(/\bklrkdrp\b/i, "Klerksdorp");
+  } else if (!extracted.school) {
+    // Pattern 1: "do you have / do you offer / is X on" — extract X as school name
+    const availabilityMatch = query.match(
+      /\b(?:do you have|do you offer|do you do|is there|are you listing|can i find)\s+([A-Za-z][a-zA-Z0-9\s'\-]{1,50}?)\b(?:\?|$|,|\s+on\b|\s+listed\b)/i,
+    );
+    if (availabilityMatch) {
+      const raw = availabilityMatch[1].trim().replace(/\b([a-z])/g, (c) => c.toUpperCase());
+      if (raw.length >= 3) extracted.school = raw;
+    }
+
+    // Pattern 2: Explicit "at X School / for X Primary" etc.
+    if (!extracted.school) {
+      const schoolAtMatch = query.match(/\b(?:at|for)\s+([A-Z][a-zA-Z0-9\s'-]{2,35}\s+(?:Primary|High|College|Academy|School|Preparatory|Pre-Primary))\b/i);
+      if (schoolAtMatch) extracted.school = schoolAtMatch[1].trim();
+    }
+
+    // Pattern 3: Full school name ending in Primary / High / College / Academy etc. anywhere in query
+    if (!extracted.school) {
+      const fullSchoolMatch = query.match(/\b([A-Z][a-zA-Z0-9\s'\-]{2,35}\s+(?:Primary|High|College|Academy|School|Preparatory|Pre-Primary|Hoërskool|Laerskool))\b/i);
+      if (fullSchoolMatch) extracted.school = fullSchoolMatch[1].trim();
+    }
+
+    // Pattern 4: Known informal shorthand and SA suburb school names
+    if (!extracted.school) {
+      const informalSchoolMatch = query.match(
+        /\b(st\.?\s*[a-z]+(?:\s+[a-z]+)?|curro(?:\s+[a-z]+)?|crawford(?:\s+[a-z]+)?|redhill|reddamhuis|jeppe|kes|marist(?:\s+[a-z]+)?|primrose(?:\s+hill)?|bedfordview|germiston|kempton(?:\s+park)?|edenvale|benoni|boksburg|brakpan|alberton|roodepoort|randburg|sandton|fourways|midrand|centurion|pretoria|tshwane|soweto|diepkloof|lenasia|naturena|katlehong|thembisa|daveyton|springs|nigel|heidelberg|vereeniging|vanderbijlpark|meyerton|sasolburg|bloemfontein|polokwane|limpopo|nelspruit|mbombela|rustenburg|klerksdorp|potchefstroom|mahikeng|mafikeng|cape town|bellville|tygervalley|stellenbosch|paarl|george|knysna|durban|pietermaritzburg|pinetown|amanzimtoti|umhlanga|umlazi|chatsworth|phoenix|east london|king william|port elizabeth|gqeberha|queenstown)\b/i,
+      );
+      if (informalSchoolMatch && !/\b(status|step|start|stock|store|street|street|straight)\b/i.test(informalSchoolMatch[1])) {
+        let cleaned = informalSchoolMatch[1].trim();
+        // Capitalise each word
         cleaned = cleaned.replace(/\b([a-z])/g, (c) => c.toUpperCase());
-        if (/St\s*Marys/i.test(cleaned)) {
-          cleaned = cleaned.replace(/St Marys/i, "St Mary's");
-        }
+        // Fix common apostrophe patterns
+        cleaned = cleaned.replace(/\bSt Marys\b/i, "St Mary's").replace(/\bSt Benedicts\b/i, "St Benedict's");
+        // Normalise klrkdrp shorthand
+        cleaned = cleaned.replace(/\bKlrkdrp\b/i, "Klerksdorp");
         extracted.school = cleaned;
       }
     }
@@ -277,6 +300,14 @@ export function detectPexIntent(query: string): PexIntent {
   if (/\b(delivery|deliveri|courier|paxi|pep|shipping|collect(?:ion)?)\b/.test(value)) return "delivery_information";
   if (/\b(checkout|chekout|pay|payment|payement|ozow|happy\s*pay|eft|card)\b/.test(value)) return "payment_information";
   if (/\b(cart|basket)\b|\b(quantity|remove|add).{0,24}\b(pack|pak|item|product|cart|basket)\b/.test(value)) return "checkout_help";
+
+  // "do you have X?", "is X on your site?", "do you offer X?" → school availability check
+  if (/\b(do you have|do you offer|do you do|are you listing|is .+ on your site|can i find .+ on here)\b/.test(value)) return "find_school";
+  // "how do I order", "how to buy", "how can I get" stationery packs
+  if (/\b(how do i order|how to order|how can i order|how do i get|how can i buy|how to buy|how do i buy|where do i start|how do i place)\b/.test(value)) return "find_school";
+  // "what is X", "which grade packs do you have"
+  if (/\b(what grades do you have|which schools do you have|what packs do you have|what schools are on|official.*pack|stationery.*pack)\b/.test(value)) return "find_school_pack";
+
   if (
     /\b(school|skool|schools|where do i start|how do i order|how to make an order|how to place an order|how can i buy|want stationery|want stationary)\b/.test(value) ||
     /\b(st\.?\s*[a-z]+|curro|crawford|redhill|jeppe|marist|kes|klerksdorp|klrkdrp)\b/i.test(value)
@@ -585,17 +616,61 @@ export function buildPexReply(
       break;
 
     case "find_school":
-    case "find_school_pack":
-      if (updatedEntities.school && !updatedEntities.grade) {
+    case "find_school_pack": {
+      const matchedSchool = updatedEntities.school;
+      const matchedGrade = updatedEntities.grade;
+
+      if (matchedSchool) {
+        // Build a slug from the extracted school name for direct linking
+        const schoolSlug = matchedSchool
+          .toLowerCase()
+          .replace(/['']/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+        if (matchedGrade) {
+          // We have both school + grade — direct link to the grade pack
+          const gradeSlug = matchedGrade.toLowerCase().replace(/\s+/g, "-");
+          reply = response(
+            resolvedIntent,
+            `${matchedSchool} is on Pexpacks — the ${matchedGrade} pack is ready to go. Tap below to open it, confirm the items, and add it straight to your cart.`,
+            [{ id: "view-pack", label: `${matchedSchool} ${matchedGrade}`, description: "View grade pack and add to cart", href: `/schools/${schoolSlug}/${gradeSlug}` }],
+            [
+              { id: "open-pack", label: `View ${matchedGrade} pack`, message: `Show me the ${matchedGrade} pack for ${matchedSchool}` },
+              { id: "pexcover-query", label: "Add book covering", message: "Tell me about Pexcover" },
+            ],
+            false,
+            updatedEntities,
+            options.contextSummary ?? `User confirmed ${matchedSchool} ${matchedGrade} pack.`,
+            activeSession,
+          );
+        } else {
+          // School found but no grade yet — link to school page, ask for grade
+          reply = response(
+            resolvedIntent,
+            `${matchedSchool} is on Pexpacks. Tap below to see all available grade packs — just pick the learner's grade when you get there.`,
+            [{ id: "view-school", label: `View ${matchedSchool}`, description: "See all grade packs for this school", href: `/schools/${schoolSlug}` }],
+            [
+              { id: "grade-r", label: "Grade R", message: `Grade R pack for ${matchedSchool}` },
+              { id: "grade-1", label: "Grade 1", message: `Grade 1 pack for ${matchedSchool}` },
+              { id: "grade-4", label: "Grade 4", message: `Grade 4 pack for ${matchedSchool}` },
+              { id: "grade-8", label: "Grade 8", message: `Grade 8 pack for ${matchedSchool}` },
+            ],
+            false,
+            updatedEntities,
+            options.contextSummary ?? `User asked for ${matchedSchool} — linked to school page.`,
+            activeSession,
+          );
+        }
+      } else if (matchedGrade) {
+        // Grade known but no school — guide them to browse
         reply = response(
           resolvedIntent,
-          `Pulling up the ${updatedEntities.school} list right now. What grade are we sorting out today?`,
-          [{ id: "browse-schools", label: `View ${updatedEntities.school}`, description: "Search grades and packs", href: "/schools" }],
+          `We've got packs for ${matchedGrade} across many schools in South Africa. Search by your school name to find the exact official list.`,
+          [{ id: "browse-schools", label: `Browse ${matchedGrade} packs`, description: "Search schools and grade packs", href: "/schools" }],
           [
-            { id: "grade-r", label: "Grade R", message: `Grade R for ${updatedEntities.school}` },
-            { id: "grade-1", label: "Grade 1", message: `Grade 1 for ${updatedEntities.school}` },
-            { id: "grade-4", label: "Grade 4", message: `Grade 4 for ${updatedEntities.school}` },
-            { id: "grade-8", label: "Grade 8", message: `Grade 8 for ${updatedEntities.school}` },
+            { id: "find-school", label: "Find my school", message: `Find my school's ${matchedGrade} pack` },
+            { id: "upload-list", label: "Upload a list", message: "My school is not listed yet" },
           ],
           false,
           updatedEntities,
@@ -603,11 +678,18 @@ export function buildPexReply(
           activeSession,
         );
       } else {
+        // General school search — no entity extracted
         reply = response(
           resolvedIntent,
-          "Search for your school, then choose the learner's grade. Packs are prepared to match the official school list where it is available.",
-          [{ id: "browse-schools", label: "Find my school", description: "Search schools and grade packs", href: "/schools" }],
-          QUICK_REPLIES.slice(0, 3),
+          "We carry official packs for hundreds of South African schools. Type your school name above to find your pack — if it's not listed yet, Upload a List gets you sorted just as fast.",
+          [
+            { id: "browse-schools", label: "Browse schools", description: "Search schools and grade packs", href: "/schools" },
+            { id: "upload-list", label: "Upload a list", description: "Submit your school's list", href: "/upload-a-list" },
+          ],
+          [
+            { id: "find-school", label: "Find my school", message: "Help me find my school pack" },
+            { id: "upload-list", label: "Upload a list", message: "I need to upload a stationery list" },
+          ],
           false,
           updatedEntities,
           options.contextSummary,
@@ -615,6 +697,7 @@ export function buildPexReply(
         );
       }
       break;
+    }
 
     case "product_search":
       reply = response(
@@ -713,8 +796,31 @@ export function buildPexReply(
       );
       break;
 
-    default:
-      reply = response("unknown_intent", UNKNOWN_REPLY, [], QUICK_REPLIES, false, updatedEntities, options.contextSummary, activeSession);
+    default: {
+      // Last-resort: if any school-sounding word crept through, try find_school
+      const hasSchoolHint = /\b(school|skool|primrose|bedfordview|curro|crawford|reddamhuis|st\s|primary|high|college|academy|preparatory)\b/i.test(query);
+      if (hasSchoolHint) {
+        const detectedSchool = extractPexEntities(query, updatedEntities);
+        const slug = (detectedSchool.school ?? "")
+          .toLowerCase().replace(/['']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        const schoolLabel = detectedSchool.school ?? "that school";
+        reply = response(
+          "find_school",
+          `${schoolLabel} sounds like a school we may have on Pexpacks. Tap below to check the available grade packs — if it's not listed, our Upload a List option has you covered.`,
+          [{ id: "view-school", label: `Search for ${schoolLabel}`, description: "Check school pack availability", href: slug ? `/schools/${slug}` : "/schools" }],
+          [
+            { id: "find-school", label: "Find my school", message: `Search for ${schoolLabel}` },
+            { id: "upload-list", label: "Upload a list", message: "My school is not listed yet" },
+          ],
+          false,
+          updatedEntities,
+          options.contextSummary,
+          activeSession,
+        );
+      } else {
+        reply = response("unknown_intent", UNKNOWN_REPLY, [], QUICK_REPLIES, false, updatedEntities, options.contextSummary, activeSession);
+      }
+    }
   }
 
   return avoidRepeatedReply(reply, options.previousAssistantText);
