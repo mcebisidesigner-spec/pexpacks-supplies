@@ -698,6 +698,7 @@ export function TrayCheckoutClient() {
                         )}
                       >
                         <input
+                          id={`contact-method-${option.value}`}
                           type="radio"
                           name="preferredContactMethod"
                           value={option.value}
@@ -778,6 +779,7 @@ export function TrayCheckoutClient() {
                       )}
                     >
                       <input
+                        id={`fulfilment-option-${option.value}`}
                         type="radio"
                         name="fulfilment"
                         value={option.value}
@@ -823,6 +825,7 @@ export function TrayCheckoutClient() {
                           )}
                         >
                           <input
+                            id={`multi-school-${school.slug}`}
                             type="radio"
                             name="multiSchoolDrop"
                             value={school.slug}
@@ -894,13 +897,14 @@ export function TrayCheckoutClient() {
             className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-label="Consent"
           >
-            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel-dark)] [&_a]:underline [&_a]:underline-offset-2 [&_a]:decoration-1.5 [&_a]:font-semibold hover:[&_a]:text-[var(--pex-keppel)]">
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed">
               <input
                 ref={(node) => {
                   fieldRefs.current.consent = node;
                 }}
                 type="checkbox"
                 id="consent"
+                name="consent"
                 checked={consent}
                 onChange={(e) => {
                   setConsent(e.target.checked);
@@ -913,23 +917,23 @@ export function TrayCheckoutClient() {
                 I agree that Pexpacks may process my personal information to
                 complete this order, send order updates, and contact me about
                 delivery or collection. I have read and agree to the{" "}
-                <a href="/privacy-policy" target="_blank">
+                <a href="/privacy-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   privacy policy
                 </a>
                 ,{" "}
-                <a href="/terms" target="_blank">
+                <a href="/terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   terms of use
                 </a>
                 ,{" "}
-                <a href="/delivery-policy" target="_blank">
+                <a href="/delivery-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   delivery policy
                 </a>
                 ,{" "}
-                <a href="/happy-pay-terms" target="_blank">
+                <a href="/happy-pay-terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   happy pay terms
                 </a>
                 , and{" "}
-                <a href="/returns-refunds-policy" target="_blank">
+                <a href="/returns-refunds-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   returns &amp; refunds policy
                 </a>
                 .

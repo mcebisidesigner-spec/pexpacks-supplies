@@ -452,6 +452,8 @@ export function AiListDropzone() {
 
                 {/* Standard file input */}
                 <input
+                  id="stationery-file-upload"
+                  name="stationeryFile"
                   ref={fileInputRef}
                   type="file"
                   accept="image/*,application/pdf"
@@ -461,6 +463,8 @@ export function AiListDropzone() {
 
                 {/* Direct mobile camera capture input */}
                 <input
+                  id="stationery-camera-capture"
+                  name="stationeryCamera"
                   ref={cameraInputRef}
                   type="file"
                   accept="image/*"
@@ -491,6 +495,8 @@ export function AiListDropzone() {
           ) : (
             <div className="flex flex-col gap-4">
               <textarea
+                id="stationery-text-input"
+                name="stationeryText"
                 className="w-full border-2 border-pex-border focus:border-pex-keppel rounded-xl p-3.5 text-sm text-foreground resize-y min-h-[140px] outline-none transition-all shadow-[inset_0_2px_4px_rgba(26,42,64,0.04)] focus:ring-4 focus:ring-pex-keppel/15 placeholder:text-muted-foreground/50"
                 rows={6}
                 placeholder="Paste or type your stationery list here...&#10;e.g.&#10;5x 72pg Exercise Books Feint & Margin&#10;2x Pritt Glue Sticks 43g&#10;1x Staedtler Noris 2B Pencils Pack of 12&#10;1x 30cm Shatterproof Ruler"

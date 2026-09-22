@@ -207,6 +207,7 @@ export function MustChangePasswordModal({
             {/* New Password */}
             <div>
               <label
+                htmlFor="new-permanent-password"
                 style={{
                   display: "block",
                   fontSize: "0.8125rem",
@@ -219,6 +220,9 @@ export function MustChangePasswordModal({
               </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="new-permanent-password"
+                  name="newPassword"
+                  autoComplete="new-password"
                   type={showPassword ? "text" : "password"}
                   required
                   value={password}
@@ -260,6 +264,7 @@ export function MustChangePasswordModal({
             {/* Confirm New Password */}
             <div>
               <label
+                htmlFor="confirm-new-password"
                 style={{
                   display: "block",
                   fontSize: "0.8125rem",
@@ -272,6 +277,9 @@ export function MustChangePasswordModal({
               </label>
               <div style={{ position: "relative" }}>
                 <input
+                  id="confirm-new-password"
+                  name="confirmPassword"
+                  autoComplete="new-password"
                   type={showConfirm ? "text" : "password"}
                   required
                   value={confirmPassword}

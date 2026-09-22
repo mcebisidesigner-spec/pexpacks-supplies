@@ -48,6 +48,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
+            name={props.name ?? (typeof inputId === "string" ? inputId : undefined)}
             className={cn(
               "w-full h-11 min-h-11 rounded-xl border border-pex-border px-4 bg-white text-pex-navy font-sans text-sm sm:text-[15px] placeholder:text-pex-muted/50 transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
               error &&

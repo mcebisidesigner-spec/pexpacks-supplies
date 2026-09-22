@@ -245,6 +245,8 @@ export function CSVStationeryImporter({
           {isCondensed ? (
             <label className={compactDropzoneClasses}>
               <input
+                id="csv-stationery-compact-file"
+                name="csvFile"
                 type="file"
                 accept=".csv"
                 onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
@@ -284,6 +286,8 @@ export function CSVStationeryImporter({
           }
         >
           <input
+            id="csv-stationery-full-file"
+            name="csvFile"
             type="file"
             accept=".csv"
             onChange={(e) => handleFileChange(e.target.files?.[0] || null)}

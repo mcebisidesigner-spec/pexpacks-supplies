@@ -354,6 +354,7 @@ export default function PexConsoleGateway() {
             <div className="flex items-start gap-2.5 p-3 sm:px-3.5 sm:py-3 bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-[var(--db-radius-control)] box-border">
               <input
                 id="trusted-device"
+                name="trustedDevice"
                 type="checkbox"
                 checked={isTrustedDevice}
                 onChange={(e) => setIsTrustedDevice(e.target.checked)}
@@ -399,6 +400,8 @@ export default function PexConsoleGateway() {
                 {otpValues.map((digit, idx) => (
                   <input
                     key={idx}
+                    id={`otp-token-${idx}`}
+                    name={`otpToken_${idx}`}
                     ref={(el) => {
                       otpRefs.current[idx] = el;
                     }}

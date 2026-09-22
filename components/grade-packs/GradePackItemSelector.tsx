@@ -225,6 +225,8 @@ export function GradePackItemSelector({
           </div>
 
           <input
+            id="grade-pack-item-search"
+            name="gradePackItemSearch"
             type="text"
             value={searchTerm}
             onChange={(e) => {

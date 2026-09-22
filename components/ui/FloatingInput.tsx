@@ -52,6 +52,7 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
           <input
             ref={ref}
             id={inputId}
+            name={props.name ?? (id || inputId)}
             placeholder=" "
             value={value}
             defaultValue={defaultValue}
