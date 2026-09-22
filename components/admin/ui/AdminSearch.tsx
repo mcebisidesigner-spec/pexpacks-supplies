@@ -81,10 +81,8 @@ export function AdminSearch({
         placeholder={placeholder}
         aria-label={placeholder}
         className={cn(
-          "w-full h-9 pl-9 pr-14 text-xs font-medium rounded-lg",
-          "bg-[var(--db-surface-inner,#090e17)] text-[var(--db-text-primary,#f8fafc)] placeholder:text-[var(--db-text-subtle,#64748b)]",
-          "border border-[var(--db-border,#1e293b)] focus:outline-none focus:border-emerald-500/80 focus:ring-1 focus:ring-emerald-500/30",
-          "transition-colors shadow-xs",
+          "h-11 w-full rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] pl-9 pr-14 text-sm font-medium text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)]",
+          "outline-none transition-all focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)] shadow-sm",
           className,
         )}
         {...props}
@@ -100,7 +98,7 @@ export function AdminSearch({
           <button
             type="button"
             onClick={handleClear}
-            className="p-1 text-[var(--db-text-subtle,#64748b)] hover:text-[var(--db-text-primary,#f8fafc)] rounded focus:outline-none focus:ring-1 focus:ring-slate-500"
+            className="rounded-md p-1 text-[var(--db-text-subtle)] transition-colors hover:bg-[var(--db-brand-subtle)] hover:text-[var(--db-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--db-brand-subtle)]"
             aria-label="Clear search"
           >
             <X size={13} aria-hidden="true" />

@@ -38,11 +38,11 @@ export const letterWorkbenchStyles = {
   formLabel:
     "text-[11px] font-bold uppercase tracking-wider text-slate-400",
   formInput:
-    "w-full px-3.5 py-2.5 rounded-lg bg-[var(--db-canvas,#070b12)] border border-[var(--db-border,#1e293b)] text-white text-xs outline-none focus:border-emerald-500 transition-colors",
+    "h-11 w-full rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 font-inherit text-sm text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
   formInputReadOnly:
     "bg-[var(--db-surface-inner,#090e17)] text-slate-400 cursor-not-allowed",
   formTextarea:
-    "w-full min-h-[140px] p-3 rounded-lg bg-[var(--db-canvas,#070b12)] border border-[var(--db-border,#1e293b)] text-white text-xs font-mono leading-relaxed outline-none focus:border-emerald-500 resize-y transition-colors",
+    "min-h-36 w-full resize-y rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] p-3.5 font-mono text-sm leading-relaxed text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
   attachmentCard:
     "flex items-center justify-between p-3 sm:px-4 bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,#1e293b)] rounded-lg text-xs text-slate-400",
   attachmentBadge: "font-mono font-bold text-emerald-400",

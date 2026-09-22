@@ -41,12 +41,12 @@ export const pexpacksDetailsStyles = {
   formCard:
     "bg-[var(--db-surface,#0c1322)] border border-[var(--db-border,#1e293b)] rounded-xl p-5 sm:p-6 flex flex-col gap-5 shadow-sm",
   formGrid2: "grid grid-cols-1 sm:grid-cols-2 gap-4",
-  formField: "flex flex-col gap-1.5",
-  formLabel: "text-xs font-semibold text-slate-300",
+  formField: "flex flex-col gap-2",
+  formLabel: "text-xs font-semibold leading-4 text-[var(--db-text-secondary)]",
   formInput:
-    "bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,#1e293b)] rounded-lg px-3.5 py-2 text-white text-xs outline-none focus:border-emerald-500 transition-colors",
+    "h-11 rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 text-sm text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
   formTextarea:
-    "bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,#1e293b)] rounded-lg p-3 text-white text-xs outline-none focus:border-emerald-500 min-h-[100px] leading-relaxed transition-colors",
+    "min-h-24 rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] p-3.5 text-sm leading-relaxed text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
   actionFooter: "flex justify-end items-center gap-3 pt-4 border-t border-[var(--db-border,#1e293b)]",
   cancelBtn:
     "px-4 py-2 bg-transparent border border-[var(--db-border,#1e293b)] rounded-lg text-slate-300 text-xs font-semibold hover:bg-slate-800 hover:text-white transition-colors cursor-pointer",

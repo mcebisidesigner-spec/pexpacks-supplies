@@ -14,6 +14,7 @@ import {
   trackWhatsAppClicked,
 } from "@/lib/analytics";
 import type { PexChatResponse } from "@/lib/chat/pex";
+import type { ActiveSession, PexEntities } from "@/lib/chat/request";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { cn } from "@/lib/utils";
 
@@ -132,6 +133,10 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionEntities, setSessionEntities] = useState<PexEntities>({});
+  const [greetingGiven, setGreetingGiven] = useState(false);
+  const [contextSummary, setContextSummary] = useState<string | undefined>(undefined);
+  const [activeSession, setActiveSession] = useState<ActiveSession | undefined>(undefined);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const openTray = usePackTrayStore((state) => state.openTray);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -224,7 +229,25 @@ export function ChatWidget() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             messages: history,
-            context: { pathname: window.location.pathname },
+            context: {
+              pathname: window.location.pathname,
+              greetingGiven,
+              entities: sessionEntities,
+              contextSummary,
+              activeSession: {
+                ...activeSession,
+                turnsCount: (activeSession?.turnsCount ?? 0) + 1,
+                greetingDelivered: greetingGiven || activeSession?.greetingDelivered || false,
+                knownEntities: {
+                  ...activeSession?.knownEntities,
+                  grade: sessionEntities.grade,
+                  schoolName: sessionEntities.school,
+                  deliveryMethod: sessionEntities.deliveryMethod,
+                  deliveryLocation: sessionEntities.deliveryLocation,
+                  serviceAddons: sessionEntities.pexcover ? ["pexcover"] : (activeSession?.knownEntities?.serviceAddons ?? []),
+                },
+              },
+            },
           }),
         });
         const data: unknown = await response.json();
@@ -246,6 +269,28 @@ export function ChatWidget() {
           intent: reply.intent,
           sourcePath: window.location.pathname,
         });
+
+        if (reply.entities) {
+          setSessionEntities((prev) => ({ ...prev, ...reply.entities }));
+        }
+        if (reply.activeSession) {
+          setActiveSession(reply.activeSession);
+          if (reply.activeSession.knownEntities) {
+            setSessionEntities((prev) => ({
+              ...prev,
+              school: reply.activeSession?.knownEntities?.schoolName ?? prev.school,
+              grade: reply.activeSession?.knownEntities?.grade ?? prev.grade,
+              deliveryMethod: reply.activeSession?.knownEntities?.deliveryMethod ?? prev.deliveryMethod,
+              deliveryLocation: reply.activeSession?.knownEntities?.deliveryLocation ?? prev.deliveryLocation,
+              pexcover: reply.activeSession?.knownEntities?.serviceAddons?.includes("pexcover") ?? prev.pexcover,
+            }));
+          }
+        }
+        if (reply.contextSummary) {
+          setContextSummary(reply.contextSummary);
+        }
+        setGreetingGiven(true);
+
         setMessages((current) => [
           ...current,
           { id: newId(), role: "assistant", response: reply },
@@ -258,7 +303,7 @@ export function ChatWidget() {
         setIsLoading(false);
       }
     },
-    [isLoading, messages],
+    [isLoading, messages, greetingGiven, sessionEntities, contextSummary, activeSession],
   );
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -342,6 +387,32 @@ export function ChatWidget() {
                 setIsOpen(false);
               }}
             />
+
+            {Object.keys(sessionEntities).length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 rounded-xl bg-white/90 p-2 text-xs border border-slate-200/80 shadow-xs">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Active Details:</span>
+                {sessionEntities.school && (
+                  <span className="rounded-md bg-teal-50 px-2 py-0.5 font-semibold text-teal-800 border border-teal-200/60">
+                    🏫 {sessionEntities.school}
+                  </span>
+                )}
+                {sessionEntities.grade && (
+                  <span className="rounded-md bg-sky-50 px-2 py-0.5 font-semibold text-sky-800 border border-sky-200/60">
+                    📚 {sessionEntities.grade}
+                  </span>
+                )}
+                {sessionEntities.pexcover && (
+                  <span className="rounded-md bg-amber-50 px-2 py-0.5 font-semibold text-amber-800 border border-amber-200/60">
+                    🛡️ Pexcover Added
+                  </span>
+                )}
+                {sessionEntities.deliveryMethod && (
+                  <span className="rounded-md bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-800 border border-emerald-200/60">
+                    🚚 {sessionEntities.deliveryMethod === "courier" ? "Home Courier" : sessionEntities.deliveryMethod.toUpperCase()}
+                  </span>
+                )}
+              </div>
+            )}
 
             {messages.map((message) =>
               message.role === "user" ? (

@@ -196,7 +196,7 @@ export default async function SchoolDetailPage({
               we&apos;ll pack it for you.
             </p>
 
-            <div className="flex flex-wrap gap-3.5 justify-center [&>*:not(:first-child)]:bg-white/12 [&>*:not(:first-child)]:border-white/35 [&>*:not(:first-child)]:text-white hover:[&>*:not(:first-child)]:bg-white/25 hover:[&>*:not(:first-child)]:border-white/70">
+            <div className="flex flex-wrap justify-center gap-3.5">
               <Button href="/order" variant="primary">
                 Upload Stationery List
               </Button>
@@ -205,6 +205,7 @@ export default async function SchoolDetailPage({
                   `Hi Pexpacks, I'd like to send my ${school.name} stationery list.`,
                 )}
                 variant="outline"
+                className="!border-white/50 !bg-white/10 !text-white hover:!bg-white/20 hover:!border-white/80"
               >
                 Send List on WhatsApp
               </Button>

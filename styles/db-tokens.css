@@ -662,16 +662,16 @@
 .db-field {
   display: flex;
   flex-direction: column;
-  gap: var(--db-space-0-5);
+  gap: var(--db-space-1);
   min-width: 0;
 }
 
 .db-field-label {
   display: block;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--db-text-secondary);
-  line-height: 1.4;
+  line-height: 1rem;
 }
 
 /* ── Board system (spec §71/77/78 — shared board/column/card) ── */

@@ -11,7 +11,7 @@ export const settingsStyles = {
   headerSubtitle: "m-0 text-xs sm:text-sm text-slate-400",
   searchWrapper: "relative w-full sm:max-w-[380px]",
   searchInput:
-    "w-full h-10 pl-9 pr-11 text-xs font-medium rounded-xl border border-[var(--a-border,#1e293b)] bg-[var(--a-bg,#090e17)] text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30 transition-all",
+    "w-full h-11 pl-9 pr-11 text-sm font-medium rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] outline-none focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)] transition-all",
   searchIcon:
     "absolute left-3 top-3 w-4 h-4 text-slate-500 pointer-events-none",
   searchKbd:
@@ -44,23 +44,23 @@ export const settingsStyles = {
   panelHeader:
     "mb-5 pb-3 border-b border-[var(--a-border,#1e293b)] flex flex-col gap-1",
   formGrid: "grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5",
-  field: "flex flex-col gap-1.5",
-  label: "text-xs font-bold text-slate-200",
+  field: "flex flex-col gap-2",
+  label: "text-xs font-semibold leading-4 text-[var(--db-text-secondary)]",
   input:
-    "w-full h-9 px-3 border border-[var(--a-border,#1e293b)] rounded-lg bg-[var(--a-bg,#090e17)] text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 transition-colors",
+    "w-full h-11 px-3.5 border border-[var(--db-border-strong)] rounded-lg bg-[var(--db-surface-elevated)] text-sm text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] outline-none focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)] transition-all",
   select:
-    "w-full h-9 px-3 border border-[var(--a-border,#1e293b)] rounded-lg bg-[var(--a-bg,#090e17)] text-white text-xs focus:outline-none focus:border-emerald-500",
+    "w-full h-11 px-3.5 border border-[var(--db-border-strong)] rounded-lg bg-[var(--db-surface-elevated)] text-sm text-[var(--db-text-primary)] outline-none focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)] transition-all",
   textarea:
-    "w-full p-3 border border-[var(--a-border,#1e293b)] rounded-lg bg-[var(--a-bg,#090e17)] text-white text-xs focus:outline-none focus:border-emerald-500 min-h-[80px]",
-  hint: "text-[11px] text-slate-400",
+    "w-full min-h-24 resize-y p-3.5 border border-[var(--db-border-strong)] rounded-lg bg-[var(--db-surface-elevated)] text-sm leading-relaxed text-[var(--db-text-primary)] outline-none focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)] transition-all",
+  hint: "text-xs leading-relaxed text-[var(--db-text-muted)]",
   checkboxLabel:
     "flex items-center gap-2.5 text-xs font-semibold text-slate-200 cursor-pointer",
   actionsRow:
     "flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[var(--a-border,#1e293b)] flex-wrap",
   saveButton:
-    "px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
+    "inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[var(--db-brand)] px-5 text-sm font-semibold text-slate-950 shadow-sm transition-all hover:-translate-y-px hover:bg-[var(--db-brand-strong)] hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--db-brand-subtle)] disabled:cursor-not-allowed disabled:opacity-50",
   discardButton:
-    "px-3.5 py-2 rounded-lg border border-[var(--a-border,#1e293b)] bg-transparent text-slate-300 text-xs font-semibold hover:bg-slate-800 hover:text-white transition-colors cursor-pointer",
+    "inline-flex h-11 items-center justify-center rounded-lg border border-[var(--db-border-strong)] bg-transparent px-4 text-sm font-medium text-[var(--db-text-secondary)] transition-all hover:-translate-y-px hover:border-[var(--db-brand)] hover:bg-[var(--db-brand-subtle)] hover:text-[var(--db-text-primary)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--db-brand-subtle)]",
   badgeSuccess:
     "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-bold",
   badgeWarning:

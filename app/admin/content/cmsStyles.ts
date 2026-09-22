@@ -87,14 +87,14 @@ export const styles = {
   /* ── Form Controls ── */
   formGrid2: "grid grid-cols-1 min-[500px]:grid-cols-2 gap-3.5",
   formRow2: "grid grid-cols-1 min-[500px]:grid-cols-2 gap-3.5",
-  formGroup: "flex flex-col gap-1.5",
-  formLabel: "text-[11.5px] font-bold text-[var(--db-text-secondary)] uppercase tracking-[0.04em]",
-  formInput: "h-10 px-3 bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-lg text-white text-[13.5px] font-inherit outline-none transition-[border-color,box-shadow] duration-140 focus:border-[var(--db-brand)] focus:ring-1 focus:ring-[var(--db-brand)]",
-  formTextarea: "min-h-[90px] max-h-[240px] overflow-y-auto p-[10px_12px] bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-lg text-white text-[13.5px] font-inherit outline-none resize-y transition-[border-color,box-shadow] duration-140 focus:border-[var(--db-brand)] focus:ring-1 focus:ring-[var(--db-brand)]",
-  formSelect: "h-10 px-3 bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-lg text-white text-[13.5px] font-inherit outline-none cursor-pointer transition-[border-color,box-shadow] duration-140 focus:border-[var(--db-brand)] focus:ring-1 focus:ring-[var(--db-brand)]",
+  formGroup: "flex flex-col gap-2",
+  formLabel: "text-xs font-semibold leading-4 text-[var(--db-text-secondary)]",
+  formInput: "h-11 w-full rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 font-inherit text-sm text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
+  formTextarea: "min-h-24 max-h-60 w-full resize-y overflow-y-auto rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 py-3 font-inherit text-sm leading-relaxed text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
+  formSelect: "h-11 w-full cursor-pointer rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 font-inherit text-sm text-[var(--db-text-primary)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
   checkboxWrap: "flex items-center gap-2 text-[13px] font-semibold text-[var(--db-text-secondary)] cursor-pointer select-none",
   checkbox: "w-4 h-4 accent-[var(--db-brand)] cursor-pointer",
-  errorMessage: "p-[10px_14px] bg-red-500/10 border border-red-500/35 rounded-lg text-red-400 text-[12.5px] font-semibold",
+  errorMessage: "flex items-center gap-2 rounded-lg border border-[var(--db-danger-border)] bg-[var(--db-danger-subtle)] px-3.5 py-2.5 text-xs font-semibold text-[var(--db-danger-text)]",
 
   /* ── Empty State ── */
   emptyState: "flex flex-col items-center justify-center text-center p-[48px_24px] bg-[var(--db-surface)] border border-dashed border-[var(--db-border)] rounded-[var(--db-radius-card)] text-[var(--db-text-muted)]",

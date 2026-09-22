@@ -265,7 +265,7 @@ function CreateBrandModal({ isOpen, onClose, onBrandCreated }: BrandModalProps) 
       role="dialog"
       aria-modal="true"
       aria-labelledby="brand-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--db-surface-elevated)]/80 backdrop-blur-sm animate-in fade-in duration-150"
     >
       <div className="relative w-full max-w-md rounded-xl bg-slate-900 border border-slate-800 p-6 shadow-2xl shadow-black/80">
         {/* Modal Header */}
@@ -305,7 +305,7 @@ function CreateBrandModal({ isOpen, onClose, onBrandCreated }: BrandModalProps) 
           <div>
             <label
               htmlFor="modal-brand-name"
-              className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+              className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
             >
               Brand Name <span className="text-emerald-400">*</span>
             </label>
@@ -319,10 +319,10 @@ function CreateBrandModal({ isOpen, onClose, onBrandCreated }: BrandModalProps) 
                 if (error) setError(null);
               }}
               placeholder="e.g. Treeline, Faber-Castell, Artline..."
-              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+              className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
               required
             />
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-xs leading-relaxed text-[var(--db-text-muted)] mt-2">
               The brand will be added to the directory and automatically selected.
             </p>
           </div>
@@ -735,7 +735,7 @@ export function ProductEditForm({
                 <div className="sm:col-span-8">
                   <label
                     htmlFor="master-name"
-                    className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                    className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                   >
                     Product Name <span className="text-emerald-400">*</span>
                   </label>
@@ -747,14 +747,14 @@ export function ProductEditForm({
                       setMasterProduct((p) => ({ ...p, name: e.target.value }))
                     }
                     placeholder="e.g. College Exercise Unruled"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                   />
                 </div>
 
                 <div className="sm:col-span-4">
                   <label
                     htmlFor="master-category"
-                    className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                    className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                   >
                     Category
                   </label>
@@ -764,7 +764,7 @@ export function ProductEditForm({
                     onChange={(e) =>
                       setMasterProduct((p) => ({ ...p, category: e.target.value }))
                     }
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                   >
                     {PRODUCT_CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -779,7 +779,7 @@ export function ProductEditForm({
               <div>
                 <label
                   htmlFor="master-desc"
-                  className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                  className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                 >
                   Description &amp; Specifications
                 </label>
@@ -794,7 +794,7 @@ export function ProductEditForm({
                     }))
                   }
                   placeholder="Material specs, binding details, ruling rules..."
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                  className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                 />
               </div>
 
@@ -803,7 +803,7 @@ export function ProductEditForm({
                 <div>
                   <label
                     htmlFor="master-unit"
-                    className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                    className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                   >
                     Pack / Unit (e.g. Pack, Box, Each)
                   </label>
@@ -818,14 +818,14 @@ export function ProductEditForm({
                       }))
                     }
                     placeholder="Unit"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="master-qty"
-                    className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                    className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                   >
                     Quantity per Master Item
                   </label>
@@ -840,7 +840,7 @@ export function ProductEditForm({
                         quantity: parseInt(e.target.value, 10) || 1,
                       }))
                     }
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                   />
                 </div>
               </div>
@@ -868,7 +868,7 @@ export function ProductEditForm({
                         requires_covering: e.target.checked,
                       }))
                     }
-                    className="w-4 h-4 rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900"
+                    className="w-4 h-4 rounded bg-[var(--db-surface-elevated)] border-[var(--db-border-strong)] text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900"
                   />
                   <span>Requires Pexcover™ covering</span>
                 </label>
@@ -890,7 +890,7 @@ export function ProductEditForm({
                           pexco_code: e.target.value,
                         }))
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                      className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                     >
                       {PEXCO_CLASSIFICATION_OPTIONS.map((opt) => (
                         <option key={opt.code} value={opt.code}>
@@ -945,7 +945,7 @@ export function ProductEditForm({
                     id="variant-brand-select"
                     value={selectedBrandId}
                     onChange={handleBrandSelectChange}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                   >
                     <option value="">— Select Brand —</option>
                     {brands.map((b) => (
@@ -969,7 +969,7 @@ export function ProductEditForm({
                 <div className="sm:col-span-6">
                   <label
                     htmlFor="variant-cost-input"
-                    className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                    className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                   >
                     Cost Price (R) <span className="text-emerald-400">*</span>
                   </label>
@@ -981,7 +981,7 @@ export function ProductEditForm({
                     value={costPriceInput}
                     onChange={(e) => setCostPriceInput(e.target.value)}
                     placeholder="e.g. 16.00"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all font-mono"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all font-mono"
                   />
                 </div>
               </div>
@@ -1018,7 +1018,7 @@ export function ProductEditForm({
                       setIsCustomSku(true);
                     }}
                     placeholder="PEX-CEU-FREEDOM-..."
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all font-mono text-xs"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all font-mono text-xs"
                   />
                 </div>
 
@@ -1026,7 +1026,7 @@ export function ProductEditForm({
                 <div className="sm:col-span-6">
                   <label
                     htmlFor="variant-supplier-select"
-                    className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                    className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
                   >
                     Supplier (Cost Source)
                   </label>
@@ -1034,7 +1034,7 @@ export function ProductEditForm({
                     id="variant-supplier-select"
                     value={selectedSupplierId}
                     onChange={(e) => setSelectedSupplierId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                    className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
                   >
                     {suppliers.map((s) => (
                       <option key={s.id} value={s.id}>
@@ -1046,7 +1046,7 @@ export function ProductEditForm({
               </div>
 
               {/* Inline Margin & Staging Action Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800/80 bg-slate-950/40 p-3.5 rounded-lg">
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[var(--db-border-strong)]/80 bg-[var(--db-surface-elevated)]/40 p-3.5 rounded-lg">
                 <div className="flex items-center gap-4">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
@@ -1113,7 +1113,7 @@ export function ProductEditForm({
               <div className="overflow-x-auto rounded-lg border border-slate-800">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-950/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                    <tr className="bg-[var(--db-surface-elevated)]/80 text-slate-400 uppercase tracking-wider font-semibold border-b border-[var(--db-border-strong)]">
                       <th className="py-3 px-4">Brand</th>
                       <th className="py-3 px-4">SKU</th>
                       <th className="py-3 px-4 text-right">Cost Price</th>
@@ -1216,7 +1216,7 @@ export function ProductEditForm({
             <div>
               <label
                 htmlFor="primary-cost"
-                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
               >
                 Cost Price (R)
               </label>
@@ -1241,12 +1241,12 @@ export function ProductEditForm({
                     ]);
                   }
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm font-mono outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
               />
             </div>
 
             {/* Calculated Selling Price Highlight Card */}
-            <div className="rounded-lg bg-slate-950/80 border border-emerald-500/20 p-4 relative overflow-hidden">
+            <div className="rounded-lg bg-[var(--db-surface-elevated)]/80 border border-emerald-500/20 p-4 relative overflow-hidden">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Calculated Selling Price
               </span>
@@ -1264,7 +1264,7 @@ export function ProductEditForm({
             <div>
               <label
                 htmlFor="sidebar-supplier"
-                className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5"
+                className="block text-xs font-semibold leading-4 text-[var(--db-text-secondary)] mb-2"
               >
                 Supplier (Cost Price Source)
               </label>
@@ -1285,7 +1285,7 @@ export function ProductEditForm({
                     ]);
                   }
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                className="w-full h-11 px-3.5 rounded-lg bg-[var(--db-surface-elevated)] border border-[var(--db-border-strong)] text-[var(--db-text-primary)] text-sm outline-none focus:ring-4 focus:ring-[var(--db-brand-subtle)] focus:border-[var(--db-brand)] transition-all"
               >
                 {suppliers.map((sup) => (
                   <option key={sup.id} value={sup.id}>
@@ -1293,7 +1293,7 @@ export function ProductEditForm({
                   </option>
                 ))}
               </select>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-xs leading-relaxed text-[var(--db-text-muted)] mt-2">
                 Select the supplier whose cost price is used for this product.
               </p>
             </div>
@@ -1316,7 +1316,7 @@ export function ProductEditForm({
                     ]);
                   }
                 }}
-                className="w-4 h-4 rounded bg-slate-950 border-slate-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900"
+                className="w-4 h-4 rounded bg-[var(--db-surface-elevated)] border-[var(--db-border-strong)] text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900"
               />
               <span className="font-medium">Visible on Public Catalogue</span>
             </label>

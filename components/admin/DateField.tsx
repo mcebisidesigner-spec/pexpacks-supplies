@@ -209,8 +209,8 @@ export function DateField({
         id={triggerId}
         type="button"
         className={cn(
-          "flex w-full h-[46px] min-h-[46px] items-center gap-3 text-left cursor-pointer bg-[var(--db-surface-inner,#090e17)] border border-slate-800 rounded-lg px-3.5 text-white font-inherit text-[13.5px] font-medium outline-none transition-all hover:border-emerald-500/40 focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/20",
-          currentValue ? "text-white font-bold" : "text-slate-400 font-medium",
+          "flex h-11 min-h-11 w-full items-center gap-3 rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 text-left font-inherit text-sm font-medium text-[var(--db-text-primary)] outline-none transition-all duration-150 cursor-pointer hover:border-[var(--db-text-subtle)] focus-visible:border-[var(--db-brand)] focus-visible:ring-4 focus-visible:ring-[var(--db-brand-subtle)]",
+          currentValue ? "text-[var(--db-text-primary)] font-semibold" : "text-[var(--db-text-muted)] font-medium",
           className,
         )}
         aria-label={ariaLabel ?? placeholder}

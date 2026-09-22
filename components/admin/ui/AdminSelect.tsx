@@ -86,11 +86,11 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
     };
 
     return (
-      <div className="flex flex-col gap-1.5 w-full" ref={ref}>
+      <div className="flex w-full flex-col gap-2" ref={ref}>
         {label && (
           <label
             htmlFor={selectId}
-            className="text-xs font-semibold text-[var(--db-text-muted)] select-none"
+            className="text-xs font-semibold leading-4 text-[var(--db-text-secondary)] select-none"
           >
             {label}
           </label>
@@ -103,9 +103,9 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
             aria-haspopup="listbox"
             aria-expanded={open}
             className={cn(
-              "flex items-center justify-between gap-2 w-full h-[42px] bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,rgba(51,65,85,0.85))] rounded-lg px-3 text-left cursor-pointer outline-none transition-colors transition-shadow text-[var(--db-text-primary,#ffffff)] hover:border-slate-400/60 hover:bg-slate-800/50 focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/25 focus-visible:bg-[#0b121e] disabled:opacity-50 disabled:cursor-not-allowed",
+              "flex h-11 w-full items-center justify-between gap-2 rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 text-left text-sm font-medium text-[var(--db-text-primary)] outline-none transition-all duration-150 cursor-pointer hover:border-[var(--db-text-subtle)] hover:bg-[var(--db-surface-hover)] focus-visible:border-[var(--db-brand)] focus-visible:ring-4 focus-visible:ring-[var(--db-brand-subtle)] disabled:cursor-not-allowed disabled:opacity-60",
               open &&
-                "border-emerald-500 ring-2 ring-emerald-500/25 bg-[#0b121e]",
+                "border-[var(--db-brand)] ring-4 ring-[var(--db-brand-subtle)] bg-[var(--db-surface-hover)]",
               error &&
                 "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/25",
               className,
@@ -127,7 +127,7 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
 
           {open ? (
             <ul
-              className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 m-0 p-1.5 list-none bg-[#090e17] border border-slate-700/90 rounded-lg shadow-[0_12px_36px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.05)] max-h-70 overflow-y-auto box-border"
+              className="absolute left-0 right-0 top-[calc(100%+8px)] z-50 m-0 max-h-70 overflow-y-auto rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface)] p-1.5 shadow-[var(--db-shadow-elevated)] box-border"
               role="listbox"
             >
               {options.map((opt) => {
@@ -166,7 +166,7 @@ export const AdminSelect = React.forwardRef<HTMLDivElement, AdminSelectProps>(
           ) : null}
         </div>
         {error && (
-          <span className="text-xs text-[var(--db-danger-text,#ef4444)] font-medium">
+          <span className="text-xs font-medium leading-4 text-[var(--db-danger-text,#ef4444)]">
             {error}
           </span>
         )}

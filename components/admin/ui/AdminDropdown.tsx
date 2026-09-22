@@ -123,7 +123,7 @@ export function AdminDropdown<T extends string | number>({
         className={cn(
           pill
             ? "inline-flex items-center gap-2 bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,rgba(51,65,85,0.85))] rounded-full px-3.5 py-1.5 text-white text-xs font-semibold cursor-pointer outline-none transition-all shadow-xs hover:bg-[#0d1524] hover:border-slate-400/60 focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/25 data-[open=true]:border-emerald-500 data-[open=true]:ring-2 data-[open=true]:ring-emerald-500/25 data-[open=true]:bg-[#0b121e]"
-            : "flex items-center justify-between gap-2 w-full h-[42px] px-3 bg-[var(--db-surface-inner,#090e17)] border border-[var(--db-border,rgba(51,65,85,0.85))] rounded-lg text-white font-inherit text-[13px] font-medium cursor-pointer outline-none transition-colors transition-shadow hover:border-slate-400/60 hover:bg-slate-800/50 focus-visible:border-emerald-500 focus-visible:ring-2 focus-visible:ring-emerald-500/25 data-[open=true]:border-emerald-500 data-[open=true]:ring-2 data-[open=true]:ring-emerald-500/25 data-[open=true]:bg-[#0b121e]",
+            : "flex h-11 w-full items-center justify-between gap-2 rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 font-inherit text-sm font-medium text-[var(--db-text-primary)] cursor-pointer outline-none transition-all duration-150 hover:border-[var(--db-text-subtle)] hover:bg-[var(--db-surface-hover)] focus-visible:border-[var(--db-brand)] focus-visible:ring-4 focus-visible:ring-[var(--db-brand-subtle)] data-[open=true]:border-[var(--db-brand)] data-[open=true]:ring-4 data-[open=true]:ring-[var(--db-brand-subtle)] data-[open=true]:bg-[var(--db-surface-hover)]",
         )}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-haspopup="listbox"
@@ -149,7 +149,7 @@ export function AdminDropdown<T extends string | number>({
           role="listbox"
           aria-label={ariaLabel || "Options"}
           className={cn(
-            "absolute top-[calc(100%+6px)] left-0 right-0 z-50 w-full min-w-full max-h-70 overflow-y-auto p-1.5 bg-[#090e17] border border-slate-700/90 rounded-lg shadow-[0_12px_36px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.05)] animate-in fade-in duration-150 box-border",
+            "absolute left-0 right-0 top-[calc(100%+8px)] z-50 w-full min-w-full max-h-70 overflow-y-auto rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface)] p-1.5 shadow-[var(--db-shadow-elevated)] animate-in fade-in duration-150 box-border",
             searchable && "flex flex-col max-h-85 overflow-hidden p-0",
             align === "right" && "left-auto right-0",
             openUpwards && "top-auto bottom-[calc(100%+6px)]",

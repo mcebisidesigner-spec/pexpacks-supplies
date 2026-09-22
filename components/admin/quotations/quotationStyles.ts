@@ -47,12 +47,9 @@ export const quotationStyles: Record<string, string> = {
   relativeCell: "relative p-1 align-middle border-b border-[var(--db-border,#1e293b)]",
   actionCell: "p-1 text-center align-middle border-b border-[var(--db-border,#1e293b)]",
   totalCell: "p-2.5 text-right font-bold tabular-nums text-emerald-400 align-middle border-b border-[var(--db-border,#1e293b)]",
-  tableInput:
-    "w-full h-8 px-2 text-xs rounded bg-[var(--db-surface-inner,#090e17)] border border-slate-700/60 text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500",
-  tableInputCenter:
-    "w-full h-8 px-2 text-xs text-center rounded bg-[var(--db-surface-inner,#090e17)] border border-slate-700/60 text-white focus:outline-none focus:border-emerald-500",
-  tableInputRight:
-    "w-full h-8 px-2 text-xs text-right tabular-nums rounded bg-[var(--db-surface-inner,#090e17)] border border-slate-700/60 text-white focus:outline-none focus:border-emerald-500",
+  tableInput: "h-9 w-full rounded-md border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-2.5 text-sm text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] outline-none transition-all focus:border-[var(--db-brand)] focus:ring-2 focus:ring-[var(--db-brand-subtle)]",
+  tableInputCenter: "h-9 w-full rounded-md border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-2.5 text-center text-sm text-[var(--db-text-primary)] outline-none transition-all focus:border-[var(--db-brand)] focus:ring-2 focus:ring-[var(--db-brand-subtle)]",
+  tableInputRight: "h-9 w-full rounded-md border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-2.5 text-right text-sm tabular-nums text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] outline-none transition-all focus:border-[var(--db-brand)] focus:ring-2 focus:ring-[var(--db-brand-subtle)]",
   deleteRowBtn:
     "p-1.5 rounded text-slate-500 hover:text-rose-400 hover:bg-rose-950/40 transition-colors cursor-pointer border-0 bg-transparent",
   itemAutocomplete:
@@ -131,7 +128,7 @@ export const quotationStyles: Record<string, string> = {
   modalCloseBtn: "p-1 rounded text-slate-400 hover:text-white border-0 bg-transparent cursor-pointer",
   modalBody: "flex flex-col gap-3",
   modalFieldSpaced: "flex flex-col gap-1.5",
-  modalSelect: "w-full h-9 px-3 text-xs rounded bg-[var(--db-surface-inner,#090e17)] border border-slate-700 text-white focus:outline-none focus:border-emerald-500",
+  modalSelect: "h-11 w-full rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 text-sm text-[var(--db-text-primary)] outline-none transition-all focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)]",
   modalFooterActions: "flex justify-end gap-2 pt-3 border-t border-[var(--db-border,#1e293b)]",
   modalLoading: "p-6 text-center text-xs text-slate-400",
   modalEmpty: "p-6 text-center text-xs text-slate-400",

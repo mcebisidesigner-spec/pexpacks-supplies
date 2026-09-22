@@ -7,6 +7,34 @@ import { isSameOriginRequest, rateLimitRequest } from "@/lib/security/requestGua
 
 export const runtime = "nodejs";
 
+function hasPriorGreeting(messages: PexChatRequest["messages"]): boolean {
+  return messages.some(
+    (m) => m.role === "assistant" && /^(?:hi|hello|welcome|howzit|sawubona)/i.test(m.content),
+  );
+}
+
+function summarizePriorTurns(
+  messages: PexChatRequest["messages"],
+  existingSummary?: string,
+): string | undefined {
+  if (messages.length <= 8) return existingSummary;
+
+  const olderMessages = messages.slice(0, messages.length - 8);
+  const userQueries = olderMessages
+    .filter((m) => m.role === "user")
+    .map((m) => m.content)
+    .slice(-3)
+    .join(" | ");
+
+  if (!userQueries) return existingSummary;
+
+  const combined = existingSummary
+    ? `${existingSummary}; Earlier: ${userQueries}`
+    : `Earlier topics: ${userQueries}`;
+
+  return combined.slice(0, 500);
+}
+
 export async function POST(request: NextRequest) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
@@ -26,16 +54,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid chat request." }, { status: 400 });
     }
 
+    const { messages, context } = payload.data;
     const query = latestPexUserMessage(payload.data);
-    const intent = await resolvePexIntent(query);
+    const incomingSession = context?.activeSession;
+    const intent = await resolvePexIntent(query, incomingSession);
     const [liveCards, knowledgeCards] = await Promise.all([
       getPexLiveCards(intent, query),
-      getPexKnowledgeCards(query, payload.data.context?.pathname),
+      getPexKnowledgeCards(query, context?.pathname),
     ]);
     const previousAssistantText = latestPexAssistantMessage(payload.data);
-    return NextResponse.json(PexChatResponseSchema.parse({ ...buildPexReply(query, intent, { previousAssistantText }), ...liveCards, knowledgeCards }), {
-      headers: { "Cache-Control": "private, no-store" },
+
+    // Dialogue history truncation & summarisation
+    const greetingGiven =
+      context?.greetingGiven ||
+      incomingSession?.greetingDelivered ||
+      hasPriorGreeting(messages);
+    const contextSummary = summarizePriorTurns(messages, context?.contextSummary);
+
+    const reply = buildPexReply(query, intent, {
+      previousAssistantText,
+      greetingGiven,
+      entities: context?.entities,
+      contextSummary,
+      activeSession: incomingSession,
     });
+
+    return NextResponse.json(
+      PexChatResponseSchema.parse({
+        ...reply,
+        ...liveCards,
+        knowledgeCards,
+      }),
+      {
+        headers: { "Cache-Control": "private, no-store" },
+      },
+    );
   } catch (error) {
     console.error("[pex-chat] Request failed:", error);
     return NextResponse.json(
@@ -44,6 +97,7 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 function latestPexAssistantMessage(request: PexChatRequest) {
   const previous = [...request.messages]
     .reverse()

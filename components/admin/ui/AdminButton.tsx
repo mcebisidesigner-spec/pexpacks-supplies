@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const adminButtonVariants = cva(
-  "inline-flex items-center justify-center gap-2 font-inherit font-bold rounded-lg cursor-pointer no-underline transition-all duration-150 whitespace-nowrap select-none border border-transparent outline-none box-border focus-visible:outline-2 focus-visible:outline-emerald-500 focus-visible:outline-offset-2 focus-visible:ring-4 focus-visible:ring-slate-950/90 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+  "inline-flex items-center justify-center gap-2 font-inherit font-bold rounded-lg cursor-pointer no-underline transition-all duration-150 whitespace-nowrap select-none border border-transparent outline-none box-border focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--db-brand-subtle)] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
   {
     variants: {
       variant: {
@@ -26,9 +26,9 @@ export const adminButtonVariants = cva(
           "w-[var(--db-control-height-sm,32px)] h-[var(--db-control-height-sm,32px)] p-0 rounded-[var(--db-radius-control,8px)] bg-[rgba(45,212,191,0.12)] border border-[rgba(45,212,191,0.4)] text-[var(--db-teal-text)] hover:bg-[rgba(45,212,191,0.25)]",
       },
       size: {
-        sm: "h-8 px-3.5 text-xs",
-        md: "h-10 px-4.5 text-sm",
-        lg: "h-11 px-5.5 text-[0.9375rem]",
+        sm: "h-9 px-3.5 text-xs",
+        md: "h-11 px-5 text-sm",
+        lg: "h-12 px-6 text-[0.9375rem]",
       },
       loading: {
         true: "opacity-50 cursor-not-allowed pointer-events-none",

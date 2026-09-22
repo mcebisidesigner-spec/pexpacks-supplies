@@ -14,11 +14,11 @@ export const AdminInput = React.forwardRef<HTMLInputElement, AdminInputProps>(
       id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="flex flex-col gap-1.5 w-full">
+      <div className="flex w-full flex-col gap-2">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-xs font-semibold text-[var(--db-text-muted)] select-none"
+            className="text-xs font-semibold leading-4 text-[var(--db-text-secondary)] select-none"
           >
             {label}
           </label>
@@ -33,8 +33,8 @@ export const AdminInput = React.forwardRef<HTMLInputElement, AdminInputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "w-full h-10 bg-[var(--db-surface-inner)] border border-[var(--db-border)] rounded-lg px-3 font-inherit text-[13px] font-medium text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] outline-none transition-colors transition-shadow focus:border-[var(--db-brand,#10b981)] focus:ring-2 focus:ring-[var(--db-brand,#10b981)]/20",
-              icon && "pl-9.5",
+              "w-full h-11 rounded-lg border border-[var(--db-border-strong)] bg-[var(--db-surface-elevated)] px-3.5 font-inherit text-sm font-medium text-[var(--db-text-primary)] placeholder:text-[var(--db-text-subtle)] outline-none transition-all duration-150 focus:border-[var(--db-brand)] focus:ring-4 focus:ring-[var(--db-brand-subtle)] disabled:cursor-not-allowed disabled:opacity-60",
+              icon && "pl-10",
               error && "border-red-500 focus:border-red-500 focus:ring-red-500/25",
               className,
             )}
@@ -42,7 +42,7 @@ export const AdminInput = React.forwardRef<HTMLInputElement, AdminInputProps>(
           />
         </div>
         {error && (
-          <span className="text-xs text-[var(--db-danger-text,#ef4444)] font-medium">
+          <span className="text-xs font-medium leading-4 text-[var(--db-danger-text,#ef4444)]">
             {error}
           </span>
         )}

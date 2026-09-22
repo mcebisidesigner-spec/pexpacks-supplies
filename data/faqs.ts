@@ -299,4 +299,48 @@ export const faqs: FAQ[] = [
       { label: "Partnership terms", href: "/school-partnership-terms" },
     ],
   },
+  {
+    id: "grade-pack-confirmation",
+    category: "School packs",
+    question: "How do I confirm the correct grade pack for my learner?",
+    answer:
+      "Search for the learner's school, choose the grade, and review the pack contents before submitting the order enquiry. Pexpacks confirms the exact stationery list during follow-up so the pack matches the school requirements.",
+    links: [
+      { label: "Find your school pack", href: "/schools" },
+      { label: "Start an order", href: "/order" },
+    ],
+  },
+  {
+    id: "happy-pay-checkout",
+    category: "Happy Pay (BNPL)",
+    question: "Can I use Happy Pay for any school pack?",
+    answer:
+      "Happy Pay is available across Pexpacks school stationery packs at checkoutless. You split the cost into equal, zero-interest instalments while your learner receives the stationery upfront.",
+    links: [
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
+      { label: "Find your pack", href: "/schools" },
+    ],
+  },
+  {
+    id: "order-follow-up-contactless",
+    category: "Orders",
+    question: "What happens after I submit an order enquiry?",
+    answer:
+      "Pexpacks follows up to confirm availability, pricing, delivery details        and payment instructions. Keep your order reference handy so the team can match your request quickly.",
+    links: [
+      { label: "Track an order", href: "/track-order" },
+      { label: "Contact support", href: "/contact" },
+    ],
+  },
+  {
+    id: "happy-pay-cancel-contactless",
+    category: "Happy Pay (BNPL)",
+    question: "Can I cancel a Happy Pay instalment plan?",
+    answer:
+      "You can cancel an instalment plan before the pack order is finalised. Once the stationery has been dispatched, Happy Pay follows its standard BNPL terms for cancellations and refunds.",
+    links: [
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
+      { label: "Returns policy", href: "/returns-refunds-policy" },
+    ],
+  },
 ];
