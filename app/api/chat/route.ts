@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "@ai-sdk/google";
-import { streamObject, generateObject } from "ai";
+import { streamObject, generateObject, streamText } from "ai";
 import { chatResponseSchema } from "@/lib/schemas/chat";
 import { pexTools } from "@/lib/chat/tools";
 import { buildPexReply, PexChatResponseSchema, resolvePexIntent, PexIntent } from "@/lib/chat/pex";
@@ -147,7 +147,18 @@ export async function POST(request: NextRequest) {
           { role: "user" as const, content: query },
         ];
 
-        // 1. Streaming response for useObject / streamObject clients
+        // 1. Text stream with native tool-calling (useChat / streamText)
+        if (rawBody.mode === "text" || rawBody.stream === "text" || rawBody.mode === "chat") {
+          const textStreamResult = streamText({
+            model: google("gemini-2.5-flash"),
+            system: dynamicSystem,
+            messages: messagesForAi,
+            tools: pexTools,
+          });
+          return textStreamResult.toTextStreamResponse();
+        }
+
+        // 2. Structured streaming response for useObject / streamObject clients
         if (isStreaming) {
           const streamResult = streamObject({
             model: google("gemini-2.5-flash"),
@@ -158,7 +169,7 @@ export async function POST(request: NextRequest) {
           return streamResult.toTextStreamResponse();
         }
 
-        // 2. Direct validated object response via generateObject
+        // 3. Direct validated object response via generateObject
         const genResult = await generateObject({
           model: google("gemini-2.5-flash"),
           schema: chatResponseSchema,
