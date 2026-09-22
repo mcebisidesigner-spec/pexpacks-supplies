@@ -219,7 +219,8 @@ export default async function HomePage() {
                 placeholder="blur"
                 blurDataURL={IMAGE_BLUR_DATA_URL}
                 sizes="(min-width: 1280px) 700px, (min-width: 820px) 55vw, 100vw"
-                className="w-full h-full object-cover object-[center_top] lg:object-center"
+                className="w-full h-full object-cover object-[center_top] lg:object-center aspect-[5/4]"
+                style={{ aspectRatio: "700 / 560" }}
               />
               <div
                 className="absolute left-6 bottom-3.5 lg:left-[clamp(18px,3vw,34px)] lg:bottom-[clamp(18px,3vw,34px)] z-1 w-[78px] h-[78px] lg:w-[138px] lg:h-[138px] rounded-full border border-white/60 bg-white/90 text-pex-navy grid place-items-center content-center text-center shadow-[0_10px_24px_rgba(26,42,64,0.16)] lg:shadow-[0_16px_36px_rgba(26,42,64,0.18)] backdrop-blur-[10px]"

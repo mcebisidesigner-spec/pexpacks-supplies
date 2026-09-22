@@ -473,7 +473,8 @@ export function SchoolSearchBox({
                         alt={`${school.name} logo`}
                         width={28}
                         height={28}
-                        className="rounded-md object-cover shrink-0"
+                        className="rounded-md object-cover shrink-0 aspect-square"
+                        style={{ aspectRatio: "1 / 1" }}
                       />
                     ) : (
                       <SchoolLogoPlaceholder
@@ -568,7 +569,8 @@ export function SchoolSearchBox({
                                 <Image
                                   src={school.image}
                                   alt={`${school.name} logo`}
-                                  className="shrink-0 w-9 h-9 rounded-lg object-contain bg-pex-bg mt-0.5"
+                                  className="shrink-0 w-9 h-9 rounded-lg object-contain bg-pex-bg mt-0.5 aspect-square"
+                                  style={{ aspectRatio: "1 / 1" }}
                                   width={36}
                                   height={36}
                                 />

@@ -141,6 +141,7 @@ export function SchoolSearchWidget({
           </label>
           <input
             id="widgetSchoolQuery"
+            name="schoolQuery"
             type="search"
             value={query}
             onChange={(e) => {

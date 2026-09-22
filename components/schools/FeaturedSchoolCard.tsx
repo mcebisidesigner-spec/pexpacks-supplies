@@ -63,9 +63,10 @@ export function FeaturedSchoolCard({
           <Image
             src={school.image}
             alt={`${school.name} logo`}
-            className="w-[54px] h-[54px] rounded-[18px] object-contain bg-white"
+            className="w-[54px] h-[54px] rounded-[18px] object-contain bg-white aspect-square"
             width={54}
             height={54}
+            style={{ aspectRatio: "1 / 1" }}
           />
         ) : (
           <SchoolLogoPlaceholder

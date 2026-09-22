@@ -183,10 +183,11 @@ export function TestimonialMarquee({ items }: TestimonialMarqueeProps) {
                     width={48}
                     height={48}
                     alt={`${item.name} avatar`}
-                    className="shrink-0 w-12 h-12 rounded-full object-cover border-2 border-[var(--pex-keppel)] shadow-[0_2px_8px_rgba(26,122,119,0.18)]"
+                    className="shrink-0 w-12 h-12 rounded-full object-cover border-2 border-[var(--pex-keppel)] shadow-[0_2px_8px_rgba(26,122,119,0.18)] aspect-square"
                     placeholder="blur"
                     blurDataURL={IMAGE_BLUR_DATA_URL}
                     loading="lazy"
+                    style={{ aspectRatio: "1 / 1" }}
                   />
                 ) : (
                   <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-[rgba(26,122,119,0.12)] to-[rgba(26,122,119,0.22)] text-[var(--pex-keppel)] font-extrabold text-base tracking-tight grid place-items-center border-2 border-[rgba(26,122,119,0.28)] shadow-[0_2px_8px_rgba(26,122,119,0.1)] select-none" aria-hidden="true">

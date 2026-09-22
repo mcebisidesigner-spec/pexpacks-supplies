@@ -161,12 +161,13 @@ function renderContent(content: string[]): ReactNode[] {
             width={800}
             height={450}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 800px"
-            className="w-full h-auto object-cover block rounded-2xl border border-black/5"
+            className="w-full h-auto object-cover block rounded-2xl border border-black/5 aspect-[16/9]"
             placeholder="blur"
             blurDataURL={IMAGE_BLUR_DATA_URL}
             style={{
               width: "100%",
               height: "auto",
+              aspectRatio: "16 / 9",
               borderRadius: "16px",
               border: "1px solid rgba(0,0,0,0.05)",
             }}
@@ -350,7 +351,8 @@ export default async function BlogPostPage({
                   width={800}
                   height={450}
                   sizes="(max-width: 768px) 100vw, 800px"
-                  className="w-full h-auto object-cover block"
+                  className="w-full h-auto object-cover block aspect-[16/9]"
+                  style={{ aspectRatio: "16 / 9" }}
                   placeholder="blur"
                   blurDataURL={IMAGE_BLUR_DATA_URL}
                   priority

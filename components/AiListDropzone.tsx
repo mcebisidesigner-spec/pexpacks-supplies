@@ -303,7 +303,10 @@ export function AiListDropzone() {
               <img
                 src={filePreview}
                 alt="Uploaded stationery list"
-                className="w-full h-full object-cover opacity-85"
+                width={320}
+                height={180}
+                className="w-full h-full object-cover opacity-85 aspect-[16/9]"
+                style={{ aspectRatio: "16 / 9" }}
               />
             ) : (
               <div className="flex flex-col items-center justify-center text-white gap-2 p-4 text-center">

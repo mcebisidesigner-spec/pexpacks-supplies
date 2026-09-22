@@ -168,7 +168,8 @@ export default async function SchoolDetailPage({
                   alt={`${school.name} crest`}
                   width={96}
                   height={96}
-                  className="w-full h-full object-contain block"
+                  className="w-full h-full object-contain block aspect-square"
+                  style={{ aspectRatio: "1 / 1" }}
                   priority
                 />
               ) : (

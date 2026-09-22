@@ -21,7 +21,8 @@ export function FooterHappyPayLink({ className }: FooterHappyPayLinkProps) {
         alt="Happy Pay"
         width={90}
         height={24}
-        className="block w-full h-auto m-0 p-0"
+        className="block w-full h-auto m-0 p-0 aspect-[15/4]"
+        style={{ aspectRatio: "90 / 24" }}
       />
     </Link>
   );
