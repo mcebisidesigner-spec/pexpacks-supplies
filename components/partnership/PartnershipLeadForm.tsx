@@ -360,11 +360,11 @@ export function PartnershipLeadForm({
                         style={{ marginTop: 4, accentColor: "var(--pex-keppel)" }}
                         aria-invalid={Boolean(errors.consent)}
                       />
-                      <span className="text-[12.5px] text-[var(--pex-muted,#64748b)] leading-[1.5] m-0 [&_a]:text-pex-keppel [&_a]:underline [&_a]:underline-offset-2">
+                      <span className="text-[12.5px] text-[var(--pex-muted,#64748b)] leading-[1.5] m-0">
                         By submitting this form, you acknowledge that Pexpacks Supplies may process the
                         information provided for the purpose of responding to your institutional enquiry,
                         in accordance with our{" "}
-                        <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                        <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                           Privacy Policy
                         </Link>{" "}
                         and applicable data-protection requirements.

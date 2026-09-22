@@ -35,7 +35,7 @@ const honeypotCls = "absolute left-[-10000px] w-px h-px overflow-hidden";
 const consentFieldCls =
   "grid grid-cols-[20px_1fr] gap-[var(--space-3)] items-start";
 const consentSpanCls =
-  "text-[var(--pex-primary)] text-[var(--text-sm)] leading-[1.45] [&_a]:text-[var(--pex-keppel)] [&_a]:font-extrabold [&_a]:underline [&_a]:[text-underline-offset:3px]";
+  "text-[var(--pex-primary)] text-[var(--text-sm)] leading-[1.45]";
 const consentInputCls =
   "w-[20px] h-[20px] mt-[2px] accent-[var(--pex-keppel)]";
 const statusMessageCls =
@@ -288,7 +288,7 @@ export function AddSchoolForm() {
         <span className={consentSpanCls}>
           I consent to Pexpacks processing my information to handle this
           request. I have read and agree to the{" "}
-          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+          <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
             privacy policy
           </a>
           .

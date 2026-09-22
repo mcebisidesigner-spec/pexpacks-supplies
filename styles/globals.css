@@ -616,6 +616,30 @@ div[id*="assistant-control" i] {
   }
 }
 
+@keyframes askBroPexSlide {
+  0%,
+  12% {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  24%,
+  72% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  86%,
+  100% {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-reduce\:animate-none {
+    animation: none !important;
+  }
+}
+
 @keyframes typingPulse {
   0%,
   80%,

@@ -460,7 +460,7 @@ export function HappyPayCheckoutClient() {
             className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
             aria-label="Happy Pay consent"
           >
-            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed [&_a]:text-[var(--pex-keppel-dark)] [&_a]:underline [&_a]:underline-offset-2 [&_a]:decoration-1.5 [&_a]:font-semibold hover:[&_a]:text-[var(--pex-keppel)]">
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed">
               <input
                 type="checkbox"
                 id="hp-consent"
@@ -478,15 +478,15 @@ export function HappyPayCheckoutClient() {
                 in 30 days) charged to the payment method I approve with Happy
                 Pay. Happy Pay is an independent company and Pexpacks acts only
                 as a referral consultant. I have read and agree to the{" "}
-                <a href="/happy-pay-terms" target="_blank">
+                <a href="/happy-pay-terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   happy pay terms
                 </a>
                 ,{" "}
-                <a href="/privacy-policy" target="_blank">
+                <a href="/privacy-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   privacy policy
                 </a>
                 , and{" "}
-                <a href="/terms" target="_blank">
+                <a href="/terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   terms of use
                 </a>
                 .

@@ -583,7 +583,7 @@ export function GradePackActions({
                 estimatedPrice: formatCurrency(pack.fullPackPrice ?? 0),
                 fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
               }}
-              className="text-[var(--pex-navy)] text-[15px] font-bold underline underline-offset-4 inline-flex items-center gap-[var(--space-2)] transition-[var(--interactive-transition)] hover:text-[var(--pex-keppel)]"
+              className="text-[var(--pex-text-muted)] text-xs font-medium underline underline-offset-4 inline-flex items-center gap-2 transition-colors hover:text-[var(--pex-keppel)]"
             >
               {downloadLabel}
             </DownloadListLink>
