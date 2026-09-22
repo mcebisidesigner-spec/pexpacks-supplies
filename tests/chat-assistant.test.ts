@@ -54,6 +54,19 @@ describe("Pex chat API", () => {
     });
   });
 
+  it("handles informal school typos with zero interrogation", async () => {
+    const response = await POST(chatRequest({
+      message: "st marys klrkdrp",
+      history: [],
+      sessionState: {},
+    }));
+
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data.intent).toBe("find_school");
+    expect(data.reply || data.text).toContain("St Mary's Klerksdorp");
+  });
+
   it("rejects malformed, oversized, and cross-origin requests", async () => {
     const malformed = await POST(chatRequest({ messages: [] }, "198.51.100.11"));
     expect(malformed.status).toBe(400);

@@ -33,7 +33,7 @@ test.describe("Design System Visual Baselines - Views & Routes", () => {
       await expect(page).toHaveScreenshot(`view-order-dropzone-${vp.name}.png`, {
         mask: [
           // Mask chat widget or transient elements
-          page.locator('[aria-label="Open Ask Pex Assistant"]'),
+          page.locator('[aria-label="Open Ask Bro Pex Assistant"]'),
         ],
       });
     });
@@ -45,7 +45,7 @@ test.describe("Design System Visual Baselines - Views & Routes", () => {
 
       await expect(page).toHaveScreenshot(`view-schools-directory-${vp.name}.png`, {
         mask: [
-          page.locator('[aria-label="Open Ask Pex Assistant"]'),
+          page.locator('[aria-label="Open Ask Bro Pex Assistant"]'),
         ],
       });
     });
@@ -58,7 +58,7 @@ test.describe("Design System Visual Baselines - Views & Routes", () => {
 
       await expect(hero).toHaveScreenshot(`view-homepage-hero-${vp.name}.png`, {
         mask: [
-          page.locator('[aria-label="Open Ask Pex Assistant"]'),
+          page.locator('[aria-label="Open Ask Bro Pex Assistant"]'),
         ],
       });
     });

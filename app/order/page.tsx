@@ -68,7 +68,7 @@ export default function OrderPage() {
                   Review suggested items
                 </h3>
                 <p className="m-0 text-pex-muted text-[15px] leading-[1.4]">
-                  Pex can help identify the items, then you can review the suggestions before ordering.
+                  Bro Pex can help identify the items, then you can review the suggestions before ordering.
                 </p>
               </div>
             </div>

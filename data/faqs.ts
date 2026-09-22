@@ -361,4 +361,70 @@ export const faqs: FAQ[] = [
       { label: "Returns policy", href: "/returns-refunds-policy" },
     ],
   },
+  {
+    id: "repeat-purchase-returning-parents",
+    category: "School packs",
+    question: "Can returning parents reorder the same pack each year?",
+    answer:
+      "Yes. Pexpacks keeps a record of previous pack orders for returning parents, so reordering for a new grade or a second learner is quicker. You can also update the learner details during order follow-up.",
+    links: [
+      { label: "Find your school pack", href: "/schools" },
+      { label: "Start an order", href: "/order" },
+    ],
+  },
+  {
+    id: "school-pack-collection-in-school",
+    category: "Schools",
+    question: "Can a pack be collected at the school?",
+    answer:
+      "Collection options depend on the school, area and season. Pexpacks confirms whether a school collection point or home delivery is available when the order is followed up.",
+    links: [
+      { label: "Find your school", href: "/schools" },
+      { label: "Track an order", href: "/track-order" },
+    ],
+  },
+  {
+    id: "whole-school-group-orders",
+    category: "Orders",
+    question: "Can I order packs for a whole class or group?",
+    answer:
+      "Yes. Parents organising a class or group can submit one combined order enquiry for multiple learnersainer grades, and Pexpacks will help arrange the packs together.",
+    links: [
+      { label: "Start a group order", href: "/order" },
+      { label: "Contact Pexpacks", href: "/contact" },
+    ],
+  },
+  {
+    id: "delivery-damage-during-transit",
+    category: "Delivery",
+    question: "What should I do if my pack arrives damaged?",
+    answer:
+      "Keep the packaging and note any damage, then contact Pexpacks with your order reference. Pexpacks will arrange a suitable resolution for damaged or missing items.",
+    links: [
+      { label: "Report a delivery issue", href: "/contact" },
+      { label: "Returns policy", href: "/returns-refunds-policy" },
+    ],
+  },
+  {
+    id: "invoice-tax-invoice-availability",
+    category: "Payment",
+    question: "Can I request a tax invoice for my order?",
+    answer:
+      "Yes. Pexpacks provides tax invoices for confirmed orders on request. Share your business or company details during order follow-up so the invoice is issued correctly.",
+    links: [
+      { label: "Start an order", href: "/order" },
+      { label: "Contact support", href: "/contact" },
+    ],
+  },
+  {
+    id: "happy-pay-credit-check-soft",
+    category: "Happy Pay (BNPL)",
+    question: "Does Happy Pay run a credit check?",
+    answer:
+      "Happy Pay performs eligibility checks at checkout, which may include a soft check that does not affect your credit score. Approval depends on the details you provide.",
+    links: [
+      { label: "Learn about Happy Pay", href: "/happy-pay" },
+      { label: "Happy Pay terms", href: "/happy-pay-terms" },
+    ],
+  },
 ];

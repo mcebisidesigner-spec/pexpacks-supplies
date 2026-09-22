@@ -7,7 +7,7 @@ export const PEXPACKS_CONTENT = {
   },
   lists: {
     short:
-      "Have a stationery list? Upload it and Pex can help organise the items for you.",
+      "Have a stationery list? Upload it and Bro Pex will help you organise the items for you.",
     detail:
       "Upload a PDF or clear photo of your school list. You can review the suggested items before ordering, and personal help is available if something does not look right.",
     review:

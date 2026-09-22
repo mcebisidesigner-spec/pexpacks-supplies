@@ -38,7 +38,7 @@ const STARTER_LINKS = [
 ] as const;
 
 type ChatMessage =
-  | { id: string; role: "user"; text: string }
+  | { id: string; role: "user"; text: string; pending?: boolean }
   | { id: string; role: "assistant"; response: PexChatResponse };
 
 function starterLinksForPath(pathname: string | null) {
@@ -208,14 +208,16 @@ export function ChatWidget() {
       const message = text.trim();
       if (!message || isLoading) return;
 
+      const userMsgId = newId();
       const userMessage: ChatMessage = {
-        id: newId(),
+        id: userMsgId,
         role: "user",
         text: message,
+        pending: true,
       };
       const history = [...messages, userMessage].slice(-12).map((entry) => ({
         role: entry.role,
-        content: entry.role === "user" ? entry.text : entry.response.text,
+        content: entry.role === "user" ? entry.text : (entry.response.text || entry.response.reply || ""),
       }));
 
       setInput("");
@@ -261,7 +263,7 @@ export function ChatWidget() {
             sourcePath: window.location.pathname,
             status: response.status,
           });
-          throw new Error("Pex request failed");
+          throw new Error("Bro Pex request failed");
         }
 
         const reply = data as PexChatResponse;
@@ -292,10 +294,13 @@ export function ChatWidget() {
         setGreetingGiven(true);
 
         setMessages((current) => [
-          ...current,
+          ...current.map((m) => (m.id === userMsgId ? { ...m, pending: false } : m)),
           { id: newId(), role: "assistant", response: reply },
         ]);
       } catch {
+        setMessages((current) =>
+          current.map((m) => (m.id === userMsgId ? { ...m, pending: false } : m))
+        );
         setError(
           "Bro Pex could not respond just now. Please try again or contact the Pexpacks team.",
         );
@@ -305,6 +310,12 @@ export function ChatWidget() {
     },
     [isLoading, messages, greetingGiven, sessionEntities, contextSummary, activeSession],
   );
+
+  const handleQuickReply = (queryText: string) => {
+    // Dynamic Keyboard & Input Dismissal on mobile
+    inputRef.current?.blur();
+    void sendMessage(queryText);
+  };
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -418,16 +429,68 @@ export function ChatWidget() {
               message.role === "user" ? (
                 <div
                   key={message.id}
-                  className="ml-auto max-w-[82%] rounded-[18px_18px_5px_18px] bg-brand-teal px-3.5 py-2.5 text-sm leading-relaxed text-white shadow-sm"
+                  className={cn(
+                    "ml-auto max-w-[82%] rounded-[18px_18px_5px_18px] bg-brand-teal px-3.5 py-2.5 text-sm leading-relaxed text-white shadow-sm flex items-center justify-between gap-2 transition-all",
+                    message.pending && "opacity-85 shadow-none"
+                  )}
                 >
-                  {message.text}
+                  <span>{message.text}</span>
+                  {message.pending && (
+                    <span
+                      className="inline-block h-2 w-2 shrink-0 animate-ping rounded-full bg-teal-200"
+                      title="Sending..."
+                      aria-label="Sending message..."
+                    />
+                  )}
                 </div>
               ) : (
                 <div key={message.id} className="flex items-start gap-2.5">
                   <Avatar size="mt-0.5 h-8 w-8" />
                   <div className="min-w-0 max-w-[85%]">
                     <AssistantMessage>
-                      <p className="m-0">{message.response.text}</p>
+                      <p className="m-0">{message.response.text || message.response.reply}</p>
+
+                      {/* Structured Response Cards */}
+                      {message.response.cards && message.response.cards.length > 0 && (
+                        <div className="mt-2.5 flex flex-col gap-2">
+                          {message.response.cards.map((card: any, idx: number) => (
+                            <div key={card.id || `card-${idx}`} className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 shadow-2xs">
+                              <div className="flex items-center justify-between gap-2">
+                                <h4 className="m-0 text-xs font-bold text-ink">{card.title}</h4>
+                                {card.badge && (
+                                  <span className="rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-800 border border-teal-200/50">
+                                    {card.badge}
+                                  </span>
+                                )}
+                              </div>
+                              {card.price && (
+                                <p className="mt-0.5 text-xs font-bold text-brand-teal">{card.price}</p>
+                              )}
+                              <p className="mt-1 text-xs text-slate-600 m-0">{card.description}</p>
+                              {card.actions && card.actions.length > 0 && (
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                  {card.actions.map((act: any, i: number) => (
+                                    <Link
+                                      key={i}
+                                      href={act.url}
+                                      onClick={() => setIsOpen(false)}
+                                      className={cn(
+                                        "rounded-lg px-2.5 py-1 text-xs font-semibold no-underline transition",
+                                        act.variant === "primary"
+                                          ? "bg-brand-teal text-white hover:bg-brand-teal-dark"
+                                          : "border border-slate-200 text-slate-700 hover:bg-slate-50"
+                                      )}
+                                    >
+                                      {act.label} &rarr;
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       <InlineReplyLinks
                         actions={message.response.actions}
                         knowledgeCards={message.response.knowledgeCards}
@@ -444,9 +507,29 @@ export function ChatWidget() {
                           setIsOpen(false);
                         }}
                       />
-                      {message.response.handoffRecommended && whatsappHref && (
+
+                      {/* Interactive Quick Reply Chips */}
+                      {message.response.quickReplies && message.response.quickReplies.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Suggested quick options">
+                          {message.response.quickReplies.map((qr) => (
+                            <button
+                              key={qr.id}
+                              type="button"
+                              onClick={() => handleQuickReply(qr.query || qr.message || qr.label)}
+                              className="inline-flex items-center rounded-full border border-brand-teal/25 bg-teal-50/80 px-2.5 py-1 text-xs font-semibold text-brand-teal shadow-2xs transition hover:bg-brand-teal hover:text-white active:scale-95 cursor-pointer"
+                            >
+                              {qr.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {message.response.handoffRecommended && (
                         <a
-                          href={whatsappHref}
+                          href={
+                            whatsappHref ||
+                            `https://wa.me/27725964898?text=${encodeURIComponent("Hi Pexpacks, I'm asking about an order inquiry.")}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={() => {
@@ -458,8 +541,9 @@ export function ChatWidget() {
                               label: "pex_human_handoff",
                             });
                           }}
-                          className="mt-2.5 inline-flex font-semibold text-whatsapp-dark underline decoration-whatsapp/40 underline-offset-2 transition hover:decoration-whatsapp"
+                          className="mt-2.5 inline-flex items-center gap-1.5 font-semibold text-whatsapp-dark underline decoration-whatsapp/40 underline-offset-2 transition hover:decoration-whatsapp"
                         >
+                          <MessageCircle size={14} className="text-[#25D366]" aria-hidden="true" />
                           Talk to Pexpacks on WhatsApp
                         </a>
                       )}
@@ -514,25 +598,28 @@ export function ChatWidget() {
             </div>
           </form>
 
-          {whatsappHref && (
-            <footer className="flex shrink-0 items-center justify-center border-t border-slate-200 bg-white px-4 py-3">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => {
-                  trackWhatsAppClicked({
-                    sourcePath,
-                    label: "pex_footer_handoff",
-                  });
-                }}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-whatsapp-dark transition hover:text-whatsapp hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
-              >
-                <MessageCircle size={16} aria-hidden="true" />
-                Chat with us on WhatsApp
-              </a>
-            </footer>
-          )}
+          {/* Persistent WhatsApp & Human Handoff Bridge */}
+          <footer className="flex shrink-0 items-center justify-between border-t border-slate-200 bg-white px-4 py-2.5">
+            <span className="text-[11px] font-medium text-slate-500">Need personal human help?</span>
+            <a
+              href={
+                whatsappHref ||
+                `https://wa.me/27725964898?text=${encodeURIComponent("Hi Pexpacks, I'm asking about my school stationery order")}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                trackWhatsAppClicked({
+                  sourcePath,
+                  label: "pex_docked_handoff",
+                });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2.5 py-1 text-xs font-semibold text-[#075E54] transition hover:bg-[#25D366]/20 hover:text-[#054c44]"
+            >
+              <MessageCircle size={14} className="text-[#25D366]" aria-hidden="true" />
+              Chat on WhatsApp
+            </a>
+          </footer>
         </section>
       )}
     </div>
