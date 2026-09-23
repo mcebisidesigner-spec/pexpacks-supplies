@@ -88,7 +88,10 @@ async function generateAndUploadPdf(quotationId: string): Promise<string | null>
       import("@/components/pdf/QuotationPdfDocument"),
     ]);
     const element = React.createElement(QuotationPdfDocument, { data: pdfData }) as NonNullable<Parameters<typeof pdf>[0]>;
-    const documentBuffer = await pdf(element).toBuffer();
+    // react-pdf v4: toBuffer() returns a readable stream, not a Buffer.
+    // Use toBlob() → arrayBuffer() to materialise the PDF bytes for Storage upload.
+    const blob = await pdf(element).toBlob();
+    const documentBuffer = Buffer.from(await blob.arrayBuffer());
 
     const admin = createSupabaseAdminClient();
     const filePath = `quotes/${quotation.quote_number}_${Date.now()}.pdf`;

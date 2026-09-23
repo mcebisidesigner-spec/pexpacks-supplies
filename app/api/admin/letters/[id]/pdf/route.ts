@@ -44,12 +44,16 @@ export async function GET(
       },
     }) as NonNullable<Parameters<typeof pdf>[0]>;
 
-    const buffer = await pdf(pdfElement).toBuffer();
+    // react-pdf v4: toBuffer() returns a readable stream, not a Buffer.
+    // Use toBlob() → arrayBuffer() to correctly materialise the PDF bytes.
+    const blob = await pdf(pdfElement).toBlob();
+    const buffer = Buffer.from(await blob.arrayBuffer());
 
-    return new NextResponse(buffer as unknown as BodyInit, {
+    return new NextResponse(buffer, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${letter.reference_number}.pdf"`,
+        "Content-Length": String(buffer.byteLength),
       },
     });
   } catch (err: unknown) {

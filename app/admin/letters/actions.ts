@@ -344,15 +344,16 @@ export async function searchQuotationsForLetterAction(query: string) {
     let dbQuery = supabase
       .from("quotations" as never)
       .select(
-        "id, quote_number, recipient_name, recipient_email, school_name, subtotal, vat_rate, vat_amount, total_amount, items:quotation_items(id, item_title, sku, unit, quantity, unit_price, total_price)",
+        "id, quote_number, recipient_name, recipient_email, subtotal, vat_rate, vat_amount, total_amount, items:quotation_items(id, item_title, sku, unit, quantity, unit_price, total_price)",
       )
       .order("created_at", { ascending: false })
       .limit(20);
 
     if (query && query.trim()) {
       const q = query.trim();
+      // quotations table has no school_name column (uses school_id FK); filter on available text columns only
       dbQuery = dbQuery.or(
-        `quote_number.ilike.%${q}%,recipient_name.ilike.%${q}%,school_name.ilike.%${q}%`,
+        `quote_number.ilike.%${q}%,recipient_name.ilike.%${q}%,recipient_email.ilike.%${q}%`,
       );
     }
 
