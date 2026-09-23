@@ -1,5 +1,6 @@
 import React from "react";
 import { NextRequest, NextResponse } from "next/server";
+import { unstable_rethrow } from "next/navigation";
 import { getLetterById } from "@/lib/admin/letters";
 import { requireAdmin } from "@/lib/admin/rbac";
 
@@ -57,6 +58,9 @@ export async function GET(
       },
     });
   } catch (err: unknown) {
+    // Re-throw Next.js navigation errors (redirect, notFound) so auth
+    // redirects from requireAdmin() are handled correctly by the framework.
+    unstable_rethrow(err);
     console.error("[Letter PDF Route] Error:", err);
     return new NextResponse("Failed to generate PDF", { status: 500 });
   }
