@@ -3,7 +3,7 @@
 import { ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type WheelEvent as ReactWheelEvent } from "react";
 import { createPortal } from "react-dom";
 import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
@@ -106,6 +106,12 @@ export function SchoolSearchBox({
   >([]);
   const trendingFetched = useRef(false);
   const urlQueryApplied = useRef(false);
+  const trendingStripRef = useRef<HTMLDivElement>(null);
+  const trendingProgressRef = useRef<HTMLDivElement>(null);
+  const chipDragRef = useRef<{ pointerId: number; startX: number; startScrollLeft: number } | null>(null);
+  const progressDragRef = useRef<number | null>(null);
+  const chipDragMovedRef = useRef(false);
+  const [trendingProgress, setTrendingProgress] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -150,6 +156,116 @@ export function SchoolSearchBox({
   }, []);
 
   const searchActive = panelOpen;
+
+  function updateTrendingProgress() {
+    const strip = trendingStripRef.current;
+    if (!strip) return;
+
+    const maxScroll = strip.scrollWidth - strip.clientWidth;
+    setTrendingProgress(
+      maxScroll > 0 ? Math.min(1, Math.max(0, strip.scrollLeft / maxScroll)) : 1,
+    );
+  }
+
+  function seekTrendingProgress(clientX: number) {
+    const strip = trendingStripRef.current;
+    const track = trendingProgressRef.current;
+    if (!strip || !track) return;
+
+    const maxScroll = strip.scrollWidth - strip.clientWidth;
+    if (maxScroll <= 0) {
+      strip.scrollLeft = 0;
+      return;
+    }
+
+    const bounds = track.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - bounds.left) / bounds.width));
+    strip.scrollLeft = ratio * maxScroll;
+  }
+
+  function handleChipPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+
+    const strip = event.currentTarget;
+    chipDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: strip.scrollLeft,
+    };
+    chipDragMovedRef.current = false;
+    strip.setPointerCapture(event.pointerId);
+  }
+
+  function handleChipPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = chipDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    const strip = event.currentTarget;
+    const deltaX = event.clientX - drag.startX;
+    if (Math.abs(deltaX) > 4) chipDragMovedRef.current = true;
+    strip.scrollLeft = drag.startScrollLeft - deltaX;
+  }
+
+  function handleChipPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    if (chipDragRef.current?.pointerId === event.pointerId) {
+      chipDragRef.current = null;
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+      window.setTimeout(() => {
+        chipDragMovedRef.current = false;
+      }, 0);
+    }
+  }
+
+  function handleProgressPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    progressDragRef.current = event.pointerId;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    seekTrendingProgress(event.clientX);
+  }
+
+  function handleProgressPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    if (progressDragRef.current === event.pointerId) {
+      seekTrendingProgress(event.clientX);
+    }
+  }
+
+  function handleProgressPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    if (progressDragRef.current === event.pointerId) {
+      progressDragRef.current = null;
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    }
+  }
+
+  function handleTrendingWheel(event: ReactWheelEvent<HTMLDivElement>) {
+    const strip = event.currentTarget;
+    const maxScroll = strip.scrollWidth - strip.clientWidth;
+    if (maxScroll <= 0 || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+    event.preventDefault();
+    strip.scrollLeft += event.deltaY;
+  }
+
+  useEffect(() => {
+    const strip = trendingStripRef.current;
+    if (!strip) return;
+
+    updateTrendingProgress();
+    strip.addEventListener("scroll", updateTrendingProgress, { passive: true });
+
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updateTrendingProgress)
+        : null;
+    observer?.observe(strip);
+
+    return () => {
+      strip.removeEventListener("scroll", updateTrendingProgress);
+      observer?.disconnect();
+    };
+  }, [trendingSchools.length, query.length < 3]);
 
   /* Sync from URL ?q= on schools page */
   useEffect(() => {
@@ -290,23 +406,42 @@ export function SchoolSearchBox({
             <span className="block mb-1.5 px-1 text-pex-navy/50 text-xs font-extrabold uppercase tracking-wider">
               Trending Schools
             </span>
-            {/* Scrollable chip strip with vertical padding to prevent hover border clipping */}
             <div className="relative">
-              <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pt-2.5 pb-3 px-1.5 -mx-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div
+                id={source + "-trending-school-strip"}
+                ref={trendingStripRef}
+                className="flex gap-2 overflow-x-auto snap-x snap-mandatory pt-2.5 pb-3 px-1.5 -mx-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing select-none touch-pan-x"
+                onWheel={handleTrendingWheel}
+                onPointerDown={handleChipPointerDown}
+                onPointerMove={handleChipPointerMove}
+                onPointerUp={handleChipPointerUp}
+                onPointerCancel={handleChipPointerUp}
+                onPointerLeave={(event) => {
+                  if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                    return;
+                  }
+                  chipDragRef.current = null;
+                }}
+              >
                 {trendingSchools.map((school, index) => (
                   <Link
                     key={school.slug}
-                    href={`/schools/${school.slug}`}
+                    href={"/schools/" + school.slug}
                     className={CHIP_CLASSES}
-                    data-conversion-event={`${source}_trending_school`}
-                    onClick={() =>
-                      handleSchoolSelected(school.slug, index + 1, "trending")
-                    }
+                    data-conversion-event={source + "_trending_school"}
+                    onClick={(event) => {
+                      if (chipDragMovedRef.current) {
+                        event.preventDefault();
+                        chipDragMovedRef.current = false;
+                        return;
+                      }
+                      handleSchoolSelected(school.slug, index + 1, "trending");
+                    }}
                   >
                     {school.image ? (
                       <Image
                         src={school.image}
-                        alt={`${school.name} logo`}
+                        alt={school.name + " logo"}
                         width={28}
                         height={28}
                         className="rounded-md object-cover shrink-0 aspect-square"
@@ -317,7 +452,7 @@ export function SchoolSearchBox({
                         className="rounded-md object-cover shrink-0"
                         width={28}
                         height={28}
-                        title={`${school.name} logo`}
+                        title={school.name + " logo"}
                       />
                     )}
                     <span className="text-xs font-bold text-pex-navy whitespace-nowrap">
@@ -326,17 +461,39 @@ export function SchoolSearchBox({
                   </Link>
                 ))}
               </div>
-              {/* Teal scroll indicator bar */}
               <div
-                className="h-[3px] rounded-full bg-pex-keppel/30 mt-0.5 overflow-hidden"
-                aria-hidden="true"
+                ref={trendingProgressRef}
+                role="scrollbar"
+                tabIndex={0}
+                aria-controls={source + "-trending-school-strip"}
+                aria-label="Browse trending schools"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(trendingProgress * 100)}
+                className="relative h-2 mx-1.5 mt-0.5 overflow-hidden rounded-full bg-pex-keppel/20 cursor-ew-resize touch-none select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel/40"
+                onPointerDown={handleProgressPointerDown}
+                onPointerMove={handleProgressPointerMove}
+                onPointerUp={handleProgressPointerUp}
+                onPointerCancel={handleProgressPointerUp}
+                onKeyDown={(event) => {
+                  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                  event.preventDefault();
+                  const strip = trendingStripRef.current;
+                  if (!strip) return;
+                  strip.scrollBy({
+                    left: (event.key === "ArrowRight" ? 1 : -1) * strip.clientWidth * 0.75,
+                    behavior: "smooth",
+                  });
+                }}
               >
-                <div className="h-full w-[42%] bg-pex-keppel rounded-full" />
+                <span
+                  className="absolute inset-y-0 left-0 rounded-full bg-pex-keppel transition-[width] duration-100 ease-out"
+                  style={{ width: (Math.max(0.08, trendingProgress) * 100) + "%" }}
+                />
               </div>
             </div>
           </div>
         ) : null}
-
         {/* Results panel */}
         {panelOpen ? (
           <div
