@@ -37,7 +37,7 @@ export function ChatBox() {
       </div>
 
       {isLoading && (
-        <div className="text-xs text-slate-400 italic py-1">Bro Pex is thinking...</div>
+        <div className="text-xs text-slate-400 italic py-1">Pex is thinking...</div>
       )}
 
       {/* Quick-reply action chips */}

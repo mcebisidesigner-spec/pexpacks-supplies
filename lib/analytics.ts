@@ -34,11 +34,11 @@ export const AnalyticsEvents = {
   aiConversionRetried: "AI Conversion Retried",
   cartReviewOpened: "Cart Review Opened",
   cartReviewItemEdited: "Cart Review Item Edited",
-  pexIntentResolved: "Bro Pex Intent Resolved",
-  pexQuickReplySelected: "Bro Pex Quick Reply Selected",
-  pexActionSelected: "Bro Pex Action Selected",
-  pexHumanHandoff: "Bro Pex Human Handoff",
-  pexRequestFailed: "Bro Pex Request Failed",
+  pexIntentResolved: "Pex Intent Resolved",
+  pexQuickReplySelected: "Pex Quick Reply Selected",
+  pexActionSelected: "Pex Action Selected",
+  pexHumanHandoff: "Pex Human Handoff",
+  pexRequestFailed: "Pex Request Failed",
 } as const;
 
 type SearchSource = "home" | "schools" | "tray";

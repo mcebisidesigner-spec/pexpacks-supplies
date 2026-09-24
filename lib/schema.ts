@@ -33,7 +33,7 @@ export function organizationSchema() {
     url: siteUrl,
     logo: brandLogoUrls.default,
     image: schoolPackImage,
-    slogan: "Save time with Bro Pex.",
+    slogan: "Save time with Pex.",
     description:
       "Pexpacks Supplies prepares exclusive school stationery packs, standard grade combos, and convenience-driven pack services for South African parents and schools.",
     areaServed: {

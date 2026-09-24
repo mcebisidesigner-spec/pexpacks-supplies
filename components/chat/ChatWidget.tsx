@@ -263,7 +263,7 @@ export function ChatWidget() {
             sourcePath: window.location.pathname,
             status: response.status,
           });
-          throw new Error("Bro Pex request failed");
+          throw new Error("Pex request failed");
         }
 
         const reply = data as PexChatResponse;
@@ -302,7 +302,7 @@ export function ChatWidget() {
           current.map((m) => (m.id === userMsgId ? { ...m, pending: false } : m))
         );
         setError(
-          "Bro Pex could not respond just now. Please try again or contact the Pexpacks team.",
+          "Pex could not respond just now. Please try again or contact the Pexpacks team.",
         );
       } finally {
         setIsLoading(false);
@@ -337,31 +337,31 @@ export function ChatWidget() {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          aria-label="Open Ask Bro Pex Assistant"
+          aria-label="Open Ask Pex Assistant"
           className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-brand-navy p-1.5 text-left !text-white shadow-[0_12px_28px_rgba(13,31,56,0.24)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_16px_34px_rgba(13,31,56,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
-          title="Ask Bro Pex"
+          title="Ask Pex"
         >
           <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-teal p-0.5 ring-2 ring-white/10">
             <Avatar size="h-full w-full" />
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-brand-teal" aria-hidden="true" />
           </span>
           <span className="grid h-8 w-[86px] place-items-center overflow-hidden rounded-full bg-white/10 px-2 text-[11px] font-bold tracking-tight text-white">
-            <span className="whitespace-nowrap [animation:askBroPexSlide_4.8s_ease-in-out_infinite] motion-reduce:animate-none">
-              Ask Bro Pex
+            <span className="whitespace-nowrap">
+              Ask Pex
             </span>
           </span>
         </button>
       ) : (
         <section
           className="flex h-[min(570px,calc(100dvh-24px))] w-[min(360px,calc(100vw-24px))] flex-col overflow-hidden rounded-3xl border border-slate-200/90 bg-surface shadow-[0_24px_70px_rgba(15,35,61,0.22)]"
-          aria-label="Bro Pex Assistant"
+          aria-label="Pex Assistant"
         >
           <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-4 py-3.5 text-white sm:px-5">
             <div className="flex items-center gap-3">
               <Avatar size="h-10 w-10" />
               <div>
                 <h2 className="m-0 text-sm font-semibold leading-tight">
-                  Ask Bro Pex
+                  Ask Pex
                 </h2>
                 <p className="m-0 mt-1 flex items-center gap-1.5 text-xs text-slate-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-teal" />
@@ -372,7 +372,7 @@ export function ChatWidget() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              aria-label="Close Ask Bro Pex Assistant"
+              aria-label="Close Ask Pex Assistant"
               className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-slate-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <X size={18} aria-hidden="true" />
@@ -592,7 +592,7 @@ export function ChatWidget() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
-                placeholder="Ask Bro Pex about your order..."
+                placeholder="Ask Pex about your order..."
                 className="min-w-0 flex-1 border-0 bg-transparent py-2 text-sm text-ink outline-none placeholder:text-text-muted"
               />
               <button
@@ -651,7 +651,7 @@ function Avatar({ size }: { size: string }) {
     >
       <Image
         src={CHATBOT_LOGO}
-        alt="Bro Pex"
+        alt="Pex"
         width={44}
         height={44}
         className="h-full w-full object-cover aspect-square"
@@ -669,7 +669,7 @@ function StarterLinks({
   onNavigate: (linkId: string, destination: string) => void;
 }) {
   return (
-    <div className="mt-2.5 flex flex-wrap gap-2" aria-label="Popular Bro Pex links">
+    <div className="mt-2.5 flex flex-wrap gap-2" aria-label="Popular Pex links">
       {links.map((link) => (
         <Link
           key={link.id}

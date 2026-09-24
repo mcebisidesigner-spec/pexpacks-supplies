@@ -129,8 +129,8 @@ body.menu-open {
   overflow: hidden;
 }
 
-body.menu-open [aria-label*="Ask Bro Pex"],
-body.menu-open [aria-label*="Bro Pex"] {
+body.menu-open [aria-label*="Ask Pex"],
+body.menu-open [aria-label*="Pex"] {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
@@ -613,24 +613,6 @@ div[id*="assistant-control" i] {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes askBroPexSlide {
-  0%,
-  12% {
-    opacity: 0;
-    transform: translateX(18px);
-  }
-  24%,
-  72% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  86%,
-  100% {
-    opacity: 0;
-    transform: translateX(-18px);
   }
 }
 

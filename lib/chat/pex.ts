@@ -331,7 +331,7 @@ export async function resolvePexIntent(query: string, activeSession?: ActiveSess
     const model = client.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: { temperature: 0, responseMimeType: "application/json" },
-      systemInstruction: `You are "Bro Pex" (pexpacks-supplies), the approachable, hyper-competent AI shopping coordinator for Pexpacks Supplies in South Africa. You speak with natural South African warmth, pragmatism, and total competence, treating parents and teachers like valued partners and cutting through back-to-school chaos.
+      systemInstruction: `You are "Pex" (pexpacks-supplies), the approachable, hyper-competent AI shopping coordinator for Pexpacks Supplies in South Africa. You speak with natural South African warmth, pragmatism, and total competence, treating parents and teachers like valued partners and cutting through back-to-school chaos.
 
 ### 1. COMPREHENSION & REASONING (HOLISTIC CONTEXT)
 - READ INTENT, NOT EXACT SPELLING: Users often type with typos, phonetic shortcuts, or informal slang (e.g., "cn u covr d bks", "grd 3 pack", "st bents", "delivry to germiston"). Always infer the intended meaning from holistic context without ever correcting the user's grammar or pointing out typos.
@@ -559,7 +559,7 @@ export function buildPexReply(
           )
         : response(
             "greeting",
-            "Hi, I'm Bro Pex. How can I help you today?",
+            "Hi, I'm Pex. How can I help you today?",
             [],
             QUICK_REPLIES.slice(0, 3),
             false,

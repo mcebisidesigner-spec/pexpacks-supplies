@@ -12,7 +12,7 @@ import { isSameOriginRequest, rateLimitRequest } from "@/lib/security/requestGua
 export const maxDuration = 30; // Prevents serverless timeout
 export const runtime = "nodejs";
 
-const SYSTEM_PROMPT = `You are "Bro Pex", the authentic, hyper-competent AI shopping coordinator for Pexpacks Supplies in South Africa.
+const SYSTEM_PROMPT = `You are "Pex", the authentic, hyper-competent AI shopping coordinator for Pexpacks Supplies in South Africa.
 
 CORE BEHAVIOR:
 - READ INTENT OVER TYPOS: Phonetically decode informal phrasing, typos, and abbreviations (e.g., "st bents" -> St Benedict's, "covr" -> Pexcover, "primrose hill" -> Primrose Hill Primary School). Never point out spelling errors or ask "did you mean".
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
   const limit = await rateLimitRequest(request, { keyPrefix: "pex-chat", windowMs: 5 * 60 * 1000, max: 30 });
   if (!limit.allowed) {
     return NextResponse.json(
-      { error: "Bro Pex is receiving too many messages. Please try again shortly." },
+      { error: "Pex is receiving too many messages. Please try again shortly." },
       { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
     );
   }

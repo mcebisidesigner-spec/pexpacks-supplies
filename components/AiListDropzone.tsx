@@ -274,7 +274,7 @@ export function AiListDropzone() {
           Organise your school list
         </h2>
         <p className="text-muted-foreground text-sm m-0 leading-relaxed">
-          Drop your stationery list or snap a photo. Bro Pex will help you organise the items, and you can review the suggestions before ordering.
+          Drop your stationery list or snap a photo. Pex will help you organise the items, and you can review the suggestions before ordering.
         </p>
       </div>
 
