@@ -3,7 +3,14 @@
 import { ChevronDown, MoveHorizontal, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type WheelEvent as ReactWheelEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type WheelEvent as ReactWheelEvent,
+} from "react";
 import { createPortal } from "react-dom";
 import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
@@ -14,6 +21,15 @@ import {
   trackSchoolNoResultsRecovery,
   trackSchoolResultSelected,
 } from "@/lib/analytics";
+import {
+  getRecentSchoolVisits,
+  saveSchoolVisit,
+  RECENT_SCHOOL_VISITS_EVENT,
+} from "@/components/schools/schoolVisitTracker";
+import {
+  rankHybridSchools,
+  type HybridSchoolItem,
+} from "@/lib/schools/hybridSchoolRanking";
 import { DEFAULT_PACKS_BADGE } from "@/lib/public-data/contracts";
 import { cn } from "@/lib/utils";
 
@@ -89,6 +105,17 @@ const CHIP_CLASSES =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel/40 focus-visible:!border-pex-keppel " +
   "cursor-pointer no-underline select-none";
 
+const RECENT_CHIP_CLASSES =
+  "shrink-0 snap-start inline-flex items-center gap-2.5 " +
+  "py-2 px-3.5 sm:px-4 rounded-2xl " +
+  "bg-teal-50/70 border-2 border-pex-keppel/50 ring-1 ring-pex-keppel/20 " +
+  "text-pex-navy font-bold text-xs sm:text-[13px] " +
+  "shadow-[0_2px_8px_rgba(26,122,119,0.08)] " +
+  "hover:!border-pex-keppel hover:bg-teal-50 hover:shadow-[0_4px_14px_rgba(26,122,119,0.18)] " +
+  "transition-all duration-200 hover:-translate-y-0.5 " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel/40 focus-visible:!border-pex-keppel " +
+  "cursor-pointer no-underline select-none";
+
 /* Section */
 
 export function SchoolSearchBox({
@@ -102,8 +129,10 @@ export function SchoolSearchBox({
   const searchRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [trendingSchools, setTrendingSchools] = useState<
-    { name: string; slug: string; image?: string | null }[]
+    HybridSchoolItem[]
   >([]);
+  const [hasRecentVisits, setHasRecentVisits] = useState(false);
+  const rawServerSchoolsRef = useRef<HybridSchoolItem[]>([]);
   const trendingFetched = useRef(false);
   const urlQueryApplied = useRef(false);
   const trendingStripRef = useRef<HTMLDivElement>(null);
@@ -140,7 +169,18 @@ export function SchoolSearchBox({
         : "We couldn't search schools right now. Please try again.",
   });
 
-  /* Fetch trending schools on mount without location dependency */
+  const applyHybridRanking = useCallback((serverResults: HybridSchoolItem[]) => {
+    const recents = getRecentSchoolVisits();
+    const { rankedSchools, hasRecent } = rankHybridSchools(
+      serverResults,
+      recents,
+      8,
+    );
+    setTrendingSchools(rankedSchools);
+    setHasRecentVisits(hasRecent);
+  }, []);
+
+  /* Fetch trending schools on mount and rank using edge IP + behavioral recents */
   useEffect(() => {
     if (trendingFetched.current) return;
     trendingFetched.current = true;
@@ -149,11 +189,28 @@ export function SchoolSearchBox({
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data?.results) && data.results.length > 0) {
-          setTrendingSchools(data.results);
+          rawServerSchoolsRef.current = data.results;
+          applyHybridRanking(data.results);
         }
       })
       .catch(() => {});
-  }, []);
+  }, [applyHybridRanking]);
+
+  /* Re-rank reactively whenever localStorage visits are updated */
+  useEffect(() => {
+    function handleVisitsUpdate() {
+      if (rawServerSchoolsRef.current.length > 0) {
+        applyHybridRanking(rawServerSchoolsRef.current);
+      }
+    }
+
+    window.addEventListener(RECENT_SCHOOL_VISITS_EVENT, handleVisitsUpdate);
+    window.addEventListener("storage", handleVisitsUpdate);
+    return () => {
+      window.removeEventListener(RECENT_SCHOOL_VISITS_EVENT, handleVisitsUpdate);
+      window.removeEventListener("storage", handleVisitsUpdate);
+    };
+  }, [applyHybridRanking]);
 
   const searchActive = panelOpen;
 
@@ -292,7 +349,25 @@ export function SchoolSearchBox({
     schoolSlug: string,
     position: number,
     placement: "result" | "trending",
+    meta?: {
+      name?: string;
+      image?: string | null;
+      city?: string;
+      grade?: string;
+    },
   ) {
+    if (meta?.name) {
+      saveSchoolVisit({
+        schoolName: meta.name,
+        schoolSlug,
+        image: meta.image,
+        city: meta.city,
+        grade: meta.grade,
+        gradeSlug: meta.grade
+          ? meta.grade.toLowerCase().replace(/\s+/g, "-")
+          : undefined,
+      });
+    }
     trackSchoolResultSelected({ source, schoolSlug, position, placement });
     onResultClick?.();
   }
@@ -404,7 +479,7 @@ export function SchoolSearchBox({
         {query.length < 3 && trendingSchools.length > 0 ? (
           <div className="mt-3 min-w-0">
             <span className="block mb-1.5 px-1 text-pex-navy/50 text-xs font-extrabold uppercase tracking-wider">
-              Trending Schools
+              {hasRecentVisits ? "Trending & Recent For You" : "Trending Schools Near You"}
             </span>
             <div className="relative">
               <div
@@ -423,18 +498,28 @@ export function SchoolSearchBox({
                   chipDragRef.current = null;
                 }}
               >
-                {trendingSchools.map((school, index) => (
-                  <Link
-                    key={school.slug}
-                    href={"/schools/" + school.slug}
-                    className={CHIP_CLASSES}
-                    data-conversion-event={source + "_trending_school"}
+                {trendingSchools.map((school, index) => {
+                  const isRecent = Boolean(school.isRecent);
+                  return (
+                    <Link
+                      key={school.slug}
+                      href={"/schools/" + school.slug}
+                      className={isRecent ? RECENT_CHIP_CLASSES : CHIP_CLASSES}
+                      data-conversion-event={
+                        source + (isRecent ? "_recent_school" : "_trending_school")
+                      }
                     onClick={(event) => {
                       if (chipDragMovedRef.current) {
                         event.preventDefault();
                         chipDragMovedRef.current = false;
                         return;
                       }
+                      saveSchoolVisit({
+                        schoolName: school.name,
+                        schoolSlug: school.slug,
+                        image: school.image,
+                        city: school.city,
+                      });
                       handleSchoolSelected(school.slug, index + 1, "trending");
                     }}
                   >
@@ -458,8 +543,14 @@ export function SchoolSearchBox({
                     <span className="text-xs font-bold text-pex-navy whitespace-nowrap">
                       {school.name}
                     </span>
+                    {isRecent ? (
+                      <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-pex-keppel/15 text-pex-keppel text-[9px] font-extrabold uppercase tracking-wider">
+                        Recent
+                      </span>
+                    ) : null}
                   </Link>
-                ))}
+                );
+              })}
               </div>
               <div
                 ref={trendingProgressRef}
@@ -589,14 +680,15 @@ export function SchoolSearchBox({
                                     href={`/schools/${school.slug}`}
                                     className="text-inherit no-underline hover:text-pex-keppel transition-colors"
                                     onClick={() =>
-                                      handleSchoolSelected(
-                                        school.slug,
-                                        index + 1,
-                                        "result",
-                                      )
-                                    }
-                                  >
-                                    <HighlightMatch
+                                        handleSchoolSelected(
+                                          school.slug,
+                                          index + 1,
+                                          "result",
+                                          { name: school.name, image: school.image, city: school.city },
+                                        )
+                                      }
+                                    >
+                                      <HighlightMatch
                                       text={school.name}
                                       query={query}
                                     />
@@ -622,7 +714,7 @@ export function SchoolSearchBox({
                                         handleSchoolSelected(
                                           school.slug,
                                           index + 1,
-                                          "result",
+                                          "result", { name: school.name, image: school.image, city: school.city, grade: g },
                                         )
                                       }
                                     >
@@ -646,7 +738,7 @@ export function SchoolSearchBox({
                                         handleSchoolSelected(
                                           school.slug,
                                           index + 1,
-                                          "result",
+                                          "result", { name: school.name, image: school.image, city: school.city, grade: g },
                                         )
                                       }
                                     >
@@ -682,7 +774,7 @@ export function SchoolSearchBox({
                               handleSchoolSelected(
                                 school.slug,
                                 index + 1,
-                                "result",
+                                "result", { name: school.name, image: school.image, city: school.city },
                               )
                             }
                           >

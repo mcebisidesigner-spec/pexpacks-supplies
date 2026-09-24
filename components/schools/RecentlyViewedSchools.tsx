@@ -3,34 +3,18 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  getRecentSchoolVisits,
   RECENT_SCHOOL_VISITS_EVENT,
   STORAGE_KEY,
   type LastVisit,
 } from "./schoolVisitTracker";
-
-const RECENT_VISIT_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
-
-function normaliseVisits(raw: string | null): LastVisit[] {
-  if (!raw) return [];
-
-  const parsed = JSON.parse(raw);
-  const visits: LastVisit[] = Array.isArray(parsed) ? parsed : [parsed];
-
-  return visits.filter(
-    (visit) => Date.now() - visit.timestamp < RECENT_VISIT_MAX_AGE
-  );
-}
 
 export function RecentlyViewedSchools() {
   const [recentVisits, setRecentVisits] = useState<LastVisit[]>([]);
 
   useEffect(() => {
     function loadRecentVisits() {
-      try {
-        setRecentVisits(normaliseVisits(localStorage.getItem(STORAGE_KEY)));
-      } catch {
-        setRecentVisits([]);
-      }
+      setRecentVisits(getRecentSchoolVisits());
     }
 
     loadRecentVisits();
@@ -50,8 +34,10 @@ export function RecentlyViewedSchools() {
   function removeRecentVisit(visitToRemove: LastVisit) {
     const nextVisits = recentVisits.filter(
       (visit) =>
-        visit.schoolSlug !== visitToRemove.schoolSlug ||
-        visit.gradeSlug !== visitToRemove.gradeSlug
+        !(
+          visit.schoolSlug === visitToRemove.schoolSlug &&
+          (visit.gradeSlug || "") === (visitToRemove.gradeSlug || "")
+        ),
     );
 
     setRecentVisits(nextVisits);
@@ -91,13 +77,13 @@ export function RecentlyViewedSchools() {
           {recentVisits.map((visit) => (
             <article
               className="relative pr-14 sm:pr-[58px] p-4 bg-card border border-pex-border rounded-card shadow-card hover:border-pex-keppel/40 hover:shadow-lg transition-all flex flex-col justify-between"
-              key={`${visit.schoolSlug}-${visit.gradeSlug}`}
+              key={`${visit.schoolSlug}-${visit.gradeSlug || "school"}`}
             >
               <button
                 type="button"
                 className="absolute top-3 right-3 w-[34px] h-[34px] border border-pex-border rounded-full bg-pex-bg text-pex-muted grid place-items-center cursor-pointer hover:bg-pex-bg-soft hover:text-pex-coral hover:-translate-y-px hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-pex-keppel transition-all"
                 onClick={() => removeRecentVisit(visit)}
-                aria-label={`Remove ${visit.schoolName} ${visit.grade} from recently viewed`}
+                aria-label={`Remove ${visit.schoolName}${visit.grade ? ` ${visit.grade}` : ""} from recently viewed`}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -118,9 +104,15 @@ export function RecentlyViewedSchools() {
                       {visit.schoolName}
                     </Link>
                   </h3>
-                  <p className="m-0 mt-0.5 text-xs sm:text-sm text-pex-muted font-semibold">
-                    {visit.grade}
-                  </p>
+                  {visit.grade ? (
+                    <p className="m-0 mt-0.5 text-xs sm:text-sm text-pex-muted font-semibold">
+                      {visit.grade}
+                    </p>
+                  ) : visit.city ? (
+                    <p className="m-0 mt-0.5 text-xs sm:text-sm text-pex-muted font-semibold">
+                      {visit.city}
+                    </p>
+                  ) : null}
                 </div>
               </div>
               <Link

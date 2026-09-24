@@ -14,6 +14,7 @@ import { getCachedSchoolBySlug } from "@/lib/school-utils";
 import { getActivePublicSeason } from "@/lib/public-data/seasons";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
+import { SchoolVisitTrackerEffect } from "@/components/schools/SchoolVisitTrackerEffect";
 
 export const revalidate = 300;
 
@@ -131,6 +132,12 @@ export default async function SchoolDetailPage({
   return (
     <>
       <JsonLd data={schoolPageMultiGraphSchema(schoolWithGrades)} />
+      <SchoolVisitTrackerEffect
+        schoolName={school.name}
+        schoolSlug={school.slug}
+        image={school.logo}
+        city={school.city}
+      />
 
       <PageHero
         variant="navy"
