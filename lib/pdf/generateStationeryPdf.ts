@@ -9,9 +9,12 @@ export type {
 /**
  * Generates and downloads the Stationery List PDF in standard A4 format using @react-pdf/renderer
  */
+export type StationeryPdfGenerationMode = "download" | "blob";
+
 export async function generateStationeryPdf(
-  options: import("@/components/pdf/StationeryListPdfDocument").StationeryPdfOptions
-): Promise<void> {
+  options: import("@/components/pdf/StationeryListPdfDocument").StationeryPdfOptions,
+  mode: StationeryPdfGenerationMode = "download"
+): Promise<Blob | void> {
   const { schoolName, grade, fileName } = options;
 
   const safeName =
@@ -35,7 +38,11 @@ export async function generateStationeryPdf(
   }) as NonNullable<Parameters<typeof pdf>[0]>;
   const pdfBlob = await pdf(element).toBlob();
 
-  // 1. Try modern File System Access API if available
+  if (mode === "blob") {
+    return pdfBlob;
+  }
+
+  // Try modern File System Access API if available
   if (typeof window !== "undefined" && "showSaveFilePicker" in window) {
     try {
       const handle = await (window as unknown as {

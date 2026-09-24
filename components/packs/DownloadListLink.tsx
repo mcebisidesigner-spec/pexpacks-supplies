@@ -7,7 +7,7 @@ import type { StationeryPdfOptions } from "@/lib/pdf/generateStationeryPdf";
 type DownloadListLinkProps = {
   children?: ReactNode;
   className?: string;
-  /** PDF options — when provided, clicking generates a PDF */
+  /** PDF options - when provided, clicking generates a PDF */
   pdfOptions: StationeryPdfOptions;
 };
 
@@ -73,7 +73,6 @@ export function DownloadListLink({
         )}
         <span>{isGenerating ? "Generating..." : children}</span>
       </button>
-
     </div>
   );
 }
