@@ -1,9 +1,9 @@
 "use client";
 
-import { ChevronDown, MapPin, ShieldCheck, X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePaginatedSchoolSearch } from "@/hooks/usePaginatedSchoolSearch";
 import { SchoolResultsAutoLoad } from "@/components/schools/SchoolResultsAutoLoad";
@@ -104,10 +104,8 @@ export function SchoolSearchBox({
   const [trendingSchools, setTrendingSchools] = useState<
     { name: string; slug: string; image?: string | null }[]
   >([]);
-  const [trendingVisible, setTrendingVisible] = useState(false);
   const trendingFetched = useRef(false);
   const urlQueryApplied = useRef(false);
-  const [locationPromptOpen, setLocationPromptOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -136,57 +134,20 @@ export function SchoolSearchBox({
         : "We couldn't search schools right now. Please try again.",
   });
 
-  const locationStorageKey = `Pexpacks:location-consent:${source}`;
+  /* Fetch trending schools on mount without location dependency */
+  useEffect(() => {
+    if (trendingFetched.current) return;
+    trendingFetched.current = true;
 
-  const fetchDefaultSchools = useCallback(() => {
-    void fetch(`/api/schools/search?limit=8`)
+    void fetch("/api/schools/search?limit=8")
       .then((response) => response.json())
       .then((data) => {
-        if (data.results) {
+        if (Array.isArray(data?.results) && data.results.length > 0) {
           setTrendingSchools(data.results);
-          setTrendingVisible(true);
         }
       })
       .catch(() => {});
   }, []);
-
-  const fetchNearbySchools = useCallback(() => {
-    if (!("geolocation" in navigator)) {
-      fetchDefaultSchools();
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        void fetch(`/api/schools/search?limit=8&lat=${latitude}&lng=${longitude}`)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.results?.length > 0) {
-              setTrendingSchools(data.results);
-              setTrendingVisible(true);
-            } else {
-              fetchDefaultSchools();
-            }
-          })
-          .catch(fetchDefaultSchools);
-      },
-      () => fetchDefaultSchools(),
-      { timeout: 4000, maximumAge: 120000 },
-    );
-  }, [fetchDefaultSchools]);
-
-  const handleLocationAllow = () => {
-    window.sessionStorage.setItem(locationStorageKey, "allowed");
-    setLocationPromptOpen(false);
-    fetchNearbySchools();
-  };
-
-  const handleLocationSkip = () => {
-    window.sessionStorage.setItem(locationStorageKey, "skipped");
-    setLocationPromptOpen(false);
-    fetchDefaultSchools();
-  };
 
   const searchActive = panelOpen;
 
@@ -211,46 +172,6 @@ export function SchoolSearchBox({
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [panelOpen, setPanelOpen]);
 
-  /* Ask first, then request browser location permission only after clear consent. */
-  useEffect(() => {
-    if (trendingFetched.current || query.length >= 3) return;
-    trendingFetched.current = true;
-
-    if (typeof window === "undefined" || !("geolocation" in navigator)) {
-      fetchDefaultSchools();
-      return;
-    }
-
-    let cancelled = false;
-    const resolveLocationAccess = async () => {
-      try {
-        const permission = await navigator.permissions?.query({
-          name: "geolocation",
-        });
-        if (cancelled) return;
-
-        const alreadyHandled = window.sessionStorage.getItem(locationStorageKey);
-        if (permission?.state === "granted") {
-          fetchNearbySchools();
-        } else if (permission?.state === "denied" || alreadyHandled) {
-          fetchDefaultSchools();
-        } else {
-          setLocationPromptOpen(true);
-        }
-      } catch {
-        if (!window.sessionStorage.getItem(locationStorageKey)) {
-          setLocationPromptOpen(true);
-        } else {
-          fetchDefaultSchools();
-        }
-      }
-    };
-
-    void resolveLocationAccess();
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchDefaultSchools, fetchNearbySchools, locationStorageKey, query]);
   function handleSchoolSelected(
     schoolSlug: string,
     position: number,
@@ -298,95 +219,12 @@ export function SchoolSearchBox({
           onClick={() => {
             setPanelOpen(false);
             setIsInputFocused(false);
-            setTrendingVisible(false);
           }}
           aria-hidden="true"
         />,
         document.body,
       )}
 
-      {mounted && locationPromptOpen
-        ? createPortal(
-            <div
-              className="fixed inset-0 z-[1500] flex items-center justify-center bg-pex-navy/45 p-4 backdrop-blur-sm"
-              role="presentation"
-            >
-              <section
-                className="w-full max-w-md overflow-hidden rounded-3xl border border-white/80 bg-white shadow-[0_24px_80px_rgba(15,35,58,0.28)]"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="location-permission-title"
-                aria-describedby="location-permission-description"
-              >
-                <div className="flex items-start justify-between gap-4 bg-pex-navy px-5 py-4 text-white sm:px-6">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-pex-keppel text-white shadow-sm">
-                      <MapPin className="size-5" strokeWidth={2.4} aria-hidden="true" />
-                    </span>
-                    <div>
-                      <p className="m-0 text-xs font-bold uppercase tracking-[0.08em] text-teal-100">
-                        Find schools faster
-                      </p>
-                      <p className="m-0 mt-1 text-sm font-semibold text-white">
-                        Use your location
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleLocationSkip}
-                    className="grid size-9 shrink-0 place-items-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                    aria-label="Close location prompt"
-                  >
-                    <X className="size-4" strokeWidth={2.4} aria-hidden="true" />
-                  </button>
-                </div>
-
-                <div className="space-y-5 p-5 sm:p-6">
-                  <div>
-                    <h2
-                      id="location-permission-title"
-                      className="m-0 text-xl font-extrabold tracking-tight text-pex-navy sm:text-2xl"
-                    >
-                      Find your nearest school
-                    </h2>
-                    <p
-                      id="location-permission-description"
-                      className="m-0 mt-2 text-sm leading-relaxed text-slate-600"
-                    >
-                      Allowing location helps us sort nearby schools first and improve your search accuracy. You can still search for any school manually.
-                    </p>
-                  </div>
-
-                  <div className="flex items-start gap-3 rounded-2xl border border-pex-keppel/20 bg-pex-keppel/5 p-3.5">
-                    <ShieldCheck className="mt-0.5 size-5 shrink-0 text-pex-keppel" strokeWidth={2.2} aria-hidden="true" />
-                    <p className="m-0 text-xs font-medium leading-relaxed text-pex-navy">
-                      This is optional. Your location is used to improve nearby school results and is not needed to use search.
-                    </p>
-                  </div>
-
-                  <div className="grid gap-2.5 sm:grid-cols-[1fr_auto]">
-                    <button
-                      type="button"
-                      onClick={handleLocationAllow}
-                      className="inline-flex h-11 items-center justify-center rounded-xl bg-pex-coral px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(255,111,89,0.22)] transition-all duration-150 hover:-translate-y-px hover:bg-pex-coral-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral focus-visible:ring-offset-2 active:translate-y-0"
-                    >
-                      Allow location
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleLocationSkip}
-                      className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-pex-navy transition-all duration-150 hover:border-pex-keppel hover:text-pex-keppel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 active:scale-[0.99]"
-                    >
-                      Not now
-                    </button>
-                  </div>
-                </div>
-              </section>
-            </div>,
-            document.body,
-          )
-        : null}
 
       {/* Search card */}
       <div
@@ -403,7 +241,6 @@ export function SchoolSearchBox({
           if (e.key === "Escape") {
             setPanelOpen(false);
             setIsInputFocused(false);
-            setTrendingVisible(false);
           }
         }}
       >
@@ -425,7 +262,6 @@ export function SchoolSearchBox({
               value={query}
               onFocus={() => {
                 setIsInputFocused(true);
-                setTrendingVisible(true);
               }}
               onBlur={() => setIsInputFocused(false)}
               onChange={(e) => updateQuery(e.target.value)}
@@ -449,10 +285,10 @@ export function SchoolSearchBox({
         </label>
 
         {/* Trending chips */}
-        {trendingVisible && query.length < 3 && trendingSchools.length > 0 ? (
+        {query.length < 3 && trendingSchools.length > 0 ? (
           <div className="mt-3 min-w-0">
             <span className="block mb-1.5 px-1 text-pex-navy/50 text-xs font-extrabold uppercase tracking-wider">
-              Trending Near You
+              Trending Schools
             </span>
             {/* Scrollable chip strip with vertical padding to prevent hover border clipping */}
             <div className="relative">
@@ -521,8 +357,7 @@ export function SchoolSearchBox({
               onClick={() => {
                 setPanelOpen(false);
                 setIsInputFocused(false);
-                setTrendingVisible(false);
-              }}
+                  }}
             >
               <X className="size-3.5 text-slate-900" strokeWidth={2.2} aria-hidden="true" />
             </button>
