@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, MoveHorizontal, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type WheelEvent as ReactWheelEvent } from "react";
@@ -470,7 +470,8 @@ export function SchoolSearchBox({
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={Math.round(trendingProgress * 100)}
-                className="relative h-2 mx-1.5 mt-0.5 overflow-hidden rounded-full bg-pex-keppel/20 cursor-ew-resize touch-none select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel/40"
+                title="Drag to browse trending schools"
+                className="relative h-2 mx-1.5 mt-0.5 overflow-visible rounded-full bg-pex-keppel/20 cursor-ew-resize touch-none select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel/40"
                 onPointerDown={handleProgressPointerDown}
                 onPointerMove={handleProgressPointerMove}
                 onPointerUp={handleProgressPointerUp}
@@ -490,6 +491,14 @@ export function SchoolSearchBox({
                   className="absolute inset-y-0 left-0 rounded-full bg-pex-keppel transition-[width] duration-100 ease-out"
                   style={{ width: (Math.max(0.08, trendingProgress) * 100) + "%" }}
                 />
+                <span
+                  className="pointer-events-none absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-pex-keppel shadow-[0_1px_4px_rgba(15,37,55,0.22)] transition-[left] duration-100 ease-out"
+                  style={{ left: (Math.max(0.08, trendingProgress) * 100) + "%" }}
+                />
+              </div>
+              <div className="hidden lg:flex items-center justify-end gap-1 px-1 mt-1 text-[10px] font-medium text-pex-navy/45">
+                <MoveHorizontal size={12} strokeWidth={2} aria-hidden="true" />
+                <span>Drag to browse</span>
               </div>
             </div>
           </div>
