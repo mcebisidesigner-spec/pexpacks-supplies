@@ -95,8 +95,8 @@ export function FAQExperience({ faqs }: FAQExperienceProps) {
       <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-[minmax(280px,0.42fr)_minmax(0,0.58fr)] gap-6 sm:gap-8 lg:gap-11 items-start">
         <div className="static lg:sticky lg:top-24 grid gap-4">
           <div className="border border-slate-200/80 rounded-[22px] p-5 sm:p-7 bg-gradient-to-br from-white/95 to-slate-50 shadow-[0_20px_52px_rgba(26,42,64,0.1)]">
-            <p className="m-0 mb-2 text-pex-coral text-xs sm:text-sm font-extrabold uppercase tracking-wider">FAQ desk</p>
-            <h2 id="faq-heading" className="m-0 mb-4.5 text-pex-navy font-heading text-2xl sm:text-3xl lg:text-[40px] font-extrabold leading-none">Get to the right answer faster</h2>
+            <p className="m-0 mb-3 text-pex-coral text-sm font-semibold leading-tight normal-case">FAQ desk</p>
+            <h2 id="faq-heading" className="m-0 mb-4.5 max-w-3xl text-pex-navy font-heading text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-[1.02] tracking-normal text-balance">Get to the right answer faster</h2>
             <label className="block mb-2 text-xs font-semibold text-slate-700" htmlFor="faq-search">
               Search common questions
             </label>

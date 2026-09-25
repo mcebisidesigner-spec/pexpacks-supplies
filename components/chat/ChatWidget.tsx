@@ -327,7 +327,7 @@ export function ChatWidget() {
   return (
     <div
       className={cn(
-        "fixed bottom-3 right-3 z-[1000] font-sans transition-[opacity,transform,visibility] duration-300 sm:bottom-6 sm:right-6",
+        "fixed bottom-4 right-4 z-[1000] font-sans transition-[opacity,transform,visibility] duration-300 sm:bottom-6 sm:right-6",
         isWidgetHidden &&
           "pointer-events-none invisible translate-y-6 opacity-0",
       )}
@@ -338,14 +338,14 @@ export function ChatWidget() {
           type="button"
           onClick={() => setIsOpen(true)}
           aria-label="Open Ask Pex Assistant"
-          className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-brand-navy p-1.5 text-left !text-white shadow-[0_12px_28px_rgba(13,31,56,0.24)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_16px_34px_rgba(13,31,56,0.3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+          className="group inline-flex items-center gap-1 rounded-full border border-white/15 bg-brand-navy p-1.5 text-left !text-white shadow-[0_10px_24px_rgba(13,31,56,0.22)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_14px_28px_rgba(13,31,56,0.28)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
           title="Ask Pex"
         >
-          <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-teal p-0.5 ring-2 ring-white/10">
+          <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-teal p-0.5 ring-2 ring-white/10">
             <Avatar size="h-full w-full" />
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-brand-teal" aria-hidden="true" />
           </span>
-          <span className="grid h-8 w-[86px] place-items-center overflow-hidden rounded-full bg-white/10 px-2 text-[11px] font-bold tracking-tight text-white">
+          <span className="grid h-8 w-[82px] place-items-center overflow-hidden rounded-full bg-white/10 px-2 text-[11px] font-semibold tracking-tight text-white">
             <span className="whitespace-nowrap">
               Ask Pex
             </span>
@@ -353,17 +353,17 @@ export function ChatWidget() {
         </button>
       ) : (
         <section
-          className="flex h-[min(570px,calc(100dvh-24px))] w-[min(360px,calc(100vw-24px))] flex-col overflow-hidden rounded-3xl border border-slate-200/90 bg-surface shadow-[0_24px_70px_rgba(15,35,61,0.22)]"
+          className="flex h-[min(540px,calc(100dvh-32px))] w-[min(344px,calc(100vw-24px))] flex-col overflow-hidden rounded-[24px] border border-slate-200/90 bg-surface shadow-[0_20px_56px_rgba(15,35,61,0.2)]"
           aria-label="Pex Assistant"
         >
-          <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-4 py-3.5 text-white sm:px-5">
-            <div className="flex items-center gap-3">
-              <Avatar size="h-10 w-10" />
+          <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-3.5 py-3 text-white sm:px-4">
+            <div className="flex items-center gap-2.5">
+              <Avatar size="h-9 w-9" />
               <div>
-                <h2 className="m-0 text-sm font-semibold leading-tight">
+                <h2 className="m-0 text-[13px] font-semibold leading-tight">
                   Ask Pex
                 </h2>
-                <p className="m-0 mt-1 flex items-center gap-1.5 text-xs text-slate-300">
+                <p className="m-0 mt-0.5 flex items-center gap-1.5 text-[11px] text-slate-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-teal" />
                   Ready to help
                 </p>
@@ -373,14 +373,14 @@ export function ChatWidget() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Close Ask Pex Assistant"
-              className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-slate-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-slate-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <X size={18} aria-hidden="true" />
             </button>
           </header>
 
           <div
-            className="flex flex-1 flex-col gap-3 overflow-y-auto bg-[#f7f9fa] p-3.5 sm:p-4"
+            className="flex flex-1 flex-col gap-2.5 overflow-y-auto bg-slate-50 p-3 sm:p-3.5"
             aria-live="polite"
           >
             <AssistantMessage>
@@ -439,7 +439,7 @@ export function ChatWidget() {
                 <div
                   key={message.id}
                   className={cn(
-                    "ml-auto max-w-[82%] rounded-[18px_18px_5px_18px] bg-brand-teal px-3.5 py-2.5 text-sm leading-relaxed text-white shadow-sm flex items-center justify-between gap-2 transition-all",
+                    "ml-auto max-w-[82%] rounded-[16px_16px_4px_16px] bg-brand-teal px-3 py-2 text-[13px] leading-relaxed text-white shadow-sm flex items-center justify-between gap-2 transition-all",
                     message.pending && "opacity-85 shadow-none"
                   )}
                 >
@@ -453,17 +453,17 @@ export function ChatWidget() {
                   )}
                 </div>
               ) : (
-                <div key={message.id} className="flex items-start gap-2.5">
+                <div key={message.id} className="flex items-start gap-2">
                   <Avatar size="mt-0.5 h-8 w-8" />
-                  <div className="min-w-0 max-w-[85%]">
+                  <div className="min-w-0 max-w-[86%]">
                     <AssistantMessage>
                       <p className="m-0">{message.response.text || message.response.reply}</p>
 
                       {/* Structured Response Cards */}
                       {message.response.cards && message.response.cards.length > 0 && (
-                        <div className="mt-2.5 flex flex-col gap-2">
+                        <div className="mt-2 flex flex-col gap-1.5">
                           {message.response.cards.map((card: any, idx: number) => (
-                            <div key={card.id || `card-${idx}`} className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 shadow-2xs">
+                            <div key={card.id || `card-${idx}`} className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 shadow-2xs">
                               <div className="flex items-center justify-between gap-2">
                                 <h4 className="m-0 text-xs font-bold text-ink">{card.title}</h4>
                                 {card.badge && (
@@ -514,7 +514,7 @@ export function ChatWidget() {
 
                       {/* Interactive Quick Reply Chips */}
                       {message.response.quickReplies && message.response.quickReplies.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5" role="group" aria-label="Suggested quick options">
+                        <div className="mt-2.5 flex flex-wrap gap-x-2.5 gap-y-1.5" role="group" aria-label="Suggested quick options">
                           {message.response.quickReplies.map((qr) => (
                             <button
                               key={qr.id}
@@ -580,9 +580,9 @@ export function ChatWidget() {
 
           <form
             onSubmit={submit}
-            className="shrink-0 border-t border-slate-200 bg-white p-3.5"
+            className="shrink-0 border-t border-slate-200 bg-white p-2.5"
           >
-            <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 py-1.5 pl-3.5 pr-1.5 shadow-inner focus-within:border-brand-teal focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-teal/15">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 py-1 pl-3 pr-1 shadow-inner focus-within:border-brand-teal focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-teal/15">
               <input
                 id="bro-pex-chat-input"
                 name="chatMessage"
@@ -593,13 +593,13 @@ export function ChatWidget() {
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
                 placeholder="Ask Pex about your order..."
-                className="min-w-0 flex-1 border-0 bg-transparent py-2 text-sm text-ink outline-none placeholder:text-text-muted"
+                className="min-w-0 flex-1 border-0 bg-transparent py-1.5 text-[13px] text-ink outline-none placeholder:text-text-muted"
               />
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
                 aria-label="Send message"
-                className="grid h-10 w-10 place-items-center rounded-xl bg-brand-accent text-white shadow-sm transition hover:bg-brand-accent-hover disabled:cursor-not-allowed disabled:opacity-45"
+                className="grid h-9 w-9 place-items-center rounded-lg bg-brand-accent text-white shadow-sm transition hover:bg-brand-accent-hover disabled:cursor-not-allowed disabled:opacity-45"
               >
                 <Send size={16} aria-hidden="true" />
               </button>
@@ -607,7 +607,7 @@ export function ChatWidget() {
           </form>
 
           {/* Persistent WhatsApp & Human Handoff Bridge */}
-          <footer className="flex shrink-0 items-center justify-end border-t border-slate-200 bg-white px-4 py-2.5">
+          <footer className="flex shrink-0 items-center justify-end border-t border-slate-200 bg-white px-3 py-2">
             <a
               href={
                 whatsappHref ||
@@ -621,7 +621,7 @@ export function ChatWidget() {
                   label: "pex_docked_handoff",
                 });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2.5 py-1 text-xs font-semibold text-[#075E54] transition hover:bg-[#25D366]/20 hover:text-[#054c44]"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2 py-1 text-[11px] font-semibold text-[#075E54] transition hover:bg-[#25D366]/20 hover:text-[#054c44]"
             >
               <MessageCircle size={14} className="text-[#25D366]" aria-hidden="true" />
               Chat on WhatsApp
@@ -635,7 +635,7 @@ export function ChatWidget() {
 
 function AssistantMessage({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-slate-200/90 bg-white px-3.5 py-3 text-sm leading-relaxed text-text-muted shadow-[0_3px_12px_rgba(26,42,64,0.05)]">
+    <div className="rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 text-[13px] leading-relaxed text-text-muted shadow-[0_3px_12px_rgba(26,42,64,0.05)]">
       {children}
     </div>
   );
@@ -655,7 +655,6 @@ function Avatar({ size }: { size: string }) {
         width={44}
         height={44}
         className="h-full w-full object-cover aspect-square"
-        style={{ aspectRatio: "1 / 1" }}
       />
     </span>
   );
@@ -669,13 +668,13 @@ function StarterLinks({
   onNavigate: (linkId: string, destination: string) => void;
 }) {
   return (
-    <div className="mt-2.5 flex flex-wrap gap-2" aria-label="Popular Pex links">
+    <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Popular Pex links">
       {links.map((link) => (
         <Link
           key={link.id}
           href={link.href}
           onClick={() => onNavigate(link.id, link.href)}
-          className="inline-flex min-h-9 items-center rounded-full border border-brand-teal/25 bg-teal-50/70 px-3 py-1.5 text-xs font-semibold text-brand-teal no-underline shadow-2xs transition-all duration-150 hover:-translate-y-px hover:border-brand-teal hover:bg-brand-teal hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/35 focus-visible:ring-offset-2"
+          className="inline-flex min-h-8 items-center rounded-full border border-brand-teal/25 bg-teal-50/70 px-2.5 py-1 text-[11px] font-semibold text-brand-teal no-underline shadow-2xs transition-all duration-150 hover:-translate-y-px hover:border-brand-teal hover:bg-brand-teal hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/35 focus-visible:ring-offset-2"
         >
           {link.label}
         </Link>

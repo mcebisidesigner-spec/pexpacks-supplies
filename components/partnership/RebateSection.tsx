@@ -38,8 +38,8 @@ export function RebateSection({ onDiscussEstimate }: RebateSectionProps) {
     <section className="py-12 sm:py-20" id="rebate-calculator" aria-labelledby="rebate-heading">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-[760px] mb-[34px] text-left flex flex-col items-start">
-          <p className="mb-3 text-pex-keppel text-sm font-extrabold text-left">Annual partnership rebate</p>
-          <h2 id="rebate-heading" className="mb-3 text-pex-navy font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-left">
+          <p className="mb-3 text-pex-keppel text-sm font-semibold leading-tight normal-case text-left">Annual partnership rebate</p>
+          <h2 id="rebate-heading" className="mb-3 max-w-3xl text-pex-navy font-heading text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-[1.02] tracking-normal text-balance text-left">
             Adoption That Gives Back to Your School.
           </h2>
           <p className="max-w-[760px] mb-[34px] text-slate-600 text-lg leading-[1.45] text-left">

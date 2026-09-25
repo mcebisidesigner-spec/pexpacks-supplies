@@ -83,7 +83,7 @@ export function Button({
   ) : (
     <>
       {iconDirection === "left" ? <ArrowLeft className="size-4 shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5" aria-hidden="true" /> : null}
-      <span className="min-w-0 break-words text-center">{children}</span>
+      <span className="inline-flex min-w-0 items-center justify-center gap-2 break-words text-center">{children}</span>
       {iconDirection && iconDirection !== "left" && iconDirection !== "none" ? (
         <span className="inline-flex shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
           {iconDirection === "right" ? <ArrowRight className="size-4" /> : null}

@@ -308,14 +308,16 @@ export default async function BlogPostPage({
               <div className="lg:sticky lg:top-24 space-y-6">
                 {/* WIDGET 1: Skip the Mall Lines (Order Pack CTA) */}
                 <div className="rounded-card bg-pex-navy text-white p-6 sm:p-7 shadow-card border border-white/10">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pex-coral/10 text-pex-coral text-[11px] font-extrabold uppercase tracking-wide mb-3 border border-pex-coral/20">
-                    <Sparkles className="size-3.5" />
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-pex-coral/10 text-pex-coral text-[11px] font-extrabold uppercase tracking-wide mb-3 border border-pex-coral/20">
                     <span>Fast & Stress-Free</span>
                   </div>
 
-                  <h3 className="text-xl font-extrabold font-heading text-white m-0 leading-snug">
-                    Skip the Mall Lines
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="size-4 shrink-0 text-pex-coral" aria-hidden="true" />
+                    <h3 className="m-0 font-heading text-xl font-extrabold leading-snug text-white">
+                      Skip the Mall Lines
+                    </h3>
+                  </div>
 
                   <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed">
                     Order your child&apos;s verified school stationery pack in a few

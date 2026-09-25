@@ -24,11 +24,11 @@ export function CTASection({
       <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-7">
         <div>
           {eyebrow ? (
-            <p className="m-0 mb-2.5 text-pex-coral text-xs sm:text-sm font-extrabold uppercase tracking-wider">
+            <p className="m-0 mb-3 text-pex-coral text-sm font-semibold leading-tight normal-case">
               {eyebrow}
             </p>
           ) : null}
-          <h2 className="m-0 font-heading text-[clamp(34px,5vw,62px)] font-extrabold leading-none text-white">
+          <h2 className="m-0 max-w-3xl font-heading text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-[1.02] tracking-normal text-balance text-white">
             {title}
           </h2>
           <p className="m-0 mt-3.5 max-w-[580px] text-white/85 text-base sm:text-lg leading-relaxed">

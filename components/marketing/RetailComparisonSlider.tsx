@@ -38,7 +38,7 @@ export function RetailComparisonSlider() {
       style={sliderStyle}
     >
       <div className="grid gap-2 mb-4 md:flex md:items-end md:justify-between md:gap-4 md:mb-[18px]">
-        <p className="m-0 text-[#219e9a] text-xs font-extrabold tracking-[0.08em] uppercase">
+        <p className="m-0 text-pex-keppel text-sm font-semibold leading-tight normal-case">
           Drag the line
         </p>
         <strong className="text-primary text-xl sm:text-2xl md:text-3xl font-heading leading-tight text-left md:text-right font-extrabold">

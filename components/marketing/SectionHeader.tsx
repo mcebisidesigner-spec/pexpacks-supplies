@@ -16,23 +16,23 @@ export function SectionHeader({
   className,
 }: SectionHeaderProps) {
   return (
-    <div className={cn("max-w-[760px] mb-8 md:mb-[34px]", className)}>
+    <div className={cn("max-w-4xl mb-8 md:mb-10", className)}>
       {eyebrow ? (
-        <p className="m-0 mb-2 text-primary font-bold text-xs md:text-sm tracking-[0.08em] uppercase">
+        <p className="m-0 mb-3 text-pex-keppel text-sm font-semibold leading-tight normal-case">
           {eyebrow}
         </p>
       ) : null}
       <h2
         id={headingId}
         className={cn(
-          "m-0 text-primary font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[58px] font-extrabold leading-[1.05] tracking-tight",
+          "m-0 max-w-4xl text-pex-navy font-heading text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-[1.02] tracking-normal text-balance",
           headingId && "scroll-mt-24 md:scroll-mt-28"
         )}
       >
         {title}
       </h2>
       {text ? (
-        <p className="mt-3.5 text-muted-foreground text-base md:text-lg leading-relaxed font-normal">
+        <p className="mt-4 max-w-3xl text-slate-600 text-base md:text-lg leading-relaxed font-normal">
           {text}
         </p>
       ) : null}

@@ -20,7 +20,6 @@ export const AnalyticsEvents = {
   trayOpened: "Order Tray Opened",
   addLearnerStarted: "Add Learner Started",
   proceedToCheckout: "Proceed to Checkout",
-  checkoutStepCompleted: "Checkout Step Completed",
   checkoutValidationFailed: "Checkout Validation Failed",
   paymentInitiated: "Payment Initiated",
   paymentFailed: "Payment Failed",
@@ -35,7 +34,6 @@ export const AnalyticsEvents = {
   cartReviewOpened: "Cart Review Opened",
   cartReviewItemEdited: "Cart Review Item Edited",
   pexIntentResolved: "Pex Intent Resolved",
-  pexQuickReplySelected: "Pex Quick Reply Selected",
   pexActionSelected: "Pex Action Selected",
   pexHumanHandoff: "Pex Human Handoff",
   pexRequestFailed: "Pex Request Failed",
@@ -256,16 +254,6 @@ export function trackPaymentInitiated({
   });
 }
 
-export function trackCheckoutStepCompleted({
-  checkoutMode,
-  step,
-}: {
-  checkoutMode: CheckoutMode;
-  step: string;
-}) {
-  track(AnalyticsEvents.checkoutStepCompleted, { checkoutMode, step });
-}
-
 export function trackCheckoutValidationFailed({
   checkoutMode,
   step,
@@ -431,10 +419,6 @@ export function trackCartReviewItemEdited({
 
 export function trackPexIntentResolved({ intent, sourcePath }: { intent: string; sourcePath: string }) {
   track(AnalyticsEvents.pexIntentResolved, { intent, sourcePath });
-}
-
-export function trackPexQuickReplySelected({ quickReplyId, sourcePath }: { quickReplyId: string; sourcePath: string }) {
-  track(AnalyticsEvents.pexQuickReplySelected, { quickReplyId, sourcePath });
 }
 
 export function trackPexActionSelected({ actionId, destination, sourcePath }: { actionId: string; destination: string; sourcePath: string }) {

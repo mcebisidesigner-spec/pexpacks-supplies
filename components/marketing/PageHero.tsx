@@ -35,10 +35,10 @@ export function PageHero({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-8 lg:gap-12 items-center">
         <div className="max-w-2xl min-w-0">
-          <p className="m-0 mb-4 text-pex-keppel font-extrabold text-xs sm:text-sm tracking-normal">
+          <p className="m-0 mb-4 text-pex-keppel text-sm font-semibold leading-tight normal-case">
             {eyebrow}
           </p>
-          <h1 className="m-0 text-white font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.06] tracking-tight [overflow-wrap:anywhere]">
+          <h1 className="m-0 max-w-3xl text-white font-heading text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-[1.02] tracking-normal text-balance [overflow-wrap:anywhere]">
             {title}
           </h1>
           {text ? (

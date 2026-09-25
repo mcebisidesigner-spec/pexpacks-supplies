@@ -4,35 +4,6 @@
  * Examples: PEX-CEU-FREEDOM-992, PEX-CEU-992, PEX-CBS-952
  */
 
-const CATEGORY_MAP: Record<string, string> = {
-  stationery: "STN",
-  writing: "WRT",
-  "writing tools": "WRT",
-  pens: "WRT",
-  pencils: "WRT",
-  books: "BOK",
-  "books & paper": "BOK",
-  paper: "BOK",
-  notebooks: "BOK",
-  "art & craft": "ART",
-  art: "ART",
-  creative: "ART",
-  "creative supplies": "ART",
-  packaging: "PKG",
-  bags: "BAG",
-  "bags & storage": "BAG",
-  storage: "BAG",
-  tools: "TLS",
-  scissors: "CUT",
-  cutting: "CUT",
-  math: "MTH",
-  geometry: "MTH",
-  calculators: "CAL",
-  adhesives: "GLU",
-  glue: "GLU",
-  general: "GEN",
-};
-
 const STOP_WORDS = new Set([
   "and",
   "the",
@@ -68,30 +39,6 @@ export function sanitizeSku(sku: string): string {
     .replace(/[^A-Z0-9-]/g, "")
     .replace(/-+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-/**
- * Derives a 3-character uppercase Category Code
- */
-export function getCategoryCode(category?: string | null): string {
-  if (!category) return "GEN";
-  const clean = category.toLowerCase().trim();
-
-  if (CATEGORY_MAP[clean]) {
-    return CATEGORY_MAP[clean];
-  }
-
-  for (const [key, code] of Object.entries(CATEGORY_MAP)) {
-    if (clean.includes(key)) {
-      return code;
-    }
-  }
-
-  const alpha = clean.replace(/[^a-z]/g, "").toUpperCase();
-  if (alpha.length >= 3) {
-    return alpha.slice(0, 3);
-  }
-  return (alpha + "GEN").slice(0, 3);
 }
 
 /**

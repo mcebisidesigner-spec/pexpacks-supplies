@@ -124,11 +124,11 @@ export function RetailVsPexpacksSlider() {
         <div className="relative bg-card border border-pex-border rounded-card md:rounded-[clamp(20px,3vw,28px)] p-4 sm:p-[clamp(20px,3vw,36px)] shadow-card">
           {/* Card Header */}
           <div className="flex items-center justify-between mb-[clamp(16px,2.5vw,24px)] gap-4 flex-wrap max-sm:flex-col max-sm:items-start max-sm:gap-1.5">
-            <p className="text-pex-keppel text-xs font-extrabold tracking-[0.08em] uppercase m-0 flex items-center gap-1.5">
+            <p className="text-pex-keppel text-sm font-semibold leading-tight normal-case m-0 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-pex-keppel inline-block animate-pulse" aria-hidden="true" />
               DRAG THE LINE
             </p>
-            <h2 className="text-pex-navy font-heading text-[clamp(24px,3.2vw,36px)] max-sm:text-[22px] font-extrabold m-0 leading-[1.1]">
+            <h2 className="text-pex-navy font-heading text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold m-0 leading-[1.02] tracking-normal text-balance">
               DIY vs. Pexpacks ready
             </h2>
           </div>

@@ -4,6 +4,7 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { HeroSearch } from "@/components/marketing/HeroSearch";
 import { ConciergeSection } from "@/components/marketing/ConciergeSection";
 import { SuperpowerSection } from "@/components/marketing/SuperpowerSection";
+import { UnboxingSection } from "@/components/marketing/UnboxingSection";
 import {
   RetailVsPexpacksSlider,
   FaqMarquee,
@@ -190,6 +191,8 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
+
+      <UnboxingSection />
 
       <section className="py-8 bg-transparent">
         <div className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8">

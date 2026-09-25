@@ -57,8 +57,8 @@ export function PartnershipBenefits() {
     <section className="py-12 sm:py-20 bg-slate-50/50 border-y border-slate-200/80" aria-labelledby="advantages-title">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-8 text-left flex flex-col items-start">
-          <p className="mb-3 text-pex-keppel text-sm font-extrabold text-left">The institutional proposition</p>
-          <h2 id="advantages-title" className="mb-3 text-pex-navy font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-left">
+          <p className="mb-3 text-pex-keppel text-sm font-semibold leading-tight normal-case text-left">The institutional proposition</p>
+          <h2 id="advantages-title" className="mb-3 max-w-3xl text-pex-navy font-heading text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-[1.02] tracking-normal text-balance text-left">
             One Partnership. Four Institutional Advantages.
           </h2>
           <p className="max-w-3xl mb-8 text-slate-600 text-base sm:text-lg leading-relaxed text-left">
