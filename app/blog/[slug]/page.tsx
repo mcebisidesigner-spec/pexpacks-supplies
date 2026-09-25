@@ -26,6 +26,7 @@ import {
   getRelatedBlogArticles,
 } from "@/lib/blog-data";
 import { PrintableChecklistCard } from "@/components/blog/PrintableChecklistCard";
+import { Button } from "@/components/ui/Button";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
 import { buildMetadata, siteUrl } from "@/lib/seo";
@@ -106,18 +107,18 @@ export default async function BlogPostPage({
       <JsonLd data={articleSchema(structuredArticle)} />
       <JsonLd data={breadcrumbSchema(breadcrumbs)} />
 
-      <div className="min-h-screen bg-slate-50 print:bg-white">
+      <div className="min-h-screen bg-pex-body-bg print:bg-white">
         {/* ── BREADCRUMBS ── */}
         <nav
           aria-label="Breadcrumbs"
-          className="border-b border-slate-200/80 bg-white print:hidden"
+          className="border-b border-pex-border bg-white print:hidden"
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5">
-            <ol className="flex items-center gap-1.5 text-xs text-slate-500 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden m-0 p-0 list-none">
+            <ol className="flex items-center gap-1.5 text-xs text-pex-muted overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden m-0 p-0 list-none">
               <li>
                 <Link
                   href="/"
-                  className="hover:text-slate-900 transition-colors no-underline font-medium text-slate-500"
+                  className="hover:text-pex-navy transition-colors no-underline font-medium text-pex-muted"
                 >
                   Home
                 </Link>
@@ -128,7 +129,7 @@ export default async function BlogPostPage({
               <li>
                 <Link
                   href="/blog"
-                  className="hover:text-slate-900 transition-colors no-underline font-medium text-slate-500"
+                  className="hover:text-pex-navy transition-colors no-underline font-medium text-pex-muted"
                 >
                   Resources
                 </Link>
@@ -137,7 +138,7 @@ export default async function BlogPostPage({
                 <ChevronRight className="size-3.5 text-slate-400 shrink-0" />
               </li>
               <li
-                className="font-bold text-slate-900 truncate max-w-[200px] sm:max-w-xs md:max-w-md"
+                className="font-bold text-pex-navy truncate max-w-[200px] sm:max-w-xs md:max-w-md"
                 aria-current="page"
               >
                 {article.title}
@@ -147,22 +148,22 @@ export default async function BlogPostPage({
         </nav>
 
         {/* ── ARTICLE HEADER ── */}
-        <header className="bg-slate-900 text-white pt-10 pb-14 sm:pt-14 sm:pb-16 print:bg-white print:text-black print:p-0 print:border-b-2 print:border-black">
+        <header className="bg-pex-navy text-white pt-10 pb-14 sm:pt-14 sm:pb-16 print:bg-white print:text-black print:p-0 print:border-b-2 print:border-black">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl">
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mb-4 print:hidden">
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-pex-keppel text-xs font-extrabold uppercase tracking-wide">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pex-keppel/10 border border-pex-keppel/30 text-pex-keppel text-xs font-extrabold uppercase tracking-wide">
                   <BookOpen className="size-3.5" />
                   <span>{article.category}</span>
                 </span>
 
-                <span className="inline-block px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-bold">
+                <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-bold">
                   {article.phase}
                 </span>
 
                 {article.hasPrintable ? (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-400 text-xs font-extrabold uppercase tracking-wide">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pex-coral/10 border border-pex-coral/30 text-pex-coral text-xs font-extrabold uppercase tracking-wide">
                     <FileDown className="size-3.5" />
                     <span>Printable Checklist</span>
                   </span>
@@ -175,14 +176,14 @@ export default async function BlogPostPage({
               </h1>
 
               {/* Description */}
-              <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed font-normal print:text-slate-800 print:text-sm">
+              <p className="mt-4 text-base sm:text-lg text-white/80 leading-relaxed font-normal print:text-slate-800 print:text-sm">
                 {article.description}
               </p>
 
               {/* Metadata Bar */}
-              <div className="mt-8 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm text-slate-300 print:border-slate-300 print:text-black print:mt-4 print:pt-3">
+              <div className="mt-8 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm text-white/80 print:border-slate-300 print:text-black print:mt-4 print:pt-3">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center font-heading font-extrabold text-white text-sm shrink-0 print:border-black">
+                  <div className="size-10 rounded-full bg-white/15 border-2 border-white/20 flex items-center justify-center font-heading font-extrabold text-white text-sm shrink-0 print:border-black">
                     {article.author.name
                       .split(" ")
                       .map((n) => n[0])
@@ -193,15 +194,15 @@ export default async function BlogPostPage({
                     <strong className="block font-bold text-white print:text-black">
                       {article.author.name}
                     </strong>
-                    <span className="block text-xs text-slate-400 print:text-slate-600">
+                    <span className="block text-xs text-white/60 print:text-slate-600">
                       {article.author.role}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 text-xs text-slate-400 font-medium print:text-slate-600">
+                <div className="flex items-center gap-4 text-xs text-white/60 font-medium print:text-slate-600">
                   <span className="inline-flex items-center gap-1.5">
-                    <Calendar className="size-4 text-slate-400" />
+                    <Calendar className="size-4 text-white/60" />
                     <span>
                       {new Date(article.date).toLocaleDateString("en-ZA", {
                         month: "long",
@@ -212,7 +213,7 @@ export default async function BlogPostPage({
                   </span>
 
                   <span className="inline-flex items-center gap-1.5">
-                    <Clock className="size-4 text-slate-400" />
+                    <Clock className="size-4 text-white/60" />
                     <span>{article.readTime}</span>
                   </span>
                 </div>
@@ -344,8 +345,8 @@ export default async function BlogPostPage({
             <aside className="lg:col-span-4 print:hidden">
               <div className="lg:sticky lg:top-24 space-y-6">
                 {/* WIDGET 1: Skip the Mall Lines (Order Pack CTA) */}
-                <div className="rounded-3xl bg-slate-900 text-white p-6 sm:p-7 shadow-lg border border-slate-800">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-[11px] font-extrabold uppercase tracking-wide mb-3">
+                <div className="rounded-card bg-pex-navy text-white p-6 sm:p-7 shadow-card border border-white/10">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pex-coral/10 text-pex-coral text-[11px] font-extrabold uppercase tracking-wide mb-3 border border-pex-coral/20">
                     <Sparkles className="size-3.5" />
                     <span>Fast & Stress-Free</span>
                   </div>
@@ -354,43 +355,45 @@ export default async function BlogPostPage({
                     Skip the Mall Lines
                   </h3>
 
-                  <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  <p className="mt-2 text-xs sm:text-sm text-white/80 leading-relaxed">
                     Order your child&apos;s verified school stationery pack in a few
                     clicks. Exact brands, required rulings, and delivery straight
                     to your door before Term 1 starts.
                   </p>
 
-                  <div className="mt-6 space-y-2.5">
-                    <Link
+                  <div className="mt-6 flex flex-col gap-2.5">
+                    <Button
                       href="/schools"
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-pex-keppel hover:bg-teal-600 text-white font-heading font-extrabold text-sm no-underline shadow-md shadow-teal-900/30 transition-all active:scale-[0.98]"
+                      variant="primary"
+                      className="w-full"
                     >
                       <Search className="size-4" />
                       <span>Find My School Pack</span>
-                    </Link>
+                    </Button>
 
-                    <Link
+                    <Button
                       href="/upload-a-list"
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-heading font-extrabold text-sm no-underline transition-all active:scale-[0.98]"
+                      variant="white"
+                      className="w-full"
                     >
-                      <Upload className="size-4 text-orange-400" />
+                      <Upload className="size-4" />
                       <span>Upload Custom List</span>
-                    </Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* WIDGET 2: Pexcover Book Covering Banner */}
-                <div className="rounded-3xl bg-gradient-to-br from-teal-900/90 to-slate-900 text-white p-6 sm:p-7 shadow-sm border border-teal-800/40">
-                  <div className="flex items-center gap-2 text-amber-400 text-xs font-extrabold uppercase tracking-wider mb-2">
-                    <ShieldCheck className="size-4 text-amber-400" />
+                <div className="rounded-card bg-pex-bg-soft text-pex-navy p-6 sm:p-7 shadow-xs border border-pex-border">
+                  <div className="flex items-center gap-2 text-pex-keppel text-xs font-extrabold uppercase tracking-wider mb-2">
+                    <ShieldCheck className="size-4" />
                     <span>Pexcover Protection</span>
                   </div>
 
-                  <h4 className="text-lg font-extrabold text-white m-0 leading-tight">
+                  <h4 className="text-lg font-extrabold text-pex-navy m-0 leading-tight">
                     Exercise Books Neatly Covered & Named
                   </h4>
 
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+                  <p className="mt-2 text-xs sm:text-sm text-pex-muted leading-relaxed">
                     Add Pexcover to any stationery pack. All exercise books
                     arrive wrapped in heavy-duty 80-micron clear protective film
                     with custom learner & subject labels.
@@ -398,7 +401,7 @@ export default async function BlogPostPage({
 
                   <Link
                     href="/schools"
-                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-400 hover:text-orange-300 transition-colors no-underline"
+                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-pex-coral hover:text-pex-coral-hover transition-colors no-underline"
                   >
                     <span>Browse school packs with Pexcover</span>
                     <ArrowRight className="size-3.5" />
@@ -407,8 +410,8 @@ export default async function BlogPostPage({
 
                 {/* WIDGET 3: Related Resources List */}
                 {relatedArticles.length > 0 ? (
-                  <div className="rounded-3xl bg-white border border-slate-200/90 p-6 shadow-sm">
-                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-4 m-0">
+                  <div className="rounded-card bg-white border border-pex-border p-6 shadow-card">
+                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-pex-muted mb-4 m-0">
                       Related Resources
                     </h4>
 
@@ -417,15 +420,15 @@ export default async function BlogPostPage({
                         <Link
                           key={rel.id}
                           href={`/blog/${rel.slug}`}
-                          className="group block no-underline border-b border-slate-100 last:border-b-0 pb-3 last:pb-0"
+                          className="group block no-underline border-b border-pex-border last:border-b-0 pb-3 last:pb-0"
                         >
                           <span className="block text-[11px] font-extrabold text-pex-keppel uppercase tracking-wide mb-1">
                             {rel.category}
                           </span>
-                          <strong className="block text-xs sm:text-sm font-bold text-slate-900 group-hover:text-orange-600 transition-colors leading-snug">
+                          <strong className="block text-xs sm:text-sm font-bold text-pex-navy group-hover:text-pex-coral transition-colors leading-snug">
                             {rel.title}
                           </strong>
-                          <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-slate-400 font-medium">
+                          <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-pex-muted font-medium">
                             <Clock className="size-3" />
                             <span>{rel.readTime}</span>
                           </span>
@@ -440,21 +443,21 @@ export default async function BlogPostPage({
         </div>
 
         {/* ── BOTTOM MORE RESOURCES SECTION ── */}
-        <section className="bg-white border-t border-slate-200 py-12 sm:py-16 print:hidden">
+        <section className="bg-white border-t border-pex-border py-12 sm:py-16 print:hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <div>
-                <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-slate-900 m-0">
+                <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-pex-navy m-0">
                   More From the Resource Hub
                 </h3>
-                <p className="mt-1 text-xs sm:text-sm text-slate-500 m-0">
+                <p className="mt-1 text-xs sm:text-sm text-pex-muted m-0">
                   Helpful guides and printables to empower learners all year long.
                 </p>
               </div>
 
               <Link
                 href="/blog"
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-orange-600 hover:text-orange-700 transition-colors no-underline"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-pex-coral hover:text-pex-coral-hover transition-colors no-underline"
               >
                 <span>View All Resources</span>
                 <ArrowRight className="size-4" />
@@ -466,9 +469,9 @@ export default async function BlogPostPage({
                 <Link
                   key={item.id}
                   href={`/blog/${item.slug}`}
-                  className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-5 hover:border-slate-300 hover:shadow-md transition-all no-underline"
+                  className="group flex flex-col rounded-card border border-pex-border bg-white p-5 hover:border-pex-keppel/40 hover:shadow-card transition-all no-underline"
                 >
-                  <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-slate-100 mb-4">
+                  <div className="relative aspect-[16/9] w-full rounded-image overflow-hidden bg-pex-bg-soft mb-4">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -482,11 +485,11 @@ export default async function BlogPostPage({
                     {item.category}
                   </span>
 
-                  <strong className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-orange-600 transition-colors leading-snug line-clamp-2">
+                  <strong className="text-sm sm:text-base font-extrabold text-pex-navy group-hover:text-pex-coral transition-colors leading-snug line-clamp-2">
                     {item.title}
                   </strong>
 
-                  <p className="mt-2 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                  <p className="mt-2 text-xs text-pex-muted line-clamp-2 leading-relaxed">
                     {item.description}
                   </p>
                 </Link>

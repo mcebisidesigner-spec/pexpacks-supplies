@@ -21,17 +21,17 @@ export default async function BlogPage() {
 
   const liveResourcesNode =
     resources.length > 0 ? (
-      <div className="resourceHubCard rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-7 grid gap-4 shadow-sm">
+      <div className="resourceHubCard rounded-card border border-pex-border bg-white p-6 sm:p-7 grid gap-4 shadow-card">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-extrabold uppercase tracking-wider text-pex-keppel">
             Resource Hub Downloads
           </span>
-          <span className="text-xs text-slate-500 font-semibold">
+          <span className="text-xs text-pex-muted font-semibold">
             Official PDF templates
           </span>
         </div>
 
-        <h3 className="text-xl font-extrabold font-heading text-slate-900 leading-tight m-0">
+        <h3 className="text-xl font-extrabold font-heading text-pex-navy leading-tight m-0">
           Live parent resources & downloadable printables
         </h3>
 
@@ -42,19 +42,19 @@ export default async function BlogPage() {
               href={resource.file_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group grid grid-cols-[1fr_auto] items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-pex-navy no-underline hover:border-pex-keppel/50 hover:bg-teal-50/40 transition-all"
+              className="group grid grid-cols-[1fr_auto] items-center gap-3 p-4 rounded-xl bg-pex-bg-soft border border-pex-border text-pex-navy no-underline hover:border-pex-keppel/50 hover:bg-pex-bg-mint transition-all"
             >
               <span className="min-w-0">
                 <strong className="block min-w-0 text-sm font-extrabold leading-snug group-hover:text-pex-keppel transition-colors">
                   {resource.title}
                 </strong>
                 {resource.description ? (
-                  <small className="block min-w-0 text-slate-500 text-xs leading-normal mt-1 line-clamp-1">
+                  <small className="block min-w-0 text-pex-muted text-xs leading-normal mt-1 line-clamp-1">
                     {resource.description}
                   </small>
                 ) : null}
               </span>
-              <em className="rounded-full bg-teal-600/10 text-teal-700 text-[10px] not-italic font-extrabold px-2.5 py-1 uppercase tracking-wide shrink-0">
+              <em className="rounded-full bg-pex-keppel/10 text-pex-keppel-dark text-[10px] not-italic font-extrabold px-2.5 py-1 uppercase tracking-wide shrink-0">
                 {resource.file_type}
               </em>
             </Link>

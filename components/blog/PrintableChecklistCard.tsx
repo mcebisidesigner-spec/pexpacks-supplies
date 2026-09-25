@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, CheckCircle2, FileDown, Printer, RotateCcw } from "lucide-react";
+import { Check, FileDown, Printer, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import type { PrintableChecklist } from "@/lib/blog-data";
 
 type PrintableChecklistCardProps = {
@@ -40,20 +41,20 @@ export function PrintableChecklistCard({
   return (
     <div
       id="printable-checklist-container"
-      className="my-10 rounded-2xl border-2 border-slate-200 bg-slate-50/90 p-6 sm:p-8 shadow-sm print:m-0 print:border-none print:p-0 print:bg-white print:shadow-none"
+      className="my-10 rounded-card border border-pex-border bg-pex-bg-soft/90 p-6 sm:p-8 shadow-card print:m-0 print:border-none print:p-0 print:bg-white print:shadow-none"
     >
       {/* ── Screen-only header actions ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 print:pb-3 print:border-b-2 print:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-pex-border print:pb-3 print:border-b-2 print:border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-extrabold uppercase tracking-wide mb-2 print:hidden">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pex-coral/10 text-pex-coral border border-pex-coral/20 text-xs font-extrabold uppercase tracking-wide mb-2 print:hidden">
             <FileDown className="size-3.5" />
             <span>Interactive Printable Tool</span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-slate-900 m-0">
+          <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-pex-navy m-0">
             {checklist.title}
           </h3>
-          <p className="mt-1 text-xs sm:text-sm text-slate-600 m-0">
+          <p className="mt-1 text-xs sm:text-sm text-pex-muted m-0">
             {checklist.subtitle}
           </p>
         </div>
@@ -63,7 +64,7 @@ export function PrintableChecklistCard({
             <button
               type="button"
               onClick={resetChecklist}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-200/80 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-pex-muted hover:text-pex-navy hover:bg-white transition-colors cursor-pointer"
               title="Reset all checkboxes"
             >
               <RotateCcw className="size-3.5" />
@@ -71,20 +72,22 @@ export function PrintableChecklistCard({
             </button>
           ) : null}
 
-          <button
+          <Button
             type="button"
+            variant="navy"
+            size="sm"
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-extrabold tracking-wide shadow-sm hover:shadow transition-all active:scale-[0.98] cursor-pointer"
+            className="cursor-pointer"
           >
-            <Printer className="size-4 text-orange-400" />
+            <Printer className="size-4 text-pex-coral" />
             <span>Print Checklist</span>
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* ── Progress bar (screen only) ── */}
       <div className="mt-4 mb-6 print:hidden">
-        <div className="flex items-center justify-between text-xs font-bold text-slate-600 mb-1.5">
+        <div className="flex items-center justify-between text-xs font-bold text-pex-muted mb-1.5">
           <span>Your Pack Readiness Progress</span>
           <span className="text-pex-keppel font-extrabold">
             {completedItems} of {totalItems} items ({progressPercent}%)
@@ -111,10 +114,10 @@ export function PrintableChecklistCard({
         {checklist.categories.map((categoryGroup, groupIdx) => (
           <div
             key={categoryGroup.category}
-            className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200 shadow-2xs print:border-none print:p-0 print:shadow-none"
+            className="rounded-xl bg-white p-4 sm:p-5 border border-pex-border shadow-2xs print:border-none print:p-0 print:shadow-none"
           >
-            <h4 className="text-sm sm:text-base font-extrabold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2 print:text-black print:mb-1.5 print:text-sm">
-              <span className="flex size-5 items-center justify-center rounded-full bg-slate-900 text-white text-[11px] font-extrabold print:bg-black">
+            <h4 className="text-sm sm:text-base font-extrabold text-pex-navy uppercase tracking-wider mb-3 flex items-center gap-2 print:text-black print:mb-1.5 print:text-sm">
+              <span className="flex size-5 items-center justify-center rounded-full bg-pex-navy text-white text-[11px] font-extrabold print:bg-black">
                 {groupIdx + 1}
               </span>
               <span>{categoryGroup.category}</span>
@@ -131,28 +134,28 @@ export function PrintableChecklistCard({
                     onClick={() => toggleItem(itemKey)}
                     className={`group flex items-start gap-3 p-2.5 rounded-lg cursor-pointer transition-colors select-none ${
                       isChecked
-                        ? "bg-teal-50/60 text-slate-500"
-                        : "hover:bg-slate-50 text-slate-800"
+                        ? "bg-pex-keppel/10 text-pex-muted"
+                        : "hover:bg-pex-bg-soft text-pex-navy"
                     } print:p-0 print:hover:bg-transparent print:cursor-default`}
                   >
                     <div
                       className={`mt-0.5 size-5 shrink-0 rounded-md border flex items-center justify-center transition-all ${
                         isChecked
-                          ? "bg-pex-keppel border-pex-keppel text-white shadow-xs"
-                          : "border-slate-300 bg-white group-hover:border-slate-400"
-                      } print:border-black print:bg-white print:text-black print:size-3.5 print:rounded-xs`}
+                          ? "bg-pex-keppel border-pex-keppel text-white shadow-2xs"
+                          : "border-slate-300 bg-white group-hover:border-pex-keppel"
+                      } print:border-black print:bg-white`}
                     >
                       {isChecked ? (
-                        <Check className="size-3.5 stroke-[3] print:hidden" />
+                        <Check className="size-3.5 stroke-[3]" />
                       ) : null}
                     </div>
 
                     <span
-                      className={`text-xs sm:text-sm leading-relaxed ${
+                      className={`text-sm leading-snug print:text-xs print:leading-tight ${
                         isChecked
-                          ? "line-through text-slate-400 font-medium"
-                          : "font-semibold text-slate-800"
-                      } print:no-underline print:text-black print:text-xs print:font-normal`}
+                          ? "line-through text-pex-muted/80"
+                          : "font-semibold text-pex-navy"
+                      }`}
                     >
                       {item}
                     </span>
@@ -164,13 +167,17 @@ export function PrintableChecklistCard({
         ))}
       </div>
 
-      {/* ── Tip Callout ── */}
-      {checklist.schoolTip ? (
-        <div className="mt-6 rounded-xl bg-orange-50/70 border border-orange-200/80 p-4 text-xs text-orange-950 font-medium flex items-start gap-2.5 print:mt-3 print:bg-white print:border-slate-300 print:text-black">
-          <CheckCircle2 className="size-4 text-orange-600 shrink-0 mt-0.5 print:text-black" />
-          <span>{checklist.schoolTip}</span>
-        </div>
-      ) : null}
+      {/* ── Print Footer Note ── */}
+      <div className="mt-8 pt-6 border-t border-pex-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:mt-4 print:pt-2 print:border-t">
+        <p className="text-xs text-pex-muted m-0">
+          Tip: Every item on this checklist is included in Pexpacks verified
+          school stationery packs.
+        </p>
+
+        <span className="text-xs font-extrabold text-pex-keppel print:hidden">
+          Official CAPS / DBE Aligned
+        </span>
+      </div>
     </div>
   );
 }
