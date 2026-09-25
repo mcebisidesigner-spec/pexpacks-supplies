@@ -3,8 +3,9 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { Check, ExternalLink, Truck } from "lucide-react";
+import { ExternalLink, Truck } from "lucide-react";
 import { useNotification } from "@/components/ui/NotificationProvider";
+import { cn } from "@/lib/utils";
 
 type TrackingResult = {
   orderReference: string;
@@ -138,18 +139,18 @@ export function TrackOrderForm() {
   const currentStageIndex = trackingData ? getStageIndex(trackingData.status) : 0;
 
   return (
-    <div style={{ maxWidth: 860, margin: "0 auto", display: "grid", gap: 32 }}>
+    <div className="mx-auto grid w-full max-w-[860px] gap-8">
       {/* Manual Search Form */}
       <form className="rounded-[24px] sm:rounded-[28px] border border-slate-200 bg-white p-6 sm:p-8 shadow-xs grid gap-4.5" onSubmit={handleSubmit}>
         <p className="text-xs font-extrabold uppercase tracking-wider text-teal-600 m-0 mb-1">Order tracking</p>
         <h2>Track your stationery order</h2>
-        <p style={{ fontSize: 14, color: "var(--pex-text-muted)", marginTop: -4 }}>
+        <p className="-mt-1 text-sm text-pex-muted">
           Enter the details from your receipt to check your order status.
         </p>
 
-        <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", alignItems: "end" }}>
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
-            <label htmlFor="trackOrderRef" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
+        <div className="grid items-end gap-4 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+          <div className="flex flex-col items-center justify-end">
+            <label htmlFor="trackOrderRef" className="mb-1.5 block text-center text-[13px] font-bold">
               Order Reference
             </label>
             <input
@@ -158,13 +159,13 @@ export function TrackOrderForm() {
               value={orderRef}
               onChange={(e) => setOrderRef(e.target.value)}
               placeholder="PEX-XXXXX"
-              style={{ width: "100%", textAlign: "center" }}
+              className="w-full text-center"
               required
             />
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
-            <label htmlFor="trackEmail" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
+          <div className="flex flex-col items-center justify-end">
+            <label htmlFor="trackEmail" className="mb-1.5 block text-center text-[13px] font-bold">
               Email used for order
             </label>
             <input
@@ -175,13 +176,13 @@ export function TrackOrderForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
-              style={{ width: "100%", textAlign: "center" }}
+              className="w-full text-center"
               required
             />
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", alignItems: "center" }}>
-            <label htmlFor="trackUniqueId" style={{ fontWeight: 700, fontSize: 13, display: "block", marginBottom: 6, textAlign: "center" }}>
+          <div className="flex flex-col items-center justify-end">
+            <label htmlFor="trackUniqueId" className="mb-1.5 block text-center text-[13px] font-bold">
               Customer ID from receipt
             </label>
             <input
@@ -190,29 +191,20 @@ export function TrackOrderForm() {
               value={uniqueId}
               onChange={(e) => setUniqueId(e.target.value)}
               placeholder="CUST-XXXXX"
-              style={{ width: "100%", textAlign: "center" }}
+              className="w-full text-center"
               required
             />
           </div>
         </div>
 
-        <Button type="submit" disabled={loading} variant="primary" style={{ marginTop: 8 }}>
+        <Button type="submit" disabled={loading} variant="primary" className="mt-2">
           {loading ? "Checking your order..." : "Track my order"}
         </Button>
 
         {error && (
           <div
             role="alert"
-            style={{
-              marginTop: 12,
-              padding: "14px 16px",
-              borderRadius: 14,
-              fontSize: 14,
-              fontWeight: 600,
-              background: "rgba(185, 28, 28, 0.08)",
-              color: "var(--pex-error)",
-              border: "1px solid rgba(185, 28, 28, 0.2)",
-            }}
+            className="mt-3 rounded-[14px] border border-red-700/20 bg-red-700/10 px-4 py-3.5 text-sm font-semibold text-pex-error"
           >
             {error}
           </div>
@@ -221,11 +213,11 @@ export function TrackOrderForm() {
 
       {/* Loading Skeleton */}
       {loading && (
-        <div style={{ background: "#ffffff", borderRadius: 24, padding: 32, border: "1px solid var(--pex-border)" }}>
-          <div style={{ height: 24, width: 200, background: "#f1f5f9", borderRadius: 8, marginBottom: 24 }} />
-          <div style={{ display: "flex", gap: 16, justifyContent: "space-between" }}>
+        <div className="rounded-3xl border border-pex-border bg-white p-8">
+          <div className="mb-6 h-6 w-48 rounded-lg bg-slate-100" />
+          <div className="flex justify-between gap-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} style={{ flex: 1, height: 48, background: "#f8fafc", borderRadius: 12 }} />
+              <div key={i} className="h-12 flex-1 rounded-xl bg-slate-50" />
             ))}
           </div>
         </div>
@@ -233,105 +225,63 @@ export function TrackOrderForm() {
 
       {/* Order Progress Visualization */}
       {trackingData && !loading && (
-        <div
-          style={{
-            background: "#ffffff",
-            borderRadius: 24,
-            padding: 32,
-            border: "1px solid var(--pex-border)",
-            boxShadow: "0 12px 32px rgba(15,23,42,0.06)",
-            display: "grid",
-            gap: 28,
-          }}
-        >
+        <div className="grid gap-7 rounded-3xl border border-pex-border bg-white p-8 shadow-[0_12px_32px_rgba(15,23,42,0.06)]">
           {/* Status Header */}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <span style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.5px", fontWeight: 800, color: "var(--pex-keppel)" }}>
+              <span className="text-xs font-extrabold uppercase tracking-wide text-pex-keppel">
                 Order status
               </span>
-              <h3 style={{ margin: "4px 0 0", fontSize: 24, fontWeight: 800, color: "var(--pex-navy)" }}>
+              <h3 className="mt-1 text-2xl font-extrabold text-pex-navy">
                 Order #{trackingData.orderReference}
               </h3>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <span style={{ fontSize: 13, color: "var(--pex-text-muted)", display: "block" }}>Estimated Delivery</span>
-              <strong style={{ fontSize: 16, color: "var(--pex-primary)", fontWeight: 800 }}>
+            <div className="text-right">
+              <span className="block text-[13px] text-pex-muted">Estimated Delivery</span>
+              <strong className="text-base font-extrabold text-pex-primary">
                 {formatDateDisplay(trackingData.estimatedDelivery)}
               </strong>
             </div>
           </div>
 
           {/* Visual 5-Stage Stepper Graph */}
-          <div style={{ margin: "12px 0" }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(5, 1fr)",
-                gap: 8,
-                position: "relative",
-              }}
-            >
+          <div className="my-3">
+            <div className="relative grid grid-cols-5 gap-2">
               {TRACKING_STAGES.map((stage, idx) => {
                 const isCompleted = idx < currentStageIndex;
                 const isCurrent = idx === currentStageIndex;
 
                 return (
-                  <div
-                    key={stage.key}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      textAlign: "center",
-                      position: "relative",
-                    }}
-                  >
+                  <div key={stage.key} className="relative flex flex-col items-center text-center">
                     {/* Circle Badge */}
                     <div
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: "50%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 800,
-                        fontSize: 15,
-                        zIndex: 2,
-                        transition: "all 0.3s ease",
-                        background: isCompleted || isCurrent ? "var(--pex-keppel)" : "#e2e8f0",
-                        color: isCompleted || isCurrent ? "#ffffff" : "#64748b",
-                        boxShadow: isCurrent ? "0 0 0 4px rgba(33,158,155,0.25)" : "none",
-                        transform: isCurrent ? "scale(1.1)" : "none",
-                      }}
+                      className={cn(
+                        "z-10 flex size-[38px] items-center justify-center rounded-full text-[15px] font-extrabold transition-all duration-300",
+                        isCompleted || isCurrent
+                          ? "bg-pex-keppel text-white"
+                          : "bg-slate-200 text-slate-500",
+                        isCurrent && "scale-110 shadow-[0_0_0_4px_rgba(33,158,155,0.25)]"
+                      )}
                     >
                       {isCompleted ? "✓" : idx + 1}
                     </div>
 
                     {/* Step Title */}
                     <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: isCurrent ? 800 : isCompleted ? 700 : 600,
-                        color: isCurrent ? "var(--pex-primary)" : isCompleted ? "#334155" : "#94a3b8",
-                        marginTop: 10,
-                        textAlign: "center",
-                        lineHeight: 1.2,
-                      }}
+                      className={cn(
+                        "mt-2.5 text-center text-[13px] leading-tight",
+                        isCurrent
+                          ? "font-extrabold text-pex-primary"
+                          : isCompleted
+                            ? "font-bold text-slate-700"
+                            : "font-semibold text-slate-400"
+                      )}
                     >
                       {stage.label}
                     </span>
 
                     {/* Step Description */}
-                    <span
-                      style={{
-                        fontSize: 11,
-                        color: "#94a3b8",
-                        marginTop: 4,
-                        textAlign: "center",
-                      }}
-                    >
+                    <span className="mt-1 text-center text-[11px] text-slate-400">
                       {stage.desc}
                     </span>
                   </div>
@@ -342,43 +292,24 @@ export function TrackOrderForm() {
 
           {/* Courier Details Card */}
           {trackingData.courier || trackingData.waybillNumber ? (
-            <div
-              style={{
-                background: "#f8fafc",
-                borderRadius: 16,
-                padding: 20,
-                border: "1px solid #e2e8f0",
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 16,
-              }}
-            >
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
               <div>
-                <span style={{ fontSize: 12, textTransform: "uppercase", fontWeight: 700, color: "#64748b" }}>
+                <span className="text-xs font-bold uppercase text-slate-500">
                   Delivery details
                 </span>
-                <p style={{ margin: "4px 0 0", fontSize: 16, fontWeight: 800, color: "#0f172a" }}>
+                <p className="mt-1 text-base font-extrabold text-slate-900">
                   {trackingData.courier || "Courier details not yet available"}
                 </p>
               </div>
 
               {trackingData.waybillNumber ? (
                 <div>
-                  <span style={{ fontSize: 12, color: "#64748b", display: "block" }}>Courier reference</span>
+                  <span className="block text-xs text-slate-500">Courier reference</span>
                   <a
                     href={`https://thecourierguy.co.za/tracking?waybill=${encodeURIComponent(trackingData.waybillNumber)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{
-                      display: "inline-block",
-                      marginTop: 2,
-                      fontSize: 15,
-                      fontWeight: 800,
-                      color: "var(--pex-keppel)",
-                      textDecoration: "underline",
-                    }}
+                    className="mt-0.5 inline-block text-[15px] font-extrabold text-pex-keppel underline underline-offset-2 transition-colors hover:text-pex-keppel-dark"
                   >
                     {trackingData.waybillNumber} <ExternalLink size={14} className="ml-1 inline-block" aria-hidden="true" />
                   </a>
@@ -386,22 +317,12 @@ export function TrackOrderForm() {
               ) : null}
             </div>
           ) : (
-            <div
-              style={{
-                background: "#f0fbfa",
-                borderRadius: 16,
-                padding: 16,
-                border: "1px solid #cdeeea",
-                fontSize: 13,
-                color: "#1a7a77",
-                fontWeight: 600,
-              }}
-            >
+            <div className="rounded-2xl border border-teal-200 bg-teal-50 p-4 text-[13px] font-semibold text-pex-keppel">
               <span className="inline-flex items-center gap-2"><Truck size={16} aria-hidden="true" /> Courier details will appear when your parcel is dispatched.</span>
             </div>
           )}
 
-          <p style={{ fontSize: 12, color: "#94a3b8", textAlign: "center", margin: 0 }}>
+          <p className="m-0 text-center text-xs text-slate-400">
             Last updated: {new Date(trackingData.updatedAt).toLocaleString("en-ZA")}
           </p>
         </div>

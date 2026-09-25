@@ -162,97 +162,31 @@ export function UserIdentityTab({
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="flex w-full flex-col gap-6">
       {/* Header Banner */}
-      <div
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(9, 14, 23, 0.95) 100%)",
-          border: "1px solid rgba(56, 189, 248, 0.25)",
-          borderRadius: "14px",
-          padding: "24px 28px",
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: "20px",
-        }}
-      >
-        <div style={{ maxWidth: "640px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "8px",
-            }}
-          >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                backgroundColor: "rgba(56, 189, 248, 0.2)",
-                color: "#38bdf8",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+      <div className="flex flex-col items-start justify-between gap-5 rounded-2xl border border-sky-400/25 bg-[linear-gradient(135deg,rgba(56,189,248,0.1)_0%,rgba(9,14,23,0.95)_100%)] p-5 sm:flex-row sm:p-6 lg:px-7">
+        <div className="max-w-2xl">
+          <div className="mb-2 flex items-center gap-2.5">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-sky-400/20 text-sky-400">
               <Users size={18} />
             </div>
-            <h2
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: 700,
-                color: "#ffffff",
-                margin: 0,
-              }}
-            >
+            <h2 className="m-0 text-xl font-bold tracking-tight text-white">
               User Identity &amp; Role Matrix
             </h2>
           </div>
-          <p
-            style={{
-              fontSize: "0.875rem",
-              color: "#94a3b8",
-              lineHeight: 1.6,
-              margin: 0,
-            }}
-          >
+          <p className="m-0 text-sm leading-relaxed text-slate-400">
             Comprehensive directory of all system users. Click on any user to
             inspect their active identity profile, review assigned roles, and
             toggle permissions on or off directly in this interface.
           </p>
         </div>
 
-        <div style={{ display: "flex", gap: "12px" }}>
-          <div
-            style={{
-              background: "rgba(15, 23, 42, 0.8)",
-              border: "1px solid rgba(51, 65, 85, 0.6)",
-              borderRadius: "10px",
-              padding: "12px 18px",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "11px",
-                fontWeight: 600,
-                color: "#64748b",
-                textTransform: "uppercase",
-              }}
-            >
+        <div className="flex shrink-0 gap-3">
+          <div className="rounded-xl border border-slate-700/60 bg-slate-900/80 px-4 py-3 text-center">
+            <div className="text-[11px] font-semibold uppercase text-slate-500">
               Total Users
             </div>
-            <div
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 800,
-                color: "#38bdf8",
-                marginTop: "2px",
-              }}
-            >
+            <div className="mt-0.5 text-2xl font-extrabold tabular-nums text-sky-400">
               {users.length}
             </div>
           </div>
@@ -269,49 +203,24 @@ export function UserIdentityTab({
       )}
 
       {/* Search & Filter Toolbar */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ position: "relative", flex: 1, maxWidth: "420px" }}>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="relative w-full flex-1 sm:max-w-[420px]">
           <Search
             size={16}
-            style={{
-              position: "absolute",
-              left: "14px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "#64748b",
-            }}
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
           />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search users by name, email, or ID..."
-            style={{
-              width: "100%",
-              height: "42px",
-              paddingLeft: "40px",
-              paddingRight: "14px",
-              backgroundColor: "#090e17",
-              border: "1px solid rgba(51, 65, 85, 0.7)",
-              borderRadius: "8px",
-              color: "#ffffff",
-              fontSize: "0.875rem",
-              outline: "none",
-            }}
+            className="h-11 w-full rounded-lg border border-slate-700/70 bg-[#090e17] py-0 pl-10 pr-3.5 text-sm text-white outline-none transition-all placeholder:text-slate-500 focus:border-sky-400 focus:ring-4 focus:ring-sky-400/10"
           />
         </div>
 
-        <div style={{ fontSize: "0.8125rem", color: "#64748b" }}>
-          Showing <strong>{filteredUsers.length}</strong> of{" "}
-          <strong>{users.length}</strong> users
+        <div className="text-[13px] text-slate-500">
+          Showing <strong className="font-semibold text-slate-300">{filteredUsers.length}</strong> of{" "}
+          <strong className="font-semibold text-slate-300">{users.length}</strong> users
         </div>
       </div>
 
@@ -326,7 +235,7 @@ export function UserIdentityTab({
                 <th>Assigned Roles</th>
                 <th>Status</th>
                 <th>Date Joined</th>
-                <th style={{ textAlign: "right" }}>Actions</th>
+                <th className="text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -351,16 +260,10 @@ export function UserIdentityTab({
                     <tr
                       key={user.id}
                       onClick={() => handleOpenInspect(user)}
-                      style={{ cursor: "pointer" }}
+                      className="cursor-pointer"
                     >
                       <td>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "12px",
-                          }}
-                        >
+                        <div className="flex items-center gap-3">
                           <div
                             style={{
                               width: "36px",
@@ -399,18 +302,12 @@ export function UserIdentityTab({
                         </div>
                       </td>
 
-                      <td style={{ color: "#cbd5e1", fontSize: "0.8125rem" }}>
+                      <td className="text-[13px] text-slate-300">
                         {user.email || "No email"}
                       </td>
 
                       <td>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: "6px",
-                          }}
-                        >
+                        <div className="flex flex-wrap gap-1.5">
                           {user.roleSlugs.length > 0 ? (
                             user.roleSlugs.map((slug) => {
                               const roleObj = roles.find(
@@ -453,24 +350,12 @@ export function UserIdentityTab({
                       </td>
 
                       <td>
-                        <span
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            padding: "3px 8px",
-                            borderRadius: "6px",
-                            fontSize: "11px",
-                            fontWeight: 600,
-                            backgroundColor: "rgba(16, 185, 129, 0.12)",
-                            color: "#34d399",
-                          }}
-                        >
+                        <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-400">
                           <CheckCircle2 size={11} /> Active
                         </span>
                       </td>
 
-                      <td style={{ color: "#94a3b8", fontSize: "0.8125rem" }}>
+                      <td className="text-[13px] text-slate-400">
                         {user.created_at
                           ? new Date(user.created_at).toLocaleDateString(
                               "en-ZA",
@@ -478,15 +363,8 @@ export function UserIdentityTab({
                           : "—"}
                       </td>
 
-                      <td style={{ textAlign: "right" }}>
-                        <div
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            justifyContent: "flex-end",
-                            gap: "8px",
-                          }}
-                        >
+                      <td className="text-right">
+                        <div className="inline-flex items-center justify-end gap-2">
                           {isPrimarySuper ? (
                             <span
                               style={{
@@ -532,11 +410,7 @@ export function UserIdentityTab({
                 <tr>
                   <td
                     colSpan={6}
-                    style={{
-                      textAlign: "center",
-                      padding: "32px",
-                      color: "#64748b",
-                    }}
+                    className="p-8 text-center text-slate-500"
                   >
                     No users matching your search filter.
                   </td>
@@ -550,80 +424,24 @@ export function UserIdentityTab({
       {/* Role Matrix & Detailed User Inspector Modal */}
       {selectedUser && (
         <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.75)",
-            backdropFilter: "blur(4px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-            padding: "20px",
-          }}
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/75 p-5 backdrop-blur-sm"
           onClick={() => setSelectedUser(null)}
         >
           <div
-            style={{
-              backgroundColor: "#090e17",
-              border: "1px solid rgba(51, 65, 85, 0.8)",
-              borderRadius: "16px",
-              width: "100%",
-              maxWidth: "680px",
-              maxHeight: "90vh",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.7)",
-            }}
+            className="flex max-h-[90vh] w-full max-w-[680px] flex-col overflow-y-auto rounded-2xl border border-slate-700/80 bg-[#090e17] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div
-              style={{
-                padding: "24px 28px",
-                borderBottom: "1px solid rgba(51, 65, 85, 0.5)",
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                gap: "16px",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "16px" }}
-              >
-                <div
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(56, 189, 248, 0.15)",
-                    border: "1px solid rgba(56, 189, 248, 0.4)",
-                    color: "#38bdf8",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 800,
-                    fontSize: "16px",
-                  }}
-                >
+            <div className="flex items-start justify-between gap-4 border-b border-slate-700/50 px-5 py-5 sm:px-7 sm:py-6">
+              <div className="flex min-w-0 items-center gap-4">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-full border border-sky-400/40 bg-sky-400/15 text-base font-extrabold text-sky-400">
                   {getInitials(getUserName(selectedUser))}
                 </div>
                 <div>
-                  <h3
-                    style={{
-                      fontSize: "1.125rem",
-                      fontWeight: 800,
-                      color: "#ffffff",
-                      margin: "0 0 2px",
-                    }}
-                  >
+                  <h3 className="mb-0.5 truncate text-lg font-extrabold text-white">
                     {getUserName(selectedUser)}
                   </h3>
-                  <div style={{ fontSize: "0.8125rem", color: "#94a3b8" }}>
+                  <div className="text-[13px] text-slate-400">
                     {selectedUser.email} &bull; Joined:{" "}
                     {selectedUser.created_at
                       ? new Date(selectedUser.created_at).toLocaleDateString(
@@ -675,40 +493,18 @@ export function UserIdentityTab({
             )}
 
             {/* Modal Body: Role Matrix */}
-            <div
-              style={{
-                padding: "24px 28px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "20px",
-              }}
-            >
+            <div className="flex flex-col gap-5 px-5 py-5 sm:px-7 sm:py-6">
               <div>
-                <div
-                  style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    marginBottom: "4px",
-                  }}
-                >
+                <div className="mb-1 text-sm font-bold text-white">
                   Role Access Matrix
                 </div>
-                <p
-                  style={{ fontSize: "0.8125rem", color: "#64748b", margin: 0 }}
-                >
+                <p className="m-0 text-[13px] text-slate-500">
                   Toggle roles ON (checked) or OFF (unchecked) to customize this
                   user's administrative capabilities.
                 </p>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
+              <div className="flex flex-col gap-2.5">
                 {visibleRoles.map((role) => {
                   const isChecked = activeRoleSlugs.includes(role.slug);
                   const isSuperRole =
@@ -879,22 +675,8 @@ export function UserIdentityTab({
             </div>
 
             {/* Modal Footer Actions */}
-            <div
-              style={{
-                padding: "18px 28px",
-                borderTop: "1px solid rgba(51, 65, 85, 0.5)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: "#060a10",
-                borderRadius: "0 0 16px 16px",
-                gap: "12px",
-                flexWrap: "wrap",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-b-2xl border-t border-slate-700/50 bg-[#060a10] px-5 py-[18px] sm:px-7">
+              <div className="flex items-center gap-2.5">
                 <AdminButton
                   variant="secondary"
                   size="sm"

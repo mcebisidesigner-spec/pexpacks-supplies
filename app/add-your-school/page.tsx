@@ -20,7 +20,7 @@ const sectionCls =
 const innerCls =
   'w-full max-w-[var(--layout-max-width)] mx-auto px-[var(--gutter-desktop)] max-lg:px-[var(--gutter-mobile)]'
 const splitBandCls =
-  'rounded-[var(--radius-section)] p-[clamp(28px,5vw,54px)] grid grid-cols-[minmax(0,1fr)_minmax(260px,0.72fr)] gap-[clamp(28px,5vw,60px)] items-center bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] max-lg:grid-cols-1'
+  'rounded-[var(--radius-section)] [border:var(--card-border)] p-[clamp(28px,5vw,54px)] grid grid-cols-[minmax(0,1fr)_minmax(260px,0.72fr)] gap-[clamp(28px,5vw,60px)] items-center bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] max-lg:grid-cols-1'
 const sectionEyebrowCls =
   'm-[var(--section-eyebrow-margin)] text-[var(--section-eyebrow-color)] font-[var(--section-eyebrow-font-weight)] text-[var(--section-eyebrow-font-size)] tracking-[var(--section-eyebrow-letter-spacing)]'
 const buttonRowCls =
@@ -33,7 +33,7 @@ const infoGridCls = 'grid grid-cols-2 gap-[18px] max-lg:grid-cols-1'
 const infoCardCls =
   'border-[var(--card-border)] rounded-[var(--radius-card)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] p-[26px]'
 const packCardCls =
-  'rounded-[var(--radius-card)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] overflow-hidden flex flex-col relative'
+  'rounded-[var(--radius-card)] [border:var(--card-border)] bg-[var(--card-bg)] [box-shadow:var(--card-shadow)] overflow-hidden flex flex-col relative'
 const packCardHeadCls =
   'py-[var(--space-5)] px-[var(--space-5)] pb-[var(--space-3)] min-w-0'
 const packTitleCls =
@@ -47,7 +47,7 @@ const cardLinkCls = 'mt-[var(--space-5)] text-[var(--pex-keppel)] font-extrabold
 
 // ── Form tokens ──────────────────────────────────────────────────────────────
 const formCardCls =
-  'p-[28px] bg-[var(--card-bg)] rounded-[var(--radius-card-lg)] [box-shadow:var(--card-shadow)] max-[480px]:p-[22px]'
+  'p-[28px] [border:var(--card-border)] bg-[var(--card-bg)] rounded-[var(--radius-card-lg)] [box-shadow:var(--card-shadow)] max-[480px]:p-[22px]'
 
 export default async function AddYourSchoolPage() {
   const [faqs, content] = await Promise.all([
@@ -87,7 +87,6 @@ export default async function AddYourSchoolPage() {
             <article
               className={formCardCls}
               id="school-request-form"
-              style={{ border: 'var(--card-border)' }}
             >
               {/* eyebrow — migrated from HeroBase.module.css */}
               <p className="m-0 mb-[var(--space-4)] text-[var(--pex-keppel)] font-extrabold text-[var(--text-sm)] tracking-[0]">
@@ -99,7 +98,6 @@ export default async function AddYourSchoolPage() {
 
             <article
               className={infoCardCls}
-              style={{ border: 'var(--card-border)' }}
             >
               <SectionHeader
                 eyebrow="How it works"
@@ -128,7 +126,6 @@ export default async function AddYourSchoolPage() {
         <div className={innerCls}>
           <div
             className={splitBandCls}
-            style={{ border: 'var(--card-border)' }}
           >
             <div>
               <p className={sectionEyebrowCls}>Already listed?</p>
@@ -148,7 +145,6 @@ export default async function AddYourSchoolPage() {
             </div>
             <div
               className={packCardCls}
-              style={{ border: 'var(--card-border)' }}
             >
               <div className={packCardHeadCls}>
                 <h3 className={packTitleCls}>Contact us</h3>

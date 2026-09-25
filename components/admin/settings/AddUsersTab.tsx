@@ -112,63 +112,19 @@ export function AddUsersTab({ roles, isSuperUser = false }: AddUsersTabProps) {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="flex w-full flex-col gap-6">
       {/* Header Banner */}
-      <div
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(9, 14, 23, 0.95) 100%)",
-          border: "1px solid rgba(16, 185, 129, 0.25)",
-          borderRadius: "14px",
-          padding: "24px 28px",
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: "20px",
-        }}
-      >
-        <div style={{ maxWidth: "640px" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "8px",
-            }}
-          >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                backgroundColor: "rgba(16, 185, 129, 0.2)",
-                color: "#10b981",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+      <div className="flex flex-col items-start justify-between gap-5 rounded-2xl border border-emerald-400/25 bg-[linear-gradient(135deg,rgba(16,185,129,0.1)_0%,rgba(9,14,23,0.95)_100%)] p-5 sm:flex-row sm:p-6 lg:px-7">
+        <div className="max-w-2xl">
+          <div className="mb-2 flex items-center gap-2.5">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-400/20 text-emerald-400">
               <UserPlus size={18} />
             </div>
-            <h2
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: 700,
-                color: "#ffffff",
-                margin: 0,
-              }}
-            >
+            <h2 className="m-0 text-xl font-bold tracking-tight text-white">
               Add Users &amp; Team Onboarding
             </h2>
           </div>
-          <p
-            style={{
-              fontSize: "0.875rem",
-              color: "#94a3b8",
-              lineHeight: 1.6,
-              margin: 0,
-            }}
-          >
+          <p className="m-0 text-sm leading-relaxed text-slate-400">
             Empower new administrators and team members with tailored access.
             Newly invited users receive an automated, branded onboarding email
             with their assigned roles, temporary password, and login gateway.
@@ -176,40 +132,14 @@ export function AddUsersTab({ roles, isSuperUser = false }: AddUsersTabProps) {
           </p>
         </div>
 
-        <div
-          style={{
-            background: "rgba(15, 23, 42, 0.8)",
-            border: "1px solid rgba(51, 65, 85, 0.6)",
-            borderRadius: "10px",
-            padding: "12px 16px",
-            textAlign: "center",
-            minWidth: "160px",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "11px",
-              fontWeight: 600,
-              color: "#64748b",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
-            }}
-          >
+        <div className="min-w-40 shrink-0 rounded-xl border border-slate-700/60 bg-slate-900/80 px-4 py-3 text-center">
+          <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
             Available Roles
           </div>
-          <div
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 800,
-              color: "#10b981",
-              marginTop: "2px",
-            }}
-          >
+          <div className="mt-0.5 text-2xl font-extrabold tabular-nums text-emerald-400">
             {roles.length || 7}
           </div>
-          <div style={{ fontSize: "11px", color: "#94a3b8" }}>
-            Configured in RBAC
-          </div>
+          <div className="text-[11px] text-slate-400">Configured in RBAC</div>
         </div>
       </div>
 
@@ -326,27 +256,11 @@ export function AddUsersTab({ roles, isSuperUser = false }: AddUsersTabProps) {
         <div className={adminStyles.sidebarCard}>
           {/* Section 1: Core Information */}
           <div>
-            <h3
-              style={{
-                fontSize: "0.9375rem",
-                fontWeight: 700,
-                color: "#f8fafc",
-                margin: "0 0 4px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
+            <h3 className="mb-1 flex items-center gap-2 text-[15px] font-bold text-slate-50">
               <User size={16} className={adminStyles.iconTeal} />
               1. Essential User Credentials
             </h3>
-            <p
-              style={{
-                fontSize: "0.8125rem",
-                color: "#64748b",
-                margin: "0 0 18px",
-              }}
-            >
+            <p className="mb-[18px] text-[13px] text-slate-500">
               Mandatory contact information for system recognition, email
               dispatch, and dashboard greeting.
             </p>
@@ -389,33 +303,15 @@ export function AddUsersTab({ roles, isSuperUser = false }: AddUsersTabProps) {
             </div>
           </div>
 
-          <div
-            style={{ height: "1px", backgroundColor: "rgba(51, 65, 85, 0.4)" }}
-          />
+          <div className="h-px bg-slate-700/40" />
 
           {/* Section 2: Department & Assignment */}
           <div>
-            <h3
-              style={{
-                fontSize: "0.9375rem",
-                fontWeight: 700,
-                color: "#f8fafc",
-                margin: "0 0 4px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
+            <h3 className="mb-1 flex items-center gap-2 text-[15px] font-bold text-slate-50">
               <Building size={16} className={adminStyles.iconBlue} />
               2. Department &amp; Organizational Role
             </h3>
-            <p
-              style={{
-                fontSize: "0.8125rem",
-                color: "#64748b",
-                margin: "0 0 18px",
-              }}
-            >
+            <p className="mb-[18px] text-[13px] text-slate-500">
               Categorizes the user within Pexpacks Supplies for operational
               workflows and reporting.
             </p>
@@ -460,44 +356,20 @@ export function AddUsersTab({ roles, isSuperUser = false }: AddUsersTabProps) {
             </div>
           </div>
 
-          <div
-            style={{ height: "1px", backgroundColor: "rgba(51, 65, 85, 0.4)" }}
-          />
+          <div className="h-px bg-slate-700/40" />
 
           {/* Section 3: Role & Permission Assignment */}
           <div>
-            <h3
-              style={{
-                fontSize: "0.9375rem",
-                fontWeight: 700,
-                color: "#f8fafc",
-                margin: "0 0 4px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <Shield size={16} style={{ color: "#a855f7" }} />
+            <h3 className="mb-1 flex items-center gap-2 text-[15px] font-bold text-slate-50">
+              <Shield size={16} className="text-violet-400" />
               3. Role &amp; Permission Access
             </h3>
-            <p
-              style={{
-                fontSize: "0.8125rem",
-                color: "#64748b",
-                margin: "0 0 18px",
-              }}
-            >
+            <p className="mb-[18px] text-[13px] text-slate-500">
               Select one or more roles that define what modules and actions this
               user can perform in the Back-Office.
             </p>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-                gap: "12px",
-              }}
-            >
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
               {visibleRoles.map((role) => {
                 const isSelected = selectedRoles.includes(role.slug);
                 const isSuper =
@@ -630,29 +502,11 @@ export function AddUsersTab({ roles, isSuperUser = false }: AddUsersTabProps) {
             </div>
           </div>
 
-          <div
-            style={{ height: "1px", backgroundColor: "rgba(51, 65, 85, 0.4)" }}
-          />
+          <div className="h-px bg-slate-700/40" />
 
           {/* Submit Action */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "16px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: "0.8125rem",
-                color: "#64748b",
-              }}
-            >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-[13px] text-slate-500">
               <Info size={14} />
               <span>
                 An automated invitation email with role details will be sent

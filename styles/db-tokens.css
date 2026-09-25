@@ -184,6 +184,77 @@
   --admin-radius: var(--db-radius-panel);
 }
 
+
+/* Admin scope aliases keep shared storefront primitives dark in AdminShell. */
+.admin-dark {
+  --db-bg: var(--db-canvas);
+  --db-sidebar: #070d18;
+  --db-surface-strong: var(--db-canvas);
+  --db-text: var(--db-text-primary);
+  --db-text-soft: var(--db-text-secondary);
+  --db-accent: var(--db-brand);
+  --db-accent-strong: var(--db-brand-strong);
+  --db-accent-hover: var(--db-brand-hover);
+  --db-green: var(--db-success-text);
+  --db-blue: var(--db-info-text);
+  --db-radius: var(--db-radius-panel);
+
+  --pex-bg: var(--db-surface);
+  --pex-body-bg: var(--db-canvas);
+  --pex-bg-soft: var(--db-surface-inner);
+  --pex-text: var(--db-text-secondary);
+  --pex-muted: var(--db-text-muted);
+  --pex-border: var(--db-border);
+  --pex-keppel: var(--db-brand);
+  --pex-keppel-dark: var(--db-brand-strong);
+  --pex-coral: #ff8a76;
+  --pex-coral-hover: #ff9b89;
+  --pex-navy: var(--db-text-primary);
+  --pex-primary: var(--db-text-primary);
+  --pex-accent: var(--db-brand);
+  --pex-text-muted: var(--db-text-muted);
+  --pex-success: var(--db-success-text);
+  --pex-error: var(--db-danger-text);
+
+  --card-bg: var(--db-surface);
+  --card-border: 1px solid var(--db-border);
+  --card-shadow: var(--db-shadow-card);
+  --card-shadow-hover: var(--db-shadow-elevated);
+  --surface-border-soft: 1px solid var(--db-border);
+  --surface-border-teal: 1px solid var(--db-teal-border);
+
+  --form-card-bg: var(--db-surface);
+  --form-card-border: 1px solid var(--db-border);
+  --form-label-color: var(--db-text-secondary);
+  --form-helper-color: var(--db-text-muted);
+  --form-control-bg: var(--db-surface-inner);
+  --form-control-border: 1px solid var(--db-border-strong);
+  --form-control-color: var(--db-text-primary);
+  --form-control-placeholder: rgba(148, 163, 184, 0.55);
+  --form-control-hover-border: var(--db-border-strong);
+  --form-control-focus-border: var(--db-brand);
+  --form-control-focus-shadow: var(--db-focus-ring);
+  --form-option-bg: var(--db-surface);
+  --form-option-selected-bg: var(--db-brand-subtle);
+  --form-option-selected-border: var(--db-brand);
+  --form-option-selected-color: var(--db-brand);
+
+  --color-shadow: rgba(0, 0, 0, 0.6);
+  --focus-ring: 3px solid rgba(52, 211, 153, 0.55);
+  --shadow-soft: var(--db-shadow-elevated);
+  --shadow-pill: 0 9px 18px rgba(0, 0, 0, 0.55);
+  --button-hover-shadow: 0 14px 24px rgba(0, 0, 0, 0.55);
+  --color-brand-orange: var(--pex-coral);
+  --color-brand-teal: var(--db-brand);
+  --color-danger: var(--db-danger);
+  --color-navy: var(--db-text-primary);
+  --color-navy-subtle: rgba(148, 163, 184, 0.1);
+  --color-overlay: rgba(2, 6, 23, 0.75);
+  --color-pex-bg: var(--db-surface);
+  --color-pex-keppel: var(--db-brand);
+  --color-teal: var(--db-teal);
+  --color-teal-border: var(--db-teal-border);
+}
 /* ═════════════════════════════════════════════════════════════════════════
    UNIVERSAL SHARED ATOMIC UTILITY CLASSES
    ═════════════════════════════════════════════════════════════════════════ */

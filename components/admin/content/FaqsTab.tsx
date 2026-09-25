@@ -236,7 +236,7 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
 
       {/* App Page Filter Tabs */}
       <div
-        style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}
+        className="mb-3.5 flex flex-wrap gap-2"
       >
         {FAQ_APP_PAGES.map((pt) => {
           const count =
@@ -250,9 +250,8 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
             <button
               key={pt.id}
               type="button"
-              className={`${styles.tabButton} ${selectedPage === pt.id ? styles.tabButtonActive : ""}`}
+              className={`${styles.tabButton} ${selectedPage === pt.id ? styles.tabButtonActive : ""} px-3.5 py-1.5 text-[13px]`}
               onClick={() => setSelectedPage(pt.id)}
-              style={{ padding: "6px 14px", fontSize: 13 }}
             >
               {pt.label} ({count})
             </button>
@@ -264,11 +263,11 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th style={{ width: "40px" }}>#</th>
+              <th className="w-10">#</th>
               <th>Page & Category</th>
               <th>Question & Answer Preview</th>
               <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th className="text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -290,17 +289,11 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
 
                 return (
                   <tr key={item.id}>
-                    <td style={{ color: "#64748b", fontWeight: 600 }}>
+                    <td className="font-semibold text-slate-500">
                       {item.sort_order || idx + 1}
                     </td>
                     <td>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 4,
-                        }}
-                      >
+                      <div className="flex flex-col gap-1">
                         <span
                           className={styles.badge}
                           style={{
@@ -323,26 +316,12 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
                       </div>
                     </td>
                     <td>
-                      <div
-                        style={{
-                          cursor: "pointer",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: 4,
-                        }}
+                      <div className="flex cursor-pointer flex-col gap-1"
                         onClick={() =>
                           setExpandedId(isExpanded ? null : item.id)
                         }
                       >
-                        <span
-                          style={{
-                            fontWeight: 600,
-                            color: "#f8fafc",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 6,
-                          }}
-                        >
+                        <span className="flex items-center gap-1.5 font-semibold text-slate-50">
                           {item.question}
                           {isExpanded ? (
                             <ChevronUp size={14} color="#10b981" />
@@ -351,18 +330,11 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
                           )}
                         </span>
                         {isExpanded ? (
-                          <p
-                            style={{
-                              margin: "6px 0 0",
-                              color: "#94a3b8",
-                              lineHeight: 1.5,
-                              fontSize: 13,
-                            }}
-                          >
+                          <p className="mt-1.5 text-[13px] leading-relaxed text-slate-400">
                             {item.answer}
                           </p>
                         ) : (
-                          <span style={{ color: "#64748b", fontSize: 12 }}>
+                          <span className="text-xs text-slate-500">
                             {item.answer.slice(0, 90)}...
                           </span>
                         )}
@@ -371,11 +343,10 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
                     <td>
                       <button
                         type="button"
-                        className={`${styles.badge} ${item.is_published ? styles.badgeEmerald : styles.badgeSlate}`}
+                        className={`${styles.badge} ${item.is_published ? styles.badgeEmerald : styles.badgeSlate} cursor-pointer`}
                         onClick={() =>
                           handleTogglePublished(item.id, item.is_published ?? false)
                         }
-                        style={{ cursor: "pointer" }}
                       >
                         {item.is_published ? (
                           <Check size={12} />
@@ -385,10 +356,9 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
                         {item.is_published ? "Published" : "Draft"}
                       </button>
                     </td>
-                    <td style={{ textAlign: "right" }}>
+                    <td className="text-right">
                       <div
-                        className={styles.actionBtnGroup}
-                        style={{ justifyContent: "flex-end" }}
+                        className={`${styles.actionBtnGroup} justify-end`}
                       >
                         <button
                           className={styles.iconBtn}
@@ -434,25 +404,11 @@ export function FaqsTab({ initialFaqs }: FaqsTabProps) {
             <form onSubmit={handleSubmit}>
               <div className={styles.modalBody}>
                 {errorMsg && (
-                  <div
-                    style={{
-                      color: "#ef4444",
-                      fontSize: 13,
-                      background: "rgba(239, 68, 68, 0.1)",
-                      padding: 10,
-                      borderRadius: 8,
-                    }}
-                  >
+                  <div className="rounded-lg border border-rose-400/30 bg-rose-500/10 p-2.5 text-[13px] text-rose-400">
                     {errorMsg}
                   </div>
                 )}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 90px",
-                    gap: 14,
-                  }}
-                >
+                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-[1fr_1fr_90px]">
                   <div className={styles.inputGroup}>
                     <label className={styles.inputLabel}>
                       Target Page / Placement *

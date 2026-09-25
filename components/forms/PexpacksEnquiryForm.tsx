@@ -68,7 +68,7 @@ function errorAttributes(errors: Record<string, string>, fieldName: string) {
 
 // ── Shared form utility strings ───────────────────────────────────────────────
 const formCardCls =
-  "p-[28px] bg-[var(--card-bg)] rounded-[var(--radius-card-lg)] [box-shadow:var(--card-shadow)] max-[480px]:p-[22px]";
+  "p-[28px] [border:var(--card-border)] bg-[var(--card-bg)] rounded-[var(--radius-card-lg)] [box-shadow:var(--card-shadow)] max-[480px]:p-[22px]";
 const formStackCls = "grid gap-[var(--form-grid-gap)]";
 const fieldCls = "min-w-0 grid gap-[var(--form-field-gap)]";
 const fieldLabelCls =
@@ -225,7 +225,6 @@ export function PexpacksEnquiryForm({
   return (
     <div
       className={formCardCls}
-      style={{ border: "var(--card-border)" }}
     >
       <form onSubmit={handleSubmit} noValidate className="grid gap-[14px]">
         {/* Eyebrow — migrated from HeroBase.module.css */}
