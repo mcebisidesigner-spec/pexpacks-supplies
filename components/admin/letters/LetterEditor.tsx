@@ -1249,12 +1249,12 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
             {recipientMode === "school" ? (
               <div className={adminStyles.formField}>
                 <div>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-                    <label className={adminStyles.formLabel} style={{ marginBottom: 0 }}>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <label className={`${adminStyles.formLabel} mb-0`}>
                       Search Registered School *
                     </label>
                     {schools.length > 0 && (
-                      <span style={{ fontSize: 11, fontFamily: "ui-monospace, monospace", color: "var(--a-accent)", fontWeight: 600 }}>
+                      <span className="font-mono text-[11px] font-semibold text-[var(--a-accent)]">
                         {schools.length.toLocaleString()} schools in database
                       </span>
                     )}
@@ -1479,7 +1479,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                 <span className={styles.templateLabel}>
                   <Sparkles
                     size={12}
-                    style={{ display: "inline", marginRight: 4 }}
+                    className="mr-1 inline"
                   />{" "}
                   Presets:
                 </span>
@@ -1539,10 +1539,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                       </span>
                     ) : (
                       <span
-                        style={{
-                          fontSize: 11,
-                          color: "var(--db-text-muted, #94a3b8)",
-                        }}
+                        className="text-[11px] text-[var(--db-text-muted,#94a3b8)]"
                       >
                         Loaded from template library
                       </span>
@@ -1600,8 +1597,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                   }}
                 >
                   <label
-                    className={adminStyles.formLabel}
-                    style={{ marginBottom: 0 }}
+                    className={`${adminStyles.formLabel} mb-0`}
                   >
                     Formal Body Content *
                   </label>
@@ -1746,8 +1742,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                   {editorTab === "write" ? (
                     <textarea
                       ref={contentTextareaRef}
-                      className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd} ${styles.editorTextareaAttached}`}
-                      style={{ minHeight: 320 }}
+                      className={`${adminStyles.textareaField} ${adminStyles.textareaFieldMd} ${styles.editorTextareaAttached} min-h-80`}
                       placeholder="Compose letter content (supports **bold**, <u>underline</u>, *italic*, bullet points •)..."
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
@@ -1779,7 +1774,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
               </div>
 
               {includeQuotation && existingQuotations.length > 0 && (
-                <div style={{ minWidth: 220 }}>
+                <div className="min-w-[220px]">
                   <select
                     className={adminStyles.selectField}
                     value={quotationRefId}
@@ -1830,19 +1825,19 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                   <table className={styles.table}>
                     <thead>
                       <tr>
-                        <th className={styles.th} style={{ width: "45%" }}>
+                        <th className={`${styles.th} w-[45%]`}>
                           Description
                         </th>
-                        <th className={styles.th} style={{ width: "15%" }}>
+                        <th className={`${styles.th} w-[15%]`}>
                           Qty
                         </th>
-                        <th className={styles.th} style={{ width: "20%" }}>
+                        <th className={`${styles.th} w-[20%]`}>
                           Unit Price (R)
                         </th>
-                        <th className={styles.th} style={{ width: "15%" }}>
+                        <th className={`${styles.th} w-[15%]`}>
                           Total
                         </th>
-                        <th className={styles.th} style={{ width: "5%" }}></th>
+                        <th className={`${styles.th} w-[5%]`}></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1893,7 +1888,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                               }
                             />
                           </td>
-                          <td className={styles.td} style={{ fontWeight: 600 }}>
+                          <td className={`${styles.td} font-semibold`}>
                             {formatRand(
                               item.total_price || computeLineTotal(item),
                             )}
@@ -1967,8 +1962,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
               <div className={styles.specRow}>
                 <span className={styles.specLabel}>Status</span>
                 <span
-                  className={styles.specValue}
-                  style={{ textTransform: "uppercase" }}
+                  className={`${styles.specValue} uppercase`}
                 >
                   {initialLetter?.status || "DRAFT"}
                 </span>
@@ -1976,8 +1970,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
               <div className={styles.specRow}>
                 <span className={styles.specLabel}>Recipient Type</span>
                 <span
-                  className={styles.specValue}
-                  style={{ textTransform: "capitalize" }}
+                  className={`${styles.specValue} capitalize`}
                 >
                   {recipientMode}
                 </span>
@@ -2031,14 +2024,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                     href={`/api/admin/letters/${initialLetter.id}/pdf`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="db-btn db-btn-secondary"
-                    style={{
-                      width: "100%",
-                      justifyContent: "center",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
+                    className="db-btn db-btn-secondary inline-flex w-full items-center justify-center gap-2"
                   >
                     <Download size={16} /> Download PDF
                   </a>
@@ -2046,14 +2032,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                   <button
                     type="button"
                     onClick={() => setPreviewOpen(true)}
-                    className="db-btn db-btn-secondary"
-                    style={{
-                      width: "100%",
-                      justifyContent: "center",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
+                    className="db-btn db-btn-secondary inline-flex w-full items-center justify-center gap-2"
                   >
                     <Eye size={16} /> Live PDF Preview
                   </button>
@@ -2061,14 +2040,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                   <button
                     type="button"
                     onClick={() => setEmailModalOpen(true)}
-                    className="db-btn db-btn-primary"
-                    style={{
-                      width: "100%",
-                      justifyContent: "center",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
+                    className="db-btn db-btn-primary inline-flex w-full items-center justify-center gap-2"
                   >
                     <Send size={16} /> Dispatch via Email
                   </button>
@@ -2076,14 +2048,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                   <button
                     type="button"
                     onClick={handleOpenMailto}
-                    className="db-btn db-btn-secondary"
-                    style={{
-                      width: "100%",
-                      justifyContent: "center",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
+                    className="db-btn db-btn-secondary inline-flex w-full items-center justify-center gap-2"
                   >
                     <Mail size={16} /> Open Mail Client (mailto:)
                   </button>
@@ -2113,13 +2078,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
           onClick={() => setPreviewOpen(false)}
         >
           <div
-            className={styles.modalContent}
-            style={{
-              maxWidth: 900,
-              height: "85vh",
-              display: "flex",
-              flexDirection: "column",
-            }}
+            className={`${styles.modalContent} flex h-[85vh] max-w-[900px] flex-col`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
@@ -2134,15 +2093,8 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                 ✕
               </button>
             </div>
-            <div style={{ flex: 1, padding: 16, background: "#1e293b" }}>
-              <iframe
-                src={`/api/admin/letters/${initialLetter.id}/pdf`}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  border: "none",
-                  borderRadius: 8,
-                }}
+            <div className="min-h-0 flex-1 bg-slate-800 p-4">
+              <iframe src={`/api/admin/letters/${initialLetter.id}/pdf`} className="h-full w-full rounded-lg border-0"
                 title="Letter PDF Preview"
               />
             </div>
@@ -2206,8 +2158,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                     Email Message Body
                   </label>
                   <textarea
-                    className={adminStyles.textareaField}
-                    style={{ minHeight: 140 }}
+                    className={`${adminStyles.textareaField} min-h-36`}
                     value={emailBodyMessage}
                     onChange={(e) => setEmailBodyMessage(e.target.value)}
                   />
@@ -2431,8 +2382,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                 type="button"
                 onClick={handleDeleteTemplateSubmit}
                 disabled={isDeletingTemplate}
-                className={styles.templateDeleteBtn}
-                style={{ padding: "7px 14px", fontSize: 12 }}
+                className={`${styles.templateDeleteBtn} px-3.5 py-1.5 text-xs`}
               >
                 {isDeletingTemplate ? "Deleting..." : "Permanently Delete"}
               </button>
@@ -2469,8 +2419,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
               </button>
             </div>
             <div
-              className={styles.modalBody}
-              style={{ maxHeight: 380, overflowY: "auto" }}
+              className={`${styles.modalBody} max-h-[380px] overflow-y-auto`}
             >
               {templates.length === 0 ? (
                 <div
@@ -2501,8 +2450,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                           handleApplyTemplate(tmpl);
                           setShowManageTemplatesModal(false);
                         }}
-                        className={styles.cardActionBtn}
-                        style={{ padding: "4px 8px", fontSize: 11 }}
+                        className={`${styles.cardActionBtn} px-2 py-1 text-[11px]`}
                         title="Load this template into the editor"
                       >
                         <Check size={12} />
@@ -2514,8 +2462,7 @@ export function LetterEditor({ initialLetter }: LetterEditorProps) {
                           setTemplateToDelete(tmpl);
                           setShowDeleteModal(true);
                         }}
-                        className={styles.templateDeleteBtn}
-                        style={{ padding: "4px 8px" }}
+                        className={`${styles.templateDeleteBtn} px-2 py-1`}
                         title="Delete template"
                       >
                         <Trash2 size={12} />
