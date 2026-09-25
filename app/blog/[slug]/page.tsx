@@ -2,24 +2,40 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  FileDown,
+  Info,
+  Layers,
+  Search,
+  Share2,
+  ShieldCheck,
+  Sparkles,
+  Tag,
+  Upload,
+} from "lucide-react";
+import {
+  getAllBlogArticles,
+  getBlogArticleBySlug,
+  getRelatedBlogArticles,
+} from "@/lib/blog-data";
+import { PrintableChecklistCard } from "@/components/blog/PrintableChecklistCard";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { CTASection } from "@/components/marketing/CTASection";
-import { PageHero } from "@/components/marketing/PageHero";
-import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
-import { listBlogPosts, getBlogPost } from "@/lib/blog";
+import { articleSchema, breadcrumbSchema } from "@/lib/schema";
 import { buildMetadata, siteUrl } from "@/lib/seo";
-import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
-import { articleSchema } from "@/lib/schema";
 
 export const revalidate = 300;
 
 export async function generateStaticParams() {
-  const posts = await listBlogPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
+  const articles = getAllBlogArticles();
+  return articles.map((article) => ({
+    slug: article.slug,
   }));
 }
 
@@ -28,18 +44,18 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const resolvedParams = await params;
-  const post = await getBlogPost(resolvedParams.slug);
+  const { slug } = await params;
+  const article = getBlogArticleBySlug(slug);
 
-  if (!post) {
-    return buildMetadata("Post Not Found | Pexpacks", "", "/blog");
+  if (!article) {
+    return buildMetadata("Article Not Found | Pexpacks", "", "/blog");
   }
 
   const metadata = buildMetadata(
-    `${post.title} | Pexpacks Resource Hub`,
-    post.excerpt,
-    `/blog/${post.slug}`,
-    post.image
+    `${article.title} | Pexpacks Resources`,
+    article.description,
+    `/blog/${article.slug}`,
+    article.image,
   );
 
   return {
@@ -47,217 +63,13 @@ export async function generateMetadata({
     openGraph: {
       ...metadata.openGraph,
       type: "article",
-      publishedTime: post.date,
-      authors: [post.author],
+      publishedTime: article.date,
+      authors: [article.author.name],
     },
     alternates: {
-      canonical: `${siteUrl}/blog/${post.slug}`,
+      canonical: `${siteUrl}/blog/${article.slug}`,
     },
   };
-}
-
-/* ── Helpers ── */
-
-type ParsedImage = { alt: string; src: string };
-
-function parseImage(line: string): ParsedImage | null {
-  const match = line.match(/^!\[(.*?)\]\((.*?)\)$/);
-  return match ? { alt: match[1], src: match[2] } : null;
-}
-
-function parseLinkPills(
-  text: string
-): { text: string; href: string }[] {
-  const pills: { text: string; href: string }[] = [];
-  const regex = /\[link_pill:\s*(.*?)\s*\|\s*(.*?)\s*\]/g;
-  let match;
-  while ((match = regex.exec(text)) !== null) {
-    pills.push({ text: match[1], href: match[2] });
-  }
-  return pills;
-}
-
-function renderInlineContent(text: string): ReactNode {
-  const parts: ReactNode[] = [];
-  const strongPattern = /<strong>\s*([\s\S]*?)\s*<\/strong>/gi;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  while ((match = strongPattern.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
-    }
-    parts.push(<strong key={`strong-${match.index}`}>{match[1]}</strong>);
-    lastIndex = strongPattern.lastIndex;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
-  }
-
-  return parts.length > 0 ? parts : text;
-}
-
-function extractHeadings(
-  content: string[]
-): { id: string; title: string }[] {
-  return content
-    .filter((line) => line.startsWith("## "))
-    .map((line) => {
-      const title = line.replace("## ", "");
-      const id = title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-      return { id, title };
-    });
-}
-
-function renderContent(content: string[]): ReactNode[] {
-  const elements: ReactNode[] = [];
-  let listBuffer: {
-    items: string[];
-    ordered: boolean;
-  } | null = null;
-
-  function flushList() {
-    if (!listBuffer) return;
-    const ListTag = listBuffer.ordered ? "ol" : "ul";
-    const cls = listBuffer.ordered
-      ? "list-decimal pl-5 sm:pl-6 my-5 grid gap-2 text-slate-700 text-[16px] sm:text-[17px] leading-relaxed"
-      : "list-disc pl-5 sm:pl-6 my-5 grid gap-2 text-slate-700 text-[16px] sm:text-[17px] leading-relaxed";
-    elements.push(
-      <ListTag key={`list-${elements.length}`} className={cls}>
-        {listBuffer.items.map((item, i) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ListTag>
-    );
-    listBuffer = null;
-  }
-
-  for (let i = 0; i < content.length; i++) {
-    const line = content[i];
-
-    /* ── Image ── */
-    const img = parseImage(line);
-    if (img) {
-      flushList();
-      const next = i + 1 < content.length ? content[i + 1] : "";
-      const isCaption =
-        next &&
-        !parseImage(next) &&
-        !next.startsWith("## ") &&
-        !next.startsWith("> ") &&
-        !next.startsWith("[link_pill:") &&
-        !next.trim().match(/^[-*\d]/);
-      if (isCaption) i++;
-
-      elements.push(
-        <figure key={`img-${i}`} className="my-6">
-          <Image
-            src={img.src}
-            alt={img.alt}
-            width={800}
-            height={450}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 800px"
-            className="w-full h-auto object-cover block rounded-2xl border border-black/5 aspect-[16/9]"
-            placeholder="blur"
-            blurDataURL={IMAGE_BLUR_DATA_URL}
-            style={{
-              width: "100%",
-              height: "auto",
-              aspectRatio: "16 / 9",
-              borderRadius: "16px",
-              border: "1px solid rgba(0,0,0,0.05)",
-            }}
-          />
-          {isCaption ? (
-            <figcaption className="mt-2.5 text-sm text-slate-500 leading-normal text-center">
-              {content[i]}
-            </figcaption>
-          ) : null}
-        </figure>
-      );
-      continue;
-    }
-
-    /* ── Heading ── */
-    if (line.startsWith("## ")) {
-      flushList();
-      const title = line.replace("## ", "");
-      const id = title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-      elements.push(
-        <h2 key={`h2-${i}`} id={id} className="mt-8 sm:mt-10 mb-4 text-xl sm:text-2xl font-extrabold text-[#1a2a40] leading-snug first:mt-0">
-          {title}
-        </h2>
-      );
-      continue;
-    }
-
-    /* ── Blockquote ── */
-    if (line.startsWith("> ")) {
-      flushList();
-      elements.push(
-        <blockquote key={`bq-${i}`} className="my-5 py-4 px-5 border-l-4 border-teal-600 bg-slate-50 rounded-r-xl text-[#1a2a40] text-base sm:text-lg font-semibold leading-relaxed">
-          {line.replace("> ", "")}
-        </blockquote>
-      );
-      continue;
-    }
-
-    /* ── List items ── */
-    const bulletMatch = line.match(/^[-*]\s+(.+)/);
-    const numMatch = line.match(/^\d+[.)]\s+(.+)/);
-    const listItem = bulletMatch
-      ? { ordered: false, text: bulletMatch[1] }
-      : numMatch
-        ? { ordered: true, text: numMatch[1] }
-        : null;
-
-    if (listItem) {
-      if (!listBuffer) {
-        listBuffer = { items: [], ordered: listItem.ordered };
-      }
-      listBuffer.items.push(listItem.text);
-      continue;
-    }
-    if (listBuffer && line.trim() === "") {
-      continue;
-    }
-    flushList();
-
-    /* ── Paragraph (with optional inline link pills) ── */
-    const pills = parseLinkPills(line);
-    if (pills.length > 0) {
-      const cleaned = line
-        .replace(/\[link_pill:\s*.*?\s*\|\s*.*?\s*\]/g, "")
-        .trim();
-      if (cleaned) {
-        elements.push(<p key={`p-${i}`} className="mb-5 last:mb-0">{renderInlineContent(cleaned)}</p>);
-      }
-      elements.push(
-        <div key={`pills-${i}`} className="flex flex-wrap gap-3 my-5">
-          {pills.map((pill, pi) => (
-            <Link key={pi} href={pill.href} className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-white border border-teal-600 text-teal-700 font-extrabold text-sm no-underline hover:bg-teal-600 hover:text-white hover:-translate-y-0.5 hover:shadow-md transition-all">
-              {pill.text}
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </Link>
-          ))}
-        </div>
-      );
-      continue;
-    }
-
-    elements.push(<p key={`p-${i}`} className="mb-5 last:mb-0">{renderInlineContent(line)}</p>);
-  }
-
-  flushList();
-
-  return elements;
 }
 
 export default async function BlogPostPage({
@@ -265,222 +77,424 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await params;
-  const post = await getBlogPost(resolvedParams.slug);
+  const { slug } = await params;
+  const article = getBlogArticleBySlug(slug);
 
-  if (!post) {
+  if (!article) {
     notFound();
   }
 
-  const publishedDate = new Date(post.date).toLocaleDateString("en-ZA", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const relatedArticles = getRelatedBlogArticles(article.slug, 3);
 
-  const headings = extractHeadings(post.content);
-  const relatedPosts = (await listBlogPosts())
-    .filter((p) => p.slug !== post.slug)
-    .slice(0, 3);
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    { name: "Resources", path: "/blog" },
+    { name: article.title, path: `/blog/${article.slug}` },
+  ];
+
+  const structuredArticle = {
+    title: article.title,
+    excerpt: article.description,
+    image: article.image,
+    date: article.date,
+    author: article.author.name,
+    slug: article.slug,
+  };
 
   return (
     <>
-      <JsonLd data={articleSchema(post)} />
-      <PageHero
-        eyebrow={post.category}
-        title={post.title}
-        panelText={`By ${post.author}`}
-        panelTitle={publishedDate}
-      >
-        <Link href="/blog" className="inline-flex items-center gap-1.5 text-teal-600 font-extrabold text-sm sm:text-base no-underline mt-4 hover:opacity-80 transition-opacity">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Resource Hub
-        </Link>
-      </PageHero>
+      <JsonLd data={articleSchema(structuredArticle)} />
+      <JsonLd data={breadcrumbSchema(breadcrumbs)} />
 
-      <section className="bg-gradient-to-b from-slate-50 to-white">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)] gap-6 lg:gap-8 items-start max-w-7xl mx-auto py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
-          {/* ── Sidebar ── */}
-          <aside className="lg:sticky lg:top-[calc(72px+16px)] self-start z-20">
-            <nav className="border border-slate-200/90 rounded-[24px] p-5 bg-white/80 backdrop-blur-md shadow-sm" aria-label="Article sections">
-              {headings.length > 0 ? (
-                <>
-                  <p className="m-0 text-teal-600 text-xs font-extrabold uppercase tracking-wider">Jump to</p>
-                  <h2 className="mt-1.5 mb-4 text-[#1a2a40] text-xl font-bold leading-tight">Contents</h2>
-                  <ol className="grid gap-1 m-0 p-0 list-none">
-                    {headings.map((h) => (
-                      <li key={h.id}>
-                        <a href={`#${h.id}`} className="block rounded-md px-2.5 py-2 text-slate-700 text-xs font-bold leading-snug no-underline hover:bg-slate-100 hover:text-teal-600 hover:translate-x-0.5 transition-all">
-                          {h.title}
-                        </a>
-                      </li>
-                    ))}
-                  </ol>
-                  <hr className="my-4 border-0 h-px bg-slate-200" />
-                </>
-              ) : null}
+      <div className="min-h-screen bg-slate-50 print:bg-white">
+        {/* ── BREADCRUMBS ── */}
+        <nav
+          aria-label="Breadcrumbs"
+          className="border-b border-slate-200/80 bg-white print:hidden"
+        >
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5">
+            <ol className="flex items-center gap-1.5 text-xs text-slate-500 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden m-0 p-0 list-none">
+              <li>
+                <Link
+                  href="/"
+                  className="hover:text-slate-900 transition-colors no-underline font-medium text-slate-500"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <ChevronRight className="size-3.5 text-slate-400 shrink-0" />
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="hover:text-slate-900 transition-colors no-underline font-medium text-slate-500"
+                >
+                  Resources
+                </Link>
+              </li>
+              <li>
+                <ChevronRight className="size-3.5 text-slate-400 shrink-0" />
+              </li>
+              <li
+                className="font-bold text-slate-900 truncate max-w-[200px] sm:max-w-xs md:max-w-md"
+                aria-current="page"
+              >
+                {article.title}
+              </li>
+            </ol>
+          </div>
+        </nav>
 
-              <div className="grid gap-2.5">
-                <div className="grid gap-0.5">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Published</span>
-                  <span className="text-sm font-semibold text-[#1a2a40] leading-snug">{publishedDate}</span>
-                </div>
-                <div className="grid gap-0.5">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Author</span>
-                  <span className="text-sm font-semibold text-[#1a2a40] leading-snug">{post.author}</span>
-                </div>
-                <div className="grid gap-0.5">
-                  <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Category</span>
-                  <span className="text-sm font-semibold text-[#1a2a40] leading-snug">{post.category}</span>
-                </div>
+        {/* ── ARTICLE HEADER ── */}
+        <header className="bg-slate-900 text-white pt-10 pb-14 sm:pt-14 sm:pb-16 print:bg-white print:text-black print:p-0 print:border-b-2 print:border-black">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl">
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-4 print:hidden">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-pex-keppel text-xs font-extrabold uppercase tracking-wide">
+                  <BookOpen className="size-3.5" />
+                  <span>{article.category}</span>
+                </span>
+
+                <span className="inline-block px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-bold">
+                  {article.phase}
+                </span>
+
+                {article.hasPrintable ? (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-400 text-xs font-extrabold uppercase tracking-wide">
+                    <FileDown className="size-3.5" />
+                    <span>Printable Checklist</span>
+                  </span>
+                ) : null}
               </div>
 
-              <Link href="/schools" className="block mt-5 py-3 px-4 rounded-full bg-[#1a2a40] text-white font-extrabold text-sm text-center no-underline hover:bg-teal-600 hover:-translate-y-0.5 transition-all" data-conversion-event="article_find_school_pack">
-                Find Your School Pack
-              </Link>
-            </nav>
-          </aside>
+              {/* Title */}
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold font-heading text-white tracking-tight leading-[1.18] m-0 print:text-black print:text-2xl">
+                {article.title}
+              </h1>
 
-          {/* ── Main content ── */}
-          <div className="grid gap-5 min-w-0">
-            {post.image ? (
-              <div className="rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-sm border border-slate-200/90">
+              {/* Description */}
+              <p className="mt-4 text-base sm:text-lg text-slate-300 leading-relaxed font-normal print:text-slate-800 print:text-sm">
+                {article.description}
+              </p>
+
+              {/* Metadata Bar */}
+              <div className="mt-8 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm text-slate-300 print:border-slate-300 print:text-black print:mt-4 print:pt-3">
+                <div className="flex items-center gap-3">
+                  <div className="size-10 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center font-heading font-extrabold text-white text-sm shrink-0 print:border-black">
+                    {article.author.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)}
+                  </div>
+                  <div>
+                    <strong className="block font-bold text-white print:text-black">
+                      {article.author.name}
+                    </strong>
+                    <span className="block text-xs text-slate-400 print:text-slate-600">
+                      {article.author.role}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-xs text-slate-400 font-medium print:text-slate-600">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Calendar className="size-4 text-slate-400" />
+                    <span>
+                      {new Date(article.date).toLocaleDateString("en-ZA", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </span>
+
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock className="size-4 text-slate-400" />
+                    <span>{article.readTime}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* ── MAIN ARTICLE & SIDEBAR LAYOUT ── */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+            {/* ── LEFT COLUMN (PROSE + CHECKLIST) ── */}
+            <article className="lg:col-span-8 min-w-0">
+              {/* Featured Image */}
+              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-slate-200 shadow-md mb-10 bg-slate-100 print:hidden">
                 <Image
-                  src={post.image}
-                  alt={post.title}
-                  width={800}
-                  height={450}
-                  sizes="(max-width: 768px) 100vw, 800px"
-                  className="w-full h-auto object-cover block aspect-[16/9]"
-                  style={{ aspectRatio: "16 / 9" }}
-                  placeholder="blur"
-                  blurDataURL={IMAGE_BLUR_DATA_URL}
+                  src={article.image}
+                  alt={article.title}
+                  fill
                   priority
+                  sizes="(max-width: 1024px) 100vw, 750px"
+                  className="object-cover"
                 />
               </div>
-            ) : null}
 
-            <article className="relative border border-slate-200/90 rounded-[24px] sm:rounded-[28px] bg-white/95 shadow-sm overflow-hidden">
-              <div className="p-5 sm:p-7 text-slate-700 text-[16px] sm:text-[17px] leading-relaxed">
-                {renderContent(post.content)}
+              {/* Prose Content Container */}
+              <div className="prose prose-slate max-w-none prose-headings:font-heading prose-headings:font-extrabold prose-headings:text-slate-900 prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-orange-600 prose-a:font-bold prose-strong:text-slate-900">
+                {/* Intro Paragraphs */}
+                {article.content.intro.map((p, i) => (
+                  <p
+                    key={i}
+                    className={
+                      i === 0
+                        ? "text-base sm:text-lg leading-relaxed text-slate-800 font-medium"
+                        : "text-base leading-relaxed text-slate-700"
+                    }
+                  >
+                    {p}
+                  </p>
+                ))}
+
+                {/* Structured Sections */}
+                {article.content.sections.map((section, idx) => (
+                  <section key={section.heading} className="my-8">
+                    <h2 className="text-xl sm:text-2xl font-extrabold font-heading text-slate-900 mt-8 mb-2">
+                      {section.heading}
+                    </h2>
+
+                    {section.subheading ? (
+                      <p className="text-sm font-bold text-pex-keppel uppercase tracking-wide mb-4">
+                        {section.subheading}
+                      </p>
+                    ) : null}
+
+                    {section.body.map((bodyPara, pIdx) => (
+                      <p
+                        key={pIdx}
+                        className="text-base leading-relaxed text-slate-700 my-4"
+                      >
+                        {bodyPara}
+                      </p>
+                    ))}
+
+                    {/* Section Callout (if present) */}
+                    {section.callout ? (
+                      <div
+                        className={`my-6 rounded-2xl p-5 border-l-4 ${
+                          section.callout.type === "warning"
+                            ? "border-amber-500 bg-amber-50/80 text-amber-950"
+                            : section.callout.type === "tip"
+                              ? "border-teal-500 bg-teal-50/80 text-teal-950"
+                              : "border-blue-500 bg-blue-50/80 text-blue-950"
+                        }`}
+                      >
+                        <strong className="block text-sm font-extrabold mb-1">
+                          {section.callout.title}
+                        </strong>
+                        <p className="text-xs sm:text-sm m-0 leading-relaxed font-medium">
+                          {section.callout.text}
+                        </p>
+                      </div>
+                    ) : null}
+                  </section>
+                ))}
+
+                {/* ── EMBEDDED CHECKLIST (If available) ── */}
+                {article.printableChecklist ? (
+                  <PrintableChecklistCard
+                    checklist={article.printableChecklist}
+                  />
+                ) : null}
+
+                {/* Conclusion */}
+                <div className="my-10 rounded-3xl bg-slate-100/90 border border-slate-200/90 p-6 sm:p-8">
+                  <h3 className="text-lg sm:text-xl font-extrabold font-heading text-slate-900 mb-3 m-0">
+                    Final Takeaway for Parents
+                  </h3>
+                  {article.content.conclusion.map((c, i) => (
+                    <p
+                      key={i}
+                      className="text-sm sm:text-base leading-relaxed text-slate-700 my-2.5"
+                    >
+                      {c}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Tags */}
+                {article.tags.length > 0 ? (
+                  <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center gap-2 print:hidden not-prose">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide mr-1 inline-flex items-center gap-1">
+                      <Tag className="size-3.5" />
+                      <span>Tags:</span>
+                    </span>
+                    {article.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </article>
 
-            <aside
-              className="border border-teal-600/25 rounded-[24px] sm:rounded-[28px] p-5 sm:p-7 bg-gradient-to-br from-teal-600/[0.06] to-white/90 shadow-sm"
-              aria-label="Explore more resources"
-            >
-              <p className="m-0 text-teal-600 text-xs font-extrabold uppercase tracking-wider">Keep digging</p>
-              <h2 className="mt-1.5 mb-2.5 text-[#1a2a40] text-xl sm:text-2xl font-bold leading-tight">
-                Dive deeper into related topics
-              </h2>
-              <p className="m-0 mb-5 text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-[660px]">
-                Discover helpful resources to make your back-to-school
-                experience smoother.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                <Link href="/schools" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all" data-conversion-event="article_browse_school_packs">
-                  Browse school packs
-                </Link>
-                <Link href="/happy-pay" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all">
-                  Split in 2 with Happy Pay
-                </Link>
-                <Link href="/add-your-school" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all" data-conversion-event="article_request_school">
-                  Request your school
-                </Link>
-                <Link href="/faq" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all">
-                  Frequently asked questions
-                </Link>
-                <Link href="/partnership" className="flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-white border border-slate-200 shadow-xs text-xs font-bold text-[#1a2a40] no-underline hover:border-teal-600 hover:text-teal-600 hover:-translate-y-0.5 transition-all">
-                  School partnerships
-                </Link>
-              </div>
-            </aside>
+            {/* ── RIGHT COLUMN (STICKY SIDEBAR) ── */}
+            <aside className="lg:col-span-4 print:hidden">
+              <div className="lg:sticky lg:top-24 space-y-6">
+                {/* WIDGET 1: Skip the Mall Lines (Order Pack CTA) */}
+                <div className="rounded-3xl bg-slate-900 text-white p-6 sm:p-7 shadow-lg border border-slate-800">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-[11px] font-extrabold uppercase tracking-wide mb-3">
+                    <Sparkles className="size-3.5" />
+                    <span>Fast & Stress-Free</span>
+                  </div>
 
-            {relatedPosts.length > 0 ? (
-              <section
-                className="relative border border-slate-200/90 rounded-[24px] sm:rounded-[28px] bg-white/95 shadow-sm overflow-hidden"
-                aria-label="Continue reading"
-              >
-                <div className="pt-6 sm:pt-7 px-5 sm:px-7">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-[#1a2a40] m-0">Continue reading</h2>
-                </div>
-                <div className="p-5 sm:p-7">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {relatedPosts.map((rp) => (
-                      <Link
-                        key={rp.id}
-                        href={`/blog/${rp.slug}`}
-                        className="group border border-slate-200 rounded-2xl p-5 bg-white shadow-xs no-underline flex flex-col hover:-translate-y-1 hover:shadow-md transition-all"
-                      >
-                        <h3 className="text-base m-0 mb-2 text-[#1a2a40] font-extrabold leading-snug group-hover:text-teal-600 transition-colors">{rp.title}</h3>
-                        <p className="text-xs text-slate-500 m-0 flex-1 leading-relaxed line-clamp-3">{rp.excerpt}</p>
-                        <span className="mt-3.5 text-xs font-extrabold text-teal-600 group-hover:opacity-80 transition-opacity flex items-center gap-1">Read more &rarr;</span>
-                      </Link>
-                    ))}
+                  <h3 className="text-xl font-extrabold font-heading text-white m-0 leading-snug">
+                    Skip the Mall Lines
+                  </h3>
+
+                  <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Order your child&apos;s verified school stationery pack in a few
+                    clicks. Exact brands, required rulings, and delivery straight
+                    to your door before Term 1 starts.
+                  </p>
+
+                  <div className="mt-6 space-y-2.5">
+                    <Link
+                      href="/schools"
+                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-pex-keppel hover:bg-teal-600 text-white font-heading font-extrabold text-sm no-underline shadow-md shadow-teal-900/30 transition-all active:scale-[0.98]"
+                    >
+                      <Search className="size-4" />
+                      <span>Find My School Pack</span>
+                    </Link>
+
+                    <Link
+                      href="/upload-a-list"
+                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-heading font-extrabold text-sm no-underline transition-all active:scale-[0.98]"
+                    >
+                      <Upload className="size-4 text-orange-400" />
+                      <span>Upload Custom List</span>
+                    </Link>
                   </div>
                 </div>
-              </section>
-            ) : null}
 
-            <div className="relative border border-slate-200/90 rounded-[24px] sm:rounded-[28px] bg-white/95 shadow-sm overflow-visible z-30 focus-within:z-40">
-              <div className="p-5 sm:p-7">
-                <SchoolSearchWidget
-                  compact={true}
-                  titleText="Find your official school pack"
-                  bodyText="Save time and buy the exact teacher-approved stationery kit for your school & grade in just 3 clicks."
-                />
+                {/* WIDGET 2: Pexcover Book Covering Banner */}
+                <div className="rounded-3xl bg-gradient-to-br from-teal-900/90 to-slate-900 text-white p-6 sm:p-7 shadow-sm border border-teal-800/40">
+                  <div className="flex items-center gap-2 text-amber-400 text-xs font-extrabold uppercase tracking-wider mb-2">
+                    <ShieldCheck className="size-4 text-amber-400" />
+                    <span>Pexcover Protection</span>
+                  </div>
+
+                  <h4 className="text-lg font-extrabold text-white m-0 leading-tight">
+                    Exercise Books Neatly Covered & Named
+                  </h4>
+
+                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
+                    Add Pexcover to any stationery pack. All exercise books
+                    arrive wrapped in heavy-duty 80-micron clear protective film
+                    with custom learner & subject labels.
+                  </p>
+
+                  <Link
+                    href="/schools"
+                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-orange-400 hover:text-orange-300 transition-colors no-underline"
+                  >
+                    <span>Browse school packs with Pexcover</span>
+                    <ArrowRight className="size-3.5" />
+                  </Link>
+                </div>
+
+                {/* WIDGET 3: Related Resources List */}
+                {relatedArticles.length > 0 ? (
+                  <div className="rounded-3xl bg-white border border-slate-200/90 p-6 shadow-sm">
+                    <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-4 m-0">
+                      Related Resources
+                    </h4>
+
+                    <div className="space-y-4">
+                      {relatedArticles.map((rel) => (
+                        <Link
+                          key={rel.id}
+                          href={`/blog/${rel.slug}`}
+                          className="group block no-underline border-b border-slate-100 last:border-b-0 pb-3 last:pb-0"
+                        >
+                          <span className="block text-[11px] font-extrabold text-pex-keppel uppercase tracking-wide mb-1">
+                            {rel.category}
+                          </span>
+                          <strong className="block text-xs sm:text-sm font-bold text-slate-900 group-hover:text-orange-600 transition-colors leading-snug">
+                            {rel.title}
+                          </strong>
+                          <span className="mt-1 inline-flex items-center gap-1 text-[11px] text-slate-400 font-medium">
+                            <Clock className="size-3" />
+                            <span>{rel.readTime}</span>
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
-            </div>
+            </aside>
           </div>
         </div>
-      </section>
 
-      <CTASection
-        eyebrow="Skip the queues"
-        title="Ready to order your school pack?"
-        text="Don't spend hours hunting for these items. Let Pexpacks deliver your exact school list straight to your door."
-        primaryHref="/schools"
-        primaryLabel="Find Your School Pack"
-        secondaryHref="/add-your-school#school-request-form"
-        secondaryLabel="My school isn't listed"
-      />
-
-      <section className="py-12 sm:py-16 bg-slate-50 border-t border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div>
-              <p className="text-xs font-extrabold uppercase tracking-wider text-teal-600 mb-2">Beat Janu-worry</p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1a2a40] mb-3 leading-tight">Plan ahead, pay at your own pace</h2>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
-                Find your child&rsquo;s school pack early, lock in your list,
-                and order at your own pace so back-to-school is stress-free.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                <Button href="/schools" variant="primary" className="min-h-[44px]" data-conversion-event="article_find_school_pack_bottom">
-                  Find Your School Pack
-                </Button>
-              </div>
-            </div>
-            <div className="rounded-[24px] border border-slate-200 bg-white p-6 sm:p-8 shadow-xs flex flex-col gap-4">
+        {/* ── BOTTOM MORE RESOURCES SECTION ── */}
+        <section className="bg-white border-t border-slate-200 py-12 sm:py-16 print:hidden">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <div>
-                <h3 className="text-xl font-extrabold text-[#1a2a40] m-0">School partnerships</h3>
-              </div>
-              <div>
-                <p className="text-slate-600 text-sm sm:text-base leading-relaxed m-0">
-                  Schools can submit stationery lists so parents order
-                  grade-specific packs. No admin, no hassle.
+                <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-slate-900 m-0">
+                  More From the Resource Hub
+                </h3>
+                <p className="mt-1 text-xs sm:text-sm text-slate-500 m-0">
+                  Helpful guides and printables to empower learners all year long.
                 </p>
               </div>
-              <div className="pt-2">
-                <Link href="/partnership" className="inline-flex items-center gap-1.5 text-sm font-extrabold text-teal-600 hover:text-teal-700 transition-colors" data-conversion-event="article_partnership">
-                  Explore partnerships &rarr;
+
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-orange-600 hover:text-orange-700 transition-colors no-underline"
+              >
+                <span>View All Resources</span>
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedArticles.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`/blog/${item.slug}`}
+                  className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-5 hover:border-slate-300 hover:shadow-md transition-all no-underline"
+                >
+                  <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-slate-100 mb-4">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+
+                  <span className="text-[11px] font-extrabold text-pex-keppel uppercase tracking-wider mb-1">
+                    {item.category}
+                  </span>
+
+                  <strong className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-orange-600 transition-colors leading-snug line-clamp-2">
+                    {item.title}
+                  </strong>
+
+                  <p className="mt-2 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                    {item.description}
+                  </p>
                 </Link>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </>
   );
 }

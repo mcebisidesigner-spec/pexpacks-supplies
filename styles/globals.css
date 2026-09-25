@@ -171,122 +171,29 @@ body.menu-open [aria-label*="Pex"] {
   }
 }
 
-/* ==========================================================================
-   BUTTON & LINK COLOR STANDARDIZATION
-   Requirements:
-   1. All text on orange buttons must be WHITE.
-   2. All text on white buttons must be NAVY.
-   3. All text on navy buttons must be WHITE.
-   4. All text on green / WhatsApp buttons must be WHITE.
-   5. All text on teal / primary buttons must be WHITE.
-   6. All linking text must hover with TEAL.
-   ========================================================================== */
-
-/* 1. Solid orange buttons -> White text */
-button[class~="bg-pex-coral"],
-a[class~="bg-pex-coral"],
-[class~="bg-pex-coral"][class*="rounded"] {
-  color: #ffffff !important;
-}
-
-/* 2. Solid white buttons -> Navy text */
-button[class~="bg-white"][class*="rounded"],
-a[class~="bg-white"][class*="rounded"],
-button[class~="border-pex-navy"][class*="rounded"],
-a[class~="border-pex-navy"][class*="rounded"] {
-  color: var(--pex-navy) !important;
-}
-
-/* 3. Solid navy buttons -> White text */
-button[class~="bg-pex-navy"],
-a[class~="bg-pex-navy"],
-[class~="bg-pex-navy"][class*="rounded"] {
-  color: #ffffff !important;
-}
-
-/* 4. Green / WhatsApp buttons -> White text */
-button[class~="bg-[#25d366]"],
-a[class~="bg-[#25d366]"],
-button[class~="bg-whatsapp"],
-a[class~="bg-whatsapp"],
-[class~="bg-[#25d366]"][class*="rounded"] {
-  color: #ffffff !important;
-}
-
-/* 5. Solid teal / Keppel buttons -> White text */
-button[class~="bg-pex-keppel"],
-a[class~="bg-pex-keppel"],
-[class~="bg-pex-keppel"][class*="rounded"] {
-  color: #ffffff !important;
-}
-
-/* 6. All text link hover -> Teal (excludes buttons & badges) */
-a:not([class*="rounded-full"]):not([class*="rounded-2xl"]):not([class*="rounded-xl"]):not([class*="rounded-lg"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover,
-a:not([class*="rounded-full"]):not([class*="rounded-2xl"]):not([class*="rounded-xl"]):not([class*="rounded-lg"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover * {
-  color: var(--pex-keppel) !important;
+@utility text-link {
+  position: relative;
+  display: inline-block;
+  color: var(--pex-keppel-dark);
+  font-weight: 500;
+  text-decoration: none;
   transition: color 150ms ease;
 }
 
-/* 7. Text links use a consistent medium-weight treatment. Legal links opt into underlining below. */
-a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]) {
-  font-weight: 500 !important;
-  color: var(--pex-keppel-dark, #156966);
-  text-decoration: none !important;
-  transition: color 150ms ease;
-}
-
-a:not([class*="rounded"]):not([class*="btn"]):not([role="button"]):not([class*="bg-pex"]):not([class*="bg-[#"]):hover {
-  color: var(--pex-keppel, #1a7a77) !important;
-  text-decoration: none !important;
+@utility text-link-hover {
+  @apply text-link hover:text-pex-keppel focus-visible:text-pex-keppel;
 }
 
 .footer-legal-link {
-  font-weight: 500 !important;
-  text-decoration: none !important;
+  color: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 150ms ease;
 }
 
-.footer-legal-link:hover {
-  color: var(--pex-keppel, #1a7a77) !important;
-}
-/* 7. Mobile Header Hamburger Toggle - Remove greenish border, outline, and tap ring */
-button[aria-controls="mobile-menu"],
-button[aria-label="Open menu"],
-button[aria-label="Close menu"] {
-  border: none !important;
-  outline: none !important;
-  outline-offset: 0 !important;
-  box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-button[aria-controls="mobile-menu"]:focus,
-button[aria-controls="mobile-menu"]:focus-visible,
-button[aria-controls="mobile-menu"]:active,
-button[aria-label="Open menu"]:focus,
-button[aria-label="Open menu"]:focus-visible,
-button[aria-label="Open menu"]:active,
-button[aria-label="Close menu"]:focus,
-button[aria-label="Close menu"]:focus-visible,
-button[aria-label="Close menu"]:active {
-  border: none !important;
-  outline: none !important;
-  outline-offset: 0 !important;
-  box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-
-
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
-    [type="file"]
-  ):focus,
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
-    [type="file"]
-  ):focus-visible,
-select:focus,
-select:focus-visible,
-textarea:focus,
-textarea:focus-visible {
-  outline: 0;
+.footer-legal-link:hover,
+.footer-legal-link:focus-visible {
+  color: var(--pex-keppel);
 }
 
 button,
@@ -799,5 +706,26 @@ div[id*="assistant-control" i] {
   50% {
     transform: translateX(5px);
     opacity: 0.9;
+  }
+}
+
+/* Print Optimization for Resource Checklists */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  header,
+  footer,
+  nav,
+  aside,
+  [data-chat-widget],
+  .site-header,
+  .site-footer,
+  #bro-pex-assistant {
+    display: none !important;
+  }
+  @page {
+    margin: 12mm 15mm 15mm 15mm;
   }
 }

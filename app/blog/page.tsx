@@ -1,114 +1,69 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
-
-import { Button } from "@/components/ui/Button";
-import { PageHero } from "@/components/marketing/PageHero";
-import { listBlogPosts } from "@/lib/blog";
+import { BlogHubClient } from "@/components/blog/BlogHubClient";
+import { getAllBlogArticles } from "@/lib/blog-data";
 import { listPublicCmsFiles } from "@/lib/cms";
 import { buildMetadata } from "@/lib/seo";
-import { SchoolSearchWidget } from "@/components/marketing/SchoolSearchWidget";
-import { BlogFilter } from "./BlogFilter";
-import { SubscribeForm } from "./SubscribeForm";
 
 export const metadata: Metadata = buildMetadata(
-  "Digital Backpack Resources | Pexpacks",
-  "Free printables, expert parent guides, and study tools to empower your child's academic year.",
-  "/blog"
+  "Stationery Guides & Printable Checklists | Pexpacks Resource Hub",
+  "Free grade stationery checklists, school ruling guides, and expert parent advice to help South African learners excel all school year long.",
+  "/blog",
 );
 
 export const revalidate = 300;
 
-export default async function BlogIndex() {
-  const [posts, resources] = await Promise.all([
-    listBlogPosts(),
+export default async function BlogPage() {
+  const [articles, resources] = await Promise.all([
+    getAllBlogArticles(),
     listPublicCmsFiles(),
   ]);
 
-  return (
-    <>
-      <PageHero
-        eyebrow="Digital Backpack"
-        title="Everything you need."
-        text="Download free grade stationery checklists, printable study tools, and expert parent guides to help learners excel all school year long."
-        panelText="Free resources for parents and learners"
-        panelTitle="Expert guides, printables, study tools & more"
-      >
-        <div className="flex flex-col sm:flex-row gap-3 mt-5 items-stretch sm:items-center">
-          <Button href="#blog-content" variant="primary" className="min-h-[44px]">Browse Resources</Button>
-          <Button href="#blog-subscribe" variant="white" className="min-h-[44px]">Stay Updated</Button>
+  const liveResourcesNode =
+    resources.length > 0 ? (
+      <div className="resourceHubCard rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-7 grid gap-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-extrabold uppercase tracking-wider text-pex-keppel">
+            Resource Hub Downloads
+          </span>
+          <span className="text-xs text-slate-500 font-semibold">
+            Official PDF templates
+          </span>
         </div>
-      </PageHero>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 lg:gap-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16" id="blog-content">
-        {/* PRIMARY COLUMN: ARTICLES */}
-        <main className="flex flex-col gap-6 min-w-0" aria-label="Resource articles">
-          <BlogFilter posts={posts} />
-        </main>
+        <h3 className="text-xl font-extrabold font-heading text-slate-900 leading-tight m-0">
+          Live parent resources & downloadable printables
+        </h3>
 
-        {/* SIDEBAR COLUMN: CONVERSION WIDGETS */}
-        <aside className="relative z-30 flex flex-col gap-6 min-w-0">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky lg:top-[calc(72px+32px)] z-40 gap-6">
-            {/* WIDGET 1: GAUTENG SCHOOL PACK SEARCH */}
-            <SchoolSearchWidget headingLevel="h3" />
-
-            {resources.length > 0 ? (
-              <div className="resourceHubCard rounded-2xl border border-slate-200/80 bg-white p-5 grid gap-4 shadow-sm">
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-pex-keppel">Resource Hub</span>
-                <h3 className="text-lg font-extrabold text-pex-navy leading-tight m-0">Live parent resources</h3>
-                <div className="grid gap-2.5">
-                  {resources.slice(0, 4).map((resource) => (
-                    <Link
-                      key={resource.id}
-                      href={resource.file_url}
-                      className="group grid grid-cols-[1fr_auto] items-center gap-3 py-3 border-t border-slate-100 text-pex-navy no-underline hover:text-pex-keppel transition-colors"
-                    >
-                      <span className="min-w-0">
-                        <strong className="block min-w-0 text-[13.5px] font-extrabold leading-snug group-hover:text-pex-keppel transition-colors">{resource.title}</strong>
-                        {resource.description ? <small className="block min-w-0 text-slate-500 text-xs leading-normal mt-1">{resource.description}</small> : null}
-                      </span>
-                      <em className="rounded-full bg-teal-600/10 text-teal-700 text-[10px] not-italic font-extrabold px-2.5 py-1 uppercase tracking-wide shrink-0">{resource.file_type}</em>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            {/* WIDGET 2: 100% CORRECT PACK GUARANTEE */}
-            <div className="rounded-2xl border border-pex-keppel/20 bg-pex-keppel/[0.04] p-5 flex flex-col gap-3.5 shadow-sm">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-6 h-6 text-pex-keppel shrink-0" />
-                <h3 className="text-[15px] font-extrabold text-pex-navy m-0">Teacher-Approved Guarantee</h3>
-              </div>
-              <p className="text-[13.5px] text-slate-600 leading-relaxed m-0">
-                We strictly cross-reference official, teacher-submitted stationery lists. You receive the exact brand, size, and quantity requested by your school—100% guaranteed.
-              </p>
-            </div>
-
-            {/* WIDGET 3: PEXCOVER BOOK COVERING PROMOTION */}
-            <div className="relative overflow-hidden rounded-2xl bg-pex-navy text-white p-6 sm:p-7 flex flex-col gap-4 shadow-sm">
-              <div className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-teal-500/15 pointer-events-none" />
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">Time-Saving Add-on</span>
-              <h3 className="text-lg font-extrabold text-white m-0 leading-snug">Exercise Books Neatly Covered & Named</h3>
-              <p className="text-[13.5px] text-white/85 leading-relaxed m-0">
-                Add Pexcover to your stationery pack. Our team will cover all exercise books in durable protective film and print clean name tags for your child.
-              </p>
-              <Link
-                href="/blog/what-is-pexcover-book-covering"
-                className="mt-1 text-[13.5px] font-bold text-white no-underline hover:text-pex-keppel transition-colors w-fit"
-                data-conversion-event="blog_pexcover_guide"
-              >
-                Learn how Pexcover works
-              </Link>
-            </div>
-          </div>
-        </aside>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+          {resources.slice(0, 4).map((resource) => (
+            <Link
+              key={resource.id}
+              href={resource.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group grid grid-cols-[1fr_auto] items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-pex-navy no-underline hover:border-pex-keppel/50 hover:bg-teal-50/40 transition-all"
+            >
+              <span className="min-w-0">
+                <strong className="block min-w-0 text-sm font-extrabold leading-snug group-hover:text-pex-keppel transition-colors">
+                  {resource.title}
+                </strong>
+                {resource.description ? (
+                  <small className="block min-w-0 text-slate-500 text-xs leading-normal mt-1 line-clamp-1">
+                    {resource.description}
+                  </small>
+                ) : null}
+              </span>
+              <em className="rounded-full bg-teal-600/10 text-teal-700 text-[10px] not-italic font-extrabold px-2.5 py-1 uppercase tracking-wide shrink-0">
+                {resource.file_type}
+              </em>
+            </Link>
+          ))}
+        </div>
       </div>
-      <section className="py-12 sm:py-20 bg-slate-50/50" id="blog-subscribe">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SubscribeForm />
-        </div>
-      </section>
-    </>
+    ) : null;
+
+  return (
+    <BlogHubClient articles={articles} resourcesNode={liveResourcesNode} />
   );
 }
