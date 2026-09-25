@@ -228,7 +228,7 @@ export default async function BlogPostPage({
                       </p>
                     ) : null}
 
-                    {section.body.map((bodyPara, pIdx) => (
+                    {(section.body || section.paragraphs || []).map((bodyPara, pIdx) => (
                       <p
                         key={pIdx}
                         className="text-base leading-relaxed text-slate-700 my-4"
@@ -267,19 +267,21 @@ export default async function BlogPostPage({
                 ) : null}
 
                 {/* Conclusion */}
-                <div className="my-10 rounded-3xl bg-slate-100/90 border border-slate-200/90 p-6 sm:p-8">
-                  <h3 className="text-lg sm:text-xl font-extrabold font-heading text-slate-900 mb-3 m-0">
-                    Final Takeaway for Parents
-                  </h3>
-                  {article.content.conclusion.map((c, i) => (
-                    <p
-                      key={i}
-                      className="text-sm sm:text-base leading-relaxed text-slate-700 my-2.5"
-                    >
-                      {c}
-                    </p>
-                  ))}
-                </div>
+                {article.content.conclusion && article.content.conclusion.length > 0 ? (
+                  <div className="my-10 rounded-3xl bg-slate-100/90 border border-slate-200/90 p-6 sm:p-8">
+                    <h3 className="text-lg sm:text-xl font-extrabold font-heading text-slate-900 mb-3 m-0">
+                      Final Takeaway for Parents
+                    </h3>
+                    {article.content.conclusion.map((c, i) => (
+                      <p
+                        key={i}
+                        className="text-sm sm:text-base leading-relaxed text-slate-700 my-2.5"
+                      >
+                        {c}
+                      </p>
+                    ))}
+                  </div>
+                ) : null}
 
                 {/* Tags */}
                 {article.tags.length > 0 ? (
@@ -360,10 +362,10 @@ export default async function BlogPostPage({
                   </p>
 
                   <Link
-                    href="/schools"
+                    href="/blog/pexcover-book-covering-guide"
                     className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-pex-coral hover:text-pex-coral-hover transition-colors no-underline"
                   >
-                    <span>Browse school packs with Pexcover</span>
+                    <span>Read why schools mandate Pexcover</span>
                     <ArrowRight className="size-3.5" />
                   </Link>
                 </div>

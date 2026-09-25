@@ -65,13 +65,13 @@ export function BlogHubClient({ articles, resourcesNode }: BlogHubClientProps) {
       {/* ── HERO SECTION (MATCHES APP PAGEHERO EXACT DESIGN SPECIFICATION) ── */}
       <PageHero
         eyebrow="Parent & Learner Hub"
-        title="Free school guides +"
-        text="Give parents a clearer way to navigate school stationery rulings, academic phase transitions, and back-to-school preparation without the January rush."
+        title="School stationery guides +"
+        text="Clear ruling breakdowns, teacher-verified stationery checklists, and practical guidance to help South African parents prepare for the school year without the January rush."
         panelChildren={
           <div className="flex flex-col justify-between h-full">
             <div>
               <p className="m-0 mb-2 text-slate-600 text-sm font-semibold leading-relaxed">
-                School stationery rulings, transition checklists & budget tips
+                Official rulings, transition checklists & Pexcover guides
               </p>
               <strong className="block text-pex-navy text-2xl sm:text-3xl font-semibold leading-tight tracking-tight mb-4">
                 What parents get
@@ -83,7 +83,7 @@ export function BlogHubClient({ articles, resourcesNode }: BlogHubClientProps) {
               <input
                 type="search"
                 aria-label="Search articles by title, subject, or keyword"
-                placeholder="Search guides, subjects, checklists..."
+                placeholder="Search by grade, subject, checklist or keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-11 pl-10 pr-9 rounded-xl bg-pex-bg-soft border border-pex-border text-pex-navy placeholder:text-pex-muted text-sm font-medium outline-none transition-all duration-150 focus:border-pex-keppel focus:bg-white focus:ring-2 focus:ring-pex-keppel/20"
@@ -120,14 +120,14 @@ export function BlogHubClient({ articles, resourcesNode }: BlogHubClientProps) {
         </div>
       </PageHero>
 
-      {/* ── STICKY CATEGORY FILTER BAR ── */}
+      {/* ── STICKY CATEGORY FILTER BAR (MATCHES REFERENCE IMAGE BUTTONS UI) ── */}
       <nav
         aria-label="Article categories"
         className="sticky top-16 z-20 bg-white/95 backdrop-blur-md border-b border-pex-border shadow-xs"
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-0.5">
+            <div className="flex items-center gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-1">
               {BLOG_CATEGORIES.map((category) => {
                 const isActive = selectedCategory === category;
                 return (
@@ -135,15 +135,12 @@ export function BlogHubClient({ articles, resourcesNode }: BlogHubClientProps) {
                     key={category}
                     type="button"
                     onClick={() => setSelectedCategory(category)}
-                    className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer select-none ${
+                    className={`shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold transition-all duration-150 cursor-pointer select-none ${
                       isActive
-                        ? "bg-pex-navy text-white shadow-xs"
-                        : "bg-pex-bg-soft text-pex-navy hover:bg-pex-bg-mint hover:text-pex-keppel-dark"
+                        ? "bg-pex-navy text-white shadow-sm border border-pex-navy"
+                        : "bg-white text-slate-800 border border-slate-200/90 shadow-2xs hover:bg-slate-50 hover:border-slate-300"
                     }`}
                   >
-                    {category === "Free Printables" ? (
-                      <FileDown className="size-3.5 text-pex-coral" />
-                    ) : null}
                     <span>{category}</span>
                   </button>
                 );

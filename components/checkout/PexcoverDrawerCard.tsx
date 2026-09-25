@@ -2,6 +2,7 @@
 
 import React, { useCallback, useId, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Check, Sparkles, Shield } from "lucide-react";
 import {
@@ -363,8 +364,20 @@ export function PexcoverDrawerCard({
                 <Sparkles size={11} strokeWidth={2.5} />
                 Decorative Paper Style
               </span>
-              <span className="text-[10.5px] text-slate-500 flex items-center gap-1">
-                <Shield size={11} /> Clear sleeve included
+              <span className="text-[10.5px] text-slate-500 flex items-center gap-1.5">
+                <span className="flex items-center gap-1">
+                  <Shield size={11} /> Clear sleeve included
+                </span>
+                <span>•</span>
+                <Link
+                  href="/blog/pexcover-book-covering-guide"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pex-keppel font-bold hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Guide
+                </Link>
               </span>
             </div>
 

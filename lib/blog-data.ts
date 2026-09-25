@@ -28,7 +28,8 @@ export type BlogArticle = {
     | "Foundation Phase (Gr R-3)"
     | "Intermediate & Senior (Gr 4-9)"
     | "High School & STEM"
-    | "Free Printables";
+    | "Free Printables"
+    | "Study Hacks";
   phase: string;
   readTime: string;
   date: string;
@@ -42,25 +43,25 @@ export type BlogArticle = {
     sections: {
       heading: string;
       subheading?: string;
-      body: string[];
+      body?: string[];
+      paragraphs?: string[];
       callout?: {
         title: string;
         text: string;
         type?: "info" | "warning" | "tip";
       };
     }[];
-    conclusion: string[];
+    conclusion?: string[];
   };
 };
 
 export const BLOG_CATEGORIES = [
   "All Resources",
-  "Parent Guides",
-  "Stationery & Prep Guides",
-  "Foundation Phase (Gr R-3)",
-  "Intermediate & Senior (Gr 4-9)",
-  "High School & STEM",
   "Free Printables",
+  "Parent Guides",
+  "Study Hacks",
+  "Stationery & Prep Guides",
+  "High School & STEM",
 ] as const;
 
 export type BlogCategoryFilter = (typeof BLOG_CATEGORIES)[number];
@@ -85,6 +86,7 @@ export const blogArticles: BlogArticle[] = [
       "Exercise Books",
       "Stationery Checklist",
       "Parent Tips",
+      "Free Printables",
     ],
     author: {
       name: "Mcebisi Mhayise",
@@ -95,6 +97,8 @@ export const blogArticles: BlogArticle[] = [
       subtitle: "Official Pexpacks Back-to-School Readiness & Ruling Guide",
       description:
         "Tick off the required exercise books, specialized ruling formats, and daily pencil-case essentials before the first day of school.",
+      schoolTip:
+        "South African CAPS teachers inspect book rulings during the first week. Ensure all Feint & Margin books have ruled margins and clear protective covering.",
       categories: [
         {
           category: "Exercise Books & Rulings (The Big Shift)",
@@ -107,36 +111,34 @@ export const blogArticles: BlogArticle[] = [
           ],
         },
         {
-          category: "Daily Pencil-Case Essentials",
+          category: "Pencil Case Essentials (Term 1 & 2 Focus)",
           items: [
-            "4x HB Woodcase Graphite Pencils (Staedtler Tradition or Faber-Castell 1111 recommended)",
-            "1x 30cm Clear Shatterproof Ruler (must have clear millimetre and centimetre graduations)",
-            "2x Large PVC-free Dust-Free Erasers (gentle on thin 60gsm school exercise paper)",
-            "1x Metal Double-Hole Pencil Sharpener with integrated shavings canister",
-            "4x 43g Jumbo Glue Sticks (Pritt or Bostik — avoid watery liquid glues)",
-            "1x 13cm Rounded Blunt-Nosed Safety Scissors (choose left-handed if applicable)",
-            "2x Blue Medium Ballpoint Pens (keep safe until the school grants the Pen Licence in Term 2/3)",
+            "4x Good Quality HB Graphite Pencils (Staedtler Tradition or Faber-Castell recommended)",
+            "1x 30cm Shatterproof Ruler (clear plastic with millimetre calibration flush to edge)",
+            "2x Large Dust-Free White Vinyl Erasers",
+            "1x Metal Double-Hole Canister Pencil Sharpener (prevents shavings inside school desk)",
+            "2x 40g Glue Sticks (Bostik or Pritt solvent-free formula)",
+            "1x 13cm Rounded-Tip Safety Scissors (left-handed if applicable)",
+            "1x 12-Pack Full-Length Triangular Colouring Pencils (resists desk-drop breakage)",
           ],
         },
         {
-          category: "Creative & Visual Work",
+          category: "Measurement, Art & Craft Supplies",
           items: [
-            "1x 12 or 24-Pack Full-Length Woodcase Colouring Pencils (pre-sharpened)",
-            "1x 4-Pack Slim Neon Highlighters (Yellow, Green, Pink, Blue for summary notes)",
-            "1x Sturdy Double-Compartment Pencil Case (keeps writing tools separated from crayons)",
+            "1x 180-Degree Transparent Mathematical Protractor (for introductory angle lessons in Term 2)",
+            "1x Set of 4 Chisel-Tip Pastel Highlighters (Yellow, Green, Blue, Pink for text comprehension)",
+            "1x 30cm Canvas Pencil Case (barrel pouches cannot fit a 30cm ruler without snapping)",
           ],
         },
         {
-          category: "Book Protection & Organisation",
+          category: "Organisation, Protection & Labelling",
           items: [
-            "Heavy-Duty 80-Micron Clear Plastic Book Covers or Pexcover Pre-Fit Sleeves",
-            "Printed Subject & Learner Name Labels with school coat of arms or subject titles",
-            "1x Sturdy A5 Daily School Homework Diary",
+            "Pre-cut Heavy-Duty 80-Micron Clear Book Covers (or Pexcover pre-covering)",
+            "Pack of 30 Self-Adhesive Printed Subject Labels (Learner Name, Grade 4, Subject)",
+            "A5 Homework Diary / School Communication Book",
           ],
         },
       ],
-      schoolTip:
-        "Pro-Tip: Most South African primary schools do not allow pencil cases with fidget poppers or metal tins that clatter on wooden desks. Opt for quiet dual-zip canvas pouches.",
     },
     content: {
       intro: [
@@ -147,22 +149,21 @@ export const blogArticles: BlogArticle[] = [
       sections: [
         {
           heading: "1. The Great Ruling Shift: Why 17mm Disappears",
-          subheading: "Say goodbye to wide lines and Irish ruling",
-          body: [
-            "The single biggest stationery surprise for Grade 4 parents is the ruling of the exercise books. In Foundation Phase, children write in 17mm ruling (very wide spaces with guide dashes to teach letter formation) or Irish & Margin.",
-            "In Grade 4, schools switch universally to 8.5mm Feint & Margin. The lines are halved in height. Children with developing fine-motor control can feel overwhelmed trying to condense their cursive or print into half the vertical space.",
-            "Furthermore, subjects now require dedicated formats. Mathematics almost always requires a Quad & Margin book (small 5mm or 7mm squares for column addition and graphing), while Natural Sciences often asks for a Nature Study book (blank on the left for drawings and feint-ruled on the right for observations).",
+          subheading: "SAY GOODBYE TO WIDE LINES AND IRISH RULING",
+          paragraphs: [
+            "The single biggest point of confusion on a Grade 4 stationery list is book ruling. In Grades 1 to 3, children write in exercise books ruled with 17mm line spacing—sometimes with intermediate guidelines (Irish ruling) to assist with lowercase ascenders and descenders.",
+            "In Grade 4, Foundation Phase ruling is retired. Learners transition overnight to standard 8.5mm Feint & Margin (F&M). Writing on lines half the size requires fine motor discipline and spatial control.",
+            "Buying the wrong ruling is the #1 mistake parents make in January. If you buy 17mm books, teachers will return them unopened on day two.",
           ],
           callout: {
-            title: "Crucial Stationery Warning",
-            text: "Never buy 'Irish Ruling' for Grade 4 unless specifically requested. Irish ruling is 8.5mm feint lines with a vertical line dividing the page into two columns, which confuses Intermediate Phase paragraph writing.",
-            type: "warning",
+            title: "Crucial Rule of Thumb for South African Schools",
+            text: "Unless your school's official list specifically specifies otherwise, all standard exercise books for Grade 4 must be A4 72-page Feint & Margin (F&M) with a printed red vertical margin line.",
           },
         },
         {
           heading: "2. The Pen Licence Myth vs. Reality",
-          subheading: "Do they write with pens in Grade 4?",
-          body: [
+          subheading: "DO THEY WRITE WITH PENS IN GRADE 4?",
+          paragraphs: [
             "A frequent question from parents is: 'Can my child finally write with blue ballpoint pens?'",
             "In South African CAPS curricula, almost all schools require Grade 4 learners to begin Term 1 strictly in pencil. Teachers use the first two terms to ensure handwriting is legible, properly sized, and disciplined within the new 8.5mm lines.",
             "Only when a child consistently demonstrates neat cursive handwriting and minimal mistakes do teachers award the coveted 'Pen Licence'. Buying expensive gel pens or erasable rollerballs in January is usually wasted money—stick to quality HB graphite pencils until the teacher's formal notice.",
@@ -170,37 +171,210 @@ export const blogArticles: BlogArticle[] = [
           callout: {
             title: "What Teachers Recommend",
             text: "Provide your child with Staedtler Tradition 110 or Faber-Castell 1111 HB pencils. Cheaper unbranded pencils often contain brittle lead that breaks internally every time the pencil drops.",
-            type: "tip",
           },
         },
         {
           heading: "3. Multiple Teachers Means Everything Must Be Labelled",
-          subheading: "The end of the communal Foundation Phase crate",
-          body: [
+          subheading: "THE END OF THE COMMUNAL FOUNDATION PHASE CRATE",
+          paragraphs: [
             "In Grade R through Grade 3, stationery is often pooled in communal table caddies or stored in the child's single classroom cubby.",
             "In Grade 4, learners move between classes for English, Afrikaans or isiZulu, Mathematics, Life Skills, and Natural Sciences & Technology. Books travel in heavy backpacks and get mixed up in different venues.",
             "If an exercise book or ruler does not have a clean, visible, and protected label with the learner's name, surname, and subject, it invariably disappears into the lost-and-found by week two.",
-            "This is why pre-covered books with durable clear plastic (such as Pexpacks' Pexcover service) make such an impact: the subject and learner name are permanently secured under 80-micron film.",
           ],
         },
         {
-          heading: "4. The 30cm Ruler and Maths Geometry Preparation",
-          subheading: "Precision matters in Intermediate Phase",
-          body: [
-            "Foundation Phase children frequently use 15cm mini rulers. In Grade 4, a standard 30cm clear shatterproof ruler is non-negotiable. Children must draw neat margins on every single page of their feint-ruled books if the book does not have pre-printed margins.",
-            "Look for rulers where the centimetre and millimetre numbers start flush with the edge of the plastic, rather than indented. This prevents measurement errors during early geometry and perimeter lessons.",
+          heading: "4. The 30cm Ruler Dilemma",
+          subheading: "WHY BARREL PENCIL CASES CAUSE BROKEN RULERS",
+          paragraphs: [
+            "Grade 4 Mathematics introduces basic geometry, perimeters, and data handling. A sturdy 30cm shatterproof ruler is used in every single lesson.",
+            "Unfortunately, trendy cylinder or barrel pencil cases are only 20cm to 22cm long. Learners force their 30cm ruler in diagonally, snapping the ruler or tearing the zipper within the first fortnight.",
+            "Choose a flat 33cm wide pencil case or a double-zip pouch designed to comfortably house a full-length ruler alongside pens, glue, and scissors.",
           ],
         },
       ],
       conclusion: [
-        "The transition to Grade 4 is a milestone moment in your child's schooling journey. It is the bridge between early childhood and independent scholarship.",
-        "Having the exact exercise book rulings, sharp HB pencils, reliable glue sticks, and neatly covered books removes classroom anxiety and lets your learner focus on what truly matters: discovering new subjects with confidence.",
-        "Print out our free Grade 4 Readiness Checklist below, or simply order your school's tailored pack directly through Pexpacks to have every single item verified by teachers delivered to your door.",
+        "The leap into Grade 4 is a proud milestone for both parents and learners. With the right stationery foundations and pre-labelled books, your child will enter their new classroom confident, equipped, and excited for the journey ahead.",
       ],
     },
   },
   {
-    id: "smart-budget-formula-january-rush",
+    id: "pexcover-book-covering-guide",
+    slug: "pexcover-book-covering-guide",
+    title:
+      "The Parent's Guide to Book Covering: Why Schools Require It & How Pexcover Solves It",
+    description:
+      "Avoid midnight contact plastic bubbles, sticky tape disasters, and peeling corners. Discover why South African schools mandate covered books and how Pexcover pre-covers books in 80-micron protection before delivery.",
+    category: "Parent Guides",
+    phase: "All Grades (Gr R–12)",
+    readTime: "5 min read",
+    date: "2026-09-26",
+    image: "/images/blog/pexcover-guide.jpg",
+    author: {
+      name: "Mcebisi Mhayise",
+      role: "Primary Education & Stationery Specialist",
+    },
+    tags: [
+      "Pexcover",
+      "Book Covering",
+      "Stationery Lists",
+      "Parent Tips",
+      "Back to School",
+    ],
+    hasPrintable: false,
+    content: {
+      intro: [
+        "Every January across South Africa, a familiar collective groan echoes through family living rooms: the dreaded book covering marathon.",
+        "Equipped with rolls of sticky contact plastic, scissors that never seem sharp enough, and sellotape that splits in all the wrong places, parents spend hours trying to smooth out air bubbles on 20 or more exercise books. By midnight, fingers are sticky, corners are wrinkled, and patience has worn thin.",
+        "Why do schools insist on covered exercise books, and how can parents completely eliminate this chore while still giving their children classroom-ready books on day one?",
+      ],
+      sections: [
+        {
+          heading: "1. Why Schools Insist On Covered Exercise Books",
+          subheading: "PROTECTING CURRICULUM WORK OVER FOUR FULL TERMS",
+          paragraphs: [
+            "In both public CAPS and private IEB schools, exercise books are not just notepads—they are continuous portfolios of evidence for assessment. An exercise book must withstand being crammed into heavy backpacks, pulled in and out of desks multiple times a day, and survive rainy commutes for up to ten months.",
+            "Without protective covering, cardboard covers quickly fray, moisture warps pages, and staples loosen. When books are neatly covered and named, teachers can immediately identify each learner's book on their marking pile and children take greater pride in keeping their schoolwork neat.",
+          ],
+        },
+        {
+          heading: "2. The Hidden Cost of DIY Contact Plastic",
+          subheading: "AIR BUBBLES, TIME LOST, AND EXPENSIVE RE-ROLLS",
+          paragraphs: [
+            "Cheap rolls of adhesive plastic often stretch unevenly, creating permanent wrinkles across the cover. Even worse, if you make a mistake on an expensive hardcover book, peeling off the plastic can tear the paper beneath.",
+            "By the time parents purchase four or five rolls of contact paper, heavy brown kraft paper, sellotape dispensers, and personalized name stickers, they have spent significant money—plus an entire evening of frustrating labor.",
+          ],
+          callout: {
+            title: "What South African Teachers Say",
+            text: "Teachers strongly prefer books covered with a sturdy inner paper (such as heavy brown kraft or vibrant paper) sealed under a clear protective sleeve. This prevents ink bleed-through from front covers and ensures labels remain legible all year.",
+          },
+        },
+        {
+          heading: "3. How Pexcover Works: Professional Pre-Covering",
+          subheading: "DONE-FOR-YOU PROTECTION DELIVERED TO YOUR DOOR",
+          paragraphs: [
+            "Pexpacks created Pexcover specifically to solve this back-to-school headache. When ordering a verified stationery pack, parents can simply toggle the Pexcover option for their coverable exercise books.",
+            "Each book is wrapped in heavy-duty 80-micron clear protective film with the learner's choice of paper style: classic Standard Kraft, Marbled & Print, or Solid Vibrant Colors. Every book is neatly fitted with custom printed labels displaying the learner's full name, grade, and subject.",
+          ],
+        },
+        {
+          heading: "4. How to Add Pexcover to Your Pack",
+          subheading: "ONE-CLICK TOGGLE DURING CHECKOUT",
+          paragraphs: [
+            "When viewing your school pack in your order tray or uploading your stationery list, look for the 'Pexcover Done-For-You' card. Check the box, pick your preferred paper style, and your entire pack arrives pre-covered, labelled, and ready for school on day one.",
+            "No scissors, no air bubbles, no midnight stress.",
+          ],
+        },
+      ],
+      conclusion: [
+        "Book covering doesn't have to be a stressful January ritual. With Pexcover, your child receives perfectly protected, teacher-compliant exercise books that stay pristine from Term 1 through final exams.",
+      ],
+    },
+  },
+  {
+    id: "high-school-study-hacks-cornell-notes-revision-guide",
+    slug: "high-school-study-hacks-cornell-notes-revision-guide",
+    title:
+      "High School Study Hacks: The Cornell Note Method, Quad Books & Active Recall for Top Marks",
+    description:
+      "Transform how you revise for Grade 8 through Matric exams. Master the Cornell note-taking technique, learn why quad exercise books beat lined pages for STEM, and use our free printable revision timetable.",
+    category: "Study Hacks",
+    phase: "Senior & FET Phase (Grades 8–12)",
+    readTime: "6 min read",
+    date: "2026-09-27",
+    image: "/images/blog/study-hacks.jpg",
+    author: {
+      name: "Nomsa Dlamini",
+      role: "Consumer Finance & Academic Strategy",
+    },
+    tags: [
+      "Study Hacks",
+      "High School",
+      "Exams",
+      "Note Taking",
+      "Matric",
+      "Free Printables",
+    ],
+    hasPrintable: true,
+    printableChecklist: {
+      title: "High School Weekly Revision & Study Planner",
+      subtitle: "Official Pexpacks Study Schedule & Exam Readiness Framework",
+      description:
+        "Daily active recall schedule, high-yield revision habits, and mandatory STEM stationery tools for Grade 8 through Matric learners.",
+      schoolTip:
+        "Consistent 20-minute daily review sessions beat all-night cramming. Keep revision notes strictly separated by subject flip files.",
+      categories: [
+        {
+          category: "Daily Active Recall Habits",
+          items: [
+            "Summarize each lesson into Cornell note summary block within 24 hours",
+            "Generate 3 flashcards or practice questions per major textbook chapter",
+            "Review previous week's science formulas and math theorems using blurting method",
+            "Highlight core concepts using 3-tier color coding (terms, definitions, examples)",
+          ],
+        },
+        {
+          category: "Stationery Tools That Boost Revision",
+          items: [
+            "Quad grid exercise books (5mm/10mm) for all mathematics and accounting workings",
+            "Pastel highlighters (avoid dark neon that bleeds through 70gsm paper)",
+            "0.5mm or 0.7mm gel pens for high-speed legible exam writing",
+            "Clear document wallet / flip file for past examination papers and memos",
+            "Casio scientific calculator with fresh backup batteries",
+          ],
+        },
+        {
+          category: "Exam Week Final Countdown",
+          items: [
+            "Complete 2 full past exam papers under strict timed examination conditions",
+            "Mark against official DBE / IEB memorandums in contrasting red or green ink",
+            "Compile formula cheat sheet for final 30-minute pre-exam memory consolidation",
+            "Prepare clear exam pencil case (transparent pouch mandatory for exam venues)",
+          ],
+        },
+      ],
+    },
+    content: {
+      intro: [
+        "Stepping into Grade 8 or preparing for Matric brings an overwhelming volume of content across seven subjects. Passive studying—re-reading textbooks or highlighting whole pages in neon yellow—is proven to be the least effective way to retain information.",
+        "Top-performing learners rely on proven cognitive study techniques and specific stationery setups that turn revision into an active, high-yield habit. Here is how to upgrade your study system this term.",
+      ],
+      sections: [
+        {
+          heading: "1. The Cornell Note-Taking System",
+          subheading: "DIVIDE YOUR PAGE TO MULTIPLY YOUR RETENTION",
+          paragraphs: [
+            "Developed at Cornell University, this method divides an A4 feint-ruled page into three distinct sections: a narrow left margin (the Cue Column), a wide right section (the Notes Area), and a 5cm block at the bottom (the Summary).",
+            "During class, record key explanations in the Notes Area. Within 24 hours, write recall prompts and questions in the Cue Column. Finally, synthesize the entire page in two sentences at the bottom. When test week arrives, cover the notes and quiz yourself using only the cues.",
+          ],
+          callout: {
+            title: "Why Color Coding Matters",
+            text: "Adopt a strict 3-color highlighter convention: Yellow for core vocabulary, Orange for laws, theorems and formulas, and Green for real-world case examples. Keeping colors consistent across all subjects speeds up visual recall during exams.",
+          },
+        },
+        {
+          heading: "2. Why Quad Grid Books Beat Lined Pages for STEM",
+          subheading: "MATHEMATICS, PHYSICAL SCIENCES & ACCOUNTING ACCURACY",
+          paragraphs: [
+            "Feint-ruled lines are designed for text, but they fail when drawing graphs, balancing chemical equations, or aligning accounting ledgers. Quad grid exercise books (either 5mm or 10mm grid) provide structural alignment.",
+            "Learners who use quad books make significantly fewer transcription errors in trigonometry and algebra because numbers, exponents, and fraction bars stay strictly aligned.",
+          ],
+        },
+        {
+          heading: "3. Spaced Repetition & The 20-Minute Review",
+          subheading: "CONQUERING THE FORGETTING CURVE",
+          paragraphs: [
+            "German psychologist Hermann Ebbinghaus discovered that within 48 hours of learning new material, the human brain forgets up to 75% of it unless actively reviewed. A quick 15-to-20 minute review session at the end of each study day resets this curve to 100%.",
+            "Use our printable revision checklist below to track your daily active recall and organize your study sessions systematically.",
+          ],
+        },
+      ],
+      conclusion: [
+        "High school academic success is not about working 14 hours a day—it is about working systematically with the right note-taking structure and stationery tools.",
+      ],
+    },
+  },
+  {
+    id: "how-to-avoid-january-rush-markups-smart-budget-formula",
     slug: "how-to-avoid-january-rush-markups-smart-budget-formula",
     title:
       "How to Avoid January Rush Markups: The Smart Parent's Budget Formula",
@@ -212,161 +386,146 @@ export const blogArticles: BlogArticle[] = [
     date: "2026-09-20",
     hasPrintable: false,
     image: "/images/blog/smart-budget.jpg",
-    tags: ["Budgeting", "School Savings", "Lay-By", "Smart Shopping"],
+    tags: [
+      "Budgeting",
+      "Back to School",
+      "Stationery Costs",
+      "Money Saving",
+      "Parent Tips",
+    ],
     author: {
       name: "Nomsa Dlamini",
       role: "Consumer Finance & Family Budgeting",
     },
     content: {
       intro: [
-        "Every January, South African retail malls witness the same high-stress spectacle: frantic parents wandering aisles with crumpled school stationery lists, fighting over the last pair of left-handed scissors, and discovering that prices have quietly spiked.",
-        "Stationery supply chains follow predictable pricing seasons. Understanding the pricing cycle and using smarter purchasing formulas can easily save a household R800 to R1,800 per learner.",
+        "Every year, South African families spend between R1,200 and R4,500 per learner on back-to-school stationery, workbooks, and uniform essentials.",
+        "Retail pricing data reveals a stark reality: walk-in department store prices on essential stationery items spike significantly during the frantic two weeks before Term 1 commences.",
       ],
       sections: [
         {
-          heading: "1. The 28% 'Convenience Tax' in Mid-January",
-          body: [
-            "Independent retail surveys across Gauteng and the Western Cape show that back-to-school items purchased as loose single units between January 5th and January 20th cost between 18% and 28% more than when purchased in pre-packed bundles during October or November.",
-            "Retailers capitalize on scarcity. When a specific workbook or Casio scientific calculator sells out, parents have no choice but to pay premium shelf rates or drive across town to multiple stores.",
+          heading: "1. The Convenience Penalty at Mall Shelves",
+          subheading: "WHAT HAPPENS IN JANUARY RETAIL",
+          paragraphs: [
+            "When parents shop in early January, stockouts on popular brands (Pritt, Bic, Staedtler, Croxley) force them to buy premium multipacks or inferior knockoffs that don't last.",
+            "Retailers rarely run genuine promotions during peak rush weeks. Buying your packs in October or November secures off-season bulk rates.",
           ],
         },
         {
-          heading: "2. The Lay-By & HappyPay Splitting Advantage",
-          body: [
-            "Instead of absorbing a massive financial hit right after the December festive season, savvy parents spread back-to-school costs across two or three pay cheques.",
-            "With Pexpacks' zero-interest lay-by and HappyPay 2-part payments, you lock in early-season bulk pricing in October/November, secure guaranteed stock, and pay comfortably before school gates open.",
-          ],
-          callout: {
-            title: "Budget Rule of Thumb",
-            text: "Never use high-interest credit cards for disposable stationery. Lay-by and BNPL splits with 0% interest protect your January cash flow without added debt.",
-            type: "tip",
-          },
-        },
-        {
-          heading: "3. The False Economy of Cheap Glue and Thin Paper",
-          body: [
-            "Saving R5 on a generic 35g glue stick seems smart until it dries out by the third week of February. A learner ends up needing 8 cheap glue sticks across the year instead of 4 quality 43g Pritt sticks.",
-            "Similarly, budget 48gsm exercise books allow ink bleed-through, ruining reverse pages and forcing teachers to ask for replacement books by Term 2. Stick to verified 60gsm paper and approved South African educational brands.",
+          heading: "2. The 'Buy Once, Buy Right' Quality Principle",
+          subheading: "CHEAP STATIONERY ALWAYS COSTS DOUBLE",
+          paragraphs: [
+            "A budget 30cm ruler for R3 snaps when dropped, requiring three replacements over the term. A shatterproof ruler for R12 survives two full grades.",
+            "The same applies to glue sticks: low-cost PVA glue sticks dry out inside pencil cases within four weeks, whereas quality solvent-free formulas maintain adhesion all year.",
           ],
         },
       ],
       conclusion: [
-        "Beating the January rush is not just about saving money; it is about saving your peace of mind and starting the academic year calm and organised.",
-        "Search your school on Pexpacks to explore pre-negotiated package discounts and customisable item selections.",
+        "By planning ahead and ordering your teacher-verified pack early, you beat the markups, avoid mall queues, and start January stress-free.",
       ],
     },
   },
   {
-    id: "casio-calculator-high-school-guide",
+    id: "casio-fx-82za-plus-ii-vs-fx-991za-high-school-math-calculator-guide",
     slug: "casio-fx-82za-plus-ii-vs-fx-991za-high-school-math-calculator-guide",
     title:
       "Casio FX-82ZA Plus II vs FX-991ZA: High School Math Calculator Guide",
     description:
       "Which scientific calculator is DBE and IEB approved for Grade 8 through Matric? Demystifying natural textbook display, complex numbers, and exam rules.",
     category: "High School & STEM",
-    phase: "High School & STEM (Grades 8–12)",
+    phase: "Senior & FET Phase (Grades 8–12)",
     readTime: "7 min read",
     date: "2026-09-15",
     hasPrintable: false,
     image: "/images/blog/casio-calculator.jpg",
-    tags: ["High School", "Calculators", "STEM", "Matric", "Mathematics"],
+    tags: [
+      "Casio",
+      "Scientific Calculators",
+      "High School",
+      "Mathematics",
+      "Matric Exams",
+    ],
     author: {
-      name: "Dr. Kevin Naidoo",
-      role: "High School Mathematics & Physics Educator",
+      name: "David Ndlovu",
+      role: "High School STEM & Curriculum Specialist",
     },
     content: {
       intro: [
-        "In Grade 8, every South African high schooler meets a stationery item that will stay with them all the way to Matric finals: the scientific calculator.",
-        "Browse any school stationery requirements sheet and you will see two prominent models specified: the Casio FX-82ZA Plus II and the Casio FX-991ZA Plus II. But what is the actual difference, which one does your child need, and which one is strictly permitted in final examinations?",
+        "In Grade 8, simple four-function calculators are no longer permitted. High school mathematics requires a scientific calculator that will accompany learners through to their final Matric examinations.",
+        "In South Africa, the Casio FX-82ZA Plus II and FX-991ZA Plus II dominate the classroom. Here is how to choose the right model for your child's subject choices.",
       ],
       sections: [
         {
-          heading: "1. Casio FX-82ZA Plus II: The Universal Standard (Grades 8–12)",
-          body: [
-            "Developed specifically in collaboration with South African mathematics curriculum advisors, the FX-82ZA Plus II is the gold standard for Senior Phase (Grades 8–9) and FET Phase (Grades 10–12 Core Mathematics and Mathematical Literacy).",
-            "It features Natural Textbook Display (fractions look like real fractions with a numerator over a denominator, not weird slashes), prime factorisation, quotient remainder calculation, and statistics with standard deviation.",
-            "Most importantly: It is 100% permitted in all DBE (Department of Basic Education) and IEB examinations.",
+          heading: "1. Casio FX-82ZA Plus II: The Universal Standard",
+          subheading: "THE DEFAULT FOR CORE MATHS & MATHS LITERACY",
+          paragraphs: [
+            "Developed specifically for the South African CAPS curriculum, the FX-82ZA Plus II features 283 built-in functions, natural textbook display, and quotient remainder division.",
+            "It is 100% compliant with DBE and IEB examination regulations for both Core Mathematics and Mathematical Literacy from Grade 8 through 12.",
           ],
         },
         {
-          heading: "2. Casio FX-991ZA Plus II: The Advanced STEM Powerhouse",
-          body: [
-            "The FX-991ZA Plus II features over 417 mathematical functions, including matrix and vector calculations, numerical integration, differential calculus, complex numbers, and equation solvers.",
-            "Who needs it? It is specifically designed for learners taking Advanced Programme Mathematics (AP Maths), Technical Mathematics, or university-bound STEM subjects.",
-            "Important note: Because the FX-991ZA contains equation-solving capabilities, some individual high schools prohibit it for Grade 8 and 9 standard algebra tests to ensure pupils learn basic manual factorization first.",
-          ],
-          callout: {
-            title: "Exam Regulation Advice",
-            text: "Unless your school's official stationery list explicitly asks for the FX-991ZA, the FX-82ZA Plus II is the safest, teacher-preferred choice for Grades 8 through 11.",
-            type: "info",
-          },
-        },
-        {
-          heading: "3. Protecting Against Calculator Theft & Battery Life",
-          body: [
-            "Calculators look identical in a classroom of 30 learners. Permanent engraving or hot-iron initialling on the slide-on hard case and battery door is strongly advised.",
-            "Both models are powered by a standard AAA battery (FX-82ZA) or dual solar-battery (FX-991ZA), giving between two to three years of daily school usage without battery swaps.",
+          heading: "2. Casio FX-991ZA Plus II: When Is It Needed?",
+          subheading: "FOR ADVANCED PROGRAMME (AP) MATHS & ENGINEERING",
+          paragraphs: [
+            "The FX-991ZA Plus II boasts 433 functions, including matrix calculations, vector operations, and equation solvers. It is ideal for learners taking AP Mathematics or intending to study engineering or commerce at university.",
+            "Important: Some schools and examination boards restrict the FX-991ZA in standard Grade 10 exams due to its equation-solving features. Always check your school's specific calculator policy before purchasing.",
           ],
         },
       ],
       conclusion: [
-        "Investing in an authentic, SABS-compliant Casio scientific calculator sets your high schooler up for five years of mathematical confidence.",
-        "At Pexpacks, every calculator in our high school packs is 100% genuine stock sourced through official South African educational distributors.",
+        "For 90% of high school learners, the FX-82ZA Plus II is the gold standard that will last all five years of high school.",
       ],
     },
   },
   {
-    id: "foundation-phase-pencil-grip-crayons",
+    id: "foundation-phase-grip-triangular-pencils-retractable-crayons",
     slug: "foundation-phase-grip-triangular-pencils-retractable-crayons",
     title:
-      "The Foundation Phase Grip: Why Triangular Pencils and Wax Retractables Matter",
+      "Foundation Phase Pencil Grip: Triangular Pencils vs Retractable Crayons",
     description:
-      "Why occupational therapists and Grade 1 teachers insist on jumbo triangular pencils, twist crayons, and left-handed scissors for developing motor skills.",
-    category: "Foundation Phase (Gr R-3)",
+      "Why occupational therapists recommend jumbo triangular pencils for Grade R to 2, and why standard wax crayons cause hand fatigue during early handwriting development.",
+    category: "Parent Guides",
     phase: "Foundation Phase (Grades R–3)",
     readTime: "4 min read",
     date: "2026-09-10",
-    hasPrintable: true,
+    hasPrintable: false,
     image: "/images/blog/foundation-phase.jpg",
-    tags: [
-      "Grade 1",
-      "Grade R",
-      "Foundation Phase",
-      "Pencil Grip",
-      "Occupational Therapy",
-    ],
     author: {
-      name: "Sarah Van Der Merwe",
-      role: "Pediatric Occupational Therapist",
+      name: "Mcebisi Mhayise",
+      role: "Primary Education & Stationery Specialist",
     },
+    tags: [
+      "Foundation Phase",
+      "Grade R",
+      "Grade 1",
+      "Pencil Grip",
+      "Ergonomics",
+    ],
     content: {
       intro: [
-        "When parents look at a Grade 1 stationery list and see 'Jumbo Triangular HB Pencils' and 'Twist Retractable Crayons', it can be tempting to buy standard hexagonal pencils and traditional wax crayons from the supermarket.",
-        "However, occupational therapists and early childhood educators select these specific tools for crucial biomechanical reasons.",
+        "Early handwriting development is a critical Foundation Phase milestone. Children are developing pencil grip, finger strength, and wrist stability.",
+        "Choosing ergonomic stationery tools in Grade R, 1, and 2 makes a tremendous difference in preventing finger fatigue and fostering confident writing habits.",
       ],
       sections: [
         {
-          heading: "1. The Dynamic Tripod Grip",
-          body: [
-            "Children entering Grade R and Grade 1 are transitioning from a whole-hand palmar grasp to a refined dynamic tripod grip (thumb, index, and middle finger).",
-            "Round and hexagonal pencils roll easily and slip between small fingers with underdeveloped hand muscles. Triangular pencils have three flat surfaces that naturally position the thumb and forefinger without forcing an awkward claw grasp.",
+          heading: "1. The Ergonomic Advantage of Triangular Pencils",
+          subheading: "ENCOURAGING A NATURAL TRIPOD GRIP",
+          paragraphs: [
+            "Standard round or hexagonal pencils often slip between small fingers, leading to awkward fist or cross-thumb grips.",
+            "Jumbo triangular pencils provide three wide flat surfaces that naturally guide the thumb, index, and middle fingers into the correct mature tripod grasp.",
           ],
         },
         {
-          heading: "2. The Problem with Standard Paper-Wrapped Crayons",
-          body: [
-            "Traditional paper-wrapped crayons break with the slightest excessive pressure. When a 6-year-old snaps a crayon, it often leads to frustration or disengagement.",
-            "Retractable twist wax crayons protect the wax inside a durable plastic barrel. They do not break easily, do not melt onto sweaty hands, and eliminate the need for sharpening.",
+          heading: "2. Why Retractable Wax Crayons Win",
+          subheading: "NO PAPER PEELING, NO BREAKAGE",
+          paragraphs: [
+            "Traditional paper-wrapped wax crayons snap in half easily and require constant peeling that interrupts drawing lessons.",
+            "Retractable crayons house the wax in a durable plastic casing with a twist mechanism, keeping hands clean and ensuring every millimetre of crayon is used.",
           ],
-          callout: {
-            title: "Left-Handed Learners",
-            text: "Left-handed children must be provided with true left-handed scissors (where the top blade is reversed). Using right-handed scissors in the left hand bends the paper rather than cutting it.",
-            type: "warning",
-          },
         },
       ],
       conclusion: [
-        "By providing ergonomically appropriate tools in the Foundation Phase, we set children up for pain-free handwriting and a lifelong love of learning.",
+        "Equipping young learners with ergonomic triangular pencils builds confidence and proper handwriting mechanics from their very first day in school.",
       ],
     },
   },
