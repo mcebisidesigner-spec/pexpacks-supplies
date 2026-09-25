@@ -27,21 +27,28 @@ export function SubscribeForm() {
           message: `New blog newsletter subscription request for: ${email}`,
         }),
       });
-      const result = (await response.json()) as { success?: boolean; message?: string };
+      const result = (await response.json()) as {
+        success?: boolean;
+        message?: string;
+      };
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Something went wrong while subscribing.");
+        throw new Error(
+          result.message || "Something went wrong while subscribing.",
+        );
       }
       notify({
         tone: "success",
         title: "You are subscribed",
-        message: "Thanks - I will send useful school and stationery updates to your inbox.",
+        message:
+          "Thanks — I will send useful school and stationery updates to your inbox.",
       });
       setSubmitted(true);
     } catch {
       notify({
         tone: "error",
         title: "Subscription not sent",
-        message: "Please try again, or check the email address and your connection.",
+        message:
+          "Please try again, or check the email address and your connection.",
       });
     } finally {
       setLoading(false);
@@ -50,10 +57,14 @@ export function SubscribeForm() {
 
   if (submitted) {
     return (
-      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm max-w-xl mx-auto text-center">
-        <div className="text-center py-3">
-          <p className="text-emerald-600 font-extrabold text-lg m-0">
-            You&rsquo;re in! Check your inbox soon.
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-12 shadow-sm max-w-3xl mx-auto text-center">
+        <div className="py-4">
+          <h3 className="text-2xl font-extrabold font-heading text-pex-navy m-0 mb-2">
+            You&rsquo;re all set!
+          </h3>
+          <p className="text-slate-600 text-sm sm:text-base m-0">
+            Thank you for subscribing. We&rsquo;ll send fresh resources and restock
+            reminders straight to your inbox.
           </p>
         </div>
       </div>
@@ -61,14 +72,22 @@ export function SubscribeForm() {
   }
 
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm max-w-xl mx-auto text-center">
-      <h2 className="text-2xl sm:text-[28px] font-extrabold text-pex-navy m-0 mb-2.5">Stay Equipped</h2>
-      <p className="text-slate-600 text-sm sm:text-base leading-relaxed m-0 mb-7 max-w-[480px] mx-auto">
+    <div className="bg-white border border-slate-200/90 rounded-3xl p-8 sm:p-12 shadow-sm max-w-3xl mx-auto text-center">
+      <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-pex-navy m-0 mb-2">
+        Stay Equipped
+      </h2>
+      <p className="text-slate-600 text-sm sm:text-base leading-relaxed m-0 mb-8 max-w-lg mx-auto">
         Get fresh resources and restock reminders delivered to your inbox.
       </p>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end max-w-[520px] mx-auto">
-        <div className="flex-1 min-w-0 grid gap-1.5 text-left">
-          <label htmlFor="subscribe-email" className="text-xs sm:text-sm font-bold text-slate-700 leading-tight">Email address</label>
+
+      <form onSubmit={handleSubmit} className="max-w-xl mx-auto text-left">
+        <label
+          htmlFor="subscribe-email"
+          className="block text-xs sm:text-sm font-extrabold text-pex-navy mb-2"
+        >
+          Email address
+        </label>
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch">
           <input
             id="subscribe-email"
             type="email"
@@ -77,12 +96,17 @@ export function SubscribeForm() {
             placeholder="parent@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full h-11 rounded-xl border border-slate-300 bg-white px-3.5 text-[15px] text-slate-800 placeholder:text-slate-400 focus-visible:outline-none focus-visible:border-teal-600 focus-visible:ring-2 focus-visible:ring-teal-600/20 transition-all"
+            className="flex-1 h-12 sm:h-13 rounded-2xl border border-slate-300/80 bg-white px-4 text-sm sm:text-base text-pex-navy placeholder:text-slate-400 outline-none transition-all duration-150 focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/20 shadow-2xs"
           />
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={loading}
+            className="h-12 sm:h-13 px-8 rounded-2xl text-sm sm:text-base font-extrabold shadow-md shadow-pex-coral/25 cursor-pointer shrink-0"
+          >
+            {loading ? "Subscribing..." : "Subscribe"}
+          </Button>
         </div>
-        <Button type="submit" variant="primary" size="md" disabled={loading} className="w-full sm:w-auto shrink-0 min-h-[44px]">
-          {loading ? "Subscribing..." : "Subscribe"}
-        </Button>
       </form>
     </div>
   );

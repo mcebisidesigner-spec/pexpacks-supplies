@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { PageHero } from "@/components/marketing/PageHero";
 import { Button } from "@/components/ui/Button";
+import { SubscribeForm } from "@/app/blog/SubscribeForm";
 import {
   BLOG_CATEGORIES,
   type BlogArticle,
@@ -278,6 +279,11 @@ export function BlogHubClient({ articles, resourcesNode }: BlogHubClientProps) {
           </div>
         ) : null}
       </main>
+
+      {/* ── NEWSLETTER SUBSCRIPTION (STAY EQUIPPED) ── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20">
+        <SubscribeForm />
+      </section>
 
       {/* ── CONVERSION BANNER (APP BRAND SPECIFICATION) ── */}
       <section className="bg-pex-navy text-white py-14 lg:py-16 border-t border-pex-navy">
