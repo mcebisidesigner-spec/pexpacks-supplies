@@ -8,7 +8,6 @@ import {
   BookOpen,
   Calendar,
   CheckCircle2,
-  ChevronRight,
   Clock,
   FileDown,
   Info,
@@ -108,45 +107,6 @@ export default async function BlogPostPage({
       <JsonLd data={breadcrumbSchema(breadcrumbs)} />
 
       <div className="min-h-screen bg-pex-body-bg print:bg-white">
-        {/* ── BREADCRUMBS ── */}
-        <nav
-          aria-label="Breadcrumbs"
-          className="border-b border-pex-border bg-white print:hidden"
-        >
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3.5">
-            <ol className="flex items-center gap-1.5 text-xs text-pex-muted overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden m-0 p-0 list-none">
-              <li>
-                <Link
-                  href="/"
-                  className="hover:text-pex-navy transition-colors no-underline font-medium text-pex-muted"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <ChevronRight className="size-3.5 text-slate-400 shrink-0" />
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="hover:text-pex-navy transition-colors no-underline font-medium text-pex-muted"
-                >
-                  Resources
-                </Link>
-              </li>
-              <li>
-                <ChevronRight className="size-3.5 text-slate-400 shrink-0" />
-              </li>
-              <li
-                className="font-bold text-pex-navy truncate max-w-[200px] sm:max-w-xs md:max-w-md"
-                aria-current="page"
-              >
-                {article.title}
-              </li>
-            </ol>
-          </div>
-        </nav>
-
         {/* ── ARTICLE HEADER ── */}
         <header className="bg-pex-navy text-white pt-10 pb-14 sm:pt-14 sm:pb-16 print:bg-white print:text-black print:p-0 print:border-b-2 print:border-black">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
