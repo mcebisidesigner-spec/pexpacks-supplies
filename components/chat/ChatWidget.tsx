@@ -41,7 +41,7 @@ type ChatMessage =
   | { id: string; role: "user"; text: string; pending?: boolean }
   | { id: string; role: "assistant"; response: PexChatResponse };
 
-function starterLinksForPath(pathname: string | null) {
+type ChatCardAction = {`r`n  label: string;`r`n  url: string;`r`n  href?: string;`r`n};`r`n`r`ntype ChatCard = {`r`n  id?: string;`r`n  title: string;`r`n  badge?: string;`r`n  price?: string;`r`n  description: string;`r`n  actions?: ChatCardAction[];`r`n};`r`n`r`nfunction starterLinksForPath(pathname: string | null) {
   if (pathname?.startsWith("/checkout")) {
     return [
       {
@@ -462,7 +462,7 @@ export function ChatWidget() {
                       {/* Structured Response Cards */}
                       {message.response.cards && message.response.cards.length > 0 && (
                         <div className="mt-2 flex flex-col gap-1.5">
-                          {message.response.cards.map((card: any, idx: number) => (
+                          {message.response.cards.map((card: ChatCard, idx: number) => (
                             <div key={card.id || `card-${idx}`} className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 shadow-2xs">
                               <div className="flex items-center justify-between gap-2">
                                 <h4 className="m-0 text-xs font-bold text-ink">{card.title}</h4>
@@ -478,7 +478,7 @@ export function ChatWidget() {
                               <p className="mt-1 text-xs text-slate-600 m-0">{card.description}</p>
                               {card.actions && card.actions.length > 0 && (
                                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
-                                  {card.actions.map((act: any, i: number) => (
+                                  {card.actions.map((act: ChatCardAction, i: number) => (
                                     <Link
                                       key={i}
                                       href={act.url || act.href}
