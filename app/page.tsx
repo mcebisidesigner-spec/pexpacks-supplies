@@ -66,11 +66,8 @@ export default async function HomePage() {
               <span>{heroEyebrow}</span>
             </div>
 
-            <h1 className="m-0 text-white font-heading text-[clamp(38px,12vw,46px)] sm:text-[clamp(44px,8vw,56px)] lg:text-[clamp(48px,5.4vw,74px)] font-extrabold leading-[1.04] lg:leading-[0.98] tracking-tight text-balance">
-              Stationery sorted.{" "}
-              <span className="block mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-white/95 to-slate-200">
-                Time saved.
-              </span>
+            <h1 className="m-0 max-w-[12ch] text-white font-heading text-[clamp(42px,12vw,54px)] sm:text-[clamp(50px,8vw,68px)] lg:max-w-[11ch] lg:text-[clamp(58px,5.2vw,76px)] font-extrabold leading-[0.98] tracking-normal text-balance">
+              Stationery sorted. Time saved.
             </h1>
 
             <p className="max-w-[530px] my-5 mb-7 text-white/85 text-[clamp(15px,4vw,16.5px)] lg:text-[clamp(16px,1.8vw,18px)] leading-[1.6]">
