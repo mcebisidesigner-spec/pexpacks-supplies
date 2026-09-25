@@ -223,7 +223,7 @@ export function UnboxingSection() {
               <div className="relative w-full aspect-[16/9] max-h-[580px] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.06)] bg-[#fafafa]">
                 <Image
                   src="/images/pexpacks-unboxing-showcase.webp"
-                  alt="Pexpacks school stationery carry box with official logo unboxing featuring Staedtler pencils, Pritt glue stick, Croxley books, Bic pens, Casio calculator, and Bantex folder"
+                  alt="Pexpacks school stationery carry box with official full navy logo unboxing featuring Staedtler pencils, Pritt glue stick, Croxley books, Bic pens, Casio calculator, and Bantex folder"
                   fill
                   priority
                   placeholder="blur"
@@ -231,6 +231,19 @@ export function UnboxingSection() {
                   sizes="(min-width: 1280px) 1200px, 100vw"
                   className="object-cover object-center group-hover:scale-[1.015] transition-transform duration-700 ease-out"
                 />
+
+                {/* Official Full Navy Logo on Box - Designed with Tailwind */}
+                <div
+                  className="absolute top-[30%] sm:top-[30.5%] left-[49.8%] -translate-x-1/2 w-[19%] sm:w-[19.5%] max-w-[250px] pointer-events-none select-none mix-blend-multiply opacity-95 transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+                  aria-hidden="true"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/logo-navy.svg"
+                    alt="Pexpacks Supplies Official Full Navy Logo"
+                    className="w-full h-auto object-contain block drop-shadow-[0_1px_1px_rgba(255,255,255,0.2)]"
+                  />
+                </div>
 
                 {/* Floating Interactive Badge: Personalized Learner Tag */}
                 <div className="absolute top-3 left-3 sm:top-5 sm:left-5 inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl sm:rounded-2xl bg-white/95 backdrop-blur-md border border-white/80 shadow-[0_8px_20px_rgba(26,42,64,0.12)] text-pex-navy text-xs sm:text-sm font-bold">

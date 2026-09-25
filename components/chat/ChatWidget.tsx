@@ -41,7 +41,22 @@ type ChatMessage =
   | { id: string; role: "user"; text: string; pending?: boolean }
   | { id: string; role: "assistant"; response: PexChatResponse };
 
-type ChatCardAction = {`r`n  label: string;`r`n  url: string;`r`n  href?: string;`r`n};`r`n`r`ntype ChatCard = {`r`n  id?: string;`r`n  title: string;`r`n  badge?: string;`r`n  price?: string;`r`n  description: string;`r`n  actions?: ChatCardAction[];`r`n};`r`n`r`nfunction starterLinksForPath(pathname: string | null) {
+type ChatCardAction = {
+  label: string;
+  url: string;
+  href?: string;
+};
+
+type ChatCard = {
+  id?: string;
+  title: string;
+  badge?: string;
+  price?: string;
+  description: string;
+  actions?: ChatCardAction[];
+};
+
+function starterLinksForPath(pathname: string | null) {
   if (pathname?.startsWith("/checkout")) {
     return [
       {
@@ -481,7 +496,7 @@ export function ChatWidget() {
                                   {card.actions.map((act: ChatCardAction, i: number) => (
                                     <Link
                                       key={i}
-                                      href={act.url || act.href}
+                                      href={(act.url || act.href) ?? "#"}
                                       onClick={() => setIsOpen(false)}
                                       className="inline-flex items-center gap-1 text-xs font-semibold text-brand-teal underline decoration-brand-teal/35 underline-offset-2 transition hover:text-brand-teal-dark hover:decoration-brand-teal"
                                     >
