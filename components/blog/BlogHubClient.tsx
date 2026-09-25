@@ -66,7 +66,7 @@ export function BlogHubClient({ articles, resourcesNode }: BlogHubClientProps) {
       {/* ── HERO SECTION (MATCHES APP PAGEHERO EXACT DESIGN SPECIFICATION) ── */}
       <PageHero
         eyebrow="Parent & Learner Hub"
-        title="School stationery guides +"
+        title="School stationery guides"
         text="Clear ruling breakdowns, teacher-verified stationery checklists, and practical guidance to help South African parents prepare for the school year without the January rush."
         panelChildren={
           <div className="flex flex-col justify-between h-full">
