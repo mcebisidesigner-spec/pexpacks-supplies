@@ -609,7 +609,7 @@ export function ChatWidget() {
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
                 placeholder="Ask Pex about your order..."
-                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-[13px] leading-5 text-ink outline-none ring-0 placeholder:text-text-muted focus:border-0 focus:outline-none focus:ring-0 focus-visible:outline-none"
+                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-[13px] leading-5 text-ink !outline-none !ring-0 placeholder:text-text-muted focus:!border-0 focus:!outline-none focus:!ring-0 focus-visible:!border-0 focus-visible:!outline-none focus-visible:!ring-0"
               />
               <button
                 type="submit"
@@ -651,7 +651,7 @@ export function ChatWidget() {
 
 function AssistantMessage({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 text-[13px] leading-relaxed text-text-muted shadow-[0_3px_12px_rgba(26,42,64,0.05)]">
+    <div className="rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 text-[13px] leading-snug text-text-muted shadow-[0_3px_12px_rgba(26,42,64,0.05)]">
       {children}
     </div>
   );
@@ -719,7 +719,7 @@ function InlineReplyLinks({
   if (!hasLinks) return null;
 
   return (
-    <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-2 text-xs leading-relaxed">
+    <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-snug">
       {actions.map((action) => (
         <Link
           key={action.id}
