@@ -321,7 +321,7 @@ export function detectPexIntent(query: string): PexIntent {
   if (/\b(?:pexcover|book cover(?:ing)?|wrapping|wrapped|label(?:ling|ing)?)\b/.test(value)) return "pexcover_information";
   if (/\b(delivery|deliveri|courier|paxi|pep|shipping|collect(?:ion)?)\b/.test(value)) return "delivery_information";
   if (/\b(checkout|chekout|pay|payment|payement|ozow|happy\s*pay|eft|card)\b/.test(value)) return "payment_information";
-  if (/\b(?:price|pricing|cost|how much|afford|download (?:a )?list)\b/.test(value)) return "find_school_pack";
+  if (/\b(?:price|pricing|cost|how much|afford|download (?:(?:a|the) )?list)\b/.test(value)) return "find_school_pack";
   if (/\b(cart|basket)\b|\b(quantity|remove|add).{0,24}\b(pack|pak|item|product|cart|basket)\b/.test(value)) return "checkout_help";
   if (/\b(?:multiple|several|more than one|different).{0,32}\b(?:learner|child|school|pack|order)s?\b|\b(one checkout|one order).{0,32}\b(?:school|learner|child|pack)s?\b/.test(value)) return "checkout_help";
 
@@ -768,7 +768,7 @@ export function buildPexReply(
     case "checkout_help":
       reply = response(
         resolvedIntent,
-        "To order, find your school pack or upload a list, review your cart, then check out securely.",
+        "To order, find your school pack or upload a list, review your cart, then check out securely. You can add more than one learner or school before checkout and review each pack separately.",
         [
           { id: "open-tray", label: "Open order tray", description: "Review packs already saved", href: "/checkout" },
           { id: "checkout", label: "View checkout", description: "Continue after reviewing your tray", href: "/checkout" },
