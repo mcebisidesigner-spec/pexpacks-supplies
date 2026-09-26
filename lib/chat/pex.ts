@@ -659,7 +659,7 @@ export function buildPexReply(
           reply = response(
             resolvedIntent,
             `${matchedSchool} is on Pexpacks — the ${matchedGrade} pack is ready to go. Tap below to open it, confirm the items, and add it straight to your cart.`,
-            [{ id: "view-pack", label: `${matchedSchool} ${matchedGrade}`, description: "View grade pack and add to cart", href: `/schools/${schoolSlug}/${gradeSlug}` }],
+            [{ id: "view-pack", label: `${matchedSchool} ${matchedGrade}`, description: "Open the school page and choose the grade pack", href: `/schools/${schoolSlug}` }],
             [
               { id: "open-pack", label: `View ${matchedGrade} pack`, message: `Show me the ${matchedGrade} pack for ${matchedSchool}` },
               { id: "pexcover-query", label: "Add book covering", message: "Tell me about Pexcover" },
