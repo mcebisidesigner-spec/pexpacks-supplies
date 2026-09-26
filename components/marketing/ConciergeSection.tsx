@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { MessageCircle, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/Button";
 import { buildWhatsAppHref } from "@/data/contact";
 import {
@@ -77,7 +78,7 @@ export function ConciergeSection() {
                   });
                 }}
               >
-                <MessageCircle className="size-5 shrink-0" aria-hidden="true" />
+                <WhatsAppIcon className="size-5 shrink-0" />
                 <span>WhatsApp Us Your List</span>
               </Button>
             </div>

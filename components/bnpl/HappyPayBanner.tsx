@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HappyPayLogo } from "@/components/bnpl/HappyPayLogo";
 import { cn } from "@/lib/utils";
@@ -11,20 +13,20 @@ const copy = {
   homepage: {
     eyebrow: "Happy Pay · Buy Now Pay Later",
     title: "Split your school shop in 2. Pay 50% today, the rest in 30 days.",
-    text: "Get your child’s full stationery pack now and pay half today. Happy Pay settles your order with Pexpacks straight away — interest-free and no application fees.",
+    text: "No onerous credit applications, paperwork, or credit cards required. Split your order in 2 seamlessly using your everyday SA bank debit card — 0% interest, approved in under 60 seconds.",
   },
   schoolPage: {
     eyebrow: "Happy Pay · Buy Now Pay Later",
     title: "Pay for this pack in 2 easy, interest-free payments.",
-    text: "Order your child’s school pack now and pay just 50% today. Happy Pay covers the balance, and you settle the rest in 30 days — no fees, no impact on your credit score.",
+    text: "Order your child’s school pack now with zero paperwork. Settle 50% today using any SA bank debit card and the rest in 30 days — 0% interest and no credit check hassle.",
   },
 } as const;
 
 const badges = [
   "0% interest",
-  "No application fees",
+  "No paperwork or credit checks",
+  "Works with any SA debit card",
   "Approval in under 60 seconds",
-  "No impact on your credit score",
 ] as const;
 
 export function HappyPayBanner({
@@ -77,26 +79,25 @@ export function HappyPayBanner({
             ))}
           </ul>
 
-          <div className="flex items-center flex-wrap gap-3 mt-2">
+          <div className="flex items-center flex-wrap gap-4 mt-2">
             <Button
-              href="/happy-pay"
+              href="/schools#schools-search"
               variant="primary"
               size="md"
               iconDirection="right"
+              data-conversion-event={`${variant === "homepage" ? "homepage" : "school"}_happy_pay_shop`}
+              className="w-full sm:w-auto"
+            >
+              Shop School Packs
+            </Button>
+            <Link
+              href="/happy-pay"
+              className="group inline-flex items-center gap-1.5 text-sm font-bold text-white/90 hover:text-white underline decoration-white/40 underline-offset-4 transition-colors"
               data-conversion-event={`${variant === "homepage" ? "homepage" : "school"}_happy_pay_learn_more`}
-              className="w-full sm:w-auto"
             >
-              Learn How It Works
-            </Button>
-            <Button
-              href="/checkout"
-              variant="white"
-              size="md"
-              data-conversion-event={`${variant === "homepage" ? "homepage" : "school"}_happy_pay_split`}
-              className="w-full sm:w-auto"
-            >
-              Split my pack in 2
-            </Button>
+              <span>Learn How It Works</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </Link>
           </div>
         </div>
 

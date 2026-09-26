@@ -1,9 +1,10 @@
 "use client";
 
-import { MessageCircle, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { buildWhatsAppHref } from "@/data/contact";
 import { useDialogFocusTrap } from "@/components/packs/useDialogFocusTrap";
+import { WhatsAppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 export function WhatsAppWidget() {
@@ -117,7 +118,7 @@ export function WhatsAppWidget() {
             className="bg-[#25D366] text-white no-underline font-semibold text-sm py-2.5 px-5 rounded-full flex items-center justify-center gap-2 transition-all w-full hover:brightness-110 hover:bg-[#128C7E] hover:-translate-y-0.5"
             onClick={() => setIsOpen(false)}
           >
-            <MessageCircle className="size-[18px]" strokeWidth={2} aria-hidden="true" />
+            <WhatsAppIcon className="size-[18px]" />
             Start Chat
           </a>
         </div>
@@ -135,7 +136,7 @@ export function WhatsAppWidget() {
         {isOpen ? (
           <X className="size-[22px]" strokeWidth={2} aria-hidden="true" />
         ) : (
-          <MessageCircle className="size-[26px]" strokeWidth={2} aria-hidden="true" />
+          <WhatsAppIcon className="size-[26px]" />
         )}
       </button>
     </div>

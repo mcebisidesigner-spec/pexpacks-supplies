@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, MessageCircle, School, Send, ShieldCheck, Truck, X } from "lucide-react";
+import { BookOpen, School, Send, ShieldCheck, Truck, X } from "lucide-react";
 import { buildWhatsAppHref } from "@/data/contact";
 import {
   trackPexActionSelected,
@@ -16,6 +16,7 @@ import {
 import type { PexChatResponse } from "@/lib/chat/pex";
 import type { ActiveSession, PexEntities } from "@/lib/chat/request";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
+import { WhatsAppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 const CHATBOT_LOGO = "/images/chatbot.webp";
@@ -562,7 +563,7 @@ export function ChatWidget() {
                           }}
                           className="mt-2.5 inline-flex items-center gap-1.5 font-semibold text-whatsapp-dark underline decoration-whatsapp/40 underline-offset-2 transition hover:decoration-whatsapp"
                         >
-                          <MessageCircle size={14} className="text-[#25D366]" aria-hidden="true" />
+                          <WhatsAppIcon className="size-3.5 text-[#25D366]" />
                           Talk to Pexpacks on WhatsApp
                         </a>
                       )}
@@ -638,7 +639,7 @@ export function ChatWidget() {
               }}
               className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2 py-1 text-[11px] font-semibold text-[#075E54] transition hover:bg-[#25D366]/20 hover:text-[#054c44]"
             >
-              <MessageCircle size={14} className="text-[#25D366]" aria-hidden="true" />
+              <WhatsAppIcon className="size-3.5 text-[#25D366]" />
               Chat on WhatsApp
             </a>
           </footer>

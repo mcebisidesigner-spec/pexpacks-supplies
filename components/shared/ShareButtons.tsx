@@ -1,7 +1,8 @@
 "use client";
 
-import { Link2, MessageCircle } from "lucide-react";
+import { Link2 } from "lucide-react";
 import { useState } from "react";
+import { WhatsAppIcon } from "@/components/ui/icons";
 
 type ShareButtonsProps = {
   text: string;
@@ -49,7 +50,7 @@ export function ShareButtons({ text, className = "" }: ShareButtonsProps) {
           onClick={shareWhatsApp}
           aria-label="Share via WhatsApp"
         >
-          <MessageCircle className="size-[18px]" strokeWidth={2} aria-hidden="true" />
+          <WhatsAppIcon className="size-[18px]" />
           <span>WhatsApp</span>
         </button>
         <button
