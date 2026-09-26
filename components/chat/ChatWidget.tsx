@@ -646,7 +646,7 @@ export function ChatWidget() {
             onSubmit={submit}
             className="shrink-0 border-t border-slate-100 bg-white p-2.5 sm:p-3"
           >
-            <div className="flex min-h-[44px] items-center gap-2 rounded-[14px] border-[1.5px] border-brand-teal bg-white py-1 pl-3.5 pr-1.5 shadow-xs">
+            <div className="flex min-h-[44px] items-center gap-2 rounded-[14px] border border-slate-300 bg-white py-1 pl-3.5 pr-1.5 shadow-xs transition-[border-color,box-shadow] duration-150 focus-within:border-brand-teal focus-within:ring-2 focus-within:ring-brand-teal/20">
               <input
                 id="bro-pex-chat-input"
                 name="chatMessage"
@@ -657,7 +657,7 @@ export function ChatWidget() {
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
                 placeholder="Ask Pex about your order..."
-                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-[13px] leading-5 text-ink outline-none placeholder:text-slate-500"
+                className="min-w-0 flex-1 appearance-none border-0 !border-transparent bg-transparent px-0 py-2 text-[13px] leading-5 text-ink !outline-none !ring-0 placeholder:text-slate-500 focus:!border-0 focus:!border-transparent focus:!outline-none focus:!ring-0 focus-visible:!border-0 focus-visible:!border-transparent focus-visible:!outline-none focus-visible:!ring-0"
               />
               <button
                 type="submit"
