@@ -47,7 +47,7 @@ export function WarningBannerModal({
           </span>
           <button
             type="button"
-            className="grid place-items-center w-7 h-7 border border-slate-700/60 rounded-md bg-slate-900/60 text-slate-400 cursor-pointer transition-colors hover:bg-slate-700/80 hover:text-white hover:border-slate-500"
+            className="inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-slate-700/60 bg-slate-900/60 text-slate-400 cursor-pointer transition-colors hover:bg-slate-700/80 hover:text-white hover:border-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             onClick={onCancel}
             aria-label="Close warning"
           >

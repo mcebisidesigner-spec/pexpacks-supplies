@@ -172,7 +172,7 @@ export function GlobalPackTray() {
             ) : null}
             <button
               type="button"
-              className="w-11 h-11 min-w-11 min-h-11 rounded-full border border-pex-border hover:border-pex-navy text-pex-navy hover:text-pex-navy bg-white text-2xl flex items-center justify-center cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-pex-navy"
+              className="inline-flex w-11 h-11 min-w-11 min-h-11 aspect-square items-center justify-center rounded-full border border-pex-border hover:border-pex-navy text-pex-navy hover:text-pex-navy bg-white text-2xl cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-pex-navy"
               onClick={closeTray}
               aria-label="Close your order"
               ref={closeButtonRef}

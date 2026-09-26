@@ -79,19 +79,11 @@ export function StepUpModal({
         <button
           type="button"
           onClick={onCancel}
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            background: "none",
-            border: "none",
-            color: "#64748b",
-            cursor: "pointer",
-            padding: "4px",
-          }}
+          className="absolute right-4 top-4 inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-300 transition-colors hover:bg-slate-700 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Close security verification"
           disabled={isPending}
         >
-          <X size={18} />
+          <X size={18} aria-hidden="true" />
         </button>
 
         {/* Header */}

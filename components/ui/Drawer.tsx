@@ -86,7 +86,7 @@ export function Drawer({
             {headerRight}
             <button
               type="button"
-              className="w-11 h-11 rounded-full border border-pex-border bg-white text-pex-navy text-2xl grid place-items-center cursor-pointer transition-colors duration-150 hover:border-pex-keppel hover:text-pex-keppel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2"
+              className="inline-flex w-11 h-11 aspect-square items-center justify-center rounded-full border border-pex-border bg-white text-pex-navy text-2xl cursor-pointer transition-colors duration-150 hover:border-pex-keppel hover:text-pex-keppel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2"
               onClick={onClose}
               aria-label={`Close ${title}`}
               ref={closeBtnRef}

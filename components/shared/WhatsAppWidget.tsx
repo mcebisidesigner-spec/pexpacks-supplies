@@ -98,7 +98,7 @@ export function WhatsAppWidget() {
             <span>Typically replies in a few minutes</span>
           </div>
           <button
-            className="bg-transparent border-0 text-white cursor-pointer p-1 opacity-80 transition-opacity hover:opacity-100"
+            className="inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-white/20 bg-white/10 p-0 text-white opacity-90 transition-all hover:bg-white/20 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             onClick={() => setIsOpen(false)}
             aria-label="Close chat"
           >

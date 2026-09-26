@@ -67,7 +67,7 @@ export function SchoolOverviewModal({
           </div>
           <button
             type="button"
-            className="flex-none flex items-center justify-center w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer border-0 bg-transparent transition-colors"
+            className="inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-slate-700 bg-slate-950/60 text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             onClick={onClose}
             aria-label="Close overview"
           >

@@ -129,7 +129,7 @@ export function AdminConfirmDialog({
             type="button"
             onClick={onClose}
             disabled={busy}
-            className="p-1 rounded-lg text-[var(--db-text-subtle,#64748b)] hover:text-white hover:bg-slate-800 transition-colors disabled:opacity-50"
+            className="inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-[var(--db-border,#1e293b)] bg-[var(--db-surface-inner,#090e17)] text-[var(--db-text-subtle,#64748b)] transition-colors hover:bg-slate-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Close dialog"
           >
             <X size={16} />

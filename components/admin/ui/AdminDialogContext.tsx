@@ -209,7 +209,7 @@ export function AdminDialogProvider({ children }: { children: ReactNode }) {
               </span>
               <button
                 type="button"
-                className="grid w-7 h-7 place-items-center border border-[var(--db-border,#1e293b)] rounded-md bg-[var(--db-surface-inner,#090e17)] text-[var(--db-text-muted,#94a3b8)] cursor-pointer transition-colors hover:bg-white/8 hover:text-white hover:border-[var(--db-border-strong,#334155)]"
+                className="inline-flex size-9 shrink-0 aspect-square items-center justify-center border border-[var(--db-border,#1e293b)] rounded-full bg-[var(--db-surface-inner,#090e17)] text-[var(--db-text-muted,#94a3b8)] cursor-pointer transition-colors hover:bg-white/8 hover:text-white hover:border-[var(--db-border-strong,#334155)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 onClick={() => handleClose(false)}
                 aria-label="Close dialog"
               >

@@ -165,7 +165,7 @@ function NotificationCard({
         type="button"
         onClick={onDismiss}
         aria-label="Dismiss notification"
-        className="grid size-7 shrink-0 place-items-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-pex-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
+        className="inline-flex size-8 shrink-0 aspect-square items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-100 hover:text-pex-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
       >
         <X size={15} aria-hidden="true" />
       </button>

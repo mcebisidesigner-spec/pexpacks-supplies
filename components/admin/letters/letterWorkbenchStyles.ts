@@ -25,7 +25,7 @@ export const letterWorkbenchStyles = {
   btnPrimary:
     "inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all border border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm",
   closeBtn:
-    "flex items-center justify-center w-8 h-8 rounded-lg bg-transparent border-0 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer ml-1",
+    "inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-slate-700 bg-slate-950/60 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer ml-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
   pdfViewerWrapper:
     "relative w-full h-[780px] bg-slate-950 flex items-center justify-center",
   pdfLoadingOverlay:

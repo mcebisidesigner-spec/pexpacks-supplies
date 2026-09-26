@@ -155,7 +155,7 @@ export function PartnershipLeadForm({
                   <button
                     type="button"
                     onClick={onClearPrefill}
-                    className="bg-transparent border-0 text-[var(--pex-muted,#64748b)] cursor-pointer p-0.5 flex"
+                    className="inline-flex size-8 shrink-0 aspect-square items-center justify-center rounded-full border border-pex-border bg-white text-[var(--pex-muted,#64748b)] cursor-pointer transition-colors hover:bg-pex-bg-soft hover:text-pex-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
                     aria-label="Remove calculator context"
                   >
                     <X size={16} />

@@ -60,7 +60,7 @@ export function ConfirmModal({
             type="button"
             onClick={onCancel}
             aria-label="Close confirmation"
-            className="grid w-[30px] h-[30px] place-items-center rounded-[7px] border border-[var(--a-border,rgba(30,41,59,0.9))] bg-[var(--a-surface-2,#090e17)] text-[var(--a-text-3,#94a3b8)] hover:text-white transition-colors cursor-pointer"
+            className="inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full border border-[var(--a-border,rgba(30,41,59,0.9))] bg-[var(--a-surface-2,#090e17)] text-[var(--a-text-3,#94a3b8)] transition-colors hover:bg-[var(--a-surface,#0c1322)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--a-accent,#10b981)] cursor-pointer"
           >
             <X className="w-[15px] h-[15px]" aria-hidden="true" />
           </button>

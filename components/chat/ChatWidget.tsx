@@ -408,7 +408,7 @@ export function ChatWidget() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Close Ask Pex Assistant"
-              className="grid h-8 w-8 place-items-center rounded-full bg-white/10 text-slate-200 transition-all duration-150 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal active:scale-95 border border-white/10"
+              className="inline-flex size-10 shrink-0 aspect-square items-center justify-center rounded-full border border-white/15 bg-white/10 text-slate-200 transition-all duration-150 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal active:scale-95"
             >
               <X size={16} aria-hidden="true" />
             </button>

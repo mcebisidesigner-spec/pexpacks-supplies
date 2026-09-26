@@ -156,7 +156,7 @@ export function TaskDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-800/50 border border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-700/80 transition-colors"
+            className="inline-flex size-9 shrink-0 aspect-square items-center justify-center rounded-full bg-slate-800/50 border border-slate-700/60 text-slate-400 hover:text-white hover:bg-slate-700/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             aria-label="Close drawer"
           >
             <X size={16} />
