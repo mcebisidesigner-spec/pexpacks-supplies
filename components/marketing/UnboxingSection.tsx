@@ -629,6 +629,17 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
   },
 };
 
+type QuickSchool = {
+  name: string;
+  slug: string;
+};
+
+const DEFAULT_QUICK_SCHOOLS: QuickSchool[] = [
+  { name: "Dawnview High School", slug: "dawnview-high-school" },
+  { name: "Hoërskool Primrose", slug: "ho-rskool-primrose" },
+  { name: "Primrose Hill Primary School", slug: "primrose-hill-primary-school" },
+];
+
 export function UnboxingSection() {
   const router = useRouter();
   const searchInputId = useId();
@@ -650,24 +661,23 @@ export function UnboxingSection() {
   });
   const isFloating = isHeaderHidden && !isAtTop;
 
-  // Quick find suggestions: uses the app's established edge IP + hybrid ranking setup (zero browser permission popups)
-  const [quickSuggestions, setQuickSuggestions] = useState<string[]>([
-    "Bryanston Primary",
-    "Camps Bay High",
-    "Grade 4 Pack",
-  ]);
+  // Quick find suggestions: uses the app's established edge IP + hybrid ranking setup
+  const [quickSchools, setQuickSchools] = useState<QuickSchool[]>(DEFAULT_QUICK_SCHOOLS);
 
   useEffect(() => {
     let isCancelled = false;
 
     function applyRanking(serverSchools: HybridSchoolItem[]) {
       const recents = getRecentSchoolVisits();
-      const { rankedSchools } = rankHybridSchools(serverSchools, recents, 3);
-      const names = rankedSchools
-        .map((s) => s.name?.trim())
-        .filter((name): name is string => Boolean(name));
-      if (names.length > 0 && !isCancelled) {
-        setQuickSuggestions(names);
+      const { rankedSchools } = rankHybridSchools(serverSchools, recents, 4);
+      const schools: QuickSchool[] = rankedSchools
+        .map((s) => ({
+          name: s.name?.trim() ?? "",
+          slug: s.slug?.trim() ?? "",
+        }))
+        .filter((s) => Boolean(s.name) && Boolean(s.slug));
+      if (schools.length > 0 && !isCancelled) {
+        setQuickSchools(schools);
       }
     }
 
@@ -683,12 +693,15 @@ export function UnboxingSection() {
     function handleVisitsUpdate() {
       const recents = getRecentSchoolVisits();
       if (recents.length > 0 && !isCancelled) {
-        const topNames = recents
-          .map((r) => r.schoolName?.trim())
-          .filter((name): name is string => Boolean(name))
-          .slice(0, 3);
-        if (topNames.length > 0) {
-          setQuickSuggestions(topNames);
+        const topRecentSchools: QuickSchool[] = recents
+          .map((r) => ({
+            name: r.schoolName?.trim() ?? "",
+            slug: r.schoolSlug?.trim() ?? "",
+          }))
+          .filter((s) => Boolean(s.name) && Boolean(s.slug))
+          .slice(0, 4);
+        if (topRecentSchools.length > 0) {
+          setQuickSchools(topRecentSchools);
         }
       }
     }
@@ -720,19 +733,46 @@ export function UnboxingSection() {
     };
   }, [selectedItem]);
 
-  const handleSearchSubmit = (e: FormEvent) => {
+  const handleSearchSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const query = searchQuery.trim();
-    if (query) {
-      router.push(`/schools?q=${encodeURIComponent(query)}#schools-search`);
-    } else {
-      router.push("/schools#schools-search");
+    if (!query) {
+      router.push("/schools");
+      return;
     }
-  };
 
-  const handleQuickPresetClick = (preset: string) => {
-    setSearchQuery(preset);
-    router.push(`/schools?q=${encodeURIComponent(preset)}#schools-search`);
+    // 1. Direct match with current quick/loaded schools
+    const matched = quickSchools.find(
+      (s) =>
+        s.name.toLowerCase() === query.toLowerCase() ||
+        s.slug.toLowerCase() === query.toLowerCase()
+    );
+    if (matched?.slug) {
+      router.push(`/schools/${encodeURIComponent(matched.slug)}`);
+      return;
+    }
+
+    // 2. Query the schools search API to get the exact top school record
+    try {
+      const res = await fetch(`/api/schools/search?q=${encodeURIComponent(query)}&limit=1`);
+      if (res.ok) {
+        const data = await res.json();
+        const topSchool = data?.results?.[0];
+        if (topSchool?.slug) {
+          router.push(`/schools/${encodeURIComponent(topSchool.slug)}`);
+          return;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+
+    // 3. Fallback: format slug and navigate directly to school page
+    const slug = query
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    router.push(`/schools/${encodeURIComponent(slug)}`);
   };
 
   return (
@@ -1116,8 +1156,6 @@ export function UnboxingSection() {
               {/* Inline Search / School Selector Combobox */}
               <div className="w-full lg:max-w-md xl:max-w-lg">
                 <form
-                  action="/schools#schools-search"
-                  method="GET"
                   onSubmit={handleSearchSubmit}
                   className="flex flex-col sm:flex-row items-stretch gap-2.5"
                 >
@@ -1137,11 +1175,12 @@ export function UnboxingSection() {
                       className="w-full min-h-[50px] pl-11 pr-4 rounded-xl sm:rounded-2xl bg-white/95 text-pex-navy placeholder:text-slate-500 font-semibold text-sm sm:text-base border border-white/30 focus:outline-none focus:ring-4 focus:ring-pex-keppel/30 focus:border-pex-keppel shadow-sm transition-all"
                     />
                     <datalist id="popular-school-presets">
-                      {Array.from(new Set([...quickSuggestions, ...POPULAR_SEARCH_PRESETS])).map(
-                        (school) => (
-                          <option key={school} value={school} />
-                        )
-                      )}
+                      {quickSchools.map((school) => (
+                        <option key={school.slug} value={school.name} />
+                      ))}
+                      {POPULAR_SEARCH_PRESETS.map((name) => (
+                        <option key={name} value={name} />
+                      ))}
                     </datalist>
                   </div>
 
@@ -1160,14 +1199,14 @@ export function UnboxingSection() {
                 {/* Quick-Select Chips */}
                 <div className="mt-3 flex items-center flex-wrap gap-1.5 text-xs">
                   <span className="text-slate-400 font-medium">Quick find:</span>
-                  {quickSuggestions.map((school) => (
+                  {quickSchools.map((school) => (
                     <Link
-                      key={school}
-                      href={`/schools?q=${encodeURIComponent(school)}#schools-search`}
+                      key={school.slug}
+                      href={`/schools/${encodeURIComponent(school.slug)}`}
                       className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white font-semibold transition-colors cursor-pointer text-xs inline-block"
-                      title={`Find packs for ${school}`}
+                      title={`Open official packs for ${school.name}`}
                     >
-                      {school}
+                      {school.name}
                     </Link>
                   ))}
                 </div>

@@ -354,14 +354,14 @@ export function ChatWidget() {
           type="button"
           onClick={() => setIsOpen(true)}
           aria-label="Open Ask Pex Assistant"
-          className="group inline-flex items-center gap-1 rounded-full border border-white/15 bg-brand-navy p-1.5 text-left !text-white shadow-[0_10px_24px_rgba(13,31,56,0.22)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_14px_28px_rgba(13,31,56,0.28)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+          className="group inline-flex items-center gap-0.5 rounded-full border border-white/15 bg-brand-navy p-1 text-left !text-white shadow-[0_8px_18px_rgba(13,31,56,0.2)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_12px_24px_rgba(13,31,56,0.26)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
           title="Ask Pex"
         >
-          <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-teal p-0.5 ring-2 ring-white/10">
+          <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-teal p-0.5 ring-1 ring-white/10">
             <Avatar size="h-full w-full" />
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-brand-teal" aria-hidden="true" />
+            <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border-2 border-brand-navy bg-brand-teal" aria-hidden="true" />
           </span>
-          <span className="grid h-8 w-[82px] place-items-center overflow-hidden rounded-full bg-white/10 px-2 text-[11px] font-semibold tracking-tight text-white">
+          <span className="grid h-8 w-[72px] place-items-center overflow-hidden rounded-full bg-white/10 px-1.5 text-[10px] font-semibold tracking-tight text-white">
             <span className="whitespace-nowrap">
               Ask Pex
             </span>
@@ -369,12 +369,12 @@ export function ChatWidget() {
         </button>
       ) : (
         <section
-          className="flex h-[min(540px,calc(100dvh-32px))] w-[min(344px,calc(100vw-24px))] flex-col overflow-hidden rounded-[24px] border border-slate-200/90 bg-surface shadow-[0_20px_56px_rgba(15,35,61,0.2)]"
+          className="flex h-[min(520px,calc(100dvh-32px))] w-[min(328px,calc(100vw-20px))] flex-col overflow-hidden rounded-[20px] border border-slate-200/90 bg-surface shadow-[0_16px_44px_rgba(15,35,61,0.18)]"
           aria-label="Pex Assistant"
         >
-          <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-3.5 py-3 text-white sm:px-4">
+          <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-3 py-2.5 text-white sm:px-3.5">
             <div className="flex items-center gap-2.5">
-              <Avatar size="h-9 w-9" />
+              <Avatar size="h-8 w-8" />
               <div>
                 <h2 className="m-0 text-[13px] font-semibold leading-tight">
                   Ask Pex
@@ -396,7 +396,7 @@ export function ChatWidget() {
           </header>
 
           <div
-            className="flex flex-1 flex-col gap-2.5 overflow-y-auto bg-slate-50 p-3 sm:p-3.5"
+            className="flex flex-1 flex-col gap-2 overflow-y-auto bg-slate-50 p-2.5 sm:p-3"
             aria-live="polite"
           >
             <AssistantMessage>
@@ -596,9 +596,9 @@ export function ChatWidget() {
 
           <form
             onSubmit={submit}
-            className="shrink-0 border-t border-slate-200 bg-white p-2.5"
+            className="shrink-0 border-t border-slate-200 bg-white p-2"
           >
-            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 py-1 pl-3 pr-1 shadow-inner focus-within:border-brand-teal focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-teal/15">
+            <div className="flex min-h-12 items-center gap-2 rounded-xl border border-pex-border bg-white py-1 pl-3 pr-1 shadow-sm transition-[border-color,box-shadow] duration-150 focus-within:border-brand-teal focus-within:ring-2 focus-within:ring-brand-teal/20">
               <input
                 id="bro-pex-chat-input"
                 name="chatMessage"
@@ -609,7 +609,7 @@ export function ChatWidget() {
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
                 placeholder="Ask Pex about your order..."
-                className="min-w-0 flex-1 border-0 bg-transparent py-1.5 text-[13px] text-ink outline-none placeholder:text-text-muted"
+                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-[13px] leading-5 text-ink outline-none ring-0 placeholder:text-text-muted focus:border-0 focus:outline-none focus:ring-0 focus-visible:outline-none"
               />
               <button
                 type="submit"
@@ -623,7 +623,7 @@ export function ChatWidget() {
           </form>
 
           {/* Persistent WhatsApp & Human Handoff Bridge */}
-          <footer className="flex shrink-0 items-center justify-end border-t border-slate-200 bg-white px-3 py-2">
+          <footer className="flex shrink-0 items-center justify-end border-t border-slate-200 bg-white px-2.5 py-1.5">
             <a
               href={
                 whatsappHref ||
