@@ -98,8 +98,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Noris HB Pencils",
             quantityBadge: "Pack of 12",
-            description: "Classic yellow & black striped break-resistant German lead.",
-            teacherNote: "Classroom staple. High-density lead resists breaking under intermediate learner pressure.",
+            description:
+              "Classic yellow & black striped break-resistant German lead.",
+            teacherNote:
+              "Classroom staple. High-density lead resists breaking under intermediate learner pressure.",
             specs: "Grade HB • 2mm German graphite core • FSC certified wood",
           },
           {
@@ -107,27 +109,36 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Noris Club 24 Coloured Pencils",
             quantityBadge: "Pack of 24",
-            description: "Rich, vivid pigments with high break resistance for class art.",
-            teacherNote: "Required for geography mapping, science diagrams, and creative arts projects.",
-            specs: "24 hexagonal colored pencils with white A.B.S. protective coating",
+            description:
+              "Rich, vivid pigments with high break resistance for class art.",
+            teacherNote:
+              "Required for geography mapping, science diagrams, and creative arts projects.",
+            specs:
+              "24 hexagonal colored pencils with white A.B.S. protective coating",
           },
           {
             brand: "Bic",
             brandLogo: "/images/stationery-brands/bic.svg",
             product: "Cristal Ballpoint Pens",
             quantityBadge: "4x Pens (3 Blue, 1 Red)",
-            description: "Smooth, skip-free ink flow for everyday classwork & marking.",
-            teacherNote: "Approved for transition to penmanship; does not seep through standard exercise book pages.",
-            specs: "1.0mm medium point • Clear hexagonal barrel • Tungsten carbide ball",
+            description:
+              "Smooth, skip-free ink flow for everyday classwork & marking.",
+            teacherNote:
+              "Approved for transition to penmanship; does not seep through standard exercise book pages.",
+            specs:
+              "1.0mm medium point • Clear hexagonal barrel • Tungsten carbide ball",
           },
           {
             brand: "Staedtler",
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Rasoplast Eraser & Sharpener",
             quantityBadge: "1x Eraser + 1x Sharpener",
-            description: "Clean pencil erasing without paper smudges or tearing.",
-            teacherNote: "Phthalate-free vinyl eraser prevents greasy film on lined pages.",
-            specs: "Phthalate-free white vinyl • Double-hole metal canister sharpener",
+            description:
+              "Clean pencil erasing without paper smudges or tearing.",
+            teacherNote:
+              "Phthalate-free vinyl eraser prevents greasy film on lined pages.",
+            specs:
+              "Phthalate-free white vinyl • Double-hole metal canister sharpener",
           },
         ],
       },
@@ -142,17 +153,22 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/pritt.svg",
             product: "Original Glue Stick (43g)",
             quantityBadge: "2x 43g Jumbo Sticks",
-            description: "Non-toxic, solvent-free South African school classroom favorite.",
-            teacherNote: "Mandated by teachers because it applies cleanly without wrinkling thin workbook pages.",
-            specs: "43g solvent-free formula • 97% natural ingredients • Washable at 20°C",
+            description:
+              "Non-toxic, solvent-free South African school classroom favorite.",
+            teacherNote:
+              "Mandated by teachers because it applies cleanly without wrinkling thin workbook pages.",
+            specs:
+              "43g solvent-free formula • 97% natural ingredients • Washable at 20°C",
           },
           {
             brand: "Bostik",
             brandLogo: "/images/stationery-brands/bostik.svg",
             product: "Genuine Blu Tack",
             quantityBadge: "1x 100g Pack",
-            description: "Reusable adhesive putty ideal for posters, charts & projects.",
-            teacherNote: "Standard classroom supply for hanging periodic tables and curriculum charts.",
+            description:
+              "Reusable adhesive putty ideal for posters, charts & projects.",
+            teacherNote:
+              "Standard classroom supply for hanging periodic tables and curriculum charts.",
             specs: "100g clean reusable adhesive • Non-greasy • Solvent-free",
           },
           {
@@ -160,8 +176,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "Kids Safety Scissors (13cm)",
             quantityBadge: "1x 13cm Scissors",
-            description: "Rounded safety tips with ergonomic handles designed for young hands.",
-            teacherNote: "Comfortable ambidextrous grip with precision stainless steel blades.",
+            description:
+              "Rounded safety tips with ergonomic handles designed for young hands.",
+            teacherNote:
+              "Comfortable ambidextrous grip with precision stainless steel blades.",
             specs: "13cm length • Blunt safety tip • Stainless steel blade",
           },
         ],
@@ -177,27 +195,36 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "30cm Clear Shatterproof Ruler",
             quantityBadge: "1x 30cm Ruler",
-            description: "Clear metric markings with anti-shatter durable acrylic.",
-            teacherNote: "Explicitly requested by primary educators to prevent snapping injuries.",
-            specs: "30cm metric & millimetre scale • Beveled drawing edge • Shatterproof",
+            description:
+              "Clear metric markings with anti-shatter durable acrylic.",
+            teacherNote:
+              "Explicitly requested by primary educators to prevent snapping injuries.",
+            specs:
+              "30cm metric & millimetre scale • Beveled drawing edge • Shatterproof",
           },
           {
             brand: "Marlin",
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "Maths Instrument Geometry Set",
             quantityBadge: "1x 9-Piece Tin Set",
-            description: "Compass, protractor & set squares tailored for geometry.",
-            teacherNote: "Starter geometry pack for angles, shapes, and technical drawing lessons.",
-            specs: "Sturdy metal tin • Metal pencil compass • 180° protractor • 45° & 60° set squares",
+            description:
+              "Compass, protractor & set squares tailored for geometry.",
+            teacherNote:
+              "Starter geometry pack for angles, shapes, and technical drawing lessons.",
+            specs:
+              "Sturdy metal tin • Metal pencil compass • 180° protractor • 45° & 60° set squares",
           },
           {
             brand: "Casio",
             brandLogo: "/images/stationery-brands/casio.svg",
             product: "Desktop 8-Digit School Calculator",
             quantityBadge: "1x Calculator",
-            description: "Clear dual-power display suited for intermediate arithmetic.",
-            teacherNote: "Compact solar/battery calculator compliant with CAPS Grade 4–6 guidelines.",
-            specs: "Large 8-digit LCD • Dual solar/battery power • Non-programmable",
+            description:
+              "Clear dual-power display suited for intermediate arithmetic.",
+            teacherNote:
+              "Compact solar/battery calculator compliant with CAPS Grade 4–6 guidelines.",
+            specs:
+              "Large 8-digit LCD • Dual solar/battery power • Non-programmable",
           },
         ],
       },
@@ -212,17 +239,22 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "A4 Feint & Margin Exercise Books",
             quantityBadge: "8x 72-Page Books",
-            description: "Premium high-opacity paper preventing pen bleed-through.",
-            teacherNote: "Standard South African 8mm feint lines with red margin rule.",
-            specs: "A4 (297x210mm) • 72 pages • 80gsm high-opacity bond paper • Gloss varnished cover",
+            description:
+              "Premium high-opacity paper preventing pen bleed-through.",
+            teacherNote:
+              "Standard South African 8mm feint lines with red margin rule.",
+            specs:
+              "A4 (297x210mm) • 72 pages • 80gsm high-opacity bond paper • Gloss varnished cover",
           },
           {
             brand: "Croxley",
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "A4 Quad & Margin Maths Books",
             quantityBadge: "4x 72-Page Books",
-            description: "Standard graph ruled pages for calculations and neat columns.",
-            teacherNote: "5mm quad grid essential for alignment in long division and column addition.",
+            description:
+              "Standard graph ruled pages for calculations and neat columns.",
+            teacherNote:
+              "5mm quad grid essential for alignment in long division and column addition.",
             specs: "A4 • 72 pages • 5mm squared grid • Stitched binding",
           },
           {
@@ -230,9 +262,12 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/bantex.svg",
             product: "20-Pocket Clear View Flip File",
             quantityBadge: "1x 20-Pocket File",
-            description: "Durable presentation sleeve for portfolios, tests & certificates.",
-            teacherNote: "Copysafe clear sleeves prevent print transfer from photocopied assessments.",
-            specs: "A4 size • 20 copysafe polypropylene pockets • Insertable spine label",
+            description:
+              "Durable presentation sleeve for portfolios, tests & certificates.",
+            teacherNote:
+              "Copysafe clear sleeves prevent print transfer from photocopied assessments.",
+            specs:
+              "A4 size • 20 copysafe polypropylene pockets • Insertable spine label",
           },
         ],
       },
@@ -247,27 +282,36 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/logo-icon.svg",
             product: "Heavy-Duty Handle Carry Box",
             quantityBadge: "1x Carry Case",
-            description: "Sturdy corrugated craft box keeps books pristine and easy to carry.",
-            teacherNote: "Custom designed to hold all year-long books flat without dog-earing pages.",
-            specs: "350gsm flute corrugated kraft cardboard • Die-cut reinforced handle • Water-resistant exterior",
+            description:
+              "Sturdy corrugated craft box keeps books pristine and easy to carry.",
+            teacherNote:
+              "Custom designed to hold all year-long books flat without dog-earing pages.",
+            specs:
+              "350gsm flute corrugated kraft cardboard • Die-cut reinforced handle • Water-resistant exterior",
           },
           {
             brand: "Pexpacks",
             brandLogo: "/images/logo-icon.svg",
             product: "Personalized Learner ID Label",
             quantityBadge: "1x Waterproof Tag",
-            description: "Clearly marked with learner's name and grade for day-one peace of mind.",
-            teacherNote: "Guarantees immediate recovery if left in hallways or school buses.",
-            specs: "Waterproof vinyl • Smudge-proof thermal ink • Child's full name, grade & class",
+            description:
+              "Clearly marked with learner's name and grade for day-one peace of mind.",
+            teacherNote:
+              "Guarantees immediate recovery if left in hallways or school buses.",
+            specs:
+              "Waterproof vinyl • Smudge-proof thermal ink • Child's full name, grade & class",
           },
           {
             brand: "Classroom",
             brandLogo: "/images/logo-icon.svg",
             product: "Student Multimedia Headphones",
             quantityBadge: "1x Padded Headset",
-            description: "Comfortable padded stereo headset for computer lab & tablet learning.",
-            teacherNote: "Requested for e-learning, interactive phonics, and reading comprehension apps.",
-            specs: "Adjustable headband • Padded on-ear cushions • 3.5mm stereo jack • Tangle-resistant cord",
+            description:
+              "Comfortable padded stereo headset for computer lab & tablet learning.",
+            teacherNote:
+              "Requested for e-learning, interactive phonics, and reading comprehension apps.",
+            specs:
+              "Adjustable headband • Padded on-ear cushions • 3.5mm stereo jack • Tangle-resistant cord",
           },
         ],
       },
@@ -293,35 +337,46 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Noris Jumbo Triangular HB Pencils",
             quantityBadge: "Pack of 12",
-            description: "Extra-thick triangular barrel encourages correct ergonomic tripod grip.",
-            teacherNote: "Recommended by South African occupational therapists for Grade 1 writing development.",
-            specs: "Thick 4mm German lead • Ergonomic triangular grip • Unvarnished natural wood",
+            description:
+              "Extra-thick triangular barrel encourages correct ergonomic tripod grip.",
+            teacherNote:
+              "Recommended by South African occupational therapists for Grade 1 writing development.",
+            specs:
+              "Thick 4mm German lead • Ergonomic triangular grip • Unvarnished natural wood",
           },
           {
             brand: "Staedtler",
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Noris Club 12 Jumbo Wax Crayons",
             quantityBadge: "Pack of 12",
-            description: "Vibrant, high-wax coverage with paper sleeve to keep little fingers clean.",
-            teacherNote: "Essential for early childhood motor control and creative expressive art.",
-            specs: "12 vibrant colours • Paper wrapped • Waterproof & break-resistant",
+            description:
+              "Vibrant, high-wax coverage with paper sleeve to keep little fingers clean.",
+            teacherNote:
+              "Essential for early childhood motor control and creative expressive art.",
+            specs:
+              "12 vibrant colours • Paper wrapped • Waterproof & break-resistant",
           },
           {
             brand: "Staedtler",
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Jumbo Double Hole Canister Sharpener",
             quantityBadge: "1x Sharpener",
-            description: "Container sharpener with safety lock for both standard and jumbo pencils.",
-            teacherNote: "Spill-proof lid prevents shavings from dropping on desks and carpets.",
-            specs: "Double hole (8.2mm & 10.2mm) • Safety twist lock • Shatterproof container",
+            description:
+              "Container sharpener with safety lock for both standard and jumbo pencils.",
+            teacherNote:
+              "Spill-proof lid prevents shavings from dropping on desks and carpets.",
+            specs:
+              "Double hole (8.2mm & 10.2mm) • Safety twist lock • Shatterproof container",
           },
           {
             brand: "Staedtler",
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Rasoplast Large Clean Eraser",
             quantityBadge: "2x Erasers",
-            description: "Soft vinyl eraser specially formulated for beginner handwriting lines.",
-            teacherNote: "Erases softly without gouging or tearing delicate 60gsm practice worksheets.",
+            description:
+              "Soft vinyl eraser specially formulated for beginner handwriting lines.",
+            teacherNote:
+              "Erases softly without gouging or tearing delicate 60gsm practice worksheets.",
             specs: "Phthalate-free vinyl • Protective sliding cardboard sleeve",
           },
         ],
@@ -337,26 +392,34 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/pritt.svg",
             product: "Original Glue Stick (43g)",
             quantityBadge: "4x 43g Jumbo Sticks",
-            description: "High-volume solvent-free adhesive lasting through multiple term projects.",
-            teacherNote: "Grade 1 classrooms use glue daily for pasting phonics worksheets and art.",
-            specs: "43g jumbo size • 97% natural ingredients • Odourless & non-toxic",
+            description:
+              "High-volume solvent-free adhesive lasting through multiple term projects.",
+            teacherNote:
+              "Grade 1 classrooms use glue daily for pasting phonics worksheets and art.",
+            specs:
+              "43g jumbo size • 97% natural ingredients • Odourless & non-toxic",
           },
           {
             brand: "Marlin",
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "Blunt Safety Preschool Scissors",
             quantityBadge: "1x 13cm Scissors",
-            description: "Safety rounded tip designed specifically to protect little fingers.",
-            teacherNote: "Precision alignment allows accurate cutting of card and paper without pinching.",
-            specs: "Rounded safety tip • Soft-grip handle • Stainless steel blades",
+            description:
+              "Safety rounded tip designed specifically to protect little fingers.",
+            teacherNote:
+              "Precision alignment allows accurate cutting of card and paper without pinching.",
+            specs:
+              "Rounded safety tip • Soft-grip handle • Stainless steel blades",
           },
           {
             brand: "Bostik",
             brandLogo: "/images/stationery-brands/bostik.svg",
             product: "Genuine Blu Tack (Adhesive Putty)",
             quantityBadge: "1x 100g Slab",
-            description: "Mess-free reusable putty for temporary display of drawings.",
-            teacherNote: "Clean adhesion without leaving greasy residue on classroom walls.",
+            description:
+              "Mess-free reusable putty for temporary display of drawings.",
+            teacherNote:
+              "Clean adhesion without leaving greasy residue on classroom walls.",
             specs: "Non-toxic • Reusable • Clean formulation",
           },
         ],
@@ -372,8 +435,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "30cm Clear Shatterproof Ruler",
             quantityBadge: "1x 30cm Ruler",
-            description: "Clear metric markings with bold numerals for easy early reading.",
-            teacherNote: "Helps learners visualize centimetre spacing and draw straight borders.",
+            description:
+              "Clear metric markings with bold numerals for easy early reading.",
+            teacherNote:
+              "Helps learners visualize centimetre spacing and draw straight borders.",
             specs: "Bold centimetre numerals • Flexible shatterproof material",
           },
           {
@@ -381,8 +446,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "Abacus / Counters Set (100 Pieces)",
             quantityBadge: "1x 100-Pack",
-            description: "Colourful plastic tokens for concrete number concept learning.",
-            teacherNote: "Standard CAPS foundation tool for teaching addition and grouping.",
+            description:
+              "Colourful plastic tokens for concrete number concept learning.",
+            teacherNote:
+              "Standard CAPS foundation tool for teaching addition and grouping.",
             specs: "100 durable multi-coloured tokens in resealable pouch",
           },
         ],
@@ -398,8 +465,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "A4 Irish Ruled Exercise Books (72pg)",
             quantityBadge: "6x 72-Page Books",
-            description: "Wide spacing for early letter formation and introductory handwriting.",
-            teacherNote: "Mandated wide ruling for Grade 1 print-to-cursive readiness.",
+            description:
+              "Wide spacing for early letter formation and introductory handwriting.",
+            teacherNote:
+              "Mandated wide ruling for Grade 1 print-to-cursive readiness.",
             specs: "Irish ruled lines • 72 pages • High-opacity paper",
           },
           {
@@ -407,8 +476,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "A4 Unruled / Blank Drawing Books",
             quantityBadge: "4x 72-Page Books",
-            description: "Clean blank sheets for illustration, phonics drawing, and cut-and-paste.",
-            teacherNote: "High grammage pages prevent glue soaking through to the reverse side.",
+            description:
+              "Clean blank sheets for illustration, phonics drawing, and cut-and-paste.",
+            teacherNote:
+              "High grammage pages prevent glue soaking through to the reverse side.",
             specs: "Blank white pages • 80gsm paper • Sturdy card cover",
           },
           {
@@ -416,8 +487,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/bantex.svg",
             product: "20-Pocket Clear View Flip File",
             quantityBadge: "1x 20-Pocket File",
-            description: "Organizes weekly reading worksheets and assessment reports.",
-            teacherNote: "Teachers store sight word lists and homework sheets inside.",
+            description:
+              "Organizes weekly reading worksheets and assessment reports.",
+            teacherNote:
+              "Teachers store sight word lists and homework sheets inside.",
             specs: "Copysafe clear plastic • Wipe-clean exterior",
           },
         ],
@@ -433,18 +506,24 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/logo-icon.svg",
             product: "Heavy-Duty Handle Carry Box",
             quantityBadge: "1x Carry Case",
-            description: "Reinforced handle carry box sized perfectly for Grade 1 school bags.",
-            teacherNote: "Prevents bent corners and ruined books on the daily school run.",
-            specs: "Heavy-duty corrugated kraft cardboard with die-cut carry handle",
+            description:
+              "Reinforced handle carry box sized perfectly for Grade 1 school bags.",
+            teacherNote:
+              "Prevents bent corners and ruined books on the daily school run.",
+            specs:
+              "Heavy-duty corrugated kraft cardboard with die-cut carry handle",
           },
           {
             brand: "Pexpacks",
             brandLogo: "/images/logo-icon.svg",
             product: "Personalized Learner ID Label",
             quantityBadge: "1x Waterproof Tag",
-            description: "High-contrast printed tag with learner's full name and Grade 1 class.",
-            teacherNote: "Critical during the chaotic first weeks of school to prevent lost packs.",
-            specs: "Waterproof vinyl tag with scratch-resistant permanent print",
+            description:
+              "High-contrast printed tag with learner's full name and Grade 1 class.",
+            teacherNote:
+              "Critical during the chaotic first weeks of school to prevent lost packs.",
+            specs:
+              "Waterproof vinyl tag with scratch-resistant permanent print",
           },
         ],
       },
@@ -470,26 +549,34 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/bic.svg",
             product: "Cristal Ballpoint Pens Value Pack",
             quantityBadge: "Pack of 10 (8 Blue, 2 Black)",
-            description: "High-mileage ballpoint pens engineered for secondary school exam volumes.",
-            teacherNote: "High school teachers require black/blue pens only; crisp line for legible script.",
-            specs: "1.0mm medium line • Over 2km write-out length • Clear barrel for ink monitoring",
+            description:
+              "High-mileage ballpoint pens engineered for secondary school exam volumes.",
+            teacherNote:
+              "High school teachers require black/blue pens only; crisp line for legible script.",
+            specs:
+              "1.0mm medium line • Over 2km write-out length • Clear barrel for ink monitoring",
           },
           {
             brand: "Staedtler",
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Noris HB & 2B Drawing Pencils",
             quantityBadge: "Pack of 6",
-            description: "Dual grade pencil pack for everyday calculations and technical design.",
-            teacherNote: "2B lead required for shading in arts & technology drawing.",
-            specs: "Graded HB and 2B German graphite cores • Break-resistant bonding",
+            description:
+              "Dual grade pencil pack for everyday calculations and technical design.",
+            teacherNote:
+              "2B lead required for shading in arts & technology drawing.",
+            specs:
+              "Graded HB and 2B German graphite cores • Break-resistant bonding",
           },
           {
             brand: "Staedtler",
             brandLogo: "/images/stationery-brands/staedtler.svg",
             product: "Textsurfer Classic Highlighters",
             quantityBadge: "Pack of 4 Pastel",
-            description: "Fast-drying highlighter ink that won't smudge ballpoint handwriting.",
-            teacherNote: "Essential for study summaries, comprehension texts, and exam preparation.",
+            description:
+              "Fast-drying highlighter ink that won't smudge ballpoint handwriting.",
+            teacherNote:
+              "Essential for study summaries, comprehension texts, and exam preparation.",
             specs: "Chisel tip 1–5mm • Lightfast pigment • Large ink reservoir",
           },
         ],
@@ -505,8 +592,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/pritt.svg",
             product: "Original Glue Stick (43g)",
             quantityBadge: "2x 43g Jumbo Sticks",
-            description: "Solvent-free instant adhesion for science projects and visual arts portfolios.",
-            teacherNote: "Applies smoothly without paper cockling or discoloration over time.",
+            description:
+              "Solvent-free instant adhesion for science projects and visual arts portfolios.",
+            teacherNote:
+              "Applies smoothly without paper cockling or discoloration over time.",
             specs: "43g size • 97% natural ingredients • Non-toxic",
           },
           {
@@ -514,8 +603,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "17cm Student Scissors",
             quantityBadge: "1x 17cm Scissors",
-            description: "Longer contoured blade for clean, sharp cuts through heavy cardstock.",
-            teacherNote: "Suitable for teenage hand dimensions; sharp stainless steel precision edge.",
+            description:
+              "Longer contoured blade for clean, sharp cuts through heavy cardstock.",
+            teacherNote:
+              "Suitable for teenage hand dimensions; sharp stainless steel precision edge.",
             specs: "17cm stainless steel blades • Ergonomic rubberized grip",
           },
           {
@@ -523,8 +614,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/bostik.svg",
             product: "Genuine Blu Tack",
             quantityBadge: "1x 100g Slab",
-            description: "Versatile adhesive putty for project display boards and model building.",
-            teacherNote: "Required for science fair presentation boards and classroom presentations.",
+            description:
+              "Versatile adhesive putty for project display boards and model building.",
+            teacherNote:
+              "Required for science fair presentation boards and classroom presentations.",
             specs: "100g reusable putty",
           },
         ],
@@ -540,27 +633,36 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/casio.svg",
             product: "fx-82ZA PLUS II Scientific Calculator",
             quantityBadge: "1x Scientific Calc",
-            description: "The official South African CAPS syllabus calculator for High School.",
-            teacherNote: "Developed specifically with South African educators; displays natural mathematical fractions.",
-            specs: "283 functions • Natural Textbook Display • DBE Approved for Matric exams",
+            description:
+              "The official South African CAPS syllabus calculator for High School.",
+            teacherNote:
+              "Developed specifically with South African educators; displays natural mathematical fractions.",
+            specs:
+              "283 functions • Natural Textbook Display • DBE Approved for Matric exams",
           },
           {
             brand: "Marlin",
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "Complete Geometry Maths Instrument Set",
             quantityBadge: "1x 9-Piece Tin Set",
-            description: "Precision metal compass, divider, protractor, and set squares in a metal tin.",
-            teacherNote: "Strictly required for Grade 8–12 Euclidean geometry and technical drawing.",
-            specs: "Metal tin case • Screw-lock metal compass • Clear 180° protractor • 45° & 60° triangles",
+            description:
+              "Precision metal compass, divider, protractor, and set squares in a metal tin.",
+            teacherNote:
+              "Strictly required for Grade 8–12 Euclidean geometry and technical drawing.",
+            specs:
+              "Metal tin case • Screw-lock metal compass • Clear 180° protractor • 45° & 60° triangles",
           },
           {
             brand: "Marlin",
             brandLogo: "/images/stationery-brands/marlin.svg",
             product: "30cm Clear Shatterproof Metric Ruler",
             quantityBadge: "1x 30cm Ruler",
-            description: "Anti-glare beveled ruler with clear millimetre markings.",
-            teacherNote: "Essential for physics graphing, technical drawing, and geometry exams.",
-            specs: "Shatterproof acrylic • Dual millimetre / centimetre calibrations",
+            description:
+              "Anti-glare beveled ruler with clear millimetre markings.",
+            teacherNote:
+              "Essential for physics graphing, technical drawing, and geometry exams.",
+            specs:
+              "Shatterproof acrylic • Dual millimetre / centimetre calibrations",
           },
         ],
       },
@@ -575,8 +677,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "A4 Feint & Margin Exercise Books (72pg)",
             quantityBadge: "10x 72-Page Books",
-            description: "High-opacity 80gsm paper preventing pen bleed-through during fast lectures.",
-            teacherNote: "Each high school subject requires a dedicated feint & margin workbook.",
+            description:
+              "High-opacity 80gsm paper preventing pen bleed-through during fast lectures.",
+            teacherNote:
+              "Each high school subject requires a dedicated feint & margin workbook.",
             specs: "A4 size • 72 pages • Feint & margin • Heavyweight cover",
           },
           {
@@ -584,8 +688,10 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/croxley.svg",
             product: "A4 Quad & Margin Maths Books (72pg)",
             quantityBadge: "6x 72-Page Books",
-            description: "Graph paper grid essential for algebraic functions and coordinate geometry.",
-            teacherNote: "Required for pure maths and physical sciences graphing.",
+            description:
+              "Graph paper grid essential for algebraic functions and coordinate geometry.",
+            teacherNote:
+              "Required for pure maths and physical sciences graphing.",
             specs: "A4 • 72 pages • 5mm squared grid • Durable saddle stitch",
           },
           {
@@ -593,9 +699,12 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/stationery-brands/bantex.svg",
             product: "30-Pocket Clear View Flip File",
             quantityBadge: "2x 30-Pocket Files",
-            description: "Heavy-duty presentation folder for term SBA (School Based Assessment) files.",
-            teacherNote: "Mandated by DBE for official term assessment and portfolio moderation.",
-            specs: "30 copysafe pockets • Rigid cover • Spine label for subject naming",
+            description:
+              "Heavy-duty presentation folder for term SBA (School Based Assessment) files.",
+            teacherNote:
+              "Mandated by DBE for official term assessment and portfolio moderation.",
+            specs:
+              "30 copysafe pockets • Rigid cover • Spine label for subject naming",
           },
         ],
       },
@@ -610,17 +719,22 @@ const GRADE_PACKS: Record<string, ExampleGradePack> = {
             brandLogo: "/images/logo-icon.svg",
             product: "Heavy-Duty Handle Carry Box",
             quantityBadge: "1x Carry Case",
-            description: "Heavy corrugated case protecting expensive textbooks and calculators.",
-            teacherNote: "Carries up to 15kg of books with zero tearing or broken handles.",
-            specs: "350gsm flute corrugated kraft cardboard • Die-cut reinforced handle",
+            description:
+              "Heavy corrugated case protecting expensive textbooks and calculators.",
+            teacherNote:
+              "Carries up to 15kg of books with zero tearing or broken handles.",
+            specs:
+              "350gsm flute corrugated kraft cardboard • Die-cut reinforced handle",
           },
           {
             brand: "Pexpacks",
             brandLogo: "/images/logo-icon.svg",
             product: "Personalized Learner ID Label",
             quantityBadge: "1x Waterproof Tag",
-            description: "Full learner identification preventing locker and classroom mix-ups.",
-            teacherNote: "Permanent high-adhesion vinyl tag that doesn't peel off through the year.",
+            description:
+              "Full learner identification preventing locker and classroom mix-ups.",
+            teacherNote:
+              "Permanent high-adhesion vinyl tag that doesn't peel off through the year.",
             specs: "Waterproof vinyl • Scratch-resistant thermal print",
           },
         ],
@@ -637,7 +751,10 @@ type QuickSchool = {
 const DEFAULT_QUICK_SCHOOLS: QuickSchool[] = [
   { name: "Dawnview High School", slug: "dawnview-high-school" },
   { name: "Hoërskool Primrose", slug: "ho-rskool-primrose" },
-  { name: "Primrose Hill Primary School", slug: "primrose-hill-primary-school" },
+  {
+    name: "Primrose Hill Primary School",
+    slug: "primrose-hill-primary-school",
+  },
 ];
 
 export function UnboxingSection() {
@@ -662,7 +779,9 @@ export function UnboxingSection() {
   const isFloating = isHeaderHidden && !isAtTop;
 
   // Quick find suggestions: uses the app's established edge IP + hybrid ranking setup
-  const [quickSchools, setQuickSchools] = useState<QuickSchool[]>(DEFAULT_QUICK_SCHOOLS);
+  const [quickSchools, setQuickSchools] = useState<QuickSchool[]>(
+    DEFAULT_QUICK_SCHOOLS,
+  );
 
   useEffect(() => {
     let isCancelled = false;
@@ -684,7 +803,11 @@ export function UnboxingSection() {
     void fetch("/api/schools/search?limit=8")
       .then((res) => res.json())
       .then((data) => {
-        if (!isCancelled && Array.isArray(data?.results) && data.results.length > 0) {
+        if (
+          !isCancelled &&
+          Array.isArray(data?.results) &&
+          data.results.length > 0
+        ) {
           applyRanking(data.results);
         }
       })
@@ -711,7 +834,10 @@ export function UnboxingSection() {
 
     return () => {
       isCancelled = true;
-      window.removeEventListener(RECENT_SCHOOL_VISITS_EVENT, handleVisitsUpdate);
+      window.removeEventListener(
+        RECENT_SCHOOL_VISITS_EVENT,
+        handleVisitsUpdate,
+      );
       window.removeEventListener("storage", handleVisitsUpdate);
     };
   }, []);
@@ -745,7 +871,7 @@ export function UnboxingSection() {
     const matched = quickSchools.find(
       (s) =>
         s.name.toLowerCase() === query.toLowerCase() ||
-        s.slug.toLowerCase() === query.toLowerCase()
+        s.slug.toLowerCase() === query.toLowerCase(),
     );
     if (matched?.slug) {
       router.push(`/schools/${encodeURIComponent(matched.slug)}`);
@@ -754,7 +880,9 @@ export function UnboxingSection() {
 
     // 2. Query the schools search API to get the exact top school record
     try {
-      const res = await fetch(`/api/schools/search?q=${encodeURIComponent(query)}&limit=1`);
+      const res = await fetch(
+        `/api/schools/search?q=${encodeURIComponent(query)}&limit=1`,
+      );
       if (res.ok) {
         const data = await res.json();
         const topSchool = data?.results?.[0];
@@ -902,9 +1030,15 @@ export function UnboxingSection() {
                       }}
                       className="appearance-none cursor-pointer pl-3 pr-8 py-1.5 rounded-xl bg-white border border-pex-border/80 text-xs sm:text-sm font-extrabold text-pex-navy shadow-2xs hover:border-pex-keppel focus:outline-none focus:ring-2 focus:ring-pex-keppel/30 transition-all"
                     >
-                      <option value="grade-1">Grade 1 Pack (Foundation Phase)</option>
-                      <option value="grade-4">Grade 4 Pack (Intermediate Phase)</option>
-                      <option value="grade-8">Grade 8 Pack (Senior Phase)</option>
+                      <option value="grade-1">
+                        Grade 1 Pack (Foundation Phase)
+                      </option>
+                      <option value="grade-4">
+                        Grade 4 Pack (Intermediate Phase)
+                      </option>
+                      <option value="grade-8">
+                        Grade 8 Pack (Senior Phase)
+                      </option>
                     </select>
                     <ChevronDown className="w-3.5 h-3.5 text-pex-navy/60 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
@@ -917,7 +1051,7 @@ export function UnboxingSection() {
                   "sticky max-lg:z-30 w-full self-start transition-all duration-200 mb-6",
                   isFloating
                     ? "max-md:top-2"
-                    : "max-md:top-[calc(60px+8px)] md:top-[calc(72px+10px)] lg:static lg:top-auto"
+                    : "max-md:top-[calc(60px+8px)] md:top-[calc(72px+10px)] lg:static lg:top-auto",
                 )}
               >
                 <div className="rounded-2xl border border-pex-border bg-white/95 backdrop-blur-md p-2 shadow-xs sm:shadow-sm">
@@ -940,13 +1074,15 @@ export function UnboxingSection() {
                             "inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 cursor-pointer shrink-0",
                             isSelected
                               ? "bg-pex-navy text-white shadow-xs scale-[1.01]"
-                              : "bg-pex-bg-soft text-pex-navy hover:bg-slate-200/70"
+                              : "bg-pex-bg-soft text-pex-navy hover:bg-slate-200/70",
                           )}
                         >
                           <Icon
                             className={cn(
                               "w-4 h-4 shrink-0",
-                              isSelected ? "text-pex-keppel" : "text-pex-text-muted"
+                              isSelected
+                                ? "text-pex-keppel"
+                                : "text-pex-text-muted",
                             )}
                           />
                           <span>{cat.name}</span>
@@ -955,7 +1091,7 @@ export function UnboxingSection() {
                               "text-[11px] font-extrabold px-1.5 py-0.5 rounded-md",
                               isSelected
                                 ? "bg-white/20 text-white"
-                                : "bg-slate-200/80 text-slate-600"
+                                : "bg-slate-200/80 text-slate-600",
                             )}
                           >
                             {cat.items.length}
@@ -976,7 +1112,9 @@ export function UnboxingSection() {
                   </div>
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
                     <Info className="w-3.5 h-3.5 text-pex-keppel shrink-0" />
-                    <span>Click any item for quantities & teacher specifications</span>
+                    <span>
+                      Click any item for quantities & teacher specifications
+                    </span>
                   </span>
                 </div>
 
@@ -1063,7 +1201,9 @@ export function UnboxingSection() {
                   Durable Handle Carry Box
                 </h4>
                 <p className="text-sm text-slate-700 mt-2 leading-relaxed font-normal m-0">
-                  Heavy-duty 350gsm corrugated case with a die-cut carry handle keeps exercise books pristine, protects rulers, and makes day-one transport effortless.
+                  Heavy-duty 350gsm corrugated case with a die-cut carry handle
+                  keeps exercise books pristine, protects rulers, and makes
+                  day-one transport effortless.
                 </p>
               </div>
               <div className="mt-4 pt-3 border-t border-pex-keppel/15 flex items-center gap-2 text-xs font-bold text-pex-keppel">
@@ -1087,7 +1227,9 @@ export function UnboxingSection() {
                   Personalised Learner Tag
                 </h4>
                 <p className="text-sm text-slate-700 mt-2 leading-relaxed font-normal m-0">
-                  Custom printed waterproof vinyl ID badge featuring your child’s full name, grade, and class — completely eliminating lost stationery and classroom mix-ups.
+                  Custom printed waterproof vinyl ID badge featuring your
+                  child’s full name, grade, and class — completely eliminating
+                  lost stationery and classroom mix-ups.
                 </p>
               </div>
               <div className="mt-4 pt-3 border-t border-pex-coral/20 flex items-center gap-2 text-xs font-bold text-pex-coral">
@@ -1106,7 +1248,9 @@ export function UnboxingSection() {
                   Zero Generic Knock-Offs
                 </h4>
                 <p className="text-sm text-slate-700 mt-2 leading-relaxed font-normal m-0">
-                  We never substitute items with unbranded budget products. You receive 100% authentic Staedtler, Pritt, Bic, Croxley, and Casio as mandated by South African teachers.
+                  We never substitute items with unbranded budget products. You
+                  receive 100% authentic Staedtler, Pritt, Bic, Croxley, and
+                  Casio as mandated by South African teachers.
                 </p>
               </div>
               <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-pex-navy/70">
@@ -1125,7 +1269,9 @@ export function UnboxingSection() {
                   Grade-Accurate Matching
                 </h4>
                 <p className="text-sm text-slate-700 mt-2 leading-relaxed font-normal m-0">
-                  Digitized directly from verified school stationery lists, ensuring accurate page rulings, calculator models, and exact item counts without supermarket queues.
+                  Digitized directly from verified school stationery lists,
+                  ensuring accurate page rulings, calculator models, and exact
+                  item counts without supermarket queues.
                 </p>
               </div>
               <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-pex-navy/70">
@@ -1146,10 +1292,11 @@ export function UnboxingSection() {
                   <span>Zero-Friction Search</span>
                 </div>
                 <h4 className="text-xl sm:text-2xl lg:text-3xl font-heading font-extrabold text-white m-0">
-                  Ready to get your child’s pack sorted?
+                  Ready to get your child&apos;s stationery pack sorted?
                 </h4>
                 <p className="text-sm text-slate-300 mt-2 leading-relaxed m-0">
-                  Search your school name to jump straight to your verified grade stationery list with zero extra steps.
+                  Search your school name to jump straight to your verified
+                  grade stationery list with zero extra steps.
                 </p>
               </div>
 
@@ -1198,7 +1345,9 @@ export function UnboxingSection() {
 
                 {/* Quick-Select Chips */}
                 <div className="mt-3 flex items-center flex-wrap gap-1.5 text-xs">
-                  <span className="text-slate-400 font-medium">Quick find:</span>
+                  <span className="text-slate-400 font-medium">
+                    Quick find:
+                  </span>
                   {quickSchools.map((school) => (
                     <Link
                       key={school.slug}
@@ -1333,4 +1482,3 @@ export function UnboxingSection() {
     </section>
   );
 }
-
