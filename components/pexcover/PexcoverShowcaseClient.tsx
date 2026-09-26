@@ -130,49 +130,6 @@ const PAPER_STYLES: PaperStyleShowcase[] = [
   },
 ];
 
-// ── Sizing & PEXCO Classification Table ──
-const PEXCO_SIZING_TABLE = [
-  {
-    code: "PEXCO01",
-    classification: "Slim Exercise Books",
-    pageRange: "10–36 Pages",
-    exampleBooks: "A4 & A5 handwriting books, music staves, vocabulary jotters, spelling registers",
-    fitType: "Precision Slim Snug Slip-On",
-    spineAllowance: "Flat / Micro-spine (<3mm)",
-  },
-  {
-    code: "PEXCO02",
-    classification: "Standard Exercise Books",
-    pageRange: "72–80 Pages",
-    exampleBooks: "A4 72-page feint & margin, quad margin (graph/maths), Irish & unruled exercise books",
-    fitType: "Standard High-Friction Poly Sleeve",
-    spineAllowance: "Standard spine (3mm–6mm)",
-  },
-  {
-    code: "PEXCO03",
-    classification: "Softcover Readers & Workbooks",
-    pageRange: "Flexible Extent",
-    exampleBooks: "Department CAPS readers, literature novels, poetry anthologies, language workbooks",
-    fitType: "Adaptive Contour Slip Sleeve",
-    spineAllowance: "Flexible gusset spine (5mm–12mm)",
-  },
-  {
-    code: "PEXCO04",
-    classification: "1 & 2 Quire Hardcovers",
-    pageRange: "92–192 Pages",
-    exampleBooks: "A4 1-quire & 2-quire hardbound books, accounting ledgers, science lab journals",
-    fitType: "Heavy-Gauge Rigid Hardcover Fit",
-    spineAllowance: "Deep rigid book board spine (10mm–18mm)",
-  },
-  {
-    code: "PEXCO05",
-    classification: "Heavy Hardcovers & Reference",
-    pageRange: "Large Volumes",
-    exampleBooks: "Oxford school dictionaries, world atlases, large study guides, comprehensive encyclopedias",
-    fitType: "Reinforced Jumbo Shield Sleeve",
-    spineAllowance: "Extra-wide reinforced spine (18mm–35mm)",
-  },
-];
 
 // ── Parent FAQs Data ──
 const PARENT_FAQS = [
@@ -701,75 +658,7 @@ export function PexcoverShowcaseClient() {
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          SECTION E: Sizing & PEXCO Classification Table (#sizes-standards)
-      ────────────────────────────────────────────────────────────── */}
-      <section id="sizes-standards" className="py-14 sm:py-20 bg-white border-y border-slate-200/80">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-10">
-            <div>
-              <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#1E7468] mb-2 block">
-                Precision Fit Matrix
-              </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                PEXCO Fit & Sizing Classification
-              </h2>
-              <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-2xl">
-                We calibrate each sleeve size to the millimeter so book spines never buckle and corners never slide.
-              </p>
-            </div>
-            <div className="text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg p-2.5 max-w-xs shrink-0">
-              🔒 Standardized under Pexpacks Quality Contract 2026.
-            </div>
-          </div>
 
-          {/* Responsive Table Wrapper */}
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
-            <table className="w-full text-left border-collapse text-xs sm:text-sm">
-              <thead>
-                <tr className="bg-[#EBF7F5] border-b border-[#BBE5DE] text-slate-900 font-extrabold text-[11px] sm:text-xs uppercase tracking-wider">
-                  <th className="py-3.5 px-4 sm:px-6">PEXCO Code</th>
-                  <th className="py-3.5 px-4 sm:px-6">Classification</th>
-                  <th className="py-3.5 px-4 sm:px-6">Page Extent</th>
-                  <th className="py-3.5 px-4 sm:px-6">Common School Books</th>
-                  <th className="py-3.5 px-4 sm:px-6">Sleeve Precision Standard</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
-                {PEXCO_SIZING_TABLE.map((row) => (
-                  <tr key={row.code} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-4 px-4 sm:px-6 font-mono font-bold text-[#1E7468]">
-                      <span className="inline-flex items-center px-2 py-1 rounded bg-[#EBF7F5] border border-[#BBE5DE]">
-                        {row.code}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 sm:px-6 font-bold text-slate-900">
-                      {row.classification}
-                    </td>
-                    <td className="py-4 px-4 sm:px-6 font-semibold text-slate-600">
-                      {row.pageRange}
-                    </td>
-                    <td className="py-4 px-4 sm:px-6 text-slate-600 max-w-xs">
-                      {row.exampleBooks}
-                    </td>
-                    <td className="py-4 px-4 sm:px-6 text-slate-700 font-medium">
-                      <div>{row.fitType}</div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">{row.spineAllowance}</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-            <span>* Every pack automatically associates required book items with their exact PEXCO rate code.</span>
-            <Link href="/schools" className="text-[#1E7468] font-bold hover:underline inline-flex items-center gap-1">
-              Find your school's exact pack list &rarr;
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ─────────────────────────────────────────────────────────────
           SECTION F: Interactive Photo Gallery (#gallery)
