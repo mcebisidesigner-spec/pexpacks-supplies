@@ -10,15 +10,10 @@ import {
   CheckCircle2,
   ChevronDown,
   ArrowRight,
-  BookOpen,
   Layers,
   Droplets,
   Tag,
-  Scissors,
   Clock,
-  ExternalLink,
-  ChevronRight,
-  FileCheck2,
   Sparkle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -236,53 +231,7 @@ export function PexcoverShowcaseClient() {
 
   return (
     <div className="w-full bg-slate-50/60 pb-20 selection:bg-[#1E7468]/15 selection:text-[#1E7468]">
-      {/* ─────────────────────────────────────────────────────────────
-          SECTION A: Sub-Header & Sticky Navigation Bar
-      ────────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all duration-200">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4">
-          {/* Breadcrumb Navigation */}
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 overflow-hidden">
-            <Link href="/" className="hover:text-slate-900 transition-colors shrink-0">
-              Home
-            </Link>
-            <ChevronRight size={13} className="shrink-0 text-slate-400" />
-            <span className="text-slate-500 shrink-0">Services</span>
-            <ChevronRight size={13} className="shrink-0 text-slate-400" />
-            <span className="font-bold text-[#1E7468] truncate">Pexcover™</span>
-          </nav>
 
-          {/* Quick Anchor Links (Hidden on small mobile) */}
-          <div className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-600">
-            <a href="#protection-layers" className="hover:text-[#1E7468] transition-colors">
-              3-Layer Protection
-            </a>
-            <a href="#how-it-works" className="hover:text-[#1E7468] transition-colors">
-              How It Works
-            </a>
-            <a href="#sizes-standards" className="hover:text-[#1E7468] transition-colors">
-              Fit Standards
-            </a>
-            <a href="#gallery" className="hover:text-[#1E7468] transition-colors">
-              Photo Gallery
-            </a>
-            <a href="#faqs" className="hover:text-[#1E7468] transition-colors">
-              Parent FAQs
-            </a>
-          </div>
-
-          {/* Top Right Action Button */}
-          <div className="flex items-center gap-3 shrink-0">
-            <Link
-              href="/schools"
-              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-[#1E7468] bg-[#EBF7F5] border border-[#BBE5DE] hover:bg-[#d9f1ed] transition-colors shadow-xs"
-            >
-              <span>View School Packs</span>
-              <ArrowRight size={14} className="shrink-0" />
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* ─────────────────────────────────────────────────────────────
           SECTION B: Hero Section
