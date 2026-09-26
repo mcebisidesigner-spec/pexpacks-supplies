@@ -254,7 +254,11 @@ export default async function SchoolDetailPage({
           {/* Subtle Pexcover Advertisement Banner */}
           <div className="w-full max-w-[var(--content-max-width)] mx-auto px-4 md:px-8 pt-5 sm:pt-6 md:pt-10">
             <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-stretch md:items-start p-5 bg-pex-bg-soft border border-pex-border rounded-card hover:border-pex-keppel hover:shadow-[0_10px_30px_rgba(26,42,64,0.04)] transition-all duration-200">
-              <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-pex-bg-mint text-pex-keppel grid place-items-center">
+              <Link
+                href="/pexcover"
+                className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#EBF7F5] text-[#1E7468] grid place-items-center hover:scale-105 transition-transform"
+                aria-label="Learn how Pexcover works"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -266,7 +270,7 @@ export default async function SchoolDetailPage({
                 >
                   <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-              </div>
+              </Link>
               <div className="flex-1 min-w-0">
                 <h4 className="m-0 mb-1.5 text-pex-navy font-heading text-lg font-black leading-[1.25]">
                   Simplify prep with Pexcover book covering
@@ -278,8 +282,8 @@ export default async function SchoolDetailPage({
                   first-day ready.
                 </p>
                 <Link
-                  href="/blog/what-is-pexcover-book-covering"
-                  className="inline-flex items-center text-pex-coral hover:text-pex-navy text-sm font-extrabold no-underline hover:underline transition-colors"
+                  href="/pexcover"
+                  className="text-[#FF6B53] font-bold text-sm hover:underline inline-flex items-center gap-1"
                 >
                   Learn how Pexcover works &rarr;
                 </Link>

@@ -6,7 +6,7 @@ export const PEX_ROUTES = {
   partner: "/partnership",
   contact: "/contact",
   faq: "/faq",
-  pexcover: "/blog/pexcover-book-covering-guide",
+  pexcover: "/pexcover",
 } as const;
 
 type PexActionLink = {

@@ -48,7 +48,7 @@ export function getFaqLinks(faq: FAQ): { label: string; href: string }[] {
   if (category.includes("school pack") || category === "school packs" || question.includes("grade pack") || question.includes("pexcover")) {
     return [
       { label: "Find your school pack", href: "/schools" },
-      { label: "Learn about Pexcover", href: "/blog/what-is-pexcover-book-covering" },
+      { label: "Learn about Pexcover", href: "/pexcover" },
     ];
   }
   if (category.includes("order") || question.includes("order status") || question.includes("track")) {
@@ -115,7 +115,7 @@ export const faqs: FAQ[] = [
       { label: "Find your school pack", href: "/schools" },
       {
         label: "Learn about Pexcover",
-        href: "/blog/what-is-pexcover-book-covering",
+        href: "/pexcover",
       },
     ],
   },
@@ -277,7 +277,7 @@ export const faqs: FAQ[] = [
     links: [
       {
         label: "Learn about Pexcover",
-        href: "/blog/what-is-pexcover-book-covering",
+        href: "/pexcover",
       },
       { label: "Find your pack", href: "/schools" },
     ],

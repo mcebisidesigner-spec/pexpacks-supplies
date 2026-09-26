@@ -155,7 +155,7 @@ export function onlineStoreSchema() {
         {
           "@type": "Offer",
           name: "Pexcover book covering add-on",
-          url: `${siteUrl}/blog/what-is-pexcover-book-covering`,
+          url: `${siteUrl}/pexcover`,
           category: "Book covering service",
           itemOffered: {
             "@type": "Service",

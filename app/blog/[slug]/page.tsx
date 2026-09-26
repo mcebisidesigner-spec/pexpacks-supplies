@@ -364,10 +364,10 @@ export default async function BlogPostPage({
                   </p>
 
                   <Link
-                    href="/blog/pexcover-book-covering-guide"
+                    href="/pexcover"
                     className="mt-4 inline-flex items-center gap-1.5 text-xs font-extrabold text-pex-coral hover:text-pex-coral-hover transition-colors no-underline"
                   >
-                    <span>Read why schools mandate Pexcover</span>
+                    <span>Explore Pexcover showcase &amp; photo gallery</span>
                     <ArrowRight className="size-3.5" />
                   </Link>
                 </div>

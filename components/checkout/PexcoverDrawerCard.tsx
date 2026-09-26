@@ -335,6 +335,15 @@ export function PexcoverDrawerCard({
               ? "No coverable books in this pack"
               : `${coverableCount} book${coverableCount === 1 ? "" : "s"} covered with protective wrap`}
           </span>
+          <Link
+            className="text-[11px] font-semibold text-[#1E7468] hover:underline inline-flex items-center gap-0.5 mt-0.5"
+            href="/pexcover"
+            rel="noopener noreferrer"
+            target="_blank"
+            onClick={(e) => e.stopPropagation()}
+          >
+            See materials &amp; photo gallery ↗
+          </Link>
         </div>
 
         <div
@@ -370,7 +379,7 @@ export function PexcoverDrawerCard({
                 </span>
                 <span>•</span>
                 <Link
-                  href="/blog/pexcover-book-covering-guide"
+                  href="/pexcover"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-pex-keppel font-bold hover:underline"
