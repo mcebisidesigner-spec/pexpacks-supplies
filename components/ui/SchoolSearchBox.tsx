@@ -487,7 +487,10 @@ export function SchoolSearchBox({
                 ref={trendingStripRef}
                 className="flex gap-2 overflow-x-auto snap-x snap-mandatory pt-2.5 pb-3 px-1.5 -mx-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden cursor-grab active:cursor-grabbing select-none touch-pan-x"
                 onWheel={handleTrendingWheel}
-                onPointerDown={handleChipPointerDown}
+                onPointerDown={(event) => {
+                  if (event.target instanceof Element && event.target.closest("a")) return;
+                  handleChipPointerDown(event);
+                }}
                 onPointerMove={handleChipPointerMove}
                 onPointerUp={handleChipPointerUp}
                 onPointerCancel={handleChipPointerUp}

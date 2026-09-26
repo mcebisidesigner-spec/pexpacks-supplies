@@ -7,7 +7,7 @@ export const metadata: Metadata = buildMetadata(
   "Pexcover™ Book Covering Service | Pre-Covered School Books",
   "Skip the late-night scissors and tape. Professional school book covering done for you with premium protective clear sleeves, durable backing papers, and personalized waterproof learner labels.",
   "/pexcover",
-  "/images/pexcover-banner.webp",
+  "/images/pexcover-showcase-hero.jpg",
   [
     "Pexcover",
     "book covering service",

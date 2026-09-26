@@ -766,6 +766,8 @@ export function UnboxingSection() {
 
   // Search input state for the primary CTA combobox
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [schoolMatches, setSchoolMatches] = useState<QuickSchool[]>([]);
+  const [isSchoolMatchesLoading, setIsSchoolMatchesLoading] = useState(false);
 
   const currentPack = GRADE_PACKS[selectedGradeId] ?? GRADE_PACKS["grade-4"];
   const activeCategory =
@@ -842,6 +844,53 @@ export function UnboxingSection() {
       window.removeEventListener("storage", handleVisitsUpdate);
     };
   }, []);
+
+  // Show the first three school matches once the user has entered three characters.
+  useEffect(() => {
+    const query = searchQuery.trim();
+    if (query.length < 3) {
+      setSchoolMatches([]);
+      setIsSchoolMatchesLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(async () => {
+      setIsSchoolMatchesLoading(true);
+      try {
+        const response = await fetch(
+          `/api/schools/search?q=${encodeURIComponent(query)}&limit=3`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) throw new Error("school_matches_failed");
+
+        const data = (await response.json()) as {
+          results?: Array<{ name?: string; slug?: string }>;
+        };
+        setSchoolMatches(
+          (data.results ?? [])
+            .map((school) => ({
+              name: school.name?.trim() ?? "",
+              slug: school.slug?.trim() ?? "",
+            }))
+            .filter((school) => Boolean(school.name) && Boolean(school.slug))
+            .slice(0, 3),
+        );
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        setSchoolMatches([]);
+      } finally {
+        if (!controller.signal.aborted) setIsSchoolMatchesLoading(false);
+      }
+    }, 180);
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [searchQuery]);
 
   // Handle Quick-View modal keyboard and scroll lock
   useEffect(() => {
@@ -1319,6 +1368,10 @@ export function UnboxingSection() {
                       list="popular-school-presets"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      role="combobox"
+                      aria-autocomplete="list"
+                      aria-controls={`${searchInputId}-school-matches`}
+                      aria-expanded={searchQuery.trim().length >= 3}
                       placeholder="Select your school or grade..."
                       className="w-full min-h-[50px] pl-11 pr-4 rounded-xl sm:rounded-2xl bg-white/95 text-pex-navy placeholder:text-slate-500 font-semibold text-sm sm:text-base border border-white/30 focus:outline-none focus:ring-4 focus:ring-pex-keppel/30 focus:border-pex-keppel shadow-sm transition-all"
                     />
@@ -1330,6 +1383,42 @@ export function UnboxingSection() {
                         <option key={name} value={name} />
                       ))}
                     </datalist>
+                    {searchQuery.trim().length >= 3 ? (
+                      <div
+                        id={`${searchInputId}-school-matches`}
+                        role="listbox"
+                        className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-40 overflow-hidden rounded-2xl border border-pex-border bg-white text-pex-navy shadow-[0_18px_44px_rgba(15,37,55,0.2)]"
+                      >
+                        <div className="flex items-center justify-between gap-3 border-b border-pex-border bg-pex-bg-soft/70 px-4 py-3 text-[11px] font-extrabold uppercase tracking-wider text-pex-muted">
+                          <span>Matching schools</span>
+                          <span>{isSchoolMatchesLoading ? "Searching..." : "Top 3"}</span>
+                        </div>
+                        {isSchoolMatchesLoading ? (
+                          <p className="m-0 px-4 py-4 text-sm text-pex-muted">
+                            Finding schools for you...
+                          </p>
+                        ) : schoolMatches.length > 0 ? (
+                          <div className="grid divide-y divide-pex-border/70">
+                            {schoolMatches.map((school) => (
+                              <Link
+                                key={school.slug}
+                                href={`/schools/${encodeURIComponent(school.slug)}`}
+                                role="option"
+                                className="flex items-center justify-between gap-3 px-4 py-3 text-sm font-bold text-pex-navy no-underline transition-colors hover:bg-pex-bg-soft hover:text-pex-keppel focus-visible:outline-none focus-visible:bg-pex-bg-soft focus-visible:text-pex-keppel"
+                                onClick={() => setSearchQuery(school.name)}
+                              >
+                                <span className="min-w-0 truncate">{school.name}</span>
+                                <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
+                              </Link>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="m-0 px-4 py-4 text-sm text-pex-muted">
+                            No matching school found yet. Try another spelling.
+                          </p>
+                        )}
+                      </div>
+                    ) : null}
                   </div>
 
                   <Button
