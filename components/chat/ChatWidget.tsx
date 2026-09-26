@@ -400,15 +400,9 @@ export function ChatWidget() {
                 </span>
                 <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-emerald-400" aria-hidden="true" />
               </div>
-              <div>
-                <h2 className="m-0 text-sm font-heading font-extrabold tracking-tight text-white">
-                  Ask Pex
-                </h2>
-                <p className="m-0 mt-0.5 flex items-center gap-1.5 text-[11px] font-medium text-slate-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Ready to help
-                </p>
-              </div>
+              <h2 className="m-0 text-sm font-heading font-extrabold tracking-tight text-white">
+                Ask Pex
+              </h2>
             </div>
             <button
               type="button"
