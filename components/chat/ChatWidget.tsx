@@ -383,13 +383,9 @@ export function ChatWidget() {
             <Avatar size="h-full w-full" />
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-emerald-400" aria-hidden="true" />
           </span>
-          <div className="flex flex-col">
-            <span className="text-xs font-bold leading-tight font-heading text-white">Ask Pex</span>
-            <span className="text-[10px] font-medium leading-none text-slate-300 flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Online
-            </span>
-          </div>
+          <span className="text-xs font-bold font-heading text-white whitespace-nowrap">
+            Ask Pex
+          </span>
         </button>
       ) : (
         <section
@@ -405,14 +401,9 @@ export function ChatWidget() {
                 <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-emerald-400" aria-hidden="true" />
               </div>
               <div>
-                <div className="flex items-center gap-1.5">
-                  <h2 className="m-0 text-sm font-heading font-extrabold tracking-tight text-white">
-                    Ask Pex
-                  </h2>
-                  <span className="rounded-full bg-brand-teal/20 border border-brand-teal/30 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-teal-200 leading-none">
-                    AI
-                  </span>
-                </div>
+                <h2 className="m-0 text-sm font-heading font-extrabold tracking-tight text-white">
+                  Ask Pex
+                </h2>
                 <p className="m-0 mt-0.5 flex items-center gap-1.5 text-[11px] font-medium text-slate-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Ready to help
@@ -659,9 +650,9 @@ export function ChatWidget() {
 
           <form
             onSubmit={submit}
-            className="shrink-0 border-t border-slate-200/80 bg-white p-2.5 sm:p-3"
+            className="shrink-0 border-t border-slate-100 bg-white p-2.5 sm:p-3"
           >
-            <div className="flex min-h-[46px] items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 py-1 pl-3.5 pr-1.5 shadow-2xs transition-all duration-200 focus-within:border-brand-teal focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-teal/15 focus-within:shadow-xs">
+            <div className="flex min-h-[44px] items-center gap-2 rounded-[14px] border-[1.5px] border-brand-teal bg-white py-1 pl-3.5 pr-1.5 shadow-xs">
               <input
                 id="bro-pex-chat-input"
                 name="chatMessage"
@@ -671,30 +662,27 @@ export function ChatWidget() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
-                placeholder="Ask Pex about your order or school..."
-                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-xs sm:text-[13px] leading-5 text-ink outline-none placeholder:text-slate-400"
+                placeholder="Ask Pex about your order..."
+                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-[13px] leading-5 text-ink outline-none placeholder:text-slate-500"
               />
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
                 aria-label="Send message"
                 className={cn(
-                  "grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-lg font-bold text-white transition-all duration-150",
+                  "grid h-9 w-9 shrink-0 place-items-center rounded-xl text-white transition-all duration-150",
                   input.trim() && !isLoading
-                    ? "bg-brand-accent hover:bg-brand-accent-hover shadow-sm hover:shadow active:scale-95 cursor-pointer"
-                    : "bg-slate-200/90 text-slate-400 cursor-not-allowed shadow-none"
+                    ? "bg-brand-accent hover:bg-brand-accent-hover shadow-xs active:scale-95 cursor-pointer"
+                    : "bg-[#ffa396] cursor-not-allowed shadow-none"
                 )}
               >
-                <Send size={15} aria-hidden="true" className={cn(input.trim() ? "translate-x-px text-white" : "text-slate-400")} />
+                <Send size={16} aria-hidden="true" className="translate-x-px text-white stroke-white" />
               </button>
             </div>
           </form>
 
           {/* Persistent WhatsApp & Human Handoff Bridge */}
-          <footer className="flex shrink-0 items-center justify-between border-t border-slate-100 bg-slate-50/80 px-3.5 py-2 text-xs">
-            <span className="text-[11px] font-medium text-slate-500">
-              Need human support?
-            </span>
+          <footer className="flex shrink-0 items-center justify-end border-t border-slate-100 bg-white px-3 py-1.5 text-xs">
             <a
               href={
                 whatsappHref ||
@@ -708,7 +696,7 @@ export function ChatWidget() {
                   label: "pex_docked_handoff",
                 });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2.5 py-1 text-[11px] font-bold text-[#075E54] border border-[#25D366]/25 transition-all hover:bg-[#25D366]/20 hover:border-[#25D366]/40 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2.5 py-1 text-[11px] font-semibold text-[#075E54] border border-[#25D366]/20 transition-all hover:bg-[#25D366]/20 hover:border-[#25D366]/30 active:scale-95"
             >
               <WhatsAppIcon className="size-3.5 text-[#25D366]" />
               Chat on WhatsApp
@@ -777,7 +765,7 @@ function StarterLinks({
   onNavigate: (linkId: string, destination: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-1.5" aria-label="Popular Pex links">
+    <nav className="flex flex-wrap gap-1.5" aria-label="Popular Pex links">
       {links.map((link) => (
         <Link
           key={link.id}
@@ -789,7 +777,7 @@ function StarterLinks({
           <span>{link.label}</span>
         </Link>
       ))}
-    </div>
+    </nav>
   );
 }
 
@@ -816,7 +804,7 @@ function InlineReplyLinks({
   if (!hasLinks) return null;
 
   return (
-    <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-snug">
+    <nav className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-snug" aria-label="Relevant Pex links">
       {safeActions.map((action) => (
         <Link
           key={action.id}
@@ -868,6 +856,6 @@ function InlineReplyLinks({
           {product.name} - R {product.price.toFixed(2)}
         </span>
       ))}
-    </div>
+    </nav>
   );
 }
