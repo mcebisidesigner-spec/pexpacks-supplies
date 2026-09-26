@@ -21,13 +21,20 @@ import {
   ArrowRight,
   Info,
   ExternalLink,
-  MapPin,
 } from "lucide-react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { Button } from "@/components/ui/Button";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/constants";
 import { useHideHeaderOnScroll } from "@/hooks/useHideHeaderOnScroll";
+import {
+  getRecentSchoolVisits,
+  RECENT_SCHOOL_VISITS_EVENT,
+} from "@/components/schools/schoolVisitTracker";
+import {
+  rankHybridSchools,
+  type HybridSchoolItem,
+} from "@/lib/schools/hybridSchoolRanking";
 import { cn } from "@/lib/utils";
 
 type StationeryItem = {
@@ -643,77 +650,56 @@ export function UnboxingSection() {
   });
   const isFloating = isHeaderHidden && !isAtTop;
 
-  // Quick find suggestions based on device geolocation & database nearby query
+  // Quick find suggestions: uses the app's established edge IP + hybrid ranking setup (zero browser permission popups)
   const [quickSuggestions, setQuickSuggestions] = useState<string[]>([
     "Bryanston Primary",
     "Camps Bay High",
     "Grade 4 Pack",
   ]);
-  const [isNearYou, setIsNearYou] = useState(false);
 
-  // Fetch schools from database based on device geolocation with Edge IP fallback
   useEffect(() => {
     let isCancelled = false;
 
-    async function fetchNearbySchools(lat?: number, lng?: number) {
-      try {
-        const queryParams = new URLSearchParams({ limit: "4" });
-        if (lat != null && lng != null) {
-          queryParams.set("lat", String(lat));
-          queryParams.set("lng", String(lng));
-        }
-
-        const res = await fetch(`/api/schools/search?${queryParams.toString()}`);
-        if (!res.ok) return;
-
-        const data = await res.json();
-        if (
-          !isCancelled &&
-          data?.success &&
-          Array.isArray(data.results) &&
-          data.results.length > 0
-        ) {
-          const schoolNames: string[] = data.results
-            .map((s: { name?: string }) => s.name?.trim())
-            .filter((name: unknown): name is string => typeof name === "string" && name.length > 0)
-            .slice(0, 3);
-
-          if (schoolNames.length > 0) {
-            setQuickSuggestions(schoolNames);
-            if (
-              (lat != null && lng != null) ||
-              data?.source === "edge-coordinates" ||
-              data?.source === "edge-city"
-            ) {
-              setIsNearYou(true);
-            }
-          }
-        }
-      } catch {
-        // Retain fallback presets silently
+    function applyRanking(serverSchools: HybridSchoolItem[]) {
+      const recents = getRecentSchoolVisits();
+      const { rankedSchools } = rankHybridSchools(serverSchools, recents, 3);
+      const names = rankedSchools
+        .map((s) => s.name?.trim())
+        .filter((name): name is string => Boolean(name));
+      if (names.length > 0 && !isCancelled) {
+        setQuickSuggestions(names);
       }
     }
 
-    if (typeof window !== "undefined" && "geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          fetchNearbySchools(
-            position.coords.latitude,
-            position.coords.longitude
-          );
-        },
-        () => {
-          // If user rejects prompt or GPS is unavailable, resolve via edge IP
-          fetchNearbySchools();
-        },
-        { timeout: 8000, maximumAge: 300000, enableHighAccuracy: false }
-      );
-    } else {
-      fetchNearbySchools();
+    void fetch("/api/schools/search?limit=8")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isCancelled && Array.isArray(data?.results) && data.results.length > 0) {
+          applyRanking(data.results);
+        }
+      })
+      .catch(() => {});
+
+    function handleVisitsUpdate() {
+      const recents = getRecentSchoolVisits();
+      if (recents.length > 0 && !isCancelled) {
+        const topNames = recents
+          .map((r) => r.schoolName?.trim())
+          .filter((name): name is string => Boolean(name))
+          .slice(0, 3);
+        if (topNames.length > 0) {
+          setQuickSuggestions(topNames);
+        }
+      }
     }
+
+    window.addEventListener(RECENT_SCHOOL_VISITS_EVENT, handleVisitsUpdate);
+    window.addEventListener("storage", handleVisitsUpdate);
 
     return () => {
       isCancelled = true;
+      window.removeEventListener(RECENT_SCHOOL_VISITS_EVENT, handleVisitsUpdate);
+      window.removeEventListener("storage", handleVisitsUpdate);
     };
   }, []);
 
@@ -1171,16 +1157,9 @@ export function UnboxingSection() {
                   </Button>
                 </form>
 
-                {/* Popular / Geolocation-Suggested Quick-Select Chips */}
+                {/* Quick-Select Chips */}
                 <div className="mt-3 flex items-center flex-wrap gap-1.5 text-xs">
-                  <span className="text-slate-400 font-medium inline-flex items-center gap-1.5">
-                    {isNearYou && (
-                      <MapPin className="w-3.5 h-3.5 text-pex-keppel shrink-0 animate-pulse" />
-                    )}
-                    <span className={cn(isNearYou && "text-slate-300 font-bold")}>
-                      {isNearYou ? "Near you:" : "Quick find:"}
-                    </span>
-                  </span>
+                  <span className="text-slate-400 font-medium">Quick find:</span>
                   {quickSuggestions.map((school) => (
                     <Link
                       key={school}
