@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { isPexHref } from "@/lib/chat/links";
 
 export const chatCardActionSchema = z.object({
   label: z.string(),
-  url: z.string(),
+  url: z.string().refine(isPexHref, "Use a supported Pexpacks route."),
   variant: z.enum(["primary", "secondary", "outline"]).default("primary"),
 });
 
@@ -36,7 +37,7 @@ export const chatResponseSchema = z.object({
         id: z.string(),
         label: z.string(),
         description: z.string(),
-        href: z.string(),
+        href: z.string().refine(isPexHref, "Use a supported Pexpacks route."),
       })
     )
     .optional()

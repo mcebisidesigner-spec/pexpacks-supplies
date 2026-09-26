@@ -6,7 +6,7 @@ import {
   PexEntities,
   PexEntitiesSchema,
 } from "@/lib/chat/request";
-import { PEX_ROUTES } from "@/lib/chat/links";
+import { isPexHref, PEX_ROUTES } from "@/lib/chat/links";
 
 export const PEX_INTENTS = [
   "greeting",
@@ -36,7 +36,7 @@ export const PexActionSchema = z.object({
   id: z.string().min(1).max(80),
   label: z.string().min(1).max(80),
   description: z.string().min(1).max(180),
-  href: z.string().startsWith("/").max(300),
+  href: z.string().max(300).refine(isPexHref, "Use a supported Pexpacks route."),
 });
 
 export const PexQuickReplySchema = z.object({
