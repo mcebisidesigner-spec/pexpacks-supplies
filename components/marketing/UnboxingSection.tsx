@@ -1296,8 +1296,8 @@ export function UnboxingSection() {
                   Ready to get your child&apos;s stationery pack sorted?
                 </h4>
                 <p className="text-sm text-slate-300 mt-2 leading-relaxed m-0">
-                  Search your school name to jump straight to your verified
-                  grade stationery list with zero extra steps.
+                  Search your child&apos;s school name &amp; jump straight to
+                  your verified grade stationery list with zero extra steps.
                 </p>
               </div>
 
