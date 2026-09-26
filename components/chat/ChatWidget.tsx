@@ -4,10 +4,25 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, School, Send, ShieldCheck, Truck, X } from "lucide-react";
+import {
+  BookOpen,
+  Check,
+  MessageCircle,
+  School,
+  Send,
+  ShieldCheck,
+  ShoppingCart,
+  Sparkles,
+  ThumbsDown,
+  ThumbsUp,
+  Truck,
+  Upload,
+  X,
+} from "lucide-react";
 import { buildWhatsAppHref } from "@/data/contact";
 import {
   trackPexActionSelected,
+  trackPexFeedback,
   trackPexHumanHandoff,
   trackPexIntentResolved,
   trackPexRequestFailed,
@@ -153,6 +168,7 @@ export function ChatWidget() {
   const [greetingGiven, setGreetingGiven] = useState(false);
   const [contextSummary, setContextSummary] = useState<string | undefined>(undefined);
   const [activeSession, setActiveSession] = useState<ActiveSession | undefined>(undefined);
+  const [feedbackByMessage, setFeedbackByMessage] = useState<Record<string, "helpful" | "not_helpful">>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const openTray = usePackTrayStore((state) => state.openTray);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -327,6 +343,11 @@ export function ChatWidget() {
     [isLoading, messages, greetingGiven, sessionEntities, contextSummary, activeSession],
   );
 
+  const handleFeedback = useCallback((messageId: string, feedback: "helpful" | "not_helpful", intent: string) => {
+    setFeedbackByMessage((current) => ({ ...current, [messageId]: feedback }));
+    trackPexFeedback({ feedback, intent, sourcePath: window.location.pathname });
+  }, []);
+
   const handleQuickReply = (queryText: string) => {
     // Dynamic Keyboard & Input Dismissal on mobile
     inputRef.current?.blur();
@@ -354,33 +375,45 @@ export function ChatWidget() {
           type="button"
           onClick={() => setIsOpen(true)}
           aria-label="Open Ask Pex Assistant"
-          className="group inline-flex items-center gap-0.5 rounded-full border border-white/15 bg-brand-navy p-1 text-left !text-white shadow-[0_8px_18px_rgba(13,31,56,0.2)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_12px_24px_rgba(13,31,56,0.26)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+          className="group relative inline-flex items-center gap-2 rounded-full border border-white/20 bg-brand-navy p-1.5 pr-3.5 text-left !text-white shadow-[0_10px_24px_rgba(13,31,56,0.28)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#203755] hover:shadow-[0_14px_28px_rgba(13,31,56,0.36)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal active:scale-95"
           title="Ask Pex"
         >
-          <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-teal p-0.5 ring-1 ring-white/10">
+          <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-teal/20 ring-2 ring-brand-teal/60">
             <Avatar size="h-full w-full" />
-            <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border-2 border-brand-navy bg-brand-teal" aria-hidden="true" />
+            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-emerald-400" aria-hidden="true" />
           </span>
-          <span className="grid h-8 w-[72px] place-items-center overflow-hidden rounded-full bg-white/10 px-1.5 text-[10px] font-semibold tracking-tight text-white">
-            <span className="whitespace-nowrap">
-              Ask Pex
+          <div className="flex flex-col">
+            <span className="text-xs font-bold leading-tight font-heading text-white">Ask Pex</span>
+            <span className="text-[10px] font-medium leading-none text-slate-300 flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Online
             </span>
-          </span>
+          </div>
         </button>
       ) : (
         <section
-          className="flex h-[min(520px,calc(100dvh-32px))] w-[min(328px,calc(100vw-20px))] flex-col overflow-hidden rounded-[20px] border border-slate-200/90 bg-surface shadow-[0_16px_44px_rgba(15,35,61,0.18)]"
+          className="flex h-[min(580px,calc(100dvh-32px))] sm:h-[600px] w-[min(380px,calc(100vw-24px))] sm:w-[380px] flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white shadow-[0_20px_50px_rgba(15,35,61,0.22)]"
           aria-label="Pex Assistant"
         >
-          <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-brand-navy px-3 py-2.5 text-white sm:px-3.5">
-            <div className="flex items-center gap-2.5">
-              <Avatar size="h-8 w-8" />
+          <header className="flex shrink-0 items-center justify-between border-b border-white/10 bg-gradient-to-r from-brand-navy via-[#1f344e] to-brand-navy px-4 py-3 text-white">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-teal/20 ring-2 ring-brand-teal/50 overflow-hidden">
+                  <Avatar size="h-full w-full" />
+                </span>
+                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-brand-navy bg-emerald-400" aria-hidden="true" />
+              </div>
               <div>
-                <h2 className="m-0 text-[13px] font-semibold leading-tight">
-                  Ask Pex
-                </h2>
-                <p className="m-0 mt-0.5 flex items-center gap-1.5 text-[11px] text-slate-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-brand-teal" />
+                <div className="flex items-center gap-1.5">
+                  <h2 className="m-0 text-sm font-heading font-extrabold tracking-tight text-white">
+                    Ask Pex
+                  </h2>
+                  <span className="rounded-full bg-brand-teal/20 border border-brand-teal/30 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-teal-200 leading-none">
+                    AI
+                  </span>
+                </div>
+                <p className="m-0 mt-0.5 flex items-center gap-1.5 text-[11px] font-medium text-slate-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Ready to help
                 </p>
               </div>
@@ -389,21 +422,21 @@ export function ChatWidget() {
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Close Ask Pex Assistant"
-              className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-slate-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="grid h-8 w-8 place-items-center rounded-full bg-white/10 text-slate-200 transition-all duration-150 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal active:scale-95 border border-white/10"
             >
-              <X size={18} aria-hidden="true" />
+              <X size={16} aria-hidden="true" />
             </button>
           </header>
 
           <div
-            className="flex flex-1 flex-col gap-2 overflow-y-auto bg-slate-50 p-2.5 sm:p-3"
+            className="flex flex-1 flex-col gap-3 overflow-y-auto bg-slate-50/70 p-3 sm:p-3.5 scroll-smooth"
             aria-live="polite"
           >
             <AssistantMessage>
-              <p className="m-0 font-semibold text-ink">
+              <p className="m-0 font-heading font-bold text-ink text-sm sm:text-[14px]">
                 What would you like to do?
               </p>
-              <p className="mb-0 mt-1">
+              <p className="mb-0 mt-1 text-slate-600 text-xs sm:text-[13px] leading-relaxed">
                 Find a school pack, upload a list, track an order, or get
                 checkout guidance.
               </p>
@@ -421,29 +454,29 @@ export function ChatWidget() {
             />
 
             {Object.keys(sessionEntities).length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 rounded-xl bg-white/90 p-2 text-xs border border-slate-200/80 shadow-xs">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Active details:</span>
+              <div className="flex flex-wrap items-center gap-1.5 rounded-xl bg-white p-2 text-xs border border-slate-200/80 shadow-2xs">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Context:</span>
                 {sessionEntities.school && (
                   <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 px-2 py-0.5 font-semibold text-teal-800 border border-teal-200/60">
-                    <School className="size-3.5" aria-hidden="true" />
+                    <School className="size-3" aria-hidden="true" />
                     {sessionEntities.school}
                   </span>
                 )}
                 {sessionEntities.grade && (
                   <span className="inline-flex items-center gap-1 rounded-md bg-sky-50 px-2 py-0.5 font-semibold text-sky-800 border border-sky-200/60">
-                    <BookOpen className="size-3.5" aria-hidden="true" />
+                    <BookOpen className="size-3" aria-hidden="true" />
                     {sessionEntities.grade}
                   </span>
                 )}
                 {sessionEntities.pexcover && (
                   <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 font-semibold text-amber-800 border border-amber-200/60">
-                    <ShieldCheck className="size-3.5" aria-hidden="true" />
+                    <ShieldCheck className="size-3" aria-hidden="true" />
                     Pexcover added
                   </span>
                 )}
                 {sessionEntities.deliveryMethod && (
                   <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-800 border border-emerald-200/60">
-                    <Truck className="size-3.5" aria-hidden="true" />
+                    <Truck className="size-3" aria-hidden="true" />
                     {sessionEntities.deliveryMethod === "courier" ? "Home courier" : sessionEntities.deliveryMethod.toUpperCase()}
                   </span>
                 )}
@@ -455,11 +488,11 @@ export function ChatWidget() {
                 <div
                   key={message.id}
                   className={cn(
-                    "ml-auto max-w-[82%] rounded-[16px_16px_4px_16px] bg-brand-teal px-3 py-2 text-[13px] leading-relaxed text-white shadow-sm flex items-center justify-between gap-2 transition-all",
+                    "ml-auto max-w-[85%] rounded-[18px_18px_4px_18px] bg-gradient-to-r from-brand-teal to-brand-teal-dark px-3.5 py-2.5 text-xs sm:text-[13px] leading-relaxed text-white shadow-[0_2px_8px_rgba(26,122,119,0.25)] flex items-center justify-between gap-2 transition-all",
                     message.pending && "opacity-85 shadow-none"
                   )}
                 >
-                  <span>{message.text}</span>
+                  <span className="font-medium">{message.text}</span>
                   {message.pending && (
                     <span
                       className="inline-block h-2 w-2 shrink-0 animate-ping rounded-full bg-teal-200"
@@ -470,38 +503,38 @@ export function ChatWidget() {
                 </div>
               ) : (
                 <div key={message.id} className="flex items-start gap-2">
-                  <Avatar size="mt-0.5 h-8 w-8" />
-                  <div className="min-w-0 max-w-[86%]">
+                  <Avatar size="mt-0.5 h-7 w-7" />
+                  <div className="min-w-0 max-w-[88%]">
                     <AssistantMessage>
-                      <p className="m-0">{message.response.text || message.response.reply}</p>
+                      <p className="m-0 leading-relaxed">{message.response.text || message.response.reply}</p>
 
                       {/* Structured Response Cards */}
                       {message.response.cards && message.response.cards.length > 0 && (
-                        <div className="mt-2 flex flex-col gap-1.5">
+                        <div className="mt-2.5 flex flex-col gap-2">
                           {message.response.cards.map((card: ChatCard, idx: number) => (
-                            <div key={card.id || `card-${idx}`} className="rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 shadow-2xs">
+                            <div key={card.id || `card-${idx}`} className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 shadow-2xs transition-colors hover:bg-slate-50">
                               <div className="flex items-center justify-between gap-2">
-                                <h4 className="m-0 text-xs font-bold text-ink">{card.title}</h4>
+                                <h4 className="m-0 text-xs font-bold font-heading text-ink">{card.title}</h4>
                                 {card.badge && (
-                                  <span className="rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-800 border border-teal-200/50">
+                                  <span className="rounded-full bg-brand-teal/10 px-2 py-0.5 text-[10px] font-bold text-brand-teal border border-brand-teal/20">
                                     {card.badge}
                                   </span>
                                 )}
                               </div>
                               {card.price && (
-                                <p className="mt-0.5 text-xs font-bold text-brand-teal">{card.price}</p>
+                                <p className="mt-1 text-xs font-bold text-brand-teal">{card.price}</p>
                               )}
-                              <p className="mt-1 text-xs text-slate-600 m-0">{card.description}</p>
+                              <p className="mt-1 text-xs text-slate-600 m-0 leading-relaxed">{card.description}</p>
                               {card.actions && card.actions.length > 0 && (
-                                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
+                                <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1.5">
                                   {card.actions.map((act: ChatCardAction, i: number) => (
                                     <Link
                                       key={i}
                                       href={(act.url || act.href) ?? "#"}
                                       onClick={() => setIsOpen(false)}
-                                      className="inline-flex items-center gap-1 text-xs font-semibold text-brand-teal underline decoration-brand-teal/35 underline-offset-2 transition hover:text-brand-teal-dark hover:decoration-brand-teal"
+                                      className="inline-flex items-center gap-1 text-xs font-bold text-brand-teal underline decoration-brand-teal/30 underline-offset-2 transition hover:text-brand-teal-dark hover:decoration-brand-teal"
                                     >
-                                      {act.label} <span aria-hidden="true">-&gt;</span>
+                                      {act.label} <span aria-hidden="true">&rarr;</span>
                                     </Link>
                                   ))}
                                 </div>
@@ -530,13 +563,13 @@ export function ChatWidget() {
 
                       {/* Interactive Quick Reply Chips */}
                       {message.response.quickReplies && message.response.quickReplies.length > 0 && (
-                        <div className="mt-2.5 flex flex-wrap gap-x-2.5 gap-y-1.5" role="group" aria-label="Suggested quick options">
+                        <div className="mt-2.5 flex flex-wrap gap-1.5" role="group" aria-label="Suggested quick options">
                           {message.response.quickReplies.map((qr) => (
                             <button
                               key={qr.id}
                               type="button"
                               onClick={() => handleQuickReply(qr.query || qr.message || qr.label)}
-                              className="inline-flex items-center bg-transparent p-0 text-left text-xs font-semibold text-brand-teal underline decoration-brand-teal/35 underline-offset-2 transition hover:text-brand-teal-dark hover:decoration-brand-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/35 focus-visible:ring-offset-2 active:opacity-70"
+                              className="inline-flex items-center rounded-lg border border-brand-teal/25 bg-brand-teal/5 px-2.5 py-1 text-left text-xs font-semibold text-brand-teal transition-all duration-150 hover:bg-brand-teal hover:text-white hover:border-brand-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/35 active:scale-95"
                             >
                               {qr.label}
                             </button>
@@ -561,13 +594,42 @@ export function ChatWidget() {
                               label: "pex_human_handoff",
                             });
                           }}
-                          className="mt-2.5 inline-flex items-center gap-1.5 font-semibold text-whatsapp-dark underline decoration-whatsapp/40 underline-offset-2 transition hover:decoration-whatsapp"
+                          className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-bold text-whatsapp-dark underline decoration-whatsapp/40 underline-offset-2 transition hover:decoration-whatsapp"
                         >
                           <WhatsAppIcon className="size-3.5 text-[#25D366]" />
                           Talk to Pexpacks on WhatsApp
                         </a>
                       )}
                     </AssistantMessage>
+                    <div className="mt-1.5 flex items-center gap-2 px-1 text-[11px] text-slate-400 font-medium">
+                      {feedbackByMessage[message.id] ? (
+                        <span className="text-brand-teal font-semibold flex items-center gap-1">
+                          <Check size={12} /> Thanks for the feedback!
+                        </span>
+                      ) : (
+                        <>
+                          <span>Helpful?</span>
+                          <button
+                            type="button"
+                            onClick={() => handleFeedback(message.id, "helpful", message.response.intent)}
+                            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-semibold text-slate-600 hover:text-brand-teal hover:bg-brand-teal/10 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-teal"
+                            aria-label="Mark this Pex reply as helpful"
+                          >
+                            <ThumbsUp className="size-3" aria-hidden="true" />
+                            Yes
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleFeedback(message.id, "not_helpful", message.response.intent)}
+                            className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-semibold text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-red-400"
+                            aria-label="Mark this Pex reply as not helpful"
+                          >
+                            <ThumbsDown className="size-3" aria-hidden="true" />
+                            Not quite
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               ),
@@ -575,18 +637,18 @@ export function ChatWidget() {
 
             {isLoading && (
               <div className="flex items-center gap-2.5">
-                <Avatar size="h-8 w-8" />
-                <div className="flex gap-1 rounded-[18px_18px_18px_4px] border border-line bg-surface px-3.5 py-3">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-text-muted" />
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-text-muted [animation-delay:150ms]" />
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-text-muted [animation-delay:300ms]" />
+                <Avatar size="h-7 w-7" />
+                <div className="flex gap-1.5 rounded-[18px_18px_18px_4px] border border-slate-200/80 bg-white px-3.5 py-2.5 shadow-2xs">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-teal" />
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-teal [animation-delay:150ms]" />
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-teal [animation-delay:300ms]" />
                 </div>
               </div>
             )}
             {error && (
               <div
                 role="alert"
-                className="rounded-field border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-relaxed text-red-800"
+                className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-relaxed text-red-800"
               >
                 {error}
               </div>
@@ -596,9 +658,9 @@ export function ChatWidget() {
 
           <form
             onSubmit={submit}
-            className="shrink-0 border-t border-slate-200 bg-white p-2"
+            className="shrink-0 border-t border-slate-200/80 bg-white p-2.5 sm:p-3"
           >
-            <div className="flex min-h-12 items-center gap-2 rounded-xl border border-pex-border bg-white py-1 pl-3 pr-1 shadow-sm transition-[border-color,box-shadow] duration-150 focus-within:border-brand-teal focus-within:ring-2 focus-within:ring-brand-teal/20">
+            <div className="flex min-h-[46px] items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 py-1 pl-3.5 pr-1.5 shadow-2xs transition-all duration-200 focus-within:border-brand-teal focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-teal/15 focus-within:shadow-xs">
               <input
                 id="bro-pex-chat-input"
                 name="chatMessage"
@@ -608,22 +670,30 @@ export function ChatWidget() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 maxLength={1200}
-                placeholder="Ask Pex about your order..."
-                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-[13px] leading-5 text-ink !outline-none !ring-0 placeholder:text-text-muted focus:!border-0 focus:!outline-none focus:!ring-0 focus-visible:!border-0 focus-visible:!outline-none focus-visible:!ring-0"
+                placeholder="Ask Pex about your order or school..."
+                className="min-w-0 flex-1 appearance-none border-0 bg-transparent px-0 py-2 text-xs sm:text-[13px] leading-5 text-ink outline-none placeholder:text-slate-400"
               />
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
                 aria-label="Send message"
-                className="grid h-9 w-9 place-items-center rounded-lg bg-brand-accent text-white shadow-sm transition hover:bg-brand-accent-hover disabled:cursor-not-allowed disabled:opacity-45"
+                className={cn(
+                  "grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-lg font-bold text-white transition-all duration-150",
+                  input.trim() && !isLoading
+                    ? "bg-brand-accent hover:bg-brand-accent-hover shadow-sm hover:shadow active:scale-95 cursor-pointer"
+                    : "bg-slate-200/90 text-slate-400 cursor-not-allowed shadow-none"
+                )}
               >
-                <Send size={16} aria-hidden="true" />
+                <Send size={15} aria-hidden="true" className={cn(input.trim() ? "translate-x-px text-white" : "text-slate-400")} />
               </button>
             </div>
           </form>
 
           {/* Persistent WhatsApp & Human Handoff Bridge */}
-          <footer className="flex shrink-0 items-center justify-end border-t border-slate-200 bg-white px-2.5 py-1.5">
+          <footer className="flex shrink-0 items-center justify-between border-t border-slate-100 bg-slate-50/80 px-3.5 py-2 text-xs">
+            <span className="text-[11px] font-medium text-slate-500">
+              Need human support?
+            </span>
             <a
               href={
                 whatsappHref ||
@@ -637,7 +707,7 @@ export function ChatWidget() {
                   label: "pex_docked_handoff",
                 });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2 py-1 text-[11px] font-semibold text-[#075E54] transition hover:bg-[#25D366]/20 hover:text-[#054c44]"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/10 px-2.5 py-1 text-[11px] font-bold text-[#075E54] border border-[#25D366]/25 transition-all hover:bg-[#25D366]/20 hover:border-[#25D366]/40 active:scale-95"
             >
               <WhatsAppIcon className="size-3.5 text-[#25D366]" />
               Chat on WhatsApp
@@ -651,7 +721,7 @@ export function ChatWidget() {
 
 function AssistantMessage({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 text-[13px] leading-snug text-text-muted shadow-[0_3px_12px_rgba(26,42,64,0.05)]">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 text-xs sm:text-[13px] leading-relaxed text-slate-700 shadow-[0_2px_8px_rgba(26,42,64,0.04)]">
       {children}
     </div>
   );
@@ -661,7 +731,7 @@ function Avatar({ size }: { size: string }) {
   return (
     <span
       className={cn(
-        "grid shrink-0 place-items-center overflow-hidden rounded-full bg-brand-teal",
+        "grid shrink-0 place-items-center overflow-hidden rounded-full bg-brand-teal/20",
         size,
       )}
     >
@@ -676,6 +746,28 @@ function Avatar({ size }: { size: string }) {
   );
 }
 
+function getStarterIcon(id: string) {
+  switch (id) {
+    case "find-school":
+    case "find-pack":
+      return <School className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+    case "upload-list":
+      return <Upload className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+    case "track-order":
+    case "delivery":
+      return <Truck className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+    case "checkout-help":
+    case "open-tray":
+      return <ShoppingCart className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+    case "pexcover":
+      return <ShieldCheck className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+    case "talk-to-team":
+      return <MessageCircle className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+    default:
+      return <Sparkles className="size-3.5 shrink-0 text-brand-teal" aria-hidden="true" />;
+  }
+}
+
 function StarterLinks({
   links,
   onNavigate,
@@ -684,15 +776,16 @@ function StarterLinks({
   onNavigate: (linkId: string, destination: string) => void;
 }) {
   return (
-    <div className="mt-2 flex flex-wrap gap-1.5" aria-label="Popular Pex links">
+    <div className="flex flex-wrap gap-1.5" aria-label="Popular Pex links">
       {links.map((link) => (
         <Link
           key={link.id}
           href={link.href}
           onClick={() => onNavigate(link.id, link.href)}
-          className="inline-flex min-h-8 items-center rounded-full border border-brand-teal/25 bg-teal-50/70 px-2.5 py-1 text-[11px] font-semibold text-brand-teal no-underline shadow-2xs transition-all duration-150 hover:-translate-y-px hover:border-brand-teal hover:bg-brand-teal hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/35 focus-visible:ring-offset-2"
+          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/90 bg-white px-3 py-1.5 text-xs font-semibold text-pex-navy shadow-2xs transition-all duration-150 hover:-translate-y-0.5 hover:border-brand-teal hover:bg-brand-teal/5 hover:text-brand-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal/35 active:scale-95"
         >
-          {link.label}
+          {getStarterIcon(link.id)}
+          <span>{link.label}</span>
         </Link>
       ))}
     </div>
