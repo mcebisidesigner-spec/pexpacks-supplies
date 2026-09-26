@@ -33,23 +33,24 @@ import type { ActiveSession, PexEntities } from "@/lib/chat/request";
 import { usePackTrayStore } from "@/store/usePackTrayStore";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
+import { isPexHref, PEX_ROUTES } from "@/lib/chat/links";
 
 const CHATBOT_LOGO = "/images/chatbot.webp";
 const STARTER_LINKS = [
   {
     id: "find-school",
     label: "Find my school",
-    href: "/schools",
+    href: PEX_ROUTES.schools,
   },
   {
     id: "upload-list",
     label: "Upload a list",
-    href: "/upload-a-list",
+    href: PEX_ROUTES.uploadList,
   },
   {
     id: "track-order",
     label: "Track an order",
-    href: "/track",
+    href: PEX_ROUTES.track,
   },
 ] as const;
 
@@ -78,13 +79,13 @@ function starterLinksForPath(pathname: string | null) {
       {
         id: "checkout-help",
         label: "Checkout help",
-        href: "/checkout",
+        href: PEX_ROUTES.checkout,
       },
-      { id: "open-tray", label: "Open my tray", href: "/checkout" },
+      { id: "open-tray", label: "Open my tray", href: PEX_ROUTES.checkout },
       {
         id: "pexcover",
         label: "About Pexcover",
-        href: "/blog/what-is-pexcover-book-covering",
+        href: PEX_ROUTES.pexcover,
       },
     ];
   }
@@ -93,17 +94,17 @@ function starterLinksForPath(pathname: string | null) {
       {
         id: "find-pack",
         label: "Find my grade pack",
-        href: "/schools",
+        href: PEX_ROUTES.schools,
       },
       {
         id: "pexcover",
         label: "About Pexcover",
-        href: "/blog/what-is-pexcover-book-covering",
+        href: PEX_ROUTES.pexcover,
       },
       {
         id: "upload-list",
         label: "Upload a list",
-        href: "/upload-a-list",
+        href: PEX_ROUTES.uploadList,
       },
     ];
   }
@@ -112,17 +113,17 @@ function starterLinksForPath(pathname: string | null) {
       {
         id: "track-order",
         label: "Track an order",
-        href: "/track",
+        href: PEX_ROUTES.track,
       },
       {
         id: "delivery",
         label: "Delivery help",
-        href: "/track",
+        href: PEX_ROUTES.track,
       },
       {
         id: "talk-to-team",
         label: "Talk to Pexpacks",
-        href: "/contact",
+        href: PEX_ROUTES.contact,
       },
     ];
   }
@@ -131,17 +132,17 @@ function starterLinksForPath(pathname: string | null) {
       {
         id: "upload-list",
         label: "Upload a list",
-        href: "/upload-a-list",
+        href: PEX_ROUTES.uploadList,
       },
       {
         id: "find-school",
         label: "Find my school",
-        href: "/schools",
+        href: PEX_ROUTES.schools,
       },
       {
         id: "pexcover",
         label: "About Pexcover",
-        href: "/blog/what-is-pexcover-book-covering",
+        href: PEX_ROUTES.pexcover,
       },
     ];
   }
@@ -527,10 +528,10 @@ export function ChatWidget() {
                               <p className="mt-1 text-xs text-slate-600 m-0 leading-relaxed">{card.description}</p>
                               {card.actions && card.actions.length > 0 && (
                                 <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1.5">
-                                  {card.actions.map((act: ChatCardAction, i: number) => (
+                                  {card.actions.filter((act: ChatCardAction) => isPexHref(act.url || act.href)).map((act: ChatCardAction, i: number) => (
                                     <Link
                                       key={i}
-                                      href={(act.url || act.href) ?? "#"}
+                                      href={(act.url || act.href || "#") as import("next/link").LinkProps["href"]}
                                       onClick={() => setIsOpen(false)}
                                       className="inline-flex items-center gap-1 text-xs font-bold text-brand-teal underline decoration-brand-teal/30 underline-offset-2 transition hover:text-brand-teal-dark hover:decoration-brand-teal"
                                     >
@@ -803,9 +804,12 @@ function InlineReplyLinks({
   response: PexChatResponse;
   onNavigate: (actionId: string, destination: string) => void;
 }) {
+  const safeActions = actions.filter((action) => isPexHref(action.href));
+  const safeKnowledgeCards = knowledgeCards.filter((card) => isPexHref(card.href));
+
   const hasLinks =
-    actions.length > 0 ||
-    knowledgeCards.length > 0 ||
+    safeActions.length > 0 ||
+    safeKnowledgeCards.length > 0 ||
     response.schoolCards.length > 0 ||
     response.packCards.length > 0 ||
     response.productCards.length > 0;
@@ -813,7 +817,7 @@ function InlineReplyLinks({
 
   return (
     <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs leading-snug">
-      {actions.map((action) => (
+      {safeActions.map((action) => (
         <Link
           key={action.id}
           href={action.href}
@@ -826,7 +830,7 @@ function InlineReplyLinks({
           {action.label}
         </Link>
       ))}
-      {knowledgeCards.map((card) => (
+      {safeKnowledgeCards.map((card) => (
         <Link
           key={card.id}
           href={card.href}

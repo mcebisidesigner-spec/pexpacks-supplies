@@ -3,10 +3,11 @@ import { google } from "@ai-sdk/google";
 import { streamObject, generateObject, streamText } from "ai";
 import { chatResponseSchema } from "@/lib/schemas/chat";
 import { pexTools } from "@/lib/chat/tools";
-import { buildPexReply, PexChatResponseSchema, resolvePexIntent, PexIntent } from "@/lib/chat/pex";
-import { latestPexUserMessage, PexChatRequestSchema, type PexChatRequest } from "@/lib/chat/request";
+import { buildPexReply, detectPexIntent, extractPexEntities, PEX_INTENTS, PexChatResponseSchema, resolvePexIntent, PexIntent } from "@/lib/chat/pex";
+import { latestPexUserMessage, PexChatRequestSchema } from "@/lib/chat/request";
 import { getPexLiveCards } from "@/lib/chat/live-data";
 import { getPexKnowledgeCards } from "@/lib/chat/knowledge";
+import { PEX_ROUTES, sanitizePexActions } from "@/lib/chat/links";
 import { isSameOriginRequest, rateLimitRequest } from "@/lib/security/requestGuards";
 
 export const maxDuration = 30; // Prevents serverless timeout
@@ -24,6 +25,8 @@ CORE BEHAVIOR:
 - BROAD SUPPORT: Handle everyday wording, spelling mistakes, abbreviations, follow-up questions, thanks, confirmations, and multi-part requests. Use the previous messages and session context so the user does not need to repeat themselves.
 - UNCERTAINTY: If the request is unclear, ask one focused clarifying question and offer relevant quick replies. Never send the same fallback wording twice in a row. For questions outside Pexpacks, be honest and offer WhatsApp human support.
 - UI COPY: Keep reply text concise because navigation is rendered separately in links, cards, and quickReplies. Do not invent order statuses, prices, school listings, or credentials.
+- TOOL-GROUNDED ANSWERS: When a question needs a live school, pack, product, or delivery detail, use the available tool or live cards before answering. If the data is unavailable, say so clearly and guide the user to the correct page.
+- ANTICIPATE THE NEXT STEP: Notice useful context such as school, grade, learner count, delivery area, or Pexcover interest, and ask only for the one detail needed to continue.
 
 SCHOOL AVAILABILITY QUERIES — CRITICAL:
 When a user asks "Do you have [school name]?", "Is [school] on your site?", "Do you offer [school]?" or any school existence question:
@@ -69,6 +72,28 @@ function summarizePriorTurns(
     : `Earlier topics: ${userQueries}`;
 
   return combined.slice(0, 500);
+}
+
+function defaultActionsForIntent(intent: PexIntent) {
+  switch (intent) {
+    case "find_school":
+    case "find_school_pack":
+      return [{ id: "browse-schools", label: "Find my school", description: "Search schools and grade packs", href: PEX_ROUTES.schools }];
+    case "upload_stationery_list":
+      return [{ id: "upload-list", label: "Upload a list", description: "Submit a PDF or clear photo of a school list", href: PEX_ROUTES.uploadList }];
+    case "pexcover_information":
+      return [{ id: "pexcover-guide", label: "Learn about Pexcover", description: "See how book covering works", href: PEX_ROUTES.pexcover }];
+    case "delivery_information":
+    case "order_tracking":
+      return [{ id: "track-order", label: "Track an order", description: "Open Track Your Pack", href: PEX_ROUTES.track }];
+    case "payment_information":
+    case "checkout_help":
+      return [{ id: "checkout", label: "View checkout", description: "Review your order and payment options", href: PEX_ROUTES.checkout }];
+    case "school_partnership":
+      return [{ id: "partner", label: "Partner with us", description: "See school partnership options", href: PEX_ROUTES.partner }];
+    default:
+      return [];
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -135,6 +160,21 @@ export async function POST(request: NextRequest) {
     const isFirstTurn = turnsCount <= 1;
     const priorGreetingDetected = greetingGiven || hasPriorGreeting(historyList);
     const resolvedContextSummary = summarizePriorTurns(historyList, contextSummary);
+    const detectedIntent = detectPexIntent(query);
+    const detectedEntities = extractPexEntities(query, entities as never);
+    const knowledgeCards = await getPexKnowledgeCards(query, pathname);
+    const previousAssistantText = historyList
+      .slice()
+      .reverse()
+      .find((m) => m.role === "assistant")?.content;
+    const sessionReply = buildPexReply(query, detectedIntent, {
+      previousAssistantText,
+      greetingGiven: priorGreetingDetected,
+      entities: detectedEntities,
+      contextSummary: resolvedContextSummary,
+      activeSession: activeSession as never,
+    });
+    const nextActiveSession = sessionReply.activeSession;
 
     const isStreaming =
       request.headers.get("accept")?.includes("text/event-stream") ||
@@ -155,6 +195,9 @@ export async function POST(request: NextRequest) {
           - Turn Count: ${turnsCount}
           - Greeting Already Delivered: ${priorGreetingDetected || !isFirstTurn}
           - Known Session Context: ${JSON.stringify(activeSession || {})}
+          - Deterministic Intent Hint: ${detectedIntent}
+          - Detected Entities: ${JSON.stringify(detectedEntities)}
+          - Relevant Published FAQ Knowledge: ${JSON.stringify(knowledgeCards)}
         `;
 
         const messagesForAi = [
@@ -195,12 +238,13 @@ export async function POST(request: NextRequest) {
           messages: messagesForAi,
         });
 
-        const resolvedIntent = (genResult.object.intent as PexIntent) || (await resolvePexIntent(query, activeSession as never));
+        const generatedIntent = genResult.object.intent as PexIntent | undefined;
+        const resolvedIntent = generatedIntent && PEX_INTENTS.includes(generatedIntent) ? generatedIntent : detectedIntent;
+        const replyText = previousAssistantText?.trim().toLowerCase() === genResult.object.reply.trim().toLowerCase()
+          ? sessionReply.text
+          : genResult.object.reply;
 
-        const [liveCards, knowledgeCards] = await Promise.all([
-          getPexLiveCards(resolvedIntent, query),
-          getPexKnowledgeCards(query, pathname),
-        ]);
+        const liveCards = await getPexLiveCards(resolvedIntent, query);
 
         const mappedActions = (genResult.object.cards || []).flatMap((c) =>
           (c.actions || []).map((a, idx) => ({
@@ -211,16 +255,24 @@ export async function POST(request: NextRequest) {
           }))
         );
 
+        const deterministicActions = sanitizePexActions(sessionReply.actions);
+        const modelActions = sanitizePexActions(mappedActions);
+
         return NextResponse.json(
           {
             ...genResult.object,
-            text: genResult.object.reply,
+            reply: replyText,
+            text: replyText,
             intent: resolvedIntent,
-            actions: mappedActions.length > 0 ? mappedActions : [{ id: "open-tray", label: "Open order tray", description: "Review saved packs", href: "/checkout" }],
+            actions: deterministicActions.length > 0
+              ? deterministicActions
+              : modelActions.length > 0
+                ? modelActions
+                : defaultActionsForIntent(resolvedIntent),
             handoffRecommended: resolvedIntent === "human_support",
-            entities,
+            entities: detectedEntities,
             contextSummary: resolvedContextSummary,
-            activeSession,
+            activeSession: nextActiveSession,
             ...liveCards,
             knowledgeCards,
           },
@@ -236,22 +288,18 @@ export async function POST(request: NextRequest) {
 
     // 3. Fallback deterministic path (offline / tests / fallback)
     const intent = await resolvePexIntent(query, activeSession as never);
-    const [liveCards, knowledgeCards] = await Promise.all([
-      getPexLiveCards(intent, query),
-      getPexKnowledgeCards(query, pathname),
-    ]);
-    const previousAssistantText = historyList
-      .slice()
-      .reverse()
-      .find((m) => m.role === "assistant")?.content;
-
+    const liveCards = await getPexLiveCards(intent, query);
     const reply = buildPexReply(query, intent, {
       previousAssistantText,
       greetingGiven: priorGreetingDetected,
-      entities: entities as never,
+      entities: detectedEntities,
       contextSummary: resolvedContextSummary,
       activeSession: activeSession as never,
     });
+
+    const groundedReply = reply.intent === "unknown_intent" && knowledgeCards[0]?.answer
+      ? knowledgeCards[0].answer
+      : reply.text;
 
     const standardQuickReplies = reply.quickReplies.map((qr) => ({
       id: qr.id,
@@ -262,9 +310,11 @@ export async function POST(request: NextRequest) {
 
     const result = {
       ...reply,
-      reply: reply.text,
+      reply: groundedReply,
       quickReplies: standardQuickReplies,
+      text: groundedReply,
       cards: [],
+      actions: sanitizePexActions(reply.actions),
       ...liveCards,
       knowledgeCards,
     };

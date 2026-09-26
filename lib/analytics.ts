@@ -37,6 +37,7 @@ export const AnalyticsEvents = {
   pexActionSelected: "Pex Action Selected",
   pexHumanHandoff: "Pex Human Handoff",
   pexRequestFailed: "Pex Request Failed",
+  pexFeedbackSubmitted: "Pex Feedback Submitted",
 } as const;
 
 type SearchSource = "home" | "schools" | "tray";
@@ -423,6 +424,10 @@ export function trackPexIntentResolved({ intent, sourcePath }: { intent: string;
 
 export function trackPexActionSelected({ actionId, destination, sourcePath }: { actionId: string; destination: string; sourcePath: string }) {
   track(AnalyticsEvents.pexActionSelected, { actionId, destination, sourcePath });
+}
+
+export function trackPexFeedback({ feedback, intent, sourcePath }: { feedback: "helpful" | "not_helpful"; intent: string; sourcePath: string }) {
+  track(AnalyticsEvents.pexFeedbackSubmitted, { feedback, intent, sourcePath });
 }
 
 export function trackPexHumanHandoff({ sourcePath }: { sourcePath: string }) {

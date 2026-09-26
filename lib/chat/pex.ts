@@ -6,6 +6,7 @@ import {
   PexEntities,
   PexEntitiesSchema,
 } from "@/lib/chat/request";
+import { PEX_ROUTES } from "@/lib/chat/links";
 
 export const PEX_INTENTS = [
   "greeting",
@@ -318,7 +319,7 @@ export function detectPexIntent(query: string): PexIntent {
   ) {
     return "upload_stationery_list";
   }
-  if (/\b(?:pexcover|book cover(?:ing)?|wrapping|wrapped|label(?:ling|ing)?)\b/.test(value)) return "pexcover_information";
+  if (/\b(?:pexcover|book cover(?:ing)?|cover(?:ing|ed)?|wrapping|wrapped|label(?:ling|ing)?)\b/.test(value)) return "pexcover_information";
   if (/\b(delivery|deliveri|courier|paxi|pep|shipping|collect(?:ion)?)\b/.test(value)) return "delivery_information";
   if (/\b(checkout|chekout|pay|payment|payement|ozow|happy\s*pay|eft|card)\b/.test(value)) return "payment_information";
   if (/\b(?:price|pricing|cost|how much|afford|download (?:(?:a|the) )?list)\b/.test(value)) return "find_school_pack";
@@ -743,7 +744,7 @@ export function buildPexReply(
       reply = response(
         resolvedIntent,
         "Pexcover covers eligible books in durable 120-micron plastic sleeves with printed labels for name, grade, and subject.",
-        [{ id: "pexcover-guide", label: "Learn about Pexcover", description: "See how optional book covering works", href: "/blog/what-is-pexcover-book-covering" }],
+        [{ id: "pexcover-guide", label: "Learn about Pexcover", description: "See how optional book covering works", href: PEX_ROUTES.pexcover }],
         QUICK_REPLIES.slice(0, 3),
         false,
         updatedEntities,
