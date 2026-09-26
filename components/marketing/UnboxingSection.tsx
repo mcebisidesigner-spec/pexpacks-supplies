@@ -788,13 +788,14 @@ export function UnboxingSection() {
 
     function applyRanking(serverSchools: HybridSchoolItem[]) {
       const recents = getRecentSchoolVisits();
-      const { rankedSchools } = rankHybridSchools(serverSchools, recents, 4);
+      const { rankedSchools } = rankHybridSchools(serverSchools, recents, 3);
       const schools: QuickSchool[] = rankedSchools
         .map((s) => ({
           name: s.name?.trim() ?? "",
           slug: s.slug?.trim() ?? "",
         }))
-        .filter((s) => Boolean(s.name) && Boolean(s.slug));
+        .filter((s) => Boolean(s.name) && Boolean(s.slug))
+        .slice(0, 3);
       if (schools.length > 0 && !isCancelled) {
         setQuickSchools(schools);
       }
@@ -822,7 +823,7 @@ export function UnboxingSection() {
             slug: r.schoolSlug?.trim() ?? "",
           }))
           .filter((s) => Boolean(s.name) && Boolean(s.slug))
-          .slice(0, 4);
+          .slice(0, 3);
         if (topRecentSchools.length > 0) {
           setQuickSchools(topRecentSchools);
         }
@@ -1348,7 +1349,7 @@ export function UnboxingSection() {
                   <span className="text-slate-400 font-medium">
                     Quick find:
                   </span>
-                  {quickSchools.map((school) => (
+                  {quickSchools.slice(0, 3).map((school) => (
                     <Link
                       key={school.slug}
                       href={`/schools/${encodeURIComponent(school.slug)}`}

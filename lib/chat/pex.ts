@@ -116,16 +116,34 @@ export function stripSycophanticOpeners(text: string): string {
   return cleaned.trim();
 }
 
+const COMMON_CHAT_TYPO_REPLACEMENTS: ReadonlyArray<readonly [RegExp, string]> = [
+  [/\b(?:helo|helllo|helloo|hii|hie)\b/g, "hello"],
+  [/\b(?:thx|tnx|thanx)\b/g, "thanks"],
+  [/\b(?:trak|trac|trackk)\b/g, "track"],
+  [/\b(?:ordr|oder|orderr)\b/g, "order"],
+  [/\b(?:schoo|shcool|skool)\b/g, "school"],
+  [/\b(?:stasionery|stationry|stationarry)\b/g, "stationery"],
+  [/\b(?:uplod|upoad|uplaod)\b/g, "upload"],
+  [/\b(?:delivry|delivary|deliveri)\b/g, "delivery"],
+  [/\b(?:paymnt|paymant|payement)\b/g, "payment"],
+  [/\b(?:whatsap|whatsapp)\b/g, "whatsapp"],
+  [/\b(?:covr|cvr)\b/g, "cover"],
+];
+
 function normaliseQuery(query: string) {
-  return query
-    .trim()
-    .toLowerCase()
-    .replace(/['`]/g, "")
-    .replace(/\s+/g, " ");
+  return COMMON_CHAT_TYPO_REPLACEMENTS.reduce(
+    (value, [pattern, replacement]) => value.replace(pattern, replacement),
+    query
+      .trim()
+      .toLowerCase()
+      .replace(/['`]/g, "")
+      .replace(/\s+/g, " "),
+  );
 }
 
-const UNKNOWN_REPLY = "I am not quite sure what you mean yet. Are you looking for a school pack, list upload, order tracking, payment help, or WhatsApp support?";
-const CLARIFY_REPLY = "I may have missed your meaning. Could you explain what you need, or choose one of the options below?";
+const UNKNOWN_REPLY = "I can help with school packs, list uploads, Pexcover, delivery, payments, and order tracking. What would you like to sort out?";
+const CLARIFY_REPLY = "I want to point you in the right direction. Is this about finding a pack, uploading a list, delivery, payment, or an order?";
+const ALTERNATE_CLARIFY_REPLY = "Tell me a little more about what you need and I will help you get it sorted.";
 
 const QUICK_REPLIES = [
   { id: "find-school", label: "Find my school", message: "Help me find my school pack" },
@@ -282,12 +300,16 @@ export function detectCompoundQuery(query: string): boolean {
 
 export function detectPexIntent(query: string): PexIntent {
   const value = normaliseQuery(query);
+  const greetingPrefix = /^(?:hi|hello|hey|howzit|good\s+(?:morning|afternoon|evening)|sawubona|dumela|molo|yo|sup)\b[\s,!?.]*/;
+  const withoutGreeting = value.replace(greetingPrefix, "").trim();
+  if (withoutGreeting && withoutGreeting !== value) return detectPexIntent(withoutGreeting);
   if (detectFrictionOrNegativeSentiment(query)) return "human_support";
   if (detectMidFlowCorrection(query)) return "entity_correction";
   if (detectImplicitEntityQuery(query)) return "implicit_entity_query";
   if (detectCompoundQuery(query)) return "compound_query";
   if (/^(hi|hello|hey|howzit|good\s+(morning|afternoon|evening)|sawubona|dumela|molo|yo|sup)[!.? ]*$/.test(value)) return "greeting";
-  if (/\b(help please|please help|need help|how can you help)\b/.test(value)) return "general_help";
+  if (/\b(help please|please help|need help|how can you help|what can you do|what do you help with|who are you|what are you)\b/.test(value)) return "general_help";
+  if (/^(?:thanks|thank you|cheers|ta)\b/.test(value)) return "general_help";
   if (/\b(partner|partnership|fundraising|rebate|school admin|educator|teacher|committee)\b/.test(value)) return "school_partnership";
   if (/\b(track|trak|where is|status of).{0,24}\b(order|oder|parcel|delivery|deliveri)\b|\b(order|oder|parcel)\s+track(?:ing)?\b/.test(value)) return "order_tracking";
   if (
@@ -296,10 +318,12 @@ export function detectPexIntent(query: string): PexIntent {
   ) {
     return "upload_stationery_list";
   }
-  if (/\bpexcover|book cover(?:ing)?\b/.test(value)) return "pexcover_information";
+  if (/\b(?:pexcover|book cover(?:ing)?|wrapping|wrapped|label(?:ling|ing)?)\b/.test(value)) return "pexcover_information";
   if (/\b(delivery|deliveri|courier|paxi|pep|shipping|collect(?:ion)?)\b/.test(value)) return "delivery_information";
   if (/\b(checkout|chekout|pay|payment|payement|ozow|happy\s*pay|eft|card)\b/.test(value)) return "payment_information";
+  if (/\b(?:price|pricing|cost|how much|afford|download (?:a )?list)\b/.test(value)) return "find_school_pack";
   if (/\b(cart|basket)\b|\b(quantity|remove|add).{0,24}\b(pack|pak|item|product|cart|basket)\b/.test(value)) return "checkout_help";
+  if (/\b(?:multiple|several|more than one|different).{0,32}\b(?:learner|child|school|pack|order)s?\b|\b(one checkout|one order).{0,32}\b(?:school|learner|child|pack)s?\b/.test(value)) return "checkout_help";
 
   // "do you have X?", "is X on your site?", "do you offer X?" → school availability check
   if (/\b(do you have|do you offer|do you do|are you listing|is .+ on your site|can i find .+ on here)\b/.test(value)) return "find_school";
@@ -316,7 +340,7 @@ export function detectPexIntent(query: string): PexIntent {
   }
   if (/\b(pack|pak|grade\s*(r|[1-9]|1[0-2]))\b/.test(value)) return "find_school_pack";
   if (/\b(product|stationery|stationary|pencil|pen|exercise book|find item|search item)\b/.test(value)) return "product_search";
-  if (/\b(human|person|agent|whatsapp|call|help me|support|complaint|refund|return)\b/.test(value)) return "human_support";
+  if (/\b(?:human|person|agent|whatsapp|call|contact|email|phone|location|address|opening hours|complaint|refund|return|cancel|change my order|edit my order)\b/.test(value)) return "human_support";
   return "unknown_intent";
 }
 
@@ -572,7 +596,7 @@ export function buildPexReply(
     case "general_help":
       reply = response(
         resolvedIntent,
-        "Sure, I can help with school packs, list uploads, Pexcover, payments, or tracking. What do you need?",
+        "I can help you find a school pack, upload a custom list, add Pexcover, check delivery, explain payment options, or track an order. What are you working on?",
         [],
         QUICK_REPLIES.slice(0, 3),
         false,
@@ -829,9 +853,13 @@ export function buildPexReply(
 function avoidRepeatedReply(reply: PexChatResponse, previousAssistantText: string | undefined) {
   if (!isSameReply(previousAssistantText, reply.text)) return reply;
 
+  const nextText = isSameReply(previousAssistantText, CLARIFY_REPLY)
+    ? ALTERNATE_CLARIFY_REPLY
+    : CLARIFY_REPLY;
+
   return response(
     "unknown_intent",
-    CLARIFY_REPLY,
+    nextText,
     [],
     QUICK_REPLIES,
     reply.handoffRecommended,
