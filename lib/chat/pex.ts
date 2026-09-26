@@ -655,7 +655,6 @@ export function buildPexReply(
 
         if (matchedGrade) {
           // We have both school + grade — direct link to the grade pack
-          const gradeSlug = matchedGrade.toLowerCase().replace(/\s+/g, "-");
           reply = response(
             resolvedIntent,
             `${matchedSchool} is on Pexpacks — the ${matchedGrade} pack is ready to go. Tap below to open it, confirm the items, and add it straight to your cart.`,
@@ -799,7 +798,7 @@ export function buildPexReply(
       reply = response(
         resolvedIntent,
         "Schools can partner with Pexpacks for teacher-verified packs, less admin, and fundraising rebates.",
-        [{ id: "partner", label: "Partner with us", description: "See school partnership options", href: "/partner" }],
+        [{ id: "partner", label: "Partner with us", description: "See school partnership options", href: PEX_ROUTES.partner }],
         QUICK_REPLIES.slice(0, 3),
         false,
         updatedEntities,

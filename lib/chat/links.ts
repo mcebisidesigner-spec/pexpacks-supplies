@@ -3,7 +3,7 @@ export const PEX_ROUTES = {
   uploadList: "/upload-a-list",
   track: "/track",
   checkout: "/checkout",
-  partner: "/partner",
+  partner: "/partnership",
   contact: "/contact",
   faq: "/faq",
   pexcover: "/blog/pexcover-book-covering-guide",
