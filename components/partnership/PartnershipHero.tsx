@@ -93,7 +93,7 @@ export function PartnershipHero({
           <div className="relative rounded-2xl overflow-hidden border border-[rgba(225,231,234,0.8)] shadow-[0_24px_54px_rgba(26,42,64,0.12)] bg-white">
             <div className="relative w-full aspect-[4/3.4] overflow-hidden">
               <Image
-                src="/images/hero-school-stationery-delivery.webp"
+                src="/images/hero-school-delivery-packs.webp"
                 alt="Pexpacks stationery delivery packs for partner schools"
                 fill
                 priority

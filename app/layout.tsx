@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientRuntimeWidgets } from "@/components/layout/ClientRuntimeWidgets";
@@ -8,6 +7,7 @@ import { JsonLd } from "@/components/ui/JsonLd";
 import { TrayProviders } from "@/components/order/TrayProviders";
 import { NotificationProvider } from "@/components/ui/NotificationProvider";
 import { buildMetadata } from "@/lib/seo";
+import { pexSans, pexSansAlt } from "@/lib/fonts";
 import { getWebsiteContent, getActiveAnnouncement } from "@/lib/cms";
 import {
   onlineStoreSchema,
@@ -16,59 +16,6 @@ import {
 } from "@/lib/schema";
 import "@/styles/tokens.css";
 import "@/styles/globals.css";
-
-const PexpacksSans = localFont({
-  src: [
-    {
-      path: "../public/fonts/PexSans Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/PexSans Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/PexSans Bold.woff2",
-      weight: "800",
-      style: "normal",
-    },
-  ],
-  variable: "--font-pexpacks-sans",
-  display: "swap",
-  adjustFontFallback: "Arial",
-  fallback: ["system-ui", "sans-serif"],
-});
-
-const PexpacksSansAlt = localFont({
-  src: [
-    {
-      path: "../public/fonts/PexSans Alt Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/PexSans Alt Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/PexSans Alt Semi Bold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/PexSans Alt Bold.woff2",
-      weight: "800",
-      style: "normal",
-    },
-  ],
-  variable: "--font-pexpacks-sans-alt",
-  display: "swap",
-  adjustFontFallback: "Arial",
-  fallback: ["system-ui", "sans-serif"],
-});
 
 export const viewport: Viewport = {
   themeColor: "#1A2A40",
@@ -192,7 +139,7 @@ export default async function RootLayout({
     <html
       lang="en-ZA"
       data-scroll-behavior="smooth"
-      className={`${PexpacksSans.variable} ${PexpacksSansAlt.variable}`}
+      className={`${pexSans.variable} ${pexSansAlt.variable}`}
     >
       <head>
         {process.env.NEXT_PUBLIC_SUPABASE_URL && (

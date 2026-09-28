@@ -30,5 +30,20 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
     },
+    {
+      name: "mobile-iphone",
+      testMatch: /responsive\.spec\.ts/,
+      use: { ...devices["iPhone 13"], browserName: "chromium" },
+    },
+    {
+      name: "mobile-android",
+      testMatch: /responsive\.spec\.ts/,
+      use: { ...devices["Pixel 7"], browserName: "chromium" },
+    },
+    {
+      name: "tablet",
+      testMatch: /responsive\.spec\.ts/,
+      use: { ...devices["iPad (gen 7)"], browserName: "chromium" },
+    },
   ],
 });

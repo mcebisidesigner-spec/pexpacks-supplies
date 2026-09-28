@@ -13,7 +13,6 @@ import { HappyPayBanner } from "@/components/bnpl/HappyPayBanner";
 import { HappyPaySteps } from "@/components/bnpl/HappyPaySteps";
 import {
   getFeaturedSchoolRecords,
-  getAllPublicSchoolRecords,
 } from "@/lib/schools/schoolSearchData";
 import { getWebsiteContent, getFaqs, getTestimonials } from "@/lib/cms";
 import { getActivePublicSeason } from "@/lib/public-data/seasons";
@@ -29,14 +28,12 @@ export const revalidate = 300;
 export default async function SchoolsPage() {
   const [
     featuredSchools,
-    allSchools,
     content,
     schoolsFaqs,
     testimonials,
     season,
   ] = await Promise.all([
     getFeaturedSchoolRecords(),
-    getAllPublicSchoolRecords(),
     getWebsiteContent(),
     getFaqs("schools"),
     getTestimonials(),
@@ -76,7 +73,7 @@ export default async function SchoolsPage() {
 
       <SchoolsTrustSection testimonials={testimonials} />
 
-      {allSchools.length > 0 && <BrowseAllSchools schools={allSchools} />}
+      <BrowseAllSchools />
 
       <ConciergeSection />
 

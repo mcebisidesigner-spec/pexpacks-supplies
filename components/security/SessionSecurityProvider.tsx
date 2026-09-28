@@ -179,8 +179,6 @@ export function SessionSecurityProvider({
   useEffect(() => {
     let authorized = false;
     let handshake: BroadcastChannel | null = null;
-    let timer: number | undefined;
-
     const authorize = () => {
       if (authorized) return;
       authorized = true;
@@ -206,7 +204,7 @@ export function SessionSecurityProvider({
       handshake.postMessage({ type: "RUNTIME_SESSION_REQUEST" });
     }
 
-    timer = window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       if (!authorized) void performHardSignout("manual");
     }, RUNTIME_HANDSHAKE_MS);
 

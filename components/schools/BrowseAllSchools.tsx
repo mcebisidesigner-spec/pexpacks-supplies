@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { SchoolSearchRecord } from "@/lib/schools/types";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -13,9 +13,19 @@ import {
 const LETTERS = Array.from({ length: 26 }, (_, i) =>
   String.fromCharCode(65 + i),
 );
+const DIRECTORY_PAGE_SIZE = 24;
+
+type DirectoryResponse = {
+  success?: boolean;
+  schools?: SchoolSearchRecord[];
+  total?: number;
+  hasMore?: boolean;
+  availableLetters?: string[];
+  availableRegions?: string[];
+};
 
 type BrowseAllSchoolsProps = {
-  schools: SchoolSearchRecord[];
+  schools?: SchoolSearchRecord[];
 };
 
 function priceLabel(school: SchoolSearchRecord) {
@@ -30,26 +40,120 @@ function formatCount(count: number): string {
 }
 
 export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
+  const [loadedSchools, setLoadedSchools] = useState<SchoolSearchRecord[] | null>(
+    schools ?? null,
+  );
+  const [isLoadingDirectory, setIsLoadingDirectory] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [directoryError, setDirectoryError] = useState<string | null>(null);
+  const [directoryTotal, setDirectoryTotal] = useState<number | null>(null);
+  const [directoryHasMore, setDirectoryHasMore] = useState(false);
+  const [directoryRegions, setDirectoryRegions] = useState<string[]>([]);
+  const [directoryLetters, setDirectoryLetters] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const [region, setRegion] = useState<string>("");
   const [visibleCount, setVisibleCount] = useState(4);
+  const directorySearchTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const directorySchools = useMemo(
+    () => schools ?? loadedSchools ?? [],
+    [schools, loadedSchools],
+  );
+
+  async function fetchDirectoryPage(options?: {
+    query?: string;
+    region?: string;
+    letter?: string | null;
+    offset?: number;
+    append?: boolean;
+  }) {
+    const append = options?.append ?? false;
+
+    if ((isLoadingDirectory || isLoadingMore) && !append) return;
+    if (append) setIsLoadingMore(true);
+    else setIsLoadingDirectory(true);
+    setDirectoryError(null);
+
+    try {
+      const params = new URLSearchParams({
+        limit: String(DIRECTORY_PAGE_SIZE),
+        offset: String(options?.offset ?? 0),
+      });
+      const nextQuery = options?.query ?? query;
+      const nextRegion = options?.region ?? region;
+      const nextLetter =
+        options?.letter === undefined ? activeLetter : options.letter;
+
+      if (nextQuery.trim()) params.set("q", nextQuery.trim());
+      if (nextRegion) params.set("region", nextRegion);
+      if (nextLetter) params.set("letter", nextLetter);
+
+      const response = await fetch(
+        `/api/schools/directory?${params.toString()}`,
+        {
+          headers: { Accept: "application/json" },
+        },
+      );
+      const payload = (await response.json()) as DirectoryResponse;
+
+      if (!response.ok || !payload.success || !Array.isArray(payload.schools)) {
+        throw new Error("The school directory is temporarily unavailable.");
+      }
+
+      setLoadedSchools((current) =>
+        append
+          ? [...(current ?? []), ...payload.schools!]
+          : payload.schools!,
+      );
+      setDirectoryTotal(payload.total ?? payload.schools.length);
+      setDirectoryHasMore(Boolean(payload.hasMore));
+      if (payload.availableRegions) setDirectoryRegions(payload.availableRegions);
+      if (payload.availableLetters) setDirectoryLetters(payload.availableLetters);
+      if (!append) setVisibleCount(4);
+    } catch (error) {
+      setDirectoryError(
+        error instanceof Error
+          ? error.message
+          : "The school directory is temporarily unavailable.",
+      );
+    } finally {
+      if (append) setIsLoadingMore(false);
+      else setIsLoadingDirectory(false);
+    }
+  }
+
+  function loadDirectory() {
+    if (loadedSchools || isLoadingDirectory) return;
+    void fetchDirectoryPage();
+  }
 
   useEffect(() => {
     setVisibleCount(4);
   }, [query, activeLetter, region]);
 
+  useEffect(() => {
+    return () => {
+      if (directorySearchTimer.current) {
+        clearTimeout(directorySearchTimer.current);
+      }
+    };
+  }, []);
+
   const regions = useMemo(() => {
+    if (directoryRegions.length > 0) return directoryRegions;
+
     const set = new Set<string>();
-    for (const school of schools) {
+    for (const school of directorySchools) {
       const reg = school.region?.trim();
       if (reg) set.add(reg);
     }
     return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [schools]);
+  }, [directoryRegions, directorySchools]);
 
   const filtered = useMemo(() => {
-    let list = schools;
+    let list = directorySchools;
     if (activeLetter) {
       list = list.filter((s) =>
         s.name.trim().toUpperCase().startsWith(activeLetter),
@@ -71,19 +175,59 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
       );
     }
     return list;
-  }, [schools, activeLetter, region, query]);
+  }, [directorySchools, activeLetter, region, query]);
 
   const displayed = useMemo(() => {
     return filtered.slice(0, visibleCount);
   }, [filtered, visibleCount]);
 
   const remainingLetters = useMemo(() => {
+    if (directoryLetters.length > 0) return directoryLetters;
+
     const present = new Set(
-      schools.map((s) => s.name.trim().toUpperCase().charAt(0)),
+      directorySchools.map((s) => s.name.trim().toUpperCase().charAt(0)),
     );
     return LETTERS.filter((letter) => present.has(letter));
-  }, [schools]);
+  }, [directoryLetters, directorySchools]);
 
+
+  if (!schools && !loadedSchools) {
+    return (
+      <section
+        className="w-full max-w-[var(--layout-max-width)] mx-auto px-4 md:px-8 pt-[clamp(40px,5vw,64px)]"
+        aria-labelledby="browse-schools-heading"
+      >
+        <div className="max-w-[var(--layout-max-width)] mx-auto rounded-card border border-pex-border bg-card p-6 md:p-8 shadow-card">
+          <p className="m-0 mb-2 text-pex-keppel font-extrabold text-sm">
+            Full directory
+          </p>
+          <h2
+            id="browse-schools-heading"
+            className="m-0 text-pex-navy font-heading font-extrabold text-[clamp(26px,3vw,38px)] leading-[1.1]"
+          >
+            Browse school directory
+          </h2>
+          <p className="mt-3 mb-0 max-w-[640px] text-pex-muted text-lg leading-relaxed">
+            Explore every school and find grade-specific packs prepared to the
+            official stationery list.
+          </p>
+          <button
+            type="button"
+            onClick={loadDirectory}
+            disabled={isLoadingDirectory}
+            className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-pex-navy px-5 text-sm font-extrabold !text-white shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:bg-pex-navy/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
+          >
+            {isLoadingDirectory ? "Loading schools..." : "Browse full directory"}
+          </button>
+          {directoryError ? (
+            <p className="mt-3 mb-0 text-sm font-semibold text-red-700" role="alert">
+              {directoryError}
+            </p>
+          ) : null}
+        </div>
+      </section>
+    );
+  }
   function applyFilter(next: {
     letter?: string | null;
     region?: string;
@@ -93,7 +237,7 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
     const nextRegion = next.region === undefined ? region : next.region;
     const nextQuery = next.query === undefined ? query : next.query;
 
-    let list = schools;
+    let list = directorySchools;
     if (letter) {
       list = list.filter((s) => s.name.trim().toUpperCase().startsWith(letter));
     }
@@ -128,16 +272,25 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
     const next = activeLetter === letter ? null : letter;
     setActiveLetter(next);
     applyFilter({ letter: next });
+    void fetchDirectoryPage({ letter: next, offset: 0 });
   }
 
   function handleRegion(value: string) {
     setRegion(value);
     applyFilter({ region: value });
+    void fetchDirectoryPage({ region: value, offset: 0 });
   }
 
   function handleQuery(value: string) {
     setQuery(value);
     applyFilter({ query: value });
+
+    if (directorySearchTimer.current) {
+      clearTimeout(directorySearchTimer.current);
+    }
+    directorySearchTimer.current = setTimeout(() => {
+      void fetchDirectoryPage({ query: value, offset: 0 });
+    }, 300);
   }
 
   return (
@@ -212,6 +365,7 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
           onClick={() => {
             setActiveLetter(null);
             applyFilter({ letter: null });
+            void fetchDirectoryPage({ letter: null, offset: 0 });
           }}
         >
           All
@@ -245,11 +399,13 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
       >
         {filtered.length === 0
           ? "0 schools"
-          : filtered.length <= 4
+          : filtered.length <= 4 && !directoryHasMore
             ? filtered.length === 1
               ? "1 school"
               : `${filtered.length} schools`
-            : `Showing ${displayed.length} of ${formatCount(filtered.length)} schools`}
+            : `Showing ${displayed.length} of ${formatCount(
+                directoryTotal ?? filtered.length,
+              )} schools`}
       </p>
 
       {filtered.length > 0 ? (
@@ -310,7 +466,30 @@ export function BrowseAllSchools({ schools }: BrowseAllSchoolsProps) {
             </div>
           )}
 
-          {visibleCount > 4 && visibleCount >= filtered.length && (
+          {directoryHasMore && visibleCount >= filtered.length && (
+            <div className="mt-[clamp(24px,4vw,36px)] flex justify-center items-center">
+              <button
+                type="button"
+                disabled={isLoadingMore}
+                className="group inline-flex items-center gap-3 min-h-[48px] px-7 py-3 rounded-full bg-card border border-pex-border text-pex-navy text-[15px] font-extrabold cursor-pointer shadow-[0_4px_14px_rgba(16,28,43,0.05)] hover:border-pex-keppel hover:text-pex-keppel hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all duration-200 disabled:cursor-wait disabled:opacity-60"
+                onClick={async () => {
+                  await fetchDirectoryPage({
+                    offset: directorySchools.length,
+                    append: true,
+                  });
+                  setVisibleCount((prev) => prev + 6);
+                }}
+                aria-label="Load 6 more schools"
+              >
+                <span className="inline-flex items-center justify-center w-[26px] h-[26px] rounded-full bg-pex-keppel/10 text-pex-keppel group-hover:bg-pex-keppel group-hover:text-white transition-all duration-200">
+                  <ChevronDown size={18} />
+                </span>
+                <span>{isLoadingMore ? "Loading schools..." : "Load more schools"}</span>
+              </button>
+            </div>
+          )}
+
+          {visibleCount > 4 && visibleCount >= filtered.length && !directoryHasMore && (
             <div className="mt-[clamp(24px,4vw,36px)] flex justify-center items-center">
               <button
                 type="button"

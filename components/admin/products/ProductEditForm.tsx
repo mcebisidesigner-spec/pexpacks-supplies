@@ -373,9 +373,12 @@ export function ProductEditForm({
   onSave,
   returnHref = "/admin/products",
 }: ProductEditFormProps) {
+  const draftMasterProductId =
+    initialMasterProduct?.id ?? "new-master-product";
+
   // Master Product Form State
   const [masterProduct, setMasterProduct] = useState<MasterProduct>({
-    id: initialMasterProduct?.id || `mp-${Date.now()}`,
+    id: draftMasterProductId,
     name: initialMasterProduct?.name || "College Exercise Unruled",
     category: initialMasterProduct?.category || "Stationery",
     description:
@@ -405,8 +408,8 @@ export function ProductEditForm({
 
     return [
       {
-        id: `var-${Date.now()}`,
-        master_product_id: initialMasterProduct?.id || `mp-${Date.now()}`,
+        id: "new-variant",
+        master_product_id: draftMasterProductId,
         brand_id: freedomBrand?.id || "brand-freedom",
         brand_name: freedomBrand?.name || "Freedom",
         sku: "PEX-CEU-FREEDOM-992",
@@ -549,7 +552,7 @@ export function ProductEditForm({
       // Create new staged variant
       const supplierObj = suppliers.find((s) => s.id === selectedSupplierId);
       const newVariant: ProductVariant = {
-        id: `var-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        id: "new-variant",
         master_product_id: masterProduct.id,
         brand_id: selectedBrandId,
         brand_name: currentBrand?.name || "Unknown Brand",

@@ -168,9 +168,8 @@
   --gap-card-mobile: var(--card-gap-mobile);
 
   /* Typography */
-  --font-heading: var(--font-pexpacks-sans-alt), Arial, sans-serif;
-  --font-body: var(--font-pexpacks-sans), Arial, sans-serif;
-  --font-sans: var(--font-body);
+  /* The next/font variables are attached to <html> in app/layout.tsx. */
+  --font-body: var(--font-sans), Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --font-weight-heading: 800;
   --font-weight-bold: 800;

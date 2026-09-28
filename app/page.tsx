@@ -88,7 +88,7 @@ export default async function HomePage() {
             <div className="relative min-h-[390px] md:min-h-[450px] lg:min-h-[570px] rounded-[28px] lg:rounded-[34px] overflow-hidden border border-white/15 bg-[linear-gradient(135deg,rgba(26,42,64,0.95),rgba(21,34,56,0.9))] shadow-[0_32px_80px_rgba(0,0,0,0.38)] lg:[animation:floatAnimation_6s_ease-in-out_infinite] transition-transform duration-300 motion-reduce:animate-none">
               <span className="absolute inset-0">
                 <Image
-                  src="/images/hero-school-stationery-delivery.webp"
+                  src="/images/hero-school-delivery-packs.webp"
                   alt="Pexpacks Stationery Delivery Packs"
                   fill
                   priority

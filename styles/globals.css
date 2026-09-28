@@ -47,8 +47,11 @@
   --color-input: var(--pex-border);
   --color-ring: var(--pex-keppel);
 
-  --font-heading: var(--font-pexpacks-sans-alt), Arial, sans-serif;
-  --font-body: var(--font-pexpacks-sans), Arial, sans-serif;
+  /* Tailwind v4 font tokens point to next/font source variables. */
+  --font-sans: var(--font-pex-sans), Arial, sans-serif;
+  --font-heading: var(--font-pex-heading), Arial, sans-serif;
+  --font-body: var(--font-sans), Arial, sans-serif;
+  --font-display: var(--font-heading), Arial, sans-serif;
 
   --radius-card-lg: 30px;
   --radius-card: 24px;
@@ -70,6 +73,12 @@
   --breakpoint-xs: 480px;
   --breakpoint-tab: 860px;
   --breakpoint-kanban: 1100px;
+}
+
+:root {
+  /* Semantic aliases override Tailwind's default system font token. */
+  --font-sans: var(--font-pex-sans), Arial, sans-serif;
+  --font-heading: var(--font-pex-heading), Arial, sans-serif;
 }
 
 /* Reset and base styles */
@@ -182,6 +191,15 @@ body.menu-open [aria-label*="Pex"] {
 
 @utility text-link-hover {
   @apply text-link hover:text-pex-keppel focus-visible:text-pex-keppel;
+}
+
+/* Keep the semantic utility names stable while next/font owns the variables. */
+@utility font-sans {
+  font-family: var(--font-sans), Arial, sans-serif;
+}
+
+@utility font-heading {
+  font-family: var(--font-heading), Arial, sans-serif;
 }
 
 .footer-legal-link {

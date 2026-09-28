@@ -11,8 +11,8 @@ console.log("================================================================");
 
 const steps = [
   {
-    name: "Gate 1: TypeScript Static Type Safety",
-    command: "npx tsc --noEmit",
+    name: "Gate 1: TypeScript Static Type Safety (with ESLint)",
+    command: "npx eslint . && npx tsc --noEmit",
   },
   {
     name: "Gate 2: Database Migration & Governance Integrity",
@@ -21,6 +21,14 @@ const steps = [
   {
     name: "Gate 3: Full Vitest Automated Regression Suite",
     command: "npx vitest run",
+  },
+  {
+    name: "Gate 4: Image Budget",
+    command: "node scripts/check-image-budget.cjs",
+  },
+  {
+    name: "Gate 5: Performance Configuration",
+    command: "node scripts/performance-audit.cjs",
   },
 ];
 
