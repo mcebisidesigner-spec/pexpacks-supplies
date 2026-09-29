@@ -5,10 +5,15 @@ export default [
   {
     ignores: [
       ".next/**",
+      ".next-build/**",
       "node_modules/**",
       "supabase/.temp/**",
       "out/**",
       "public/sw.js",
+      "test-results/**",
+      "*.mjs",
+      "*.cjs",
+      "scratch-test.*",
     ],
   },
   ...nextCoreWebVitals,

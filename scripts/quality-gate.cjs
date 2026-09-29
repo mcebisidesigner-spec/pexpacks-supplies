@@ -44,7 +44,7 @@ for (const step of steps) {
   const stepStart = Date.now();
 
   try {
-    execSync(step.command, { stdio: "pipe" });
+    execSync(step.command, { stdio: "pipe", maxBuffer: 64 * 1024 * 1024 });
     const duration = ((Date.now() - stepStart) / 1000).toFixed(2);
     console.log(`✅ Passed (${duration}s)`);
   } catch (error) {
