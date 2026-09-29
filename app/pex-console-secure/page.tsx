@@ -19,6 +19,13 @@ import {
   resendOtpAction,
 } from "@/app/actions/auth";
 
+function isRecentCopiedOtp(timestamp: unknown): boolean {
+  return (
+    typeof timestamp === "number" &&
+    Number.isFinite(timestamp) &&
+    Date.now() - timestamp < 5 * 60 * 1000
+  );
+}
 export default function PexConsoleGateway() {
   const [step, setStep] = useState<"credentials" | "otp_challenge">(
     "credentials",
@@ -153,7 +160,7 @@ export default function PexConsoleGateway() {
         if (
           parsed?.code &&
           /^\d{6}$/.test(parsed.code) &&
-          Date.now() - parsed.timestamp < 5 * 60 * 1000
+          isRecentCopiedOtp(parsed.timestamp)
         ) {
           setStep("otp_challenge");
           setOtpValues(parsed.code.split(""));
@@ -270,7 +277,7 @@ export default function PexConsoleGateway() {
           if (
             parsed?.code &&
             /^\d{6}$/.test(parsed.code) &&
-            Date.now() - parsed.timestamp < 5 * 60 * 1000
+            isRecentCopiedOtp(parsed.timestamp)
           ) {
             codeToUse = parsed.code;
           }

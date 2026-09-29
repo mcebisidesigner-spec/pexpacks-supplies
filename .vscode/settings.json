@@ -1,5 +1,6 @@
 {
   "css.lint.unknownAtRules": "ignore",
   "scss.lint.unknownAtRules": "ignore",
-  "less.lint.unknownAtRules": "ignore"
+  "less.lint.unknownAtRules": "ignore",
+  "docker.dockerPath": "C:\\Users\\mcebi\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe"
 }

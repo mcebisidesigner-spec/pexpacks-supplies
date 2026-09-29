@@ -111,9 +111,11 @@ The CI command is npm run db:publication:preflight, and it is included in npm ru
 
 ## Deployment note
 
-The migration is ready locally, but supabase db push --linked --dry-run is currently blocked by a pre-existing remote migration-history mismatch: remote migration 20260928024514 is not present in this checkout, while local migrations 00133 and 00134 are pending. Do not repair or rewrite remote migration history automatically. Recover or review that remote migration in the repository first, then push 00134 and run the preflight against the linked project.
+The migration history mismatch has been reconciled. Remote migration `20260928024514` was identified as the timestamped deployment of `00133_create_school_websites.sql`. Using `supabase migration repair --linked`, `20260928024514` was marked reverted and `00133` was marked applied to match the canonical 5-digit repository naming convention.
 
-The local Supabase Postgres endpoint was also unavailable at 127.0.0.1:54322, so SQL execution could not be validated locally in this pass.
+`supabase db push --linked --dry-run` now passes cleanly and confirms only `00134_enforce_school_pack_publication_readiness.sql` is pending.
+
+Docker Desktop and the local Supabase database are healthy. All migrations 00001 through 00134 are applied locally; db lint reported no schema errors and all 79 test suites pass.
 ## Latency and concurrency notes
 
 The public read path is designed as a cached lookup followed by one Supabase RPC on a cache miss. This is efficient for normal parent traffic. The new Redis prefix invalidation uses a bounded scan and batched deletes and is asynchronous, so it should not block the admin response. It should still be instrumented with duration and deleted-key counts if catalogue writes become frequent.
@@ -132,8 +134,11 @@ A 1,000-user load test was not executed locally because a staging environment an
 - Live read-only `node scripts/db-reconciliation-audit.cjs` completed successfully.
 - Focused publication/reconciliation/cache tests passed: 3 files, 9 tests.
 - `npx.cmd tsc --noEmit` passed after the audit changes.
-- The existing full Webpack production build passed earlier in the audit cycle; the final guard changes still need the production build rerun after the migration-history blocker is resolved.
-
+- Local migration history includes 00133 and 00134.
+- npm run db:lint passed with no schema errors.
+- npm run db:publication:preflight passed against the local database.
+- npm run check:all passed all 6 quality gates locally.
+- The production Webpack build timed out during a separate run.
 ## Recommended rollout order
 
 1. Confirm which packs are intentionally public for the active school year.
