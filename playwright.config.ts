@@ -20,7 +20,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: "npm run start",
+    command: "node scripts/start-standalone.cjs",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
@@ -31,18 +31,23 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
     {
+      name: "performance",
+      testMatch: /performance\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
       name: "mobile-iphone",
-      testMatch: /(?:responsive|a11y)\.spec\.ts/,
+      testMatch: /(?:responsive|a11y|performance)\.spec\.ts/,
       use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
       name: "mobile-android",
-      testMatch: /(?:responsive|a11y)\.spec\.ts/,
+      testMatch: /(?:responsive|a11y|performance)\.spec\.ts/,
       use: { ...devices["Pixel 7"], browserName: "chromium" },
     },
     {
       name: "tablet",
-      testMatch: /(?:responsive|a11y)\.spec\.ts/,
+      testMatch: /(?:responsive|a11y|performance)\.spec\.ts/,
       use: { ...devices["iPad (gen 7)"], browserName: "chromium" },
     },
   ],

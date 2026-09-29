@@ -276,14 +276,14 @@ export function PexcoverDrawerCard({
       className={cn(
         "flex flex-col w-full rounded-xl border box-border overflow-hidden transition-all duration-200",
         enabled && !isDisabled
-          ? "bg-[#EBF7F5] border-[#BBE5DE] shadow-[0_2px_10px_rgba(30,116,104,0.08)]"
+          ? "bg-pex-cover-surface border-pex-cover-border shadow-sm"
           : "bg-slate-50 border-slate-200",
         isDisabled && "opacity-60 cursor-not-allowed"
       )}
       data-testid="pexcover-drawer-card"
       data-active={enabled && !isDisabled}
     >
-      {/* ── Top Row Summary (Clickable Checkbox + Details + Price) ── */}
+      {/* Top row summary: clickable checkbox, details, and price. */}
       <div
         className={cn(
           "flex items-center gap-3 px-3.5 py-2.5 select-none bg-transparent border-none w-full text-left box-border",
@@ -317,7 +317,7 @@ export function PexcoverDrawerCard({
           <div
             className={cn(
               "w-5 h-5 rounded-[5px] border border-slate-300 bg-white flex items-center justify-center transition-all duration-180 text-white peer-focus-visible:outline-2 peer-focus-visible:outline-pex-keppel peer-focus-visible:outline-offset-2",
-              enabled && !isDisabled && "bg-pex-keppel border-pex-keppel shadow-[0_2px_6px_rgba(30,116,104,0.35)]"
+              enabled && !isDisabled && "bg-pex-keppel border-pex-keppel shadow-sm"
             )}
             aria-hidden="true"
           >
@@ -328,7 +328,7 @@ export function PexcoverDrawerCard({
         <div className="flex-1 min-w-0 flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="m-0 text-[13px] font-bold text-slate-900 leading-snug tracking-tight">Pexcover</span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#0B5C50] text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">Done-For-You</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-pex-cover-badge text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">Done-For-You</span>
           </div>
           <span className="m-0 text-[11.5px] text-slate-500 leading-snug">
             {isDisabled
@@ -336,13 +336,13 @@ export function PexcoverDrawerCard({
               : `${coverableCount} book${coverableCount === 1 ? "" : "s"} covered with protective wrap`}
           </span>
           <Link
-            className="text-[11px] font-semibold text-[#1E7468] hover:underline inline-flex items-center gap-0.5 mt-0.5"
+            className="text-[11px] font-semibold text-pex-keppel hover:underline inline-flex items-center gap-0.5 mt-0.5"
             href="/pexcover"
             rel="noopener noreferrer"
             target="_blank"
             onClick={(e) => e.stopPropagation()}
           >
-            See materials &amp; photo gallery ↗
+            See materials &amp; photo gallery -&gt;
           </Link>
         </div>
 
@@ -352,11 +352,11 @@ export function PexcoverDrawerCard({
             isDisabled ? "text-slate-400 font-semibold" : "text-pex-keppel"
           )}
         >
-          {isDisabled ? "—" : formatRandPrice(coveringPriceCents)}
+          {isDisabled ? "-" : formatRandPrice(coveringPriceCents)}
         </div>
       </div>
 
-      {/* ── Expandable Accordion Drawer (Directly beneath top row) ── */}
+      {/* Expandable accordion drawer directly beneath the top row. */}
       <div
         id={`pexcover-accordion-${packId}`}
         className={cn(
@@ -377,7 +377,7 @@ export function PexcoverDrawerCard({
                 <span className="flex items-center gap-1">
                   <Shield size={11} /> Clear sleeve included
                 </span>
-                <span>•</span>
+                <span aria-hidden="true">|</span>
                 <Link
                   href="/pexcover"
                   target="_blank"
@@ -420,9 +420,9 @@ export function PexcoverDrawerCard({
                       {isSelected ? (
                         <div
                           className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full bg-pex-keppel border border-pex-keppel text-white text-[10.5px] font-black flex items-center justify-center shadow-md z-[3] animate-[popIn_0.18s_ease-out]"
-                          aria-label="Selected style"
+                          aria-hidden="true"
                         >
-                          ✓
+                          <Check size={11} strokeWidth={3} />
                         </div>
                       ) : (
                         <div

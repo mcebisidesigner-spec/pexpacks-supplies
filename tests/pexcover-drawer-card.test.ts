@@ -141,7 +141,7 @@ describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
     expect(html).toContain("Standard Kraft");
     expect(html).toContain("Marbled &amp; Print");
     expect(html).toContain("Vibrant Colors");
-    expect(html).toContain("✓");
+    expect(html).toContain("lucide-check");
     expect(html).toContain("Selected:");
   });
 
@@ -159,7 +159,7 @@ describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
     );
 
     expect(html).toContain("No coverable books in this pack");
-    expect(html).toContain("—");
+    expect(html).toContain(">-</div>");
     expect(html).toContain("disabled");
   });
 
@@ -171,8 +171,8 @@ describe("PexcoverDrawerCard & Paper In-Card Selector", () => {
     const content = readFileSync(componentPath, "utf8");
 
     // Brand theme styling
-    expect(content).toContain("#EBF7F5");
-    expect(content).toContain("#BBE5DE");
+    expect(content).toContain("bg-pex-cover-surface");
+    expect(content).toContain("border-pex-cover-border");
     expect(content).toContain("bg-slate-50");
     expect(content).toContain("border-slate-200");
     expect(content).toContain("pex-keppel");

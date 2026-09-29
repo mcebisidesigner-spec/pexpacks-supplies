@@ -14,6 +14,8 @@ Current status:
 - The image budget passes at 2,919 KB total with no file above 300 KB.
 - The production Webpack build completes successfully.
 - 1,000-user production capacity remains unverified and still requires a production-like staging load test.
+- Browser performance budgets now pass on 4 desktop and 12 mobile/tablet route checks.
+- A staging-safe k6 profile and runbook now define the 1,000-user ramp and release thresholds.
 
 The report below keeps the original baseline evidence for traceability and clearly separates resolved findings from remaining work.
 
@@ -33,6 +35,9 @@ Post-change verification:
 - Image budget: 2,919 KB total, zero files over 300 KB.
 - /schools: approximately 203 KB on the fresh production build, down from approximately 1.83 MB.
 - /api/schools/directory: approximately 10.8 KB for the first 24-school page, 2.1 KB for a focused query, with server-side filtering and pagination.
+- Web Vitals budgets: 16/16 Playwright checks passed across desktop, iPhone, Android and tablet profiles for TTFB, transfer size, LCP, CLS and INP thresholds.
+- Added scripts/load-test.k6.js and docs/LOAD_TESTING.md; the profile is ready for staging execution but was not run against a live staging host in this local pass.
+- Replaced repeated Pexcover active-state colours with shared Tailwind v4 tokens and removed malformed visible labels from the checkout card.
 
 The remaining work is intentionally staged: the repository still has 93 non-blocking ESLint warnings and a broad formatting backlog, while a production-like 1,000-user test is still required for a real capacity claim.
 
@@ -97,7 +102,9 @@ A local concurrent burst against the production build produced these observation
 
 The homepage result varied between runs, which indicates local saturation/warm-cache effects and reinforces that this is not a production capacity test. The school search route intentionally limits each client to 60 requests per 60 seconds (`app/api/schools/search/route.ts:18-36`). That is appropriate protection, but a realistic browser test must model one request per typing pause, caching, backoff, and many distinct client IPs.
 
-**Action:** add a staging load test with k6 or Artillery. Ramp gradually to 1,000 virtual users across homepage, school search, pack detail, chat, list conversion, draft cart, and checkout-draft flows. Track p50/p95/p99, error rate, Supabase query time, connection pool usage, Redis/Upstash rate-limit latency, memory, CPU, and external-provider failures. Define thresholds before running the test.
+**Action implemented:** scripts/load-test.k6.js provides a staging-only public storefront profile that ramps to 1,000 virtual users, holds the peak, and enforces failure, p95, p99 and check-success thresholds. docs/LOAD_TESTING.md documents the run command, optional search scenario, rate-limit interpretation, and why mutating checkout/payment/list-conversion flows remain opt-in.
+
+**Status:** the profile and thresholds are ready, but the real capacity claim remains pending until the test runs against a production-like staging deployment with distributed runners and observability for p50/p95/p99, Supabase query time, connection pool usage, rate-limit latency, memory, CPU and provider failures.
 
 ### P2 - Tailwind design-token adoption is incomplete
 
@@ -111,7 +118,9 @@ The largest inline-style hotspots include `components/admin/settings/UserIdentit
 
 **Impact:** repeated colours, spacing, and state styles are harder to audit and make responsive consistency more fragile.
 
-**Action:** extend the Tailwind v4 `@theme` tokens for brand colours, surfaces, borders, focus rings, spacing, radii, and shadows. Convert the listed hotspots first. Keep arbitrary values only for genuine one-off geometry, and use shared `cn()`/component primitives for repeated controls.
+**Action implemented for the first hotspot:** the Pexcover checkout card now uses shared pex-cover-* Tailwind v4 tokens for active surfaces, borders and badges, while its intentional inline swatch geometry remains local to the visual preview. Malformed visible characters in that card were also removed.
+
+**Remaining action:** continue the same token migration through the higher-volume checkout and admin hotspots, keeping arbitrary values only for genuine one-off geometry and using shared cn()/component primitives for repeated controls.
 
 ### P2 - Responsive and accessibility coverage (responsive coverage resolved)
 
@@ -119,9 +128,9 @@ Playwright now includes Desktop Chrome, iPhone Chromium emulation, Android Chrom
 
 Verification: all 15 responsive smoke tests pass across the three narrow-device profiles. The accessibility suite also passes across iPhone, Android and tablet Chromium profiles: 21 tests total. The checks cover core route rendering, no horizontal overflow, critical/serious Axe violations, skip-link focusability and labelled authentication fields.
 
-Remaining gap: critical customer-journey suites and Web Vitals/performance budgets are not yet asserted across narrow devices.
+Remaining gap: critical customer-journey suites are not yet asserted across narrow devices. Web Vitals and transfer-size budgets are now enforced across desktop, iPhone, Android and tablet profiles.
 
-Action: add mobile/tablet coverage for the school-to-pack, upload-to-cart and checkout journeys, then add LCP, INP, CLS and transfer-size thresholds through Lighthouse CI or a Playwright Web Vitals collector.
+Action: add mobile/tablet coverage for the school-to-pack, upload-to-cart and checkout journeys. The Playwright Web Vitals collector and thresholds are now in place; a staging Lighthouse run can be added later for field-data correlation.
 
 ### P2 - ESLint warning debt remains
 
@@ -152,13 +161,15 @@ Prettier currently reports 565 files. The scan also found one active CSS module 
 - Production dependency audit passed with 0 vulnerabilities.
 - Core route smoke checks returned HTTP 200 for `/`, `/schools`, `/order`, `/pexcover`, `/checkout`, `/blog`, and `/contact`.
 - Responsive smoke suite passed: 15 tests across iPhone, Android, and tablet Chromium emulation.
+- Web Vitals and transfer budgets passed: 4 desktop checks plus 12 iPhone, Android and tablet checks.
+- The standalone Playwright server now copies public/, .next/static and local ignored environment configuration into the build output for representative local production verification.
 - Next.js already has useful baseline settings: standalone output, compression, optimized package imports, AVIF/WebP image formats, security headers, and static-asset cache headers (`next.config.ts:26-56`, `next.config.ts:161-308`).
 
 ## Recommended Delivery Sequence
 
-1. Extend the new mobile/tablet smoke profiles to accessibility and critical customer journeys, then add Web Vitals budgets to CI.
-2. Add a production-like k6 or Artillery test for 1,000 virtual users across public pages, school search, chat, list conversion, draft cart, and checkout-draft flows.
-3. Consolidate Tailwind tokens and refactor the highest-volume arbitrary-colour and inline-style hotspots.
+1. Extend the existing mobile/tablet profiles to the critical school-to-pack, upload-to-cart and checkout journeys.
+2. Run the prepared k6 profile against production-like staging with distributed runners, observability and seeded test data.
+3. Continue consolidating Tailwind tokens through the highest-volume checkout and admin arbitrary-colour and inline-style hotspots.
 4. Resolve the geolocation policy decision and document the privacy/UX contract.
 5. Burn down the remaining ESLint warning categories and establish a controlled formatting cleanup.
 

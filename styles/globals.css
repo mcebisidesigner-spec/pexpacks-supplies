@@ -23,6 +23,9 @@
   --color-pex-keppel-on-navy: var(--pex-keppel-on-navy);
   --color-pex-coral: var(--pex-coral);
   --color-pex-coral-hover: var(--pex-coral-hover);
+  --color-pex-cover-surface: var(--pex-cover-surface);
+  --color-pex-cover-border: var(--pex-cover-border);
+  --color-pex-cover-badge: var(--pex-cover-badge);
   --color-pex-border: var(--pex-border);
   --color-pex-bg: var(--pex-bg);
   --color-pex-bg-soft: var(--pex-bg-soft);
