@@ -151,15 +151,15 @@ export function Footer({ company }: FooterContent) {
               >
                 {phone ? (
                   <>
-                    <a href={phoneHrefLocal} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:!text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                    <a href={phoneHrefLocal} className="relative text-pex-keppel-on-navy text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:!text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                       {formatPhoneNumber(phone)}
                     </a>
-                    <span className="text-pex-keppel opacity-50 text-base font-medium leading-none" aria-hidden="true">
+                    <span className="text-pex-keppel-on-navy opacity-50 text-base font-medium leading-none" aria-hidden="true">
                       |
                     </span>
                   </>
                 ) : null}
-                <a href={emailHref} className="relative text-pex-keppel text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:!text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
+                <a href={emailHref} className="relative text-pex-keppel-on-navy text-sm sm:text-base font-bold leading-[1.25] tracking-normal no-underline break-all sm:break-normal transition-colors duration-200 hover:!text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12">
                   {email}
                 </a>
               </address>
@@ -206,7 +206,7 @@ export function Footer({ company }: FooterContent) {
               href="https://mcebisih.co.za/"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative !text-pex-keppel font-extrabold no-underline transition-colors duration-200 hover:text-pex-keppel focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
+              className="relative !text-pex-keppel-on-navy font-extrabold no-underline transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:rounded-full after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:min-w-12 after:min-h-12"
             >
               McebisiH
             </a>

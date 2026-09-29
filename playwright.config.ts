@@ -32,17 +32,17 @@ export default defineConfig({
     },
     {
       name: "mobile-iphone",
-      testMatch: /responsive\.spec\.ts/,
+      testMatch: /(?:responsive|a11y)\.spec\.ts/,
       use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
       name: "mobile-android",
-      testMatch: /responsive\.spec\.ts/,
+      testMatch: /(?:responsive|a11y)\.spec\.ts/,
       use: { ...devices["Pixel 7"], browserName: "chromium" },
     },
     {
       name: "tablet",
-      testMatch: /responsive\.spec\.ts/,
+      testMatch: /(?:responsive|a11y)\.spec\.ts/,
       use: { ...devices["iPad (gen 7)"], browserName: "chromium" },
     },
   ],

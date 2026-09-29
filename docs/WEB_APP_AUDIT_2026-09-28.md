@@ -113,15 +113,15 @@ The largest inline-style hotspots include `components/admin/settings/UserIdentit
 
 **Action:** extend the Tailwind v4 `@theme` tokens for brand colours, surfaces, borders, focus rings, spacing, radii, and shadows. Convert the listed hotspots first. Keep arbitrary values only for genuine one-off geometry, and use shared `cn()`/component primitives for repeated controls.
 
-### P2 - Responsive and accessibility coverage (partially resolved)
+### P2 - Responsive and accessibility coverage (responsive coverage resolved)
 
 Playwright now includes Desktop Chrome, iPhone Chromium emulation, Android Chromium emulation, and iPad Chromium emulation. The mobile and tablet projects run a dedicated responsive smoke suite so desktop-only navigation assumptions do not create false failures.
 
-Verification: all 15 responsive smoke tests pass across the three narrow-device profiles. The suite checks the core routes for HTTP 200, visible main content, and no horizontal overflow.
+Verification: all 15 responsive smoke tests pass across the three narrow-device profiles. The accessibility suite also passes across iPhone, Android and tablet Chromium profiles: 21 tests total. The checks cover core route rendering, no horizontal overflow, critical/serious Axe violations, skip-link focusability and labelled authentication fields.
 
-Remaining gap: the full accessibility and customer-journey suites still run on the desktop project only, and Web Vitals/performance budgets are not yet asserted in-browser.
+Remaining gap: critical customer-journey suites and Web Vitals/performance budgets are not yet asserted across narrow devices.
 
-Action: add mobile/tablet accessibility and critical customer-journey coverage incrementally, then add LCP, INP, CLS, and transfer-size thresholds through Lighthouse CI or a Playwright Web Vitals collector.
+Action: add mobile/tablet coverage for the school-to-pack, upload-to-cart and checkout journeys, then add LCP, INP, CLS and transfer-size thresholds through Lighthouse CI or a Playwright Web Vitals collector.
 
 ### P2 - ESLint warning debt remains
 

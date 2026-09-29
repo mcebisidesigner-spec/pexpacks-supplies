@@ -88,7 +88,9 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       {children}
       <div
         className="pointer-events-none fixed inset-x-4 top-4 z-[10000] flex flex-col items-stretch gap-3 sm:inset-0 sm:items-center sm:justify-center sm:p-6"
+        role="region"
         aria-label="Notifications"
+        aria-live="polite"
       >
         {notifications.map((notification) => (
           <NotificationCard
