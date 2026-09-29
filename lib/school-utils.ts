@@ -6,7 +6,7 @@ import { getCachedJson, setCachedJson } from "@/lib/cache/redisCloud";
 
 export const SCHOOL_DATA_TAG = "school-data";
 export const SCHOOL_DATA_REVALIDATE_SECONDS = 300;
-export const REDIS_SCHOOL_CACHE_TTL_SECONDS = 86400; // 24 hours in-memory shield
+export const REDIS_SCHOOL_CACHE_TTL_SECONDS = 300; // speed shield; Next cache tags remain the freshness authority
 
 type DbSchool = {
   id: string;

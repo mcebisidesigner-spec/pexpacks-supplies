@@ -151,13 +151,13 @@ export async function duplicatePackAction(
 export async function setPackVisibleAction(
   id: string,
   visible: boolean,
-): Promise<void> {
+): Promise<{ ok: boolean; message?: string }> {
   await requireAdmin({ permission: "packs.edit" });
-  await setPackVisible(id, visible);
+  const result = await setPackVisible(id, visible);
+  if (!result.ok) return result;
 
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
-
   const { data: pack } = await admin
     .from("school_packs")
     .select("id, slug, school_id, schools(slug)")
@@ -179,35 +179,85 @@ export async function setPackVisibleAction(
   }
   revalidatePath("/schools");
   revalidatePath("/", "layout");
+  return result;
 }
 
 export async function setSchoolPacksVisibleAction(
   schoolId: string,
   visible: boolean,
-): Promise<void> {
-  await requireAdmin({ permission: "packs.edit" });
+): Promise<{ ok: boolean; message?: string }> {
+  const actor = await requireAdmin({ permission: "packs.edit" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");
   const admin = createSupabaseAdminClient();
 
-  await admin
+  if (visible) {
+    const { error: schoolError } = await admin
+      .from("schools")
+      .update({
+        status: "active",
+        published: true,
+        publication_status: "published",
+      })
+      .eq("id", schoolId);
+    if (schoolError) return { ok: false, message: "The school could not be published." };
+
+    const { data: packs, error: packsError } = await admin
+      .from("school_packs")
+      .select("id")
+      .eq("school_id", schoolId);
+    if (packsError) return { ok: false, message: "The school packs could not be loaded." };
+
+    const results = await Promise.all(
+      (packs ?? []).map(async (pack) => {
+        const { data, error } = await admin.rpc("publish_school_pack", {
+          p_pack_id: pack.id,
+          p_user_id: actor.user.id,
+        });
+        const payload = (data ?? {}) as { success?: boolean; reasons?: unknown };
+        if (error || payload.success !== true) {
+          const reasons = Array.isArray(payload.reasons)
+            ? payload.reasons.filter((reason): reason is string => typeof reason === "string")
+            : [];
+          return reasons.join(" ") || "Pack is not ready for publication.";
+        }
+        return null;
+      }),
+    );
+    const failures = results.filter((message): message is string => Boolean(message));
+    revalidateCatalog();
+    revalidatePath("/admin/packs");
+    revalidatePath("/schools");
+    revalidatePath("/", "layout");
+    return failures.length > 0
+      ? { ok: false, message: `${failures.length} pack(s) stayed draft: ${failures[0]}` }
+      : { ok: true };
+  }
+
+  const { error: packError } = await admin
     .from("school_packs")
-    .update({ visible })
-    .eq("school_id", schoolId);
-  const { data: school } = await admin
-    .from("schools")
     .update({
-      status: visible ? "active" : "inactive",
-      published: visible,
+      visible: false,
+      publication_status: "draft",
+      published_at: null,
+      published_by: null,
     })
+    .eq("school_id", schoolId);
+  if (packError) return { ok: false, message: "The school packs could not be hidden." };
+
+  const { data: school, error: schoolError } = await admin
+    .from("schools")
+    .update({ status: "inactive", published: false, publication_status: "draft" })
     .eq("id", schoolId)
     .select("slug")
     .maybeSingle();
+  if (schoolError) return { ok: false, message: "The school could not be hidden." };
+
   revalidateCatalog({ schoolSlug: school?.slug });
   revalidatePath("/admin/packs");
   revalidatePath("/schools");
   revalidatePath("/", "layout");
+  return { ok: true };
 }
-
 export async function deleteSchoolPacksAction(schoolId: string): Promise<void> {
   await requireAdmin({ permission: "packs.delete" });
   const { createSupabaseAdminClient } = await import("@/lib/supabase/admin");

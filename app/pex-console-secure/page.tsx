@@ -9,6 +9,7 @@ import {
   ArrowRight,
   AlertTriangle,
   RefreshCw,
+  ClipboardPaste,
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { FloatingInput } from "@/components/ui/FloatingInput";
@@ -113,7 +114,12 @@ export default function PexConsoleGateway() {
           window.location.pathname,
         );
       } else if (urlOtp && urlOtp.length === 6 && /^\d+$/.test(urlOtp)) {
+        setStep("otp_challenge");
         setOtpValues(urlOtp.split(""));
+        const urlEmail = params.get("email");
+        if (urlEmail) {
+          setEmail(decodeURIComponent(urlEmail));
+        }
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             void navigator.clipboard.writeText(urlOtp);
@@ -136,6 +142,37 @@ export default function PexConsoleGateway() {
       }
     }
   }, []);
+
+  // Sync cross-tab copied OTP when window regains focus or localStorage is updated
+  useEffect(() => {
+    function syncFromStorage() {
+      try {
+        const raw = localStorage.getItem("pex_copied_otp");
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (
+          parsed?.code &&
+          /^\d{6}$/.test(parsed.code) &&
+          Date.now() - parsed.timestamp < 5 * 60 * 1000
+        ) {
+          setStep("otp_challenge");
+          setOtpValues(parsed.code.split(""));
+          if (parsed.email && !email) {
+            setEmail(parsed.email);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    window.addEventListener("focus", syncFromStorage);
+    window.addEventListener("storage", syncFromStorage);
+    return () => {
+      window.removeEventListener("focus", syncFromStorage);
+      window.removeEventListener("storage", syncFromStorage);
+    };
+  }, [email]);
 
   function handleCredentialsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -208,6 +245,50 @@ export default function PexConsoleGateway() {
       setOtpValues(next);
       otpRefs.current[5]?.focus();
       submitOtpToken(next.join(""));
+    }
+  }
+
+  async function handleQuickPaste() {
+    let codeToUse = "";
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.readText) {
+        const clipText = await navigator.clipboard.readText();
+        const digits = clipText.replace(/\D/g, "").slice(0, 6);
+        if (digits.length === 6) {
+          codeToUse = digits;
+        }
+      }
+    } catch {
+      // Browser clipboard read permission might be blocked or require user gesture
+    }
+
+    if (!codeToUse && typeof window !== "undefined" && window.localStorage) {
+      try {
+        const raw = window.localStorage.getItem("pex_copied_otp");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (
+            parsed?.code &&
+            /^\d{6}$/.test(parsed.code) &&
+            Date.now() - parsed.timestamp < 5 * 60 * 1000
+          ) {
+            codeToUse = parsed.code;
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    if (codeToUse && codeToUse.length === 6) {
+      const next = codeToUse.split("");
+      setOtpValues(next);
+      otpRefs.current[5]?.focus();
+      submitOtpToken(codeToUse);
+    } else {
+      setErrorMessage(
+        "No 6-digit code detected in clipboard. Please enter or paste manually."
+      );
     }
   }
 
@@ -395,7 +476,19 @@ export default function PexConsoleGateway() {
         {step === "otp_challenge" && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-[var(--db-text-secondary)]">6-Digit Security Token</label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-[var(--db-text-secondary)]">
+                  6-Digit Security Token
+                </label>
+                <button
+                  type="button"
+                  onClick={handleQuickPaste}
+                  className="inline-flex items-center gap-1 text-[11px] text-[var(--db-brand)] hover:underline font-semibold bg-transparent border-0 cursor-pointer p-0"
+                >
+                  <ClipboardPaste size={12} />
+                  Paste code
+                </button>
+              </div>
               <div className="flex justify-between gap-1.5 my-2.5">
                 {otpValues.map((digit, idx) => (
                   <input

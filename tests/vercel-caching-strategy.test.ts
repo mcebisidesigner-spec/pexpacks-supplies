@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { SCHOOL_DATA_REVALIDATE_SECONDS } from "@/lib/school-utils";
+import { REDIS_SCHOOL_CACHE_TTL_SECONDS, SCHOOL_DATA_REVALIDATE_SECONDS } from "@/lib/school-utils";
 import { SEASON_REVALIDATE_SECONDS } from "@/lib/public-data/seasons";
 import { SETTINGS_REVALIDATE_SECONDS } from "@/lib/public-data/settings";
 import { CMS_REVALIDATE_SECONDS } from "@/lib/cms";
@@ -16,6 +16,7 @@ function readRepoFile(path: string) {
 describe("Vercel Caching Strategy & Freshness Contract", () => {
   it("enforces a standard 5-minute (300s) TTL across all public data caching layers", () => {
     expect(SCHOOL_DATA_REVALIDATE_SECONDS).toBe(300);
+    expect(REDIS_SCHOOL_CACHE_TTL_SECONDS).toBe(300);
     expect(SEASON_REVALIDATE_SECONDS).toBe(300);
     expect(SETTINGS_REVALIDATE_SECONDS).toBe(300);
     expect(CMS_REVALIDATE_SECONDS).toBe(300);
@@ -56,6 +57,8 @@ describe("Vercel Caching Strategy & Freshness Contract", () => {
   it("ensures revalidateCatalog invalidates all public tags and paths for instant freshness", () => {
     const revalidateCode = readRepoFile("lib/admin/catalog-revalidate.ts");
     expect(revalidateCode).toContain("SCHOOL_DATA_TAG");
+    expect(revalidateCode).toContain("deleteCachedByPrefix");
+    expect(revalidateCode).toContain("school:bundle:");
     expect(revalidateCode).toContain("featured-schools");
     expect(revalidateCode).toContain("SEASON_CACHE_TAG");
     expect(revalidateCode).toContain("SETTINGS_CACHE_TAG");

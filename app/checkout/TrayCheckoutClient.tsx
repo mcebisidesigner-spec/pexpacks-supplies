@@ -555,11 +555,11 @@ export function TrayCheckoutClient() {
   }
 
   return (
-    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-[var(--pex-bg)] font-[family-name:var(--font-body)] text-[var(--pex-navy)] pb-24 lg:pb-12">
-      <header className="flex justify-between items-center max-w-[var(--layout-max-width)] mx-auto mb-8">
+    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-pex-bg font-sans text-pex-navy pb-24 lg:pb-12">
+      <header className="flex justify-between items-center max-w-layout mx-auto mb-8">
         <button
           type="button"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pex-navy)] hover:text-[var(--pex-keppel)] transition-colors cursor-pointer bg-transparent border-0 p-0"
+          className="inline-flex items-center gap-2 text-sm font-bold text-pex-navy hover:text-pex-keppel transition-colors cursor-pointer bg-transparent border-0 p-0"
           onClick={handleBackToOrder}
         >
           <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -569,17 +569,17 @@ export function TrayCheckoutClient() {
           href={buildWhatsAppHref("Hi Pexpacks, I need help with checkout.")}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-keppel)] transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-pex-muted hover:text-pex-keppel transition-colors"
         >
           Need help?
         </a>
       </header>
 
-      <div className="max-w-[var(--layout-max-width)] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
-        <section className="col-span-1 lg:col-span-2 bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
-          <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Checkout</p>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-2 leading-tight">Review your packs and confirm your order.</h1>
-          <p className="text-sm sm:text-base text-[var(--pex-muted)] m-0 max-w-2xl leading-relaxed">
+      <div className="max-w-layout mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
+        <section className="col-span-1 lg:col-span-2 bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card">
+          <p className="text-xs font-bold uppercase tracking-wider text-pex-keppel mb-2">Checkout</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-pex-navy font-heading m-0 mb-2 leading-tight">Review your packs and confirm your order.</h1>
+          <p className="text-sm sm:text-base text-pex-muted m-0 max-w-2xl leading-relaxed">
             Add your details, choose delivery or collection, and submit your
             order. We will be in touch with payment details.
           </p>
@@ -596,23 +596,23 @@ export function TrayCheckoutClient() {
             }}
             tabIndex={-1}
             className={cn(
-              "bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none transition-shadow",
-              showDetailsHiddenWarning && "ring-2 ring-[var(--pex-coral)] ring-offset-2",
+              "bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card outline-none transition-shadow",
+              showDetailsHiddenWarning && "ring-2 ring-pex-coral ring-offset-2",
             )}
             aria-labelledby="customer-details-heading"
           >
             <div className="flex items-start gap-4 mb-6 relative">
-              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
+              <span className="w-8 h-8 rounded-full bg-pex-navy text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
               <div>
-                <h2 id="customer-details-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Your details</h2>
-                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
+                <h2 id="customer-details-heading" className="text-xl font-bold text-pex-navy font-heading m-0 mb-1">Your details</h2>
+                <p className="text-xs sm:text-sm text-pex-muted m-0">
                   We use these details for order updates and delivery or
                   collection support.
                 </p>
               </div>
               <button
                 type="button"
-                className="ml-auto text-xs font-bold text-[var(--pex-keppel)] hover:underline md:hidden shrink-0"
+                className="ml-auto text-xs font-bold text-pex-keppel hover:underline md:hidden shrink-0"
                 onClick={() => toggleMobileSectionSummary("details")}
                 aria-expanded={mobileSectionSummaryOpen.details}
                 aria-controls="customer-details-summary"
@@ -682,19 +682,19 @@ export function TrayCheckoutClient() {
                   autoComplete="email"
                 />
                 <fieldset className="col-span-1 md:col-span-2 border-0 p-0 m-0 mt-2">
-                  <legend className="text-sm font-bold text-[var(--pex-navy)] mb-1">Preferred contact method</legend>
-                  <p className="text-xs text-[var(--pex-muted)] mb-3">
+                  <legend className="text-sm font-bold text-pex-navy mb-1">Preferred contact method</legend>
+                  <p className="text-xs text-pex-muted mb-3">
                     Choose how we should reach you if the order needs a quick
                     check.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-[var(--pex-bg-soft)] p-1.5 rounded-[var(--radius-sm)] border border-[var(--pex-border)]">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-pex-bg-soft p-1.5 rounded-sm border border-pex-border">
                     {contactOptions.map((option) => (
                       <label
                         key={option.value}
                         className={cn(
-                          "flex items-center justify-center gap-2 py-2.5 px-3 rounded-[var(--radius-sm)] text-xs sm:text-sm font-semibold text-[var(--pex-muted)] cursor-pointer transition-all hover:text-[var(--pex-navy)] select-none",
+                          "flex items-center justify-center gap-2 py-2.5 px-3 rounded-sm text-xs sm:text-sm font-semibold text-pex-muted cursor-pointer transition-all hover:text-pex-navy select-none",
                           preferredContactMethod === option.value &&
-                            "bg-white text-[var(--pex-keppel)] shadow-sm font-bold",
+                            "bg-white text-pex-keppel shadow-sm font-bold",
                         )}
                       >
                         <input
@@ -717,14 +717,14 @@ export function TrayCheckoutClient() {
               {packs.map((pack, index) => {
                 const errKey = `learner_${index}`;
                 return errors[errKey] ? (
-                  <p key={errKey} className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">
+                  <p key={errKey} className="text-xs font-semibold text-pex-coral mt-1.5 block">
                     Learner {index + 1} ({pack.packName}): {errors[errKey]}
                   </p>
                 ) : null;
               })}
             </div>
             {showDetailsHiddenWarning ? (
-              <p className="mt-4 p-3 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs text-[var(--pex-coral)] font-semibold md:hidden" role="alert">
+              <p className="mt-4 p-3 rounded-sm bg-pex-coral-soft border border-pex-coral-border text-xs text-pex-coral font-semibold md:hidden" role="alert">
                 Fill in your details (Click "View Summary")
               </p>
             ) : null}
@@ -735,18 +735,18 @@ export function TrayCheckoutClient() {
               sectionRefs.current.delivery = node;
             }}
             tabIndex={-1}
-            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
+            className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card outline-none"
             aria-labelledby="fulfilment-heading"
           >
             <div className="flex items-start gap-4 mb-6 relative">
-              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
+              <span className="w-8 h-8 rounded-full bg-pex-navy text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
               <div>
-                <h2 id="fulfilment-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Delivery or collection</h2>
-                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">Choose how you want to receive this order.</p>
+                <h2 id="fulfilment-heading" className="text-xl font-bold text-pex-navy font-heading m-0 mb-1">Delivery or collection</h2>
+                <p className="text-xs sm:text-sm text-pex-muted m-0">Choose how you want to receive this order.</p>
               </div>
               <button
                 type="button"
-                className="ml-auto text-xs font-bold text-[var(--pex-keppel)] hover:underline md:hidden shrink-0"
+                className="ml-auto text-xs font-bold text-pex-keppel hover:underline md:hidden shrink-0"
                 onClick={() => toggleMobileSectionSummary("delivery")}
                 aria-expanded={mobileSectionSummaryOpen.delivery}
                 aria-controls="fulfilment-summary"
@@ -773,9 +773,9 @@ export function TrayCheckoutClient() {
                     <label
                       key={option.value}
                       className={cn(
-                        "flex h-full flex-col p-4 sm:p-5 rounded-[var(--radius-md)] border-2 border-[var(--pex-border)] bg-white cursor-pointer transition-all hover:border-[rgba(33,158,154,0.4)] relative",
+                        "flex h-full flex-col p-4 sm:p-5 rounded-md border-2 border-pex-border bg-white cursor-pointer transition-all hover:border-pex-keppel/40 relative",
                         fulfilmentOption === option.value &&
-                          "border-[var(--pex-keppel)] bg-[var(--pex-bg-mint)] shadow-sm",
+                          "border-pex-keppel bg-pex-bg-mint shadow-sm",
                       )}
                     >
                       <input
@@ -790,16 +790,16 @@ export function TrayCheckoutClient() {
                         }}
                         className="sr-only"
                       />
-                      <div className="flex items-center gap-3 mb-1.5 text-sm sm:text-base font-bold text-[var(--pex-navy)]">
-                        <span className="w-8 h-8 rounded-full bg-[var(--pex-bg-mint)] text-[var(--pex-keppel)] flex items-center justify-center shrink-0">
+                      <div className="flex items-center gap-3 mb-1.5 text-sm sm:text-base font-bold text-pex-navy">
+                        <span className="w-8 h-8 rounded-full bg-pex-bg-mint text-pex-keppel flex items-center justify-center shrink-0">
                           <FulfilmentIcon option={option.value} />
                         </span>
                         <strong>{option.title}</strong>
                       </div>
-                      <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0 leading-relaxed pl-11">
+                      <p className="text-xs sm:text-sm text-pex-muted m-0 leading-relaxed pl-11">
                         {option.description}
                       </p>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--pex-bg-mint)] text-[var(--pex-keppel)] self-start mt-2 ml-11">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-pex-bg-mint text-pex-keppel self-start mt-2 ml-11">
                         {option.note}
                       </span>
                     </label>
@@ -809,8 +809,8 @@ export function TrayCheckoutClient() {
 
               {fulfilmentOption === "school_collection" &&
               uniqueSchools.length > 1 ? (
-                <div className="mt-6 pt-6 border-t border-[var(--pex-border)]">
-                  <p className="text-xs sm:text-sm font-bold text-[var(--pex-navy)] mb-3">
+                <div className="mt-6 pt-6 border-t border-pex-border">
+                  <p className="text-xs sm:text-sm font-bold text-pex-navy mb-3">
                     Which school should the main box be dropped at?
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -820,8 +820,8 @@ export function TrayCheckoutClient() {
                         <label
                           key={school.slug}
                           className={cn(
-                            "flex items-center gap-3 p-3 rounded-[var(--radius-sm)] border border-[var(--pex-border)] bg-white hover:border-[var(--pex-keppel)] cursor-pointer transition-all",
-                            isSelected && "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] shadow-xs",
+                            "flex items-center gap-3 p-3 rounded-sm border border-pex-border bg-white hover:border-pex-keppel cursor-pointer transition-all",
+                            isSelected && "border-pex-keppel bg-pex-keppel-soft shadow-xs",
                           )}
                         >
                           <input
@@ -834,9 +834,9 @@ export function TrayCheckoutClient() {
                               setMultiSchoolDrop(school.slug);
                               clearFieldError("multiSchoolDrop");
                             }}
-                            className="accent-[var(--pex-keppel)] w-4 h-4 cursor-pointer"
+                            className="accent-pex-keppel w-4 h-4 cursor-pointer"
                           />
-                          <span className="text-xs sm:text-sm font-semibold text-[var(--pex-navy)]">
+                          <span className="text-xs sm:text-sm font-semibold text-pex-navy">
                             {school.name}
                           </span>
                         </label>
@@ -844,7 +844,7 @@ export function TrayCheckoutClient() {
                     })}
                   </div>
                   {errors.multiSchoolDrop ? (
-                    <p className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">
+                    <p className="text-xs font-semibold text-pex-coral mt-1.5 block">
                       {errors.multiSchoolDrop}
                     </p>
                   ) : null}
@@ -852,7 +852,7 @@ export function TrayCheckoutClient() {
               ) : null}
 
               {deliveryExpanded ? (
-                <div className="mt-6 pt-6 border-t border-[var(--pex-border)]">
+                <div className="mt-6 pt-6 border-t border-pex-border">
                   {/* Real-time Address Auto-search & Predictions */}
                   <AddressAutocomplete
                     ref={(node) => {
@@ -877,7 +877,7 @@ export function TrayCheckoutClient() {
               ) : null}
 
               {/* Delivery notes with clear gap above and below */}
-              <div className="mt-8 sm:mt-10 mb-4 pt-6 sm:pt-8 border-t border-[var(--pex-border)]">
+              <div className="mt-8 sm:mt-10 mb-4 pt-6 sm:pt-8 border-t border-pex-border">
                 <Textarea
                   id="deliveryNotes"
                   label="Delivery notes (optional)"
@@ -894,10 +894,10 @@ export function TrayCheckoutClient() {
           <section
             ref={consentRef}
             tabIndex={-1}
-            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
+            className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card outline-none"
             aria-label="Consent"
           >
-            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed">
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-pex-muted leading-relaxed">
               <input
                 ref={(node) => {
                   fieldRefs.current.consent = node;
@@ -911,41 +911,41 @@ export function TrayCheckoutClient() {
                   clearFieldError("consent");
                 }}
                 aria-invalid={!!errors.consent}
-                className="mt-1 w-4 h-4 accent-[var(--pex-keppel)] rounded shrink-0 cursor-pointer"
+                className="mt-1 w-4 h-4 accent-pex-keppel rounded shrink-0 cursor-pointer"
               />
               <span>
                 I agree that Pexpacks may process my personal information to
                 complete this order, send order updates, and contact me about
                 delivery or collection. I have read and agree to the{" "}
-                <a href="/privacy-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/privacy-policy" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   privacy policy
                 </a>
                 ,{" "}
-                <a href="/terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/terms" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   terms of use
                 </a>
                 ,{" "}
-                <a href="/delivery-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/delivery-policy" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   delivery policy
                 </a>
                 ,{" "}
-                <a href="/happy-pay-terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/happy-pay-terms" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   happy pay terms
                 </a>
                 , and{" "}
-                <a href="/returns-refunds-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/returns-refunds-policy" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   returns &amp; refunds policy
                 </a>
                 .
               </span>
             </label>
             {errors.consent ? (
-              <p className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.consent}</p>
+              <p className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.consent}</p>
             ) : null}
           </section>
 
           {submitError ? (
-            <p className="p-4 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs sm:text-sm text-[var(--pex-coral)] font-semibold leading-relaxed" role="alert">
+            <p className="p-4 rounded-sm bg-pex-coral-soft border border-pex-coral-border text-xs sm:text-sm text-pex-coral font-semibold leading-relaxed" role="alert">
               {submitError}
             </p>
           ) : null}
@@ -957,18 +957,18 @@ export function TrayCheckoutClient() {
           className="w-full lg:sticky lg:top-24"
           aria-labelledby="order-summary-heading"
         >
-          <div className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
-            <div className="flex justify-between items-start pb-4 border-b border-[var(--pex-border)] mb-5">
+          <div className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card">
+            <div className="flex justify-between items-start pb-4 border-b border-pex-border mb-5">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Your order</p>
-                <h2 id="order-summary-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0">Order summary</h2>
+                <p className="text-xs font-bold uppercase tracking-wider text-pex-keppel mb-2">Your order</p>
+                <h2 id="order-summary-heading" className="text-xl font-bold text-pex-navy font-heading m-0">Order summary</h2>
               </div>
-              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#0B5C50] text-white shadow-sm">
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-pex-cover-badge text-white shadow-sm">
                 {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>
 
-            <div className="flex flex-col gap-4 mb-6 divide-y divide-[var(--pex-border)]">
+            <div className="flex flex-col gap-4 mb-6 divide-y divide-pex-border">
               {packs.map((pack, index) => {
                 const isExpanded = !!expandedPacks[pack.id];
                 const previewItems = getPackItemPreview(pack);
@@ -1006,9 +1006,9 @@ export function TrayCheckoutClient() {
                           <button
                             type="button"
                             className={cn(
-                              "text-xs font-bold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
+                              "text-xs font-bold text-pex-keppel hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
                               errors[`learner_${index}`] &&
-                                "text-[var(--pex-coral)] underline",
+                                "text-pex-coral underline",
                             )}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
@@ -1017,29 +1017,29 @@ export function TrayCheckoutClient() {
                           </button>
                         )}
                       </div>
-                      <strong className="text-sm font-semibold text-[var(--pex-navy)] shrink-0 tabular-nums tabular-nums">
+                      <strong className="text-sm font-semibold text-pex-navy shrink-0 tabular-nums">
                         {formatCurrency(getPackTotal(pack))}
                       </strong>
                     </div>
 
                     <div className="mb-2">
-                      <h3 className="text-sm sm:text-base font-bold text-[var(--pex-navy)] m-0 mb-1">{pack.packName}</h3>
-                      <p className="text-xs text-[var(--pex-muted)] m-0 mb-2">
+                      <h3 className="text-sm sm:text-base font-bold text-pex-navy m-0 mb-1">{pack.packName}</h3>
+                      <p className="text-xs text-pex-muted m-0 mb-2">
                         {pack.schoolName || "School pack"}
                         {pack.grade ? ` · ${pack.grade}` : ""}
                       </p>
                       <div className="flex flex-wrap gap-1.5 mb-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--pex-bg-soft)] text-[var(--pex-muted)] border border-[var(--pex-border)]">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-pex-bg-soft text-pex-muted border border-pex-border">
                           {pack.packMode === "full"
                             ? "Full pack"
                             : "Customised"}
                         </span>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--pex-bg-soft)] text-[var(--pex-muted)] border border-[var(--pex-border)]">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-pex-bg-soft text-pex-muted border border-pex-border">
                           {pack.items.length}{" "}
                           {pack.items.length === 1 ? "item" : "items"}
                         </span>
                         {pack.wantsPexcover ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] border border-[rgba(33,158,154,0.2)]">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-pex-keppel-subtle text-pex-keppel border border-pex-keppel/20">
                             Pexcover
                           </span>
                         ) : null}
@@ -1048,7 +1048,7 @@ export function TrayCheckoutClient() {
 
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-pex-keppel hover:underline cursor-pointer bg-transparent border-0 p-0"
                       aria-expanded={isExpanded}
                       aria-controls={`pack-items-${pack.id}`}
                       onClick={() =>
@@ -1065,25 +1065,25 @@ export function TrayCheckoutClient() {
                     {isExpanded ? (
                       <ul
                         id={`pack-items-${pack.id}`}
-                        className="mt-3 p-3 rounded-[var(--radius-sm)] bg-[var(--pex-bg-soft)] text-xs text-[var(--pex-muted)] space-y-1.5 list-none m-0"
+                        className="mt-3 p-3 rounded-sm bg-pex-bg-soft text-xs text-pex-muted space-y-1.5 list-none m-0"
                       >
                         {previewItems.map((item, itemIndex) => {
                           return (
                             <li key={`${pack.id}-${item.name}-${itemIndex}`} className="flex justify-between items-center">
                               <span>{item.name}</span>
-                              <span className="font-medium text-[var(--pex-navy)]">Qty {item.quantity}</span>
+                              <span className="font-medium text-pex-navy">Qty {item.quantity}</span>
                             </li>
                           );
                         })}
                         {pack.wantsPexcover ? (
-                          <li className="text-[var(--pex-keppel)] font-medium">
+                          <li className="text-pex-keppel font-medium">
                             <span>
                               Pexcover
                             </span>
                           </li>
                         ) : null}
                         {hiddenCount > 0 ? (
-                          <li className="text-[11px] text-[var(--pex-muted)] italic pt-1 border-t border-[var(--pex-border)]">
+                          <li className="text-[11px] text-pex-muted italic pt-1 border-t border-pex-border">
                             + {hiddenCount} more items in this pack
                           </li>
                         ) : null}
@@ -1094,13 +1094,13 @@ export function TrayCheckoutClient() {
               })}
             </div>
 
-            <div className="space-y-2.5 py-4 border-t border-b border-[var(--pex-border)] mb-4 text-xs sm:text-sm text-[var(--pex-muted)] [&>div]:flex [&>div]:justify-between [&>div]:items-center [&>div>strong]:text-[var(--pex-navy)] [&>div>strong]:font-semibold">
+            <div className="space-y-2.5 py-4 border-t border-b border-pex-border mb-4 text-xs sm:text-sm text-pex-muted [&>div]:flex [&>div]:justify-between [&>div]:items-center [&>div>strong]:text-pex-navy [&>div>strong]:font-semibold">
               <div>
                 <span>Pack subtotal</span>
                 <strong>{formatCurrency(itemsTotal)}</strong>
               </div>
               {pexcoverCount > 0 ? (
-                <div className="text-[var(--pex-keppel)] text-xs sm:text-sm font-bold">
+                <div className="text-pex-keppel text-xs sm:text-sm font-bold">
                   <span>
                     Pexcover x{pexcoverCount}
                   </span>
@@ -1113,7 +1113,7 @@ export function TrayCheckoutClient() {
                   <strong>To confirm</strong>
                 </div>
               ) : null}
-              <div className="!text-base !font-semibold !text-[var(--pex-navy)] tabular-nums pt-2 border-t border-dashed border-[var(--pex-border)]">
+              <div className="!text-base !font-semibold !text-pex-navy tabular-nums pt-2 border-t border-dashed border-pex-border">
                 <span>
                   {fulfilmentOption === "home_delivery"
                     ? "Pack total payable now"
@@ -1124,14 +1124,14 @@ export function TrayCheckoutClient() {
             </div>
 
             {fulfilmentOption === "home_delivery" ? (
-              <p className="text-xs text-[var(--pex-muted)] italic leading-relaxed mb-4">
+              <p className="text-xs text-pex-muted italic leading-relaxed mb-4">
                 The home-delivery fee is not included in this payment. We will
                 confirm the fee with you separately before dispatch.
               </p>
             ) : null}
 
             {errors.packs || errors.total ? (
-              <p className="p-4 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs sm:text-sm text-[var(--pex-coral)] font-semibold leading-relaxed mb-4" role="alert">
+              <p className="p-4 rounded-sm bg-pex-coral-soft border border-pex-coral-border text-xs sm:text-sm text-pex-coral font-semibold leading-relaxed mb-4" role="alert">
                 {errors.packs || errors.total}
               </p>
             ) : null}
@@ -1161,7 +1161,7 @@ export function TrayCheckoutClient() {
               Edit order
             </Button>
 
-            <p className="text-[11px] text-[var(--pex-muted)] text-center mt-3 leading-relaxed">
+            <p className="text-[11px] text-pex-muted text-center mt-3 leading-relaxed">
               Your order details are secure. Pexpacks will never share your
               information.
             </p>
@@ -1169,7 +1169,7 @@ export function TrayCheckoutClient() {
         </aside>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[var(--pex-border)] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-pex-border shadow-pex-sticky z-40 lg:hidden">
         <Button
           type="button"
           variant="primary"

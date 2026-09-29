@@ -13,9 +13,9 @@ Current status:
 - The /schools initial payload is approximately 203 KB, reduced from approximately 1.83 MB.
 - The image budget passes at 2,919 KB total with no file above 300 KB.
 - The production Webpack build completes successfully.
-- 1,000-user production capacity remains unverified and still requires a production-like staging load test.
-- Browser performance budgets now pass on 4 desktop and 12 mobile/tablet route checks.
-- A staging-safe k6 profile and runbook now define the 1,000-user ramp and release thresholds.
+- 1,000-user production capacity remains unverified and is tracked as a non-blocking enterprise-capacity test.
+- Browser performance budgets now pass on 5 desktop and 15 mobile/tablet route checks.
+- A staging-safe k6 profile and runbook now default to a 50-user pilot benchmark, support an optional 100-user rehearsal, and retain the 1,000-user ramp as an explicit non-blocking profile.
 
 The report below keeps the original baseline evidence for traceability and clearly separates resolved findings from remaining work.
 
@@ -35,11 +35,11 @@ Post-change verification:
 - Image budget: 2,919 KB total, zero files over 300 KB.
 - /schools: approximately 203 KB on the fresh production build, down from approximately 1.83 MB.
 - /api/schools/directory: approximately 10.8 KB for the first 24-school page, 2.1 KB for a focused query, with server-side filtering and pagination.
-- Web Vitals budgets: 16/16 Playwright checks passed across desktop, iPhone, Android and tablet profiles for TTFB, transfer size, LCP, CLS and INP thresholds.
-- Added scripts/load-test.k6.js and docs/LOAD_TESTING.md; the profile is ready for staging execution but was not run against a live staging host in this local pass.
+- Web Vitals budgets: 20/20 Playwright checks passed across desktop, iPhone, Android and tablet profiles for TTFB, transfer size, LCP, CLS and INP thresholds.
+- Added scripts/load-test.k6.js and docs/LOAD_TESTING.md; the 50-user pilot profile is ready for staging execution, while the 1,000-VU enterprise profile remains opt-in and neither was run against a live staging host in this local pass.
 - Replaced repeated Pexcover active-state colours with shared Tailwind v4 tokens and removed malformed visible labels from the checkout card.
 
-The remaining work is intentionally staged: the repository still has 93 non-blocking ESLint warnings and a broad formatting backlog, while a production-like 1,000-user test is still required for a real capacity claim.
+The remaining work is intentionally staged: the repository still has 93 non-blocking ESLint warnings and a broad formatting backlog. A 50-user pilot load test is the appropriate pre-announcement benchmark; the 1,000-user enterprise test remains non-blocking until production-like staging observability is available.
 
 ## Architecture Snapshot
 
@@ -89,7 +89,7 @@ Current verification:
 
 Status: resolved for the current repository asset budget. Continue using responsive next/image sizes and reserve priority loading for the single above-the-fold hero.
 
-### P1 - 1,000-request behavior is not yet a stable capacity result
+### P1 - Capacity behavior needs a right-sized staging benchmark
 
 A local concurrent burst against the production build produced these observations:
 
@@ -102,9 +102,9 @@ A local concurrent burst against the production build produced these observation
 
 The homepage result varied between runs, which indicates local saturation/warm-cache effects and reinforces that this is not a production capacity test. The school search route intentionally limits each client to 60 requests per 60 seconds (`app/api/schools/search/route.ts:18-36`). That is appropriate protection, but a realistic browser test must model one request per typing pause, caching, backoff, and many distinct client IPs.
 
-**Action implemented:** scripts/load-test.k6.js provides a staging-only public storefront profile that ramps to 1,000 virtual users, holds the peak, and enforces failure, p95, p99 and check-success thresholds. docs/LOAD_TESTING.md documents the run command, optional search scenario, rate-limit interpretation, and why mutating checkout/payment/list-conversion flows remain opt-in.
+**Action implemented:** scripts/load-test.k6.js now defaults to a 50-VU pilot profile, supports a bounded 50-100 VU rehearsal, and retains the 1,000-VU ramp behind `LOAD_TEST_PROFILE=enterprise`. docs/LOAD_TESTING.md documents launch thresholds, search rate-limit interpretation, Supabase/PgBouncer and Redis checks, checkout/payment handoff safeguards, Vercel cold-start metrics, and why mutating flows remain opt-in.
 
-**Status:** the profile and thresholds are ready, but the real capacity claim remains pending until the test runs against a production-like staging deployment with distributed runners and observability for p50/p95/p99, Supabase query time, connection pool usage, rate-limit latency, memory, CPU and provider failures.
+**Status:** the 50-VU pilot benchmark is the recommended pre-announcement gate and remains pending until staging is available. The 1,000-VU enterprise test is deliberately non-blocking for this pilot and remains pending for future capacity planning. Both require distributed runners and observability for p50/p95/p99, Supabase query time, connection pool usage, rate-limit latency, memory, CPU, cold starts and provider failures.
 
 ### P2 - Tailwind design-token adoption is incomplete
 
@@ -118,9 +118,9 @@ The largest inline-style hotspots include `components/admin/settings/UserIdentit
 
 **Impact:** repeated colours, spacing, and state styles are harder to audit and make responsive consistency more fragile.
 
-**Action implemented for the first hotspot:** the Pexcover checkout card now uses shared pex-cover-* Tailwind v4 tokens for active surfaces, borders and badges, while its intentional inline swatch geometry remains local to the visual preview. Malformed visible characters in that card were also removed.
+**Action implemented for the first seven hotspots:** the Pexcover card, main checkout flow, uploaded-list cart review, admin school-packs view, admin product editor, shared master-products table and CMS content style map now use shared Tailwind utilities for their repeated colours, surfaces, radii, fonts, focus rings, error states, status badges and shadows. Admin tables use Lucide indicators instead of malformed visible characters, while intentional inline swatch geometry remains local to visual previews.
 
-**Remaining action:** continue the same token migration through the higher-volume checkout and admin hotspots, keeping arbitrary values only for genuine one-off geometry and using shared cn()/component primitives for repeated controls.
+**Remaining action:** continue the same token migration through the remaining admin and catalogue hotspots, keeping arbitrary values only for genuine one-off geometry and using shared cn()/component primitives for repeated controls.
 
 ### P2 - Responsive and accessibility coverage (responsive coverage resolved)
 
@@ -161,14 +161,14 @@ Prettier currently reports 565 files. The scan also found one active CSS module 
 - Production dependency audit passed with 0 vulnerabilities.
 - Core route smoke checks returned HTTP 200 for `/`, `/schools`, `/order`, `/pexcover`, `/checkout`, `/blog`, and `/contact`.
 - Responsive smoke suite passed: 15 tests across iPhone, Android, and tablet Chromium emulation.
-- Web Vitals and transfer budgets passed: 4 desktop checks plus 12 iPhone, Android and tablet checks.
+- Web Vitals and transfer budgets passed: 5 desktop checks plus 15 iPhone, Android and tablet checks.
 - The standalone Playwright server now copies public/, .next/static and local ignored environment configuration into the build output for representative local production verification.
 - Next.js already has useful baseline settings: standalone output, compression, optimized package imports, AVIF/WebP image formats, security headers, and static-asset cache headers (`next.config.ts:26-56`, `next.config.ts:161-308`).
 
 ## Recommended Delivery Sequence
 
 1. Extend the existing mobile/tablet profiles to the critical school-to-pack, upload-to-cart and checkout journeys.
-2. Run the prepared k6 profile against production-like staging with distributed runners, observability and seeded test data.
+2. Run the prepared 50-VU pilot profile against production-like staging with distributed runners, observability and seeded test data; use the 1,000-VU profile later for capacity planning.
 3. Continue consolidating Tailwind tokens through the highest-volume checkout and admin arbitrary-colour and inline-style hotspots.
 4. Resolve the geolocation policy decision and document the privacy/UX contract.
 5. Burn down the remaining ESLint warning categories and establish a controlled formatting cleanup.
@@ -179,11 +179,11 @@ These should be measured on a production-like staging deployment, not only local
 
 - Warm and cold mobile 4G LCP under 2.5 seconds; route TTFB under 500 ms for cached public pages.
 - Initial HTML/RSC payload for `/schools` under 300 KB where practical, with incremental data loading for the result tray.
-- p95 response under 500 ms for cached public GET requests at the agreed 1,000-user profile.
+- p95 response under 800 ms for cached public GET requests at the agreed 50-VU pilot profile; repeat at 100 VUs for a campaign rehearsal when needed.
 - Error rate below 1% under the full mixed traffic scenario, excluding intentionally rate-limited abuse traffic.
 - INP below 200 ms and CLS below 0.1 on core customer routes.
 - No ESLint errors, no image-budget violations, and all mandatory checks represented in CI status.
 
 ## Audit Limitations
 
-The concurrency test was a local burst against one Node process and did not emulate 1,000 authenticated browser sessions, separate IPs, CDN caching, Supabase connection pooling, payment providers, email, WhatsApp, or Vercel infrastructure. It is therefore a useful baseline and failure probe, not evidence that the application can or cannot serve 1,000 real users in production. A staging load test with observability is required for that conclusion.
+The concurrency test was a local burst against one Node process and did not emulate authenticated browser sessions, separate IPs, CDN caching, Supabase connection pooling, payment providers, email, WhatsApp, or Vercel infrastructure. It is therefore a useful baseline and failure probe, not evidence of production capacity. A 50-VU staging benchmark is the practical pilot gate; the 1,000-VU enterprise test remains a later capacity-planning exercise with production-like observability.

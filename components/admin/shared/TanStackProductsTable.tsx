@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import { Eye, ChevronLeft, ChevronRight, PackageSearch } from "lucide-react";
+import { ArrowDownUp, BookOpen, Eye, PackageSearch } from "lucide-react";
 import {
   useTable,
   flexRender,
@@ -19,9 +19,10 @@ import {
   filterFns,
   type ColumnDef,
 } from "@tanstack/react-table";
+import type { TableFeatures } from "@tanstack/table-core";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import { AdminTableSkeleton, AdminEmptyState, AdminButton } from "@/components/admin/ui";
+import { AdminTableSkeleton, AdminEmptyState } from "@/components/admin/ui";
 import { DataTablePagination } from "@/components/admin/shared/DataTable/DataTablePagination";
 import type { MasterProductRow } from "@/lib/admin/operations";
 import { getProductSlug } from "@/lib/admin/item-constants";
@@ -39,7 +40,7 @@ export interface TanStackProductsTableProps {
   onPageChange?: (page: number) => void;
 }
 
-const columnHelper = createColumnHelper<any, MasterProductRow>();
+const columnHelper = createColumnHelper<TableFeatures, MasterProductRow>();
 
 /**
  * Modernised TanStack Table v9 Data Table for Master Products.
@@ -78,20 +79,20 @@ export function TanStackProductsTable({
     () => [
       columnHelper.accessor("sku", {
         header: () => (
-          <span className="inline-flex items-center gap-1.5 text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
-            SKU <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+          <span className="inline-flex items-center gap-1.5 text-db-brand font-bold text-xs uppercase tracking-wider">
+            SKU <span className="text-db-brand text-xs font-semibold"><ArrowDownUp size={12} aria-hidden="true" /></span>
           </span>
         ),
         cell: (info) => (
-          <span className="inline-flex items-center px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-[#0a1626]/70 text-[#38bdf8] font-mono text-xs font-semibold tracking-wide">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-db-surface-elevated/70 text-db-info-text font-mono text-xs font-semibold tracking-wide">
             {info.getValue()}
           </span>
         ),
       }),
       columnHelper.accessor("name", {
         header: () => (
-          <span className="inline-flex items-center gap-1.5 text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
-            PRODUCT NAME <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+          <span className="inline-flex items-center gap-1.5 text-db-brand font-bold text-xs uppercase tracking-wider">
+            PRODUCT NAME <span className="text-db-brand text-xs font-semibold"><ArrowDownUp size={12} aria-hidden="true" /></span>
           </span>
         ),
         cell: (info) => {
@@ -101,7 +102,7 @@ export function TanStackProductsTable({
             <div className="flex flex-col gap-0.5 min-w-[220px]">
               <Link
                 href={`/admin/products/${slug}`}
-                className="text-sm font-bold text-white hover:text-[#00dfb6] transition-colors"
+                className="text-sm font-bold text-white hover:text-db-brand transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.name}
@@ -112,7 +113,7 @@ export function TanStackProductsTable({
                 </span>
                 {row.requires_pexcover && (
                   <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded-full bg-emerald-950/40 border border-emerald-800/50 text-emerald-300">
-                    📚 Pexcover
+                    <BookOpen size={12} aria-hidden="true" /> Pexcover
                   </span>
                 )}
               </div>
@@ -122,8 +123,8 @@ export function TanStackProductsTable({
       }),
       columnHelper.accessor("category", {
         header: () => (
-          <span className="inline-flex items-center gap-1.5 text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
-            CATEGORY <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+          <span className="inline-flex items-center gap-1.5 text-db-brand font-bold text-xs uppercase tracking-wider">
+            CATEGORY <span className="text-db-brand text-xs font-semibold"><ArrowDownUp size={12} aria-hidden="true" /></span>
           </span>
         ),
         cell: (info) => (
@@ -134,8 +135,8 @@ export function TanStackProductsTable({
       }),
       columnHelper.accessor("latest_verified_cost", {
         header: () => (
-          <span className="inline-flex items-center gap-1.5 text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
-            COST PRICE <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+          <span className="inline-flex items-center gap-1.5 text-db-brand font-bold text-xs uppercase tracking-wider">
+            COST PRICE <span className="text-db-brand text-xs font-semibold"><ArrowDownUp size={12} aria-hidden="true" /></span>
           </span>
         ),
         cell: (info) => {
@@ -147,7 +148,7 @@ export function TanStackProductsTable({
                   R {v.toFixed(2)}
                 </span>
               ) : (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-[#131d2e]/80 border border-slate-700/50 text-slate-400 text-xs font-medium">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-db-surface-elevated/80 border border-slate-700/50 text-slate-400 text-xs font-medium">
                   Unquoted
                 </span>
               )}
@@ -157,8 +158,8 @@ export function TanStackProductsTable({
       }),
       columnHelper.accessor("current_selling_price", {
         header: () => (
-          <span className="inline-flex items-center gap-1.5 text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
-            SELLING PRICE <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+          <span className="inline-flex items-center gap-1.5 text-db-brand font-bold text-xs uppercase tracking-wider">
+            SELLING PRICE <span className="text-db-brand text-xs font-semibold"><ArrowDownUp size={12} aria-hidden="true" /></span>
           </span>
         ),
         cell: (info) => {
@@ -178,8 +179,8 @@ export function TanStackProductsTable({
       }),
       columnHelper.accessor("active", {
         header: () => (
-          <span className="inline-flex items-center gap-1.5 text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
-            STATUS <span className="text-[#00dfb6] text-xs font-semibold">↑↓</span>
+          <span className="inline-flex items-center gap-1.5 text-db-brand font-bold text-xs uppercase tracking-wider">
+            STATUS <span className="text-db-brand text-xs font-semibold"><ArrowDownUp size={12} aria-hidden="true" /></span>
           </span>
         ),
         cell: (info) => (
@@ -195,7 +196,7 @@ export function TanStackProductsTable({
       columnHelper.display({
         id: "actions",
         header: () => (
-          <span className="text-[#00dfb6] font-bold text-xs uppercase tracking-wider">
+          <span className="text-db-brand font-bold text-xs uppercase tracking-wider">
             ACTIONS
           </span>
         ),
@@ -209,7 +210,7 @@ export function TanStackProductsTable({
             >
               <Link
                 href={`/admin/products/${slug}`}
-                className="inline-flex items-center justify-center w-9 h-9 bg-[#0a1626] border border-[#00dfb6]/25 rounded-xl text-[#00dfb6] cursor-pointer no-underline transition-all duration-150 hover:bg-[#00dfb6]/10 hover:border-[#00dfb6]/60 hover:shadow-[0_0_12px_rgba(0,223,182,0.15)]"
+                className="inline-flex items-center justify-center w-9 h-9 bg-db-surface-elevated border border-db-brand/25 rounded-xl text-db-brand cursor-pointer no-underline transition-all duration-150 hover:bg-db-brand/10 hover:border-db-brand/60 hover:shadow-db-brand"
                 aria-label={`View ${row.name}`}
               >
                 <Eye size={15} />
@@ -224,7 +225,7 @@ export function TanStackProductsTable({
 
   const table = useTable({
     features,
-    columns: columns as unknown as ColumnDef<any, MasterProductRow, unknown>[],
+    columns: columns as unknown as ColumnDef<TableFeatures, MasterProductRow, unknown>[],
     data,
     initialState: {
       pagination: { pageIndex: Math.max(0, page - 1), pageSize },
@@ -235,8 +236,6 @@ export function TanStackProductsTable({
     manualPagination: true,
     rowCount: total,
   });
-
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   if (isLoading) {
     return <AdminTableSkeleton rows={5} columns={6} />;
@@ -253,14 +252,14 @@ export function TanStackProductsTable({
   }
 
   return (
-    <div className="flex flex-col rounded-[28px] border border-slate-800/80 bg-[#040812] shadow-2xl overflow-hidden">
+    <div className="flex flex-col rounded-[28px] border border-slate-800/80 bg-db-canvas shadow-2xl overflow-hidden">
       {onCategoryChange && (
-        <div className="flex items-center justify-between gap-3 flex-wrap p-4 border-b border-slate-800/60 bg-[#040812]">
+        <div className="flex items-center justify-between gap-3 flex-wrap p-4 border-b border-slate-800/60 bg-db-canvas">
           <span className="text-xs font-semibold text-slate-300">Category</span>
           <select
             value={categoryValue}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="h-8 px-3 text-xs font-medium rounded-full bg-[#071120] border border-slate-800 text-slate-200 focus:outline-none focus:border-[#00dfb6]"
+            className="h-8 px-3 text-xs font-medium rounded-full bg-db-surface-inner border border-slate-800 text-slate-200 focus:outline-none focus:border-db-brand"
           >
             <option value="all">All</option>
             {categoryOptions.map((c) => (
@@ -273,13 +272,13 @@ export function TanStackProductsTable({
       )}
 
       {/* Inner Scroll Table Container with Neon Teal Scrollbar */}
-      <div className="w-full overflow-auto max-h-[68vh] relative [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar-track]:bg-[#040812] [&::-webkit-scrollbar-thumb]:bg-[#00dfb6] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#00dfb6]/80">
+      <div className="w-full overflow-auto max-h-[68vh] relative [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar-track]:bg-db-canvas [&::-webkit-scrollbar-thumb]:bg-db-brand [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-db-brand/80">
         <table className="w-full border-collapse border-spacing-0 text-left text-xs font-sans text-slate-200">
           <thead className="sticky top-0 z-20">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="border-b border-slate-800/60 bg-[#040812]"
+                className="border-b border-slate-800/60 bg-db-canvas"
               >
                 {headerGroup.headers.map((header) => {
                   const isActions = header.column.id === "actions";
@@ -288,9 +287,9 @@ export function TanStackProductsTable({
                       key={header.id}
                       colSpan={header.colSpan}
                       className={cn(
-                        "px-5 py-4 text-xs font-bold uppercase tracking-wider text-[#00dfb6] whitespace-nowrap select-none",
+                        "px-5 py-4 text-xs font-bold uppercase tracking-wider text-db-brand whitespace-nowrap select-none",
                         isActions
-                          ? "w-24 min-w-24 text-center sticky right-0 bg-[#040812] border-l border-slate-800/40 z-30"
+                          ? "w-24 min-w-24 text-center sticky right-0 bg-db-canvas border-l border-slate-800/40 z-30"
                           : "text-left",
                       )}
                     >
@@ -306,7 +305,7 @@ export function TanStackProductsTable({
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-slate-800/30 bg-[#040812]">
+          <tbody className="divide-y divide-slate-800/30 bg-db-canvas">
             {table.getRowModel().rows.map((row) => {
               const cells =
                 typeof row.getVisibleCells === "function"
@@ -316,7 +315,7 @@ export function TanStackProductsTable({
                 <tr
                   key={row.id}
                   onClick={() => onRowClick(row.original)}
-                  className="hover:bg-[#071324] cursor-pointer transition-colors duration-150 group"
+                  className="hover:bg-db-surface-hover cursor-pointer transition-colors duration-150 group"
                 >
                   {cells.map((cell) => {
                     const isActions = cell.column.id === "actions";
@@ -324,9 +323,9 @@ export function TanStackProductsTable({
                       <td
                         key={cell.id}
                         className={cn(
-                          "px-5 py-4.5 align-middle",
+                          "px-5 py-4 align-middle",
                           isActions
-                            ? "w-24 min-w-24 text-center sticky right-0 bg-[#040812] group-hover:bg-[#071324] border-l border-slate-800/40 z-10"
+                            ? "w-24 min-w-24 text-center sticky right-0 bg-db-canvas group-hover:bg-db-surface-hover border-l border-slate-800/40 z-10"
                             : "text-left",
                         )}
                       >

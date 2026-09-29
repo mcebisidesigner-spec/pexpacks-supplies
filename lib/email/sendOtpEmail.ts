@@ -1,6 +1,58 @@
 import { Resend } from "resend";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
+export function buildOtpEmailHtml(
+  otpCode: string,
+  email: string,
+  siteUrlOverride?: string
+): string {
+  const siteUrl =
+    siteUrlOverride ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://pexpacks.co.za");
+  const baseUrl = siteUrl.replace(/\/+$/, "");
+  const copyUrl = `${baseUrl}/auth/copy-code?code=${encodeURIComponent(otpCode)}&email=${encodeURIComponent(email.trim().toLowerCase())}`;
+
+  // Keep each digit in its own tile so the code is easy to scan and copy.
+  const digits = otpCode.split("");
+  const digitCells = digits
+    .map(
+      (digit) =>
+        `<td align="center" width="${Math.floor(100 / digits.length)}%" style="padding:0 4px;"><span style="display:block;background:#ffffff;border-radius:4px;color:#20252b;font-size:25px;line-height:46px;font-family:'Courier New',Courier,monospace;min-width:36px;height:46px;text-align:center;user-select:all;-webkit-user-select:all;">${digit}</span></td>`
+    )
+    .join("");
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Pexpacks verification code</title>
+</head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#20252b;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;padding:14px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:1080px;background:#edf2f8;border-radius:14px;">
+          <tr>
+            <td style="padding:16px 20px 20px;text-align:left;">
+              <p style="margin:0 0 16px;font-size:18px;line-height:24px;color:#20252b;font-family:Arial,Helvetica,sans-serif;">Code Requested</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                <tr>${digitCells}</tr>
+              </table>
+              <a href="${copyUrl}" target="_blank" rel="noopener noreferrer" role="button" aria-label="Copy verification code" style="display:inline-block;background:#0876ad;border-radius:999px;color:#ffffff;font-size:16px;font-weight:700;line-height:50px;padding:0 30px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Copy code</a>
+            </td>
+          </tr>
+        </table>
+        <p style="max-width:1080px;margin:14px auto 0;text-align:left;font-size:12px;line-height:18px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">This code expires in <strong>5 minutes</strong> and can only be used once. If you did not request it, you can safely ignore this email.</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 export async function generateAndSendOtpEmail(
   email: string
 ): Promise<{ success: boolean; otpCode?: string; error?: string }> {
@@ -46,44 +98,8 @@ export async function generateAndSendOtpEmail(
 
     const resend = new Resend(apiKey);
     const from = process.env.RESEND_FROM_EMAIL || "Pexpacks <orders@pexpacks.co.za>";
-    
-    // Keep each digit in its own tile so the code is easy to scan and copy.
-    const digits = otpCode.split("");
-    const digitCells = digits
-      .map(
-        (digit) =>
-          `<td align="center" width="${Math.floor(100 / digits.length)}%" style="padding:0 4px;"><span style="display:block;background:#ffffff;border-radius:4px;color:#20252b;font-size:25px;line-height:46px;font-family:'Courier New',Courier,monospace;min-width:36px;height:46px;text-align:center;">${digit}</span></td>`
-      )
-      .join("");
+    const htmlBody = buildOtpEmailHtml(otpCode, email);
 
-    const htmlBody = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Pexpacks verification code</title>
-</head>
-<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#20252b;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;padding:14px 16px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:1080px;background:#edf2f8;border-radius:14px;">
-          <tr>
-            <td style="padding:16px 20px 20px;text-align:left;">
-              <p style="margin:0 0 16px;font-size:18px;line-height:24px;color:#20252b;font-family:Arial,Helvetica,sans-serif;">Code Requested</p>
-              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
-                <tr>${digitCells}</tr>
-              </table>
-              <a href="#copy-code" role="button" aria-label="Copy verification code" onclick="event.preventDefault();navigator.clipboard&amp;&amp;navigator.clipboard.writeText('${otpCode}').then(function(){this.textContent='Code copied';}.bind(this));return false;" style="display:inline-block;background:#0876ad;border-radius:999px;color:#ffffff;font-size:16px;font-weight:700;line-height:50px;padding:0 30px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Copy code</a>
-            </td>
-          </tr>
-        </table>
-        <p style="max-width:1080px;margin:14px auto 0;text-align:left;font-size:12px;line-height:18px;color:#64748b;font-family:Arial,Helvetica,sans-serif;">This code expires in <strong>5 minutes</strong> and can only be used once. If you did not request it, you can safely ignore this email.</p>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
     const { error: emailError } = await resend.emails.send({
       from,
       to: [email.trim()],

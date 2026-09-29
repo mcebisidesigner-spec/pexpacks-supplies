@@ -13,6 +13,10 @@ describe("database reconciliation audit", () => {
     expect(script).toContain("const pageSize = 1000");
     expect(script).toContain("all.push(...page)");
     expect(script).toContain("missing_or_blank_slug");
+    expect(script).toContain("visible_pack_with_unpublished_school");
+    expect(script).toContain("visible_pack_without_active_items");
+    expect(script).toContain("visible_pack_with_missing_products");
+    expect(script).toContain("active_items_with_invalid_quantity");
     expect(script).toContain("duplicate_slug_values");
     expect(script).toContain("missing_school_context");
     expect(script).toContain("delivery_fee_over_two_decimals");

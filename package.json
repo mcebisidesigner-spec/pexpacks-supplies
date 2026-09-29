@@ -39,6 +39,7 @@
     "db:security:advisors": "node scripts/db-security-advisor.cjs",
     "db:preflight": "npm run db:link && node scripts/db-schema-preflight.cjs && npm run db:smoke",
     "db:reconcile:audit": "node scripts/db-reconciliation-audit.cjs",
+    "db:publication:preflight": "node scripts/publication-readiness-preflight.cjs",
     "school:verify": "node scripts/verify-school-catalog.cjs",
     "db:archive:dry-run": "node scripts/archive-operational-history.cjs",
     "db:archive": "node scripts/archive-operational-history.cjs --execute",

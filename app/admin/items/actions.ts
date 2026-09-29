@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/rbac";
 import { getPublicGradePackPath } from "@/lib/admin/packs";
+import { revalidateCatalog } from "@/lib/admin/catalog-revalidate";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   createItem,
@@ -154,6 +155,7 @@ export async function updatePackItemQuantityAction(
   revalidatePath(`/admin/packs/${item.pack_id}`);
   revalidatePath("/admin/packs");
   revalidatePath("/admin/items");
+  revalidateCatalog();
   await revalidatePackPublicPage(item.pack_id);
   return { ok: true };
 }

@@ -9,6 +9,17 @@
   --pex-cover-surface: #ebf7f5;
   --pex-cover-border: #bbe5de;
   --pex-cover-badge: #0b5c50;
+  --pex-coral-soft: rgba(235, 94, 85, 0.08);
+  --pex-coral-border: rgba(235, 94, 85, 0.25);
+  --pex-coral-subtle: rgba(235, 94, 85, 0.1);
+  --pex-keppel-tint: rgba(33, 158, 154, 0.04);
+  --pex-keppel-soft: rgba(33, 158, 154, 0.05);
+  --pex-keppel-subtle: rgba(33, 158, 154, 0.1);
+
+  /* Admin workspace surfaces */
+  --pex-admin-surface: #070d18;
+  --pex-admin-border: rgba(255, 255, 255, 0.1);
+  --pex-admin-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 
   --pex-bg: #ffffff;
   --pex-body-bg: #ffffff;
@@ -86,6 +97,7 @@
   --shadow-card-hover: 0 20px 48px rgba(26, 42, 64, 0.12);
   --shadow-drawer: -24px 0 60px rgba(15, 37, 55, 0.22);
   --shadow-dropdown: 0 18px 42px rgba(15, 35, 58, 0.14);
+  --pex-shadow-sticky: 0 -4px 20px rgba(0, 0, 0, 0.08);
 
   /* Layering & Z-Index Scale */
   --z-base: 1;

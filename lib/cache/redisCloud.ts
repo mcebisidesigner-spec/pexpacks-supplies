@@ -143,6 +143,44 @@ export async function setCachedJson<T>(
 /**
  * Deletes a cached entry from Redis Cloud.
  */
+/**
+ * Deletes all cache entries sharing a namespace prefix.
+ *
+ * Catalogue mutations use this for school bundles because a master product
+ * can be referenced by many schools and cannot be invalidated by one slug.
+ */
+export async function deleteCachedByPrefix(prefix: string): Promise<number> {
+  const client = getRedisCloudClient();
+  if (!client || !prefix) return 0;
+
+  try {
+    const isReady = await ensureReady(client);
+    if (!isReady) return 0;
+
+    const keys: string[] = [];
+    const stream = client.scanStream({ match: prefix + "*", count: 100 });
+
+    await new Promise<void>((resolve) => {
+      stream.on("data", (batch: unknown) => {
+        if (Array.isArray(batch)) {
+          keys.push(...batch.map((key) => String(key)));
+        }
+      });
+      stream.on("end", () => resolve());
+      stream.on("error", () => resolve());
+    });
+
+    let deleted = 0;
+    for (let index = 0; index < keys.length; index += 100) {
+      const batch = keys.slice(index, index + 100);
+      if (batch.length > 0) deleted += await client.del(...batch);
+    }
+    return deleted;
+  } catch {
+    return 0;
+  }
+}
+
 export async function deleteCached(key: string): Promise<boolean> {
   const client = getRedisCloudClient();
   if (!client) return false;

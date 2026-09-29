@@ -2,7 +2,7 @@ import { SCHOOL_DATA_TAG } from "@/lib/school-utils";
 import { SEASON_CACHE_TAG } from "@/lib/public-data/seasons";
 import { SETTINGS_CACHE_TAG } from "@/lib/public-data/settings";
 import { CMS_TAGS } from "@/lib/cms";
-import { deleteCached } from "@/lib/cache/redisCloud";
+import { deleteCached, deleteCachedByPrefix } from "@/lib/cache/redisCloud";
 
 /**
  * Shared invalidation for the public catalogue after admin mutations.
@@ -32,6 +32,10 @@ export function revalidateCatalog(options?: {
   revalidateSettings?: boolean;
 }): void {
   if (typeof window !== "undefined") return;
+
+  // A master product or pack-item update can affect multiple schools. Clear
+  // the Redis bundle namespace so it cannot outlive Next.js tag invalidation.
+  void deleteCachedByPrefix("school:bundle:");
 
   try {
     // Dynamically access next/cache at runtime on the server to prevent

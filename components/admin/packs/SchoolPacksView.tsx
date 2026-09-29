@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   ArrowRight,
+  ArrowDownUp,
   Calendar,
   CheckCircle2,
   Clock,
@@ -198,7 +199,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           =================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 w-full">
         {/* Card 1: Total Schools */}
-        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+        <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl p-4 flex flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-teal-500/10 text-teal-400 border border-teal-500/20">
               <GraduationCap size={18} />
@@ -217,7 +218,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 2: Active Packs */}
-        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+        <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl p-4 flex flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
               <Package size={18} />
@@ -238,7 +239,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 3: Stationery Items */}
-        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+        <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl p-4 flex flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-blue-500/10 text-blue-400 border border-blue-500/20">
               <FileText size={18} />
@@ -259,7 +260,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 4: Active (based on Status column) */}
-        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+        <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl p-4 flex flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <CheckCircle2 size={18} />
@@ -280,7 +281,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         </div>
 
         {/* Card 5: Inactive (based on Status column) */}
-        <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col justify-between gap-3">
+        <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl p-4 flex flex-col justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-slate-500/10 text-slate-400 border border-slate-500/20">
               <EyeOff size={18} />
@@ -345,33 +346,33 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
           =================================================== */}
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_280px] gap-3.5 items-start w-full max-w-full">
         {/* Left Column: Primary Data Table */}
-        <div className="bg-[#070d18] border border-white/10 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.25)] overflow-hidden flex flex-col">
+        <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl shadow-pex-admin overflow-hidden flex flex-col">
           <div className="w-full overflow-x-auto">
             <table className="w-full min-w-[700px] border-collapse text-left text-[13px]">
               <thead className="sticky top-0 z-10 bg-slate-900/90 border-b border-slate-800">
                 <tr>
-                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                  <th className="px-4 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
                       <span>School &amp; ID</span>
-                      <span className="text-[10px] text-slate-500">↑↓</span>
+                      <ArrowDownUp size={12} className="text-slate-500" aria-hidden="true" />
                     </div>
                   </th>
-                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                  <th className="px-4 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
                       <span>Total Packs</span>
-                      <span className="text-[10px] text-slate-500">↑↓</span>
+                      <ArrowDownUp size={12} className="text-slate-500" aria-hidden="true" />
                     </div>
                   </th>
-                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                  <th className="px-4 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
                       <span>Season</span>
-                      <span className="text-[10px] text-slate-500">↑↓</span>
+                      <ArrowDownUp size={12} className="text-slate-500" aria-hidden="true" />
                     </div>
                   </th>
-                  <th className="px-4.5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
+                  <th className="px-4 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 whitespace-nowrap">
                     <div className="flex items-center gap-1.5">
                       <span>Status</span>
-                      <span className="text-[10px] text-slate-500">↑↓</span>
+                      <ArrowDownUp size={12} className="text-slate-500" aria-hidden="true" />
                     </div>
                   </th>
                 </tr>
@@ -390,7 +391,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                       )
                     }
                   >
-                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
+                    <td className="px-4 py-3.5 text-slate-300 align-middle">
                       <div className="flex items-center gap-3 min-w-[180px]">
                         <div
                           className="flex items-center justify-center w-8.5 h-8.5 rounded-lg shrink-0"
@@ -404,15 +405,15 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                         </div>
                       </div>
                     </td>
-                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
+                    <td className="px-4 py-3.5 text-slate-300 align-middle">
                       <span className="text-xs text-slate-400 font-medium">
                         {school.gradePacksCount} {school.gradePacksCount === 1 ? "pack" : "packs"}
                       </span>
                     </td>
-                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
-                      <span className="inline-flex px-2.5 py-1 bg-slate-900/60 border border-white/10 text-slate-300 rounded-md text-xs font-semibold">{school.season}</span>
+                    <td className="px-4 py-3.5 text-slate-300 align-middle">
+                      <span className="inline-flex px-2.5 py-1 bg-slate-900/60 border border-pex-admin-border text-slate-300 rounded-md text-xs font-semibold">{school.season}</span>
                     </td>
-                    <td className="px-4.5 py-3.5 text-slate-300 align-middle">
+                    <td className="px-4 py-3.5 text-slate-300 align-middle">
                       <StatusBadge
                         status={school.status}
                         tone={school.status === "Active" ? "emerald" : "slate"}
@@ -493,7 +494,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
         {/* Right Column: Stacked Panels */}
         <div className="flex flex-col gap-4">
           {/* Panel 1: What needs attention */}
-          <div className="bg-[#070d18] border border-white/10 rounded-xl p-4 flex flex-col gap-3">
+          <div className="bg-pex-admin-surface border border-pex-admin-border rounded-xl p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800/60">
               <h2 className="text-sm font-bold text-white tracking-tight m-0">What needs attention</h2>
               <Link href="/admin/tasks" className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
@@ -520,7 +521,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-semibold text-slate-300">9</span>
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 border border-rose-500/30">High</span>
-                  <span className="text-[10px] text-slate-500">32m ago</span>
+                      <span className="text-[10px] text-slate-500">32m ago</span>
                 </div>
               </div>
 
@@ -540,7 +541,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-semibold text-slate-300">14</span>
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">Medium</span>
-                  <span className="text-[10px] text-slate-500">1h ago</span>
+                      <span className="text-[10px] text-slate-500">1h ago</span>
                 </div>
               </div>
 
@@ -560,7 +561,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-semibold text-slate-300">6</span>
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">Medium</span>
-                  <span className="text-[10px] text-slate-500">1h ago</span>
+                      <span className="text-[10px] text-slate-500">1h ago</span>
                 </div>
               </div>
 
@@ -580,7 +581,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-semibold text-slate-300">3</span>
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/15 text-blue-400 border border-blue-500/30">Info</span>
-                  <span className="text-[10px] text-slate-500">2h ago</span>
+                      <span className="text-[10px] text-slate-500">2h ago</span>
                 </div>
               </div>
 
@@ -600,7 +601,7 @@ export function SchoolPacksView({ initialData }: { initialData?: SchoolGroupedRe
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-semibold text-slate-300">10</span>
                   <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-500/15 text-slate-400 border border-slate-500/30">Low</span>
-                  <span className="text-[10px] text-slate-500">2h ago</span>
+                      <span className="text-[10px] text-slate-500">2h ago</span>
                 </div>
               </div>
             </div>

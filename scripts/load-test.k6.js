@@ -3,20 +3,34 @@ import { check, sleep } from "k6";
 
 const BASE_URL = (__ENV.BASE_URL || "https://staging.pexpacks.co.za").replace(/\/$/, "");
 const INCLUDE_SEARCH = __ENV.LOAD_TEST_INCLUDE_SEARCH === "true";
+const PROFILE = (__ENV.LOAD_TEST_PROFILE || "pilot").toLowerCase();
+const IS_ENTERPRISE_PROFILE = PROFILE === "enterprise";
+const REQUESTED_PILOT_VUS = Number(__ENV.LOAD_TEST_TARGET_VUS || 50);
+const PILOT_TARGET_VUS = Number.isFinite(REQUESTED_PILOT_VUS)
+  ? Math.min(Math.max(Math.round(REQUESTED_PILOT_VUS), 10), 100)
+  : 50;
 
 export const options = {
   scenarios: {
     public_storefront: {
       executor: "ramping-vus",
       startVUs: 0,
-      stages: [
-        { duration: "1m", target: 100 },
-        { duration: "2m", target: 500 },
-        { duration: "2m", target: 1000 },
-        { duration: "1m", target: 1000 },
-        { duration: "1m", target: 0 },
-      ],
+      stages: IS_ENTERPRISE_PROFILE
+        ? [
+            { duration: "1m", target: 100 },
+            { duration: "2m", target: 500 },
+            { duration: "2m", target: 1000 },
+            { duration: "1m", target: 1000 },
+            { duration: "1m", target: 0 },
+          ]
+        : [
+            { duration: "30s", target: Math.ceil(PILOT_TARGET_VUS / 2) },
+            { duration: "1m", target: PILOT_TARGET_VUS },
+            { duration: "2m", target: PILOT_TARGET_VUS },
+            { duration: "30s", target: 0 },
+          ],
       gracefulRampDown: "30s",
+      tags: { profile: PROFILE },
     },
   },
   thresholds: {

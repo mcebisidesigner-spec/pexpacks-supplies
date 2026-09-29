@@ -79,7 +79,7 @@ export type ParsedPackForm =
   | { ok: false; errors: Record<string, string> };
 
 export type PackFormResult =
-  | { ok: true; pack: PackRow }
+  | { ok: true; pack: PackRow; message?: string }
   | { ok: false; errors: Record<string, string>; message?: string };
 
 export type PackFormState = {
@@ -584,6 +584,42 @@ async function ensureUniqueSlug(
   }
 }
 
+type PublicationRpcResult = {
+  success?: boolean;
+  reasons?: unknown;
+  error?: string;
+};
+
+function publicationFailureMessage(payload: PublicationRpcResult): string {
+  const reasons = Array.isArray(payload.reasons)
+    ? payload.reasons.filter((reason): reason is string => typeof reason === "string")
+    : [];
+  return reasons.length > 0
+    ? reasons.join(" ")
+    : payload.error || "The pack is not ready to publish.";
+}
+
+async function publishPack(
+  admin: ReturnType<typeof createSupabaseAdminClient>,
+  id: string,
+  userId: string,
+): Promise<{ ok: boolean; message?: string }> {
+  const { data, error } = await admin.rpc("publish_school_pack", {
+    p_pack_id: id,
+    p_user_id: userId,
+  });
+  if (error) {
+    console.error("[packs] publication validation failed:", error);
+    return { ok: false, message: "Could not validate this pack for publication." };
+  }
+
+  const payload = (data ?? {}) as PublicationRpcResult;
+  if (payload.success !== true) {
+    return { ok: false, message: publicationFailureMessage(payload) };
+  }
+  return { ok: true };
+}
+
 const createPackSchema = z.object({
   school_id: z.string().min(1, "Choose a school"),
   grade: z
@@ -701,7 +737,8 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
         price: defaultPrice,
         stock: 1,
         featured: data.featured,
-        visible: data.visible,
+        visible: false,
+        publication_status: "draft",
         academic_year: null,
         delivery_type: PACK_DELIVERY_TYPES[0],
         pack_image: null,
@@ -738,6 +775,14 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
       }
     }
 
+    let publicationMessage: string | undefined;
+    if (data.visible) {
+      const publication = await publishPack(admin, created.id, actor.user.id);
+      if (!publication.ok) {
+        publicationMessage = `Saved as a draft. ${publication.message}`;
+      }
+    }
+
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -749,7 +794,7 @@ export async function createPack(formData: FormData): Promise<PackFormResult> {
 
     revalidateCatalog();
 
-    return { ok: true, pack: created };
+    return { ok: true, pack: created, message: publicationMessage };
   } catch (err) {
     console.error("[packs] create failed:", err);
     return {
@@ -791,9 +836,18 @@ export async function updatePack(
     if (!slug) slug = existing.data.slug || slugify(data.title) || "pack";
     slug = await ensureUniqueSlug(admin, slug, id);
 
+    const requestedVisible = data.visible;
     const { data: updated, error } = await admin
       .from("school_packs")
-      .update({ ...data, slug, updated_by: actor.user.id })
+      .update({
+        ...data,
+        slug,
+        visible: false,
+        publication_status: "draft",
+        published_at: null,
+        published_by: null,
+        updated_by: actor.user.id,
+      })
       .eq("id", id)
       .select()
       .single();
@@ -808,6 +862,14 @@ export async function updatePack(
       throw error;
     }
 
+    let publicationMessage: string | undefined;
+    if (requestedVisible) {
+      const publication = await publishPack(admin, id, actor.user.id);
+      if (!publication.ok) {
+        publicationMessage = `Saved as a draft. ${publication.message}`;
+      }
+    }
+
     void writeAuditLog({
       actorId: actor.user.id,
       actorName: actor.user.email,
@@ -819,7 +881,7 @@ export async function updatePack(
 
     revalidateCatalog();
 
-    return { ok: true, pack: updated };
+    return { ok: true, pack: updated, message: publicationMessage };
   } catch (err) {
     console.error("[packs] update failed:", err);
     return {
@@ -914,16 +976,34 @@ export async function setPackVisible(
   const actor = await assertCan("packs.edit");
   const admin = createSupabaseAdminClient();
 
-  const { data: updated, error } = await admin
+  if (visible) {
+    const publication = await publishPack(admin, id, actor.user.id);
+    if (!publication.ok) return publication;
+  } else {
+    const { error } = await admin
+      .from("school_packs")
+      .update({
+        visible: false,
+        publication_status: "draft",
+        published_at: null,
+        published_by: null,
+        updated_by: actor.user.id,
+      })
+      .eq("id", id);
+    if (error) {
+      console.error("[packs] visibility change failed:", error);
+      return { ok: false, message: "Failed to update visibility." };
+    }
+  }
+
+  const { data: updated, error: readError } = await admin
     .from("school_packs")
-    .update({ visible, updated_by: actor.user.id })
-    .eq("id", id)
     .select("id, title, slug, visible, school_id, schools(slug)")
+    .eq("id", id)
     .single();
 
-  if (error) {
-    console.error("[packs] visibility change failed:", error);
-    return { ok: false, message: "Failed to update visibility." };
+  if (readError || !updated) {
+    return { ok: false, message: "Pack visibility was changed, but the updated record could not be read." };
   }
 
   void writeAuditLog({
@@ -941,7 +1021,6 @@ export async function setPackVisible(
 
   return { ok: true };
 }
-
 export async function duplicatePack(
   id: string,
 ): Promise<{ ok: boolean; message?: string; packId?: string }> {

@@ -30,6 +30,10 @@ const steps = [
     name: "Gate 5: Performance Configuration",
     command: "node scripts/performance-audit.cjs",
   },
+  {
+    name: "Gate 6: Public Catalogue Publication Readiness",
+    command: "node scripts/publication-readiness-preflight.cjs",
+  },
 ];
 
 let allPassed = true;

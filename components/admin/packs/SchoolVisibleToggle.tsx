@@ -21,7 +21,8 @@ export function SchoolVisibleToggle({
   async function handleToggle() {
     if (busy) return;
     setBusy(true);
-    await setSchoolPacksVisibleAction(schoolId, !visible);
+    const result = await setSchoolPacksVisibleAction(schoolId, !visible);
+    if (!result.ok) window.alert(result.message || "Some packs stayed in draft because they are not ready to publish.");
     setBusy(false);
     setShowConfirm(false);
     router.refresh();

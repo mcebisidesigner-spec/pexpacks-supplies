@@ -11,7 +11,7 @@ type PerformanceWindow = Window & {
   __pexMetrics?: MetricState;
 };
 
-const CORE_ROUTES = ["/", "/schools", "/pexcover", "/checkout"];
+const CORE_ROUTES = ["/", "/schools", "/cart/review", "/pexcover", "/checkout"];
 const MAX_TRANSFER_BYTES = 3 * 1024 * 1024;
 const MAX_LCP_MS = 3500;
 const MAX_CLS = 0.1;

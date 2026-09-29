@@ -11,7 +11,8 @@ export function VisibleToggle({ id, visible }: { id: string; visible: boolean })
   async function handleClick() {
     if (busy) return;
     setBusy(true);
-    await setPackVisibleAction(id, !visible);
+    const result = await setPackVisibleAction(id, !visible);
+    if (!result.ok) window.alert(result.message || "This pack is not ready to publish.");
     setBusy(false);
     router.refresh();
   }
