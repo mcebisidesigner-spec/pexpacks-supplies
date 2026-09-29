@@ -9,12 +9,14 @@ import {
   toggleCmsResourcePublicAction,
 } from "@/app/admin/content/actions";
 import { cmsStyles as styles } from "./cmsStyles";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 
 interface ResourcesTabProps {
   initialResources: CmsResourceRow[];
 }
 
 export function ResourcesTab({ initialResources }: ResourcesTabProps) {
+  const dialog = useAdminDialog();
   const [items, setItems] = useState<CmsResourceRow[]>(initialResources);
   const [editingItem, setEditingItem] = useState<CmsResourceRow | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,8 +72,14 @@ export function ResourcesTab({ initialResources }: ResourcesTabProps) {
     });
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm("Are you sure you want to delete this resource?")) return;
+  const handleDelete = async (id: string) => {
+    const ok = await dialog.confirm({
+      title: "Delete Resource",
+      message: "Are you sure you want to delete this resource? This action cannot be undone.",
+      variant: "danger",
+      confirmLabel: "Delete Resource",
+    });
+    if (!ok) return;
     startTransition(async () => {
       const res = await deleteCmsResourceAction(id);
       if (res.ok) {

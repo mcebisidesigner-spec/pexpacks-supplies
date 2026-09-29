@@ -3,16 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setPackVisibleAction } from "@/app/admin/packs/actions";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 
 export function VisibleToggle({ id, visible }: { id: string; visible: boolean }) {
   const router = useRouter();
+  const dialog = useAdminDialog();
   const [busy, setBusy] = useState(false);
 
   async function handleClick() {
     if (busy) return;
     setBusy(true);
     const result = await setPackVisibleAction(id, !visible);
-    if (!result.ok) window.alert(result.message || "This pack is not ready to publish.");
+    if (!result.ok) {
+      await dialog.alert({
+        title: "Publication Policy Blocked",
+        message: result.message || "This pack is not ready to publish.",
+        variant: "warning",
+        buttonLabel: "Understood",
+      });
+    }
     setBusy(false);
     router.refresh();
   }

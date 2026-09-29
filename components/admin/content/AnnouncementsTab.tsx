@@ -9,12 +9,14 @@ import {
   toggleCmsAnnouncementActiveAction,
 } from "@/app/admin/content/actions";
 import { cmsStyles as styles } from "./cmsStyles";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 
 interface AnnouncementsTabProps {
   initialAnnouncements: CmsAnnouncementRow[];
 }
 
 export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps) {
+  const dialog = useAdminDialog();
   const [items, setItems] = useState<CmsAnnouncementRow[]>(initialAnnouncements);
   const [editingItem, setEditingItem] = useState<CmsAnnouncementRow | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,8 +66,14 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
     });
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm("Are you sure you want to delete this announcement?")) return;
+  const handleDelete = async (id: string) => {
+    const ok = await dialog.confirm({
+      title: "Delete Announcement",
+      message: "Are you sure you want to delete this announcement? This action cannot be undone.",
+      variant: "danger",
+      confirmLabel: "Delete Announcement",
+    });
+    if (!ok) return;
     startTransition(async () => {
       const res = await deleteCmsAnnouncementAction(id);
       if (res.ok) {

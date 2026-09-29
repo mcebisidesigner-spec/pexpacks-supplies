@@ -9,12 +9,14 @@ import {
   toggleCmsTestimonialFeaturedAction,
 } from "@/app/admin/content/actions";
 import { cmsStyles as styles } from "./cmsStyles";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 
 interface TestimonialsTabProps {
   initialTestimonials: CmsTestimonialRow[];
 }
 
 export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
+  const dialog = useAdminDialog();
   const [items, setItems] = useState<CmsTestimonialRow[]>(initialTestimonials);
   const [editingItem, setEditingItem] = useState<CmsTestimonialRow | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,8 +69,15 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
     });
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm("Are you sure you want to delete this testimonial?")) return;
+  const handleDelete = async (id: string) => {
+    const ok = await dialog.confirm({
+      title: "Delete Testimonial",
+      message: "Are you sure you want to delete this testimonial? This action cannot be undone.",
+      variant: "danger",
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
+
     startTransition(async () => {
       const res = await deleteCmsTestimonialAction(id);
       if (res.ok) {

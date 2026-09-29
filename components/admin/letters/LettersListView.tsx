@@ -33,6 +33,7 @@ import {
 import { LetterActionWorkbench } from "./LetterActionWorkbench";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { deleteLetterAction } from "@/app/admin/letters/actions";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 import type { AdminLetterRecord, ListLettersResult } from "@/lib/admin/letters";
 import type { BadgeTone } from "@/components/admin/ui";
 import { corePages as styles } from "../views/CorePagesView";;
@@ -50,6 +51,7 @@ export function LettersListView({
   initialData: ListLettersResult;
 }) {
   const router = useRouter();
+  const dialog = useAdminDialog();
   const { params, setParams, isPending } = useTableParams();
   const [letters, setLetters] = useState<AdminLetterRecord[]>(
     initialData.letters || [],
@@ -136,7 +138,12 @@ export function LettersListView({
       setDeleteTarget(null);
     } else {
       setDeleteTarget(null);
-      alert(res.error || "Failed to delete letter.");
+      await dialog.alert({
+        title: "Delete Letter Failed",
+        message: res.error || "Failed to delete letter.",
+        variant: "danger",
+        buttonLabel: "Understood",
+      });
     }
   };
 

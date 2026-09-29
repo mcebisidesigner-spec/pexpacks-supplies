@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { setSchoolPacksVisibleAction } from "@/app/admin/packs/actions";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import { useAdminDialog } from "@/components/admin/ui/AdminDialogContext";
 
 export function SchoolVisibleToggle({
   schoolId,
@@ -15,6 +16,7 @@ export function SchoolVisibleToggle({
   visible: boolean;
 }) {
   const router = useRouter();
+  const dialog = useAdminDialog();
   const [busy, setBusy] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -22,7 +24,16 @@ export function SchoolVisibleToggle({
     if (busy) return;
     setBusy(true);
     const result = await setSchoolPacksVisibleAction(schoolId, !visible);
-    if (!result.ok) window.alert(result.message || "Some packs stayed in draft because they are not ready to publish.");
+    if (!result.ok) {
+      await dialog.alert({
+        title: "School Packs Publication Blocked",
+        message:
+          result.message ||
+          "Some packs stayed in draft because they are not ready to publish.",
+        variant: "warning",
+        buttonLabel: "Understood",
+      });
+    }
     setBusy(false);
     setShowConfirm(false);
     router.refresh();
