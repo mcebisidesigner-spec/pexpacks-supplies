@@ -51,7 +51,7 @@ export function Tooltip({
       {children}
       <span
         className={cn(
-          "absolute z-[200] inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-[var(--pex-navy,#1a2a40)] text-white text-xs font-bold leading-tight tracking-tight whitespace-nowrap border border-white/15 shadow-[0_8px_24px_rgba(15,35,58,0.28),0_2px_6px_rgba(0,0,0,0.12)] pointer-events-none opacity-0 invisible transition-all duration-150 group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible max-md:[@media(hover:none)]:hidden",
+          "absolute z-[200] inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-pex-navy text-white text-xs font-bold leading-tight tracking-tight whitespace-nowrap border border-white/15 shadow-[0_8px_24px_rgba(15,35,58,0.28),0_2px_6px_rgba(0,0,0,0.12)] pointer-events-none opacity-0 invisible transition-all duration-150 group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible max-md:[@media(hover:none)]:hidden",
           bubble,
           delay && "delay-75"
         )}
@@ -61,7 +61,7 @@ export function Tooltip({
         <span>{content}</span>
         <span
           className={cn(
-            "absolute w-[7px] h-[7px] bg-[var(--pex-navy,#1a2a40)] border border-white/15 rotate-45",
+            "absolute w-[7px] h-[7px] bg-pex-navy border border-white/15 rotate-45",
             arrow
           )}
         />

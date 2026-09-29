@@ -23,7 +23,7 @@ const PEXPACKS_MANAGES = [
 
 export function ManagedPartnership() {
   return (
-    <section className="py-12 sm:py-20 bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-slate-200/80" aria-labelledby="managed-model-heading">
+    <section className="py-12 sm:py-20 bg-pex-bg-soft border-y border-slate-200/80" aria-labelledby="managed-model-heading">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-[760px] mb-[34px] text-left flex flex-col items-start">
           <p className="mb-3 text-pex-keppel text-sm font-extrabold text-left">Operational division of responsibility</p>
@@ -63,7 +63,7 @@ export function ManagedPartnership() {
           {/* What Pexpacks Manages */}
           <div className="rounded-2xl p-[clamp(24px,4vw,36px)] flex flex-col bg-[rgba(26,122,119,0.04)] border border-[rgba(26,122,119,0.28)] shadow-[0_14px_36px_rgba(26,122,119,0.08)]">
             <div className="flex items-center gap-3 mb-5 pb-4 border-b border-slate-200/80">
-              <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center bg-[var(--pex-keppel,#1a7a77)] text-white">
+              <div className="w-[38px] h-[38px] rounded-[10px] flex items-center justify-center bg-pex-keppel text-white">
                 <ShieldCheck size={22} />
               </div>
               <div>

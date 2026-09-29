@@ -108,7 +108,7 @@ export function PartnershipHero({
                 <p className="text-[13.5px] font-bold text-white m-0">Institutional Supply Assurance</p>
                 <p className="text-xs text-[#94a3b8] m-0">100% Grade-list compliance &amp; quality guarantee</p>
               </div>
-              <CheckCircle2 size={24} className="text-[var(--pex-coral,#ff6f59)] shrink-0" />
+              <CheckCircle2 size={24} className="text-pex-coral shrink-0" />
             </div>
           </div>
         </div>

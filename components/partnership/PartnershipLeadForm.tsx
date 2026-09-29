@@ -155,7 +155,7 @@ export function PartnershipLeadForm({
                   <button
                     type="button"
                     onClick={onClearPrefill}
-                    className="inline-flex size-8 shrink-0 aspect-square items-center justify-center rounded-full border border-pex-border bg-white text-[var(--pex-muted,#64748b)] cursor-pointer transition-colors hover:bg-pex-bg-soft hover:text-pex-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
+                    className="inline-flex size-8 shrink-0 aspect-square items-center justify-center rounded-full border border-pex-border bg-white text-pex-muted cursor-pointer transition-colors hover:bg-pex-bg-soft hover:text-pex-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
                     aria-label="Remove calculator context"
                   >
                     <X size={16} />
@@ -165,13 +165,13 @@ export function PartnershipLeadForm({
             )}
 
             {success ? (
-              <div className="bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.3)] rounded-[14px] p-6 text-pex-navy text-center flex flex-col items-center gap-3" role="status">
-                <CheckCircle2 size={48} style={{ color: "var(--pex-keppel)" }} />
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-[14px] p-6 text-pex-navy text-center flex flex-col items-center gap-3" role="status">
+                <CheckCircle2 size={48} className="text-pex-keppel" />
                 <h3 className="text-xl font-extrabold text-pex-navy m-0">Partnership enquiry received</h3>
-                <p style={{ margin: 0, fontSize: "15px", color: "var(--pex-muted)", maxWidth: 500, lineHeight: 1.6 }}>
+                <p className="m-0 text-[15px] text-pex-muted max-w-[500px] leading-relaxed">
                   Thanks for reaching out. I will review the details and contact you through your preferred method to discuss the next step.
                 </p>
-                <div style={{ marginTop: 12 }}>
+                <div className="mt-3">
                   <Button
                     type="button"
                     variant="outline"
@@ -186,15 +186,7 @@ export function PartnershipLeadForm({
               <form onSubmit={handleSubmit} noValidate>
                 {serverError && (
                   <div
-                    style={{
-                      background: "#fef2f2",
-                      border: "1px solid #fecaca",
-                      borderRadius: 10,
-                      padding: "12px 16px",
-                      color: "#b91c1c",
-                      fontSize: 14,
-                      marginBottom: 20,
-                    }}
+                    className="bg-red-50 border border-red-200 rounded-[10px] p-3 px-4 text-red-700 text-sm mb-5"
                     role="alert"
                   >
                     {serverError}
@@ -213,7 +205,7 @@ export function PartnershipLeadForm({
                       type="text"
                       placeholder="e.g. St. Stithians College or Bryanston High"
                       required
-                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                       aria-invalid={Boolean(errors.schoolName)}
                     />
                     {errors.schoolName && <span className="text-xs font-semibold text-red-700">{errors.schoolName}</span>}
@@ -224,7 +216,7 @@ export function PartnershipLeadForm({
                     <label htmlFor="p-school-type" className="text-[13.5px] font-bold text-pex-navy flex items-center justify-between">
                       <span>School Type</span>
                     </label>
-                    <select id="p-school-type" name="schoolType" className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]">
+                    <select id="p-school-type" name="schoolType" className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15">
                       <option value="">Select school type (optional)</option>
                       {SCHOOL_TYPES.map((type) => (
                         <option key={type} value={type}>{type}</option>
@@ -244,7 +236,7 @@ export function PartnershipLeadForm({
                       placeholder="e.g. Dr. Jennifer Adams"
                       required
                       autoComplete="name"
-                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                       aria-invalid={Boolean(errors.fullName)}
                     />
                     {errors.fullName && <span className="text-xs font-semibold text-red-700">{errors.fullName}</span>}
@@ -259,7 +251,7 @@ export function PartnershipLeadForm({
                       id="p-role"
                       name="role"
                       required
-                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                       aria-invalid={Boolean(errors.role)}
                     >
                       <option value="">Select your institutional capacity</option>
@@ -282,7 +274,7 @@ export function PartnershipLeadForm({
                       placeholder="principal@yourschool.co.za"
                       required
                       autoComplete="email"
-                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                       aria-invalid={Boolean(errors.email)}
                     />
                     {errors.email && <span className="text-xs font-semibold text-red-700">{errors.email}</span>}
@@ -300,7 +292,7 @@ export function PartnershipLeadForm({
                       placeholder="011 456 7890 or 082 123 4567"
                       required
                       autoComplete="tel"
-                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                       aria-invalid={Boolean(errors.phone)}
                     />
                     {errors.phone && <span className="text-xs font-semibold text-red-700">{errors.phone}</span>}
@@ -317,7 +309,7 @@ export function PartnershipLeadForm({
                       type="number"
                       placeholder="e.g. 850"
                       defaultValue={initialPrefill?.learnerCount || ""}
-                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                     />
                   </div>
 
@@ -326,7 +318,7 @@ export function PartnershipLeadForm({
                     <label htmlFor="p-contact-method" className="text-[13.5px] font-bold text-pex-navy flex items-center justify-between">
                       <span>Preferred Contact Method</span>
                     </label>
-                    <select id="p-contact-method" name="preferredContactMethod" className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]">
+                    <select id="p-contact-method" name="preferredContactMethod" className="w-full h-[50px] px-3.5 rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15">
                       {PREFERRED_CONTACT_METHODS.map((method) => (
                         <option key={method} value={method}>{method}</option>
                       ))}
@@ -342,7 +334,7 @@ export function PartnershipLeadForm({
                       id="p-message"
                       name="message"
                       placeholder="Share details on your current stationery timeline, SGB review cycle, or specific pack requirements..."
-                      className="w-full h-auto min-h-[100px] p-[12px_14px] rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none resize-y transition-all duration-140 box-border focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-3 focus:ring-[rgba(26,122,119,0.14)]"
+                      className="w-full h-auto min-h-[100px] p-[12px_14px] rounded-xl border border-slate-200/80 bg-white text-slate-700 text-[14.5px] outline-none resize-y transition-all duration-140 box-border focus:border-pex-keppel focus:ring-3 focus:ring-pex-keppel/15"
                     />
                   </div>
 
@@ -350,21 +342,21 @@ export function PartnershipLeadForm({
                   <div className="flex flex-col gap-[7px] sm:col-span-2">
                     <label
                       htmlFor="p-consent"
-                      style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer" }}
+                      className="flex gap-2.5 items-start cursor-pointer"
                     >
                       <input
                         id="p-consent"
                         name="consent"
                         type="checkbox"
                         required
-                        style={{ marginTop: 4, accentColor: "var(--pex-keppel)" }}
+                        className="mt-1 accent-pex-keppel"
                         aria-invalid={Boolean(errors.consent)}
                       />
-                      <span className="text-[12.5px] text-[var(--pex-muted,#64748b)] leading-[1.5] m-0">
+                      <span className="text-[12.5px] text-pex-muted leading-relaxed m-0">
                         By submitting this form, you acknowledge that Pexpacks Supplies may process the
                         information provided for the purpose of responding to your institutional enquiry,
                         in accordance with our{" "}
-                        <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                        <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                           Privacy Policy
                         </Link>{" "}
                         and applicable data-protection requirements.

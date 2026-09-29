@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { Download, LoaderCircle } from "lucide-react";
 import type { StationeryPdfOptions } from "@/lib/pdf/generateStationeryPdf";
 
@@ -18,42 +18,45 @@ export function DownloadListLink({
 }: DownloadListLinkProps) {
   const [isGenerating, setIsGenerating] = useState(false);
 
-  async function generatePdf() {
-    if (isGenerating) return;
-    setIsGenerating(true);
-
-    try {
-      const { generateStationeryPdf } = await import(
-        "@/lib/pdf/generateStationeryPdf"
-      );
-      await generateStationeryPdf(pdfOptions);
-    } catch (error) {
-      console.error("PDF generation failed:", error);
-    } finally {
-      setIsGenerating(false);
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (isGenerating) {
+      event.preventDefault();
+      return;
     }
+
+    setIsGenerating(true);
+    window.setTimeout(() => setIsGenerating(false), 2500);
   }
 
   return (
-    <div className="relative">
+    <form
+      method="post"
+      action="/api/packs/download-list"
+      className="relative inline-flex"
+      onSubmit={handleSubmit}
+    >
+      <input
+        type="hidden"
+        name="payload"
+        value={JSON.stringify(pdfOptions)}
+      />
       <button
-        type="button"
+        type="submit"
         className={[
           "inline-flex items-center justify-center gap-[6px] w-fit min-h-10",
           "p-0 border-0 bg-transparent font-inherit",
-          "text-[14px] text-[var(--pex-text-muted)] font-medium leading-none",
+          "text-[14px] text-pex-muted font-medium leading-none",
           "underline underline-offset-[3px]",
-          "cursor-pointer transition-[var(--interactive-transition)]",
-          "hover:text-[var(--color-brand-teal)]",
-          "disabled:opacity-[0.65] disabled:cursor-wait",
-          "focus-visible:outline-2 focus-visible:outline-[var(--color-brand-orange)] focus-visible:outline-offset-4 focus-visible:text-[var(--pex-primary)]",
+          "cursor-pointer transition-colors",
+          "hover:text-pex-keppel",
+          "disabled:opacity-65 disabled:cursor-wait",
+          "focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:text-pex-navy",
           "motion-reduce:transition-none",
-          "max-md:min-h-[var(--touch-target-min)]",
+          "max-md:min-h-11",
           className,
         ]
           .filter(Boolean)
           .join(" ")}
-        onClick={() => void generatePdf()}
         disabled={isGenerating}
         aria-label={
           isGenerating
@@ -73,6 +76,6 @@ export function DownloadListLink({
         )}
         <span>{isGenerating ? "Generating..." : children}</span>
       </button>
-    </div>
+    </form>
   );
 }

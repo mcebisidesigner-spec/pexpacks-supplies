@@ -36,7 +36,7 @@ const TRUST_POINTS = [
 
 export function InstitutionalTrust() {
   return (
-    <section className="py-12 sm:py-20 bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-slate-200/80" aria-labelledby="trust-section-title">
+    <section className="py-12 sm:py-20 bg-pex-bg-soft border-y border-slate-200/80" aria-labelledby="trust-section-title">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-[760px] mb-[34px] text-left flex flex-col items-start">
           <p className="mb-3 text-pex-keppel text-sm font-extrabold text-left">Operational excellence</p>

@@ -28,7 +28,7 @@ const GALLERY_IMAGES = [
 
 export function BagExperience() {
   return (
-    <section className="py-12 sm:py-20 bg-[var(--pex-bg-soft,#f4f5f7)] border-y border-slate-200/80" aria-labelledby="brand-experience-title">
+    <section className="py-12 sm:py-20 bg-pex-bg-soft border-y border-slate-200/80" aria-labelledby="brand-experience-title">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 min-[981px]:grid-cols-[minmax(320px,1fr)_minmax(0,1.15fr)] gap-[clamp(32px,5vw,64px)] items-center">
           {/* Feature Highlights */}

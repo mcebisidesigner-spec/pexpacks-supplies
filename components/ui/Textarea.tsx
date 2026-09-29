@@ -49,9 +49,9 @@ export default function Textarea({
         onChange={onChange}
         rows={rows}
         className={cn(
-          "w-full min-h-[120px] sm:min-h-[126px] rounded-[18px] border border-[var(--form-control-border,#e1e7ea)] p-3.5 px-4 bg-[var(--form-control-bg,#ffffff)] text-[var(--form-control-color,#1a2a40)] font-sans text-sm sm:text-[15px] resize-y placeholder:text-[rgba(77,90,93,0.48)] transition-all duration-150 hover:border-[rgba(26,42,64,0.18)] focus:outline-none focus:border-[var(--pex-keppel,#1a7a77)] focus:ring-4 focus:ring-[rgba(26,122,119,0.12)] disabled:cursor-not-allowed disabled:opacity-60",
+          "w-full min-h-[120px] sm:min-h-[126px] rounded-[18px] border border-pex-border p-3.5 px-4 bg-white text-pex-navy font-sans text-sm sm:text-[15px] resize-y placeholder:text-pex-muted/60 transition-all duration-150 hover:border-pex-navy/20 focus:outline-none focus:border-pex-keppel focus:ring-4 focus:ring-pex-keppel/15 disabled:cursor-not-allowed disabled:opacity-60",
           error &&
-            "border-[var(--color-danger,#b91c1c)] focus:border-[var(--color-danger,#b91c1c)] ring-4 ring-[rgba(185,28,28,0.1)]",
+            "border-red-600 focus:border-red-600 ring-4 ring-red-600/10",
           className
         )}
         aria-invalid={error ? true : undefined}
@@ -62,7 +62,7 @@ export default function Textarea({
       {error && (
         <span
           id={errorId}
-          className="m-0 text-[var(--color-danger,#b91c1c)] text-xs sm:text-[13px] font-extrabold leading-normal"
+          className="m-0 text-red-600 text-xs sm:text-[13px] font-extrabold leading-normal"
           role="alert"
         >
           {error}
