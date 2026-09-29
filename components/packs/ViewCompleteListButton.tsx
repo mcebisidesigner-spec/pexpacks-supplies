@@ -19,13 +19,13 @@ export function ViewCompleteListButton({
       className={[
         "inline-flex items-center justify-center gap-[6px] min-h-10",
         "border-0 rounded-full bg-transparent",
-        "text-[var(--pex-text-muted)] font-inherit text-[var(--text-2xs)] font-bold leading-none",
+        "text-pex-muted font-inherit text-xs font-bold leading-none",
         "underline underline-offset-[3px]",
-        "cursor-pointer transition-[var(--interactive-transition)]",
-        "hover:text-[var(--color-brand-teal)]",
-        "focus-visible:outline-2 focus-visible:outline-[var(--color-brand-orange)] focus-visible:outline-offset-4 focus-visible:text-[var(--pex-primary)]",
+        "cursor-pointer transition-colors",
+        "hover:text-pex-keppel",
+        "focus-visible:outline-2 focus-visible:outline-pex-coral focus-visible:outline-offset-4 focus-visible:text-pex-navy",
         "motion-reduce:transition-none",
-        "max-md:min-h-[var(--touch-target-min)]",
+        "max-md:min-h-11",
         className,
       ]
         .filter(Boolean)

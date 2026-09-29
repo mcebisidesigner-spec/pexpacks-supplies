@@ -9,33 +9,33 @@ type CompleteListTableProps = {
 export function CompleteListTable({ items, label }: CompleteListTableProps) {
   if (!items.length) {
     return (
-      <p className="m-0 text-[var(--pex-text-muted)]">
+      <p className="m-0 text-pex-muted">
         The complete list is being finalised.
       </p>
     );
   }
 
   return (
-    <div className="overflow-x-auto border border-[rgba(225,231,234,0.82)] rounded-[var(--radius-card)] bg-[rgba(255,255,255,0.96)]">
+    <div className="overflow-x-auto border border-pex-border rounded-card bg-white/95">
       <table className="w-full border-collapse table-fixed">
         <caption className="sr-only">{label}</caption>
         <thead>
           <tr>
             <th
               scope="col"
-              className="w-[84px] sticky top-0 z-[1] px-[var(--space-4)] py-[14px] border-b border-b-[rgba(225,231,234,0.92)] bg-[#f4f8fa] text-[var(--pex-primary)] text-[var(--text-2xs)] font-extrabold text-left max-md:px-[var(--space-3)] max-md:text-[12px]"
+              className="w-[84px] sticky top-0 z-[1] px-4 py-3.5 border-b border-pex-border bg-pex-bg-soft text-pex-navy text-xs font-extrabold text-left max-md:px-3 max-md:text-[12px]"
             >
               Qty
             </th>
             <th
               scope="col"
-              className="sticky top-0 z-[1] px-[var(--space-4)] py-[14px] border-b border-b-[rgba(225,231,234,0.92)] bg-[#f4f8fa] text-[var(--pex-primary)] text-[var(--text-2xs)] font-extrabold text-left max-md:px-[var(--space-3)] max-md:text-[12px]"
+              className="sticky top-0 z-[1] px-4 py-3.5 border-b border-pex-border bg-pex-bg-soft text-pex-navy text-xs font-extrabold text-left max-md:px-3 max-md:text-[12px]"
             >
               Products
             </th>
             <th
               scope="col"
-              className="sticky top-0 z-[1] px-[var(--space-4)] py-[14px] border-b border-b-[rgba(225,231,234,0.92)] bg-[#f4f8fa] text-[var(--pex-primary)] text-[var(--text-2xs)] font-extrabold text-left max-md:px-[var(--space-3)] max-md:text-[12px]"
+              className="sticky top-0 z-[1] px-4 py-3.5 border-b border-pex-border bg-pex-bg-soft text-pex-navy text-xs font-extrabold text-left max-md:px-3 max-md:text-[12px]"
             >
               Description
             </th>
@@ -45,22 +45,22 @@ export function CompleteListTable({ items, label }: CompleteListTableProps) {
           {items.map((item, index) => (
             <tr
               key={`${item.id}-${index}`}
-              className="border-b border-b-[rgba(225,231,234,0.78)] last:border-b-0"
+              className="border-b border-pex-border/60 last:border-b-0"
             >
-              <td className="w-[84px] px-[var(--space-4)] py-[13px] text-[var(--pex-primary)] text-[15px] font-extrabold text-left align-top max-md:px-[var(--space-3)] max-md:text-[var(--text-2xs)]">
+              <td className="w-[84px] px-4 py-3 text-pex-navy text-[15px] font-extrabold text-left align-top max-md:px-3 max-md:text-xs">
                 {item.quantityLabel ?? item.quantity}
               </td>
-              <td className="px-[var(--space-4)] py-[13px] text-[var(--pex-text)] text-[15px] leading-[1.35] align-top max-md:px-[var(--space-3)] max-md:text-[var(--text-2xs)]">
-                <div className="inline-flex items-center gap-[10px]">
+              <td className="px-4 py-3 text-pex-navy text-[15px] leading-[1.35] align-top max-md:px-3 max-md:text-xs">
+                <div className="inline-flex items-center gap-2.5">
                   <ItemIcon
                     name={item.icon}
                     size={18}
-                    className="shrink-0 text-[var(--pex-keppel,#10b981)]"
+                    className="shrink-0 text-pex-keppel"
                   />
                   <span>{item.name}</span>
                 </div>
               </td>
-              <td className="px-[var(--space-4)] py-[13px] text-[var(--pex-text-muted)] text-[var(--text-sm)] leading-[1.4] align-top max-md:px-[var(--space-3)] max-md:text-[var(--text-2xs)]">
+              <td className="px-4 py-3 text-pex-muted text-sm leading-[1.4] align-top max-md:px-3 max-md:text-xs">
                 {item.description?.trim() || item.specification?.trim() || "-"}
               </td>
             </tr>

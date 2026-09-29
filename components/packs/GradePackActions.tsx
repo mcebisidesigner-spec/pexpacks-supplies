@@ -365,7 +365,7 @@ export function GradePackActions({
 
   const drawerContent = isOpen ? (
     <div
-      className="fixed inset-0 z-[var(--z-drawer)] bg-[var(--color-overlay)] flex justify-end overflow-hidden animate-[fadeInOverlay_0.25s_ease-out_forwards] motion-reduce:animate-none motion-reduce:opacity-100"
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end overflow-hidden animate-[fadeInOverlay_0.25s_ease-out_forwards] motion-reduce:animate-none motion-reduce:opacity-100"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -374,7 +374,7 @@ export function GradePackActions({
       }}
     >
       <section
-        className="w-full max-w-[480px] h-screen h-[100dvh] overflow-y-auto bg-[var(--pex-bg)] [box-shadow:var(--shadow-drawer)] flex flex-col animate-[slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards] motion-reduce:animate-none motion-reduce:transform-none"
+        className="w-full max-w-[480px] h-screen h-[100dvh] overflow-y-auto bg-white shadow-2xl flex flex-col animate-[slideInTray_0.35s_cubic-bezier(0.16,1,0.3,1)_forwards] motion-reduce:animate-none motion-reduce:transform-none"
         role="dialog"
         aria-modal="true"
         aria-labelledby="pack-customiser-title"
@@ -382,27 +382,27 @@ export function GradePackActions({
         ref={drawerRef}
         tabIndex={-1}
       >
-        <div className="sticky top-0 z-[3] p-[clamp(16px,3vw,24px)] max-md:pt-[max(var(--space-4),env(safe-area-inset-top))] border-b border-[var(--pex-border)] bg-white/96 backdrop-blur-md grid grid-cols-[1fr_auto] gap-[var(--space-4)] items-start">
+        <div className="sticky top-0 z-[3] p-[clamp(16px,3vw,24px)] max-md:pt-[max(16px,env(safe-area-inset-top))] border-b border-pex-border bg-white/95 backdrop-blur-md grid grid-cols-[1fr_auto] gap-4 items-start">
           <div>
-            <p className="m-0 mb-1 text-[var(--pex-keppel)] text-[var(--text-2xs)] font-extrabold">
+            <p className="m-0 mb-1 text-pex-keppel text-xs font-extrabold">
               {pack.schoolName} &ndash; {pack.grade}
             </p>
             <h2
               id="pack-customiser-title"
-              className="m-0 text-[var(--pex-primary)] font-heading text-[clamp(24px,3.5vw,32px)] font-extrabold leading-none"
+              className="m-0 text-pex-navy font-heading text-[clamp(24px,3.5vw,32px)] font-extrabold leading-none"
             >
               Customise This Pack
             </h2>
             <span
               id="pack-customiser-instructions"
-              className="block mt-1.5 text-[var(--pex-text-muted)] text-[var(--text-sm)] font-semibold"
+              className="block mt-1.5 text-pex-muted text-sm font-semibold"
             >
               Untick what you already have and order the rest.
             </span>
           </div>
           <button
             type="button"
-            className="w-[44px] h-[44px] border border-[var(--pex-border)] rounded-full bg-[var(--pex-bg)] text-[var(--pex-primary)] text-2xl leading-none p-0 box-border shrink-0 cursor-pointer grid place-items-center transition-[var(--interactive-transition)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none"
+            className="w-[44px] h-[44px] border border-pex-border rounded-full bg-pex-bg-soft text-pex-navy text-2xl leading-none p-0 box-border shrink-0 cursor-pointer grid place-items-center transition-colors hover:border-pex-keppel hover:text-pex-keppel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel motion-reduce:transition-none"
             onClick={closeCustomiser}
             aria-label="Close custom pack builder"
             ref={closeButtonRef}
@@ -413,18 +413,18 @@ export function GradePackActions({
 
         <div className="p-[clamp(16px,3vw,24px)] grid gap-3.5 flex-1">
           <div
-            className="border border-[var(--color-navy-subtle)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)] p-[18px_20px] grid gap-[var(--space-2)]"
+            className="border border-pex-border rounded-card bg-pex-bg-soft p-5 grid gap-2"
             aria-live="polite"
           >
             <div>
-              <span className="block text-[var(--pex-keppel)] text-[var(--text-2xs)] font-extrabold">
+              <span className="block text-pex-keppel text-xs font-extrabold">
                 Estimated total
               </span>
-              <strong className="block text-[var(--pex-primary)] text-[clamp(26px,4vw,36px)] font-extrabold leading-none">
+              <strong className="block text-pex-navy text-[clamp(26px,4vw,36px)] font-extrabold leading-none">
                 {displayedTotal}
               </strong>
             </div>
-            <p className="m-0 text-[var(--pex-text-muted)] text-[var(--text-sm)] leading-[1.45]">
+            <p className="m-0 text-pex-muted text-sm leading-[1.45]">
               Updates as you untick items or adjust quantities.
             </p>
           </div>
@@ -434,10 +434,10 @@ export function GradePackActions({
               {selection.map((item) => {
                 return (
                   <article
-                    className="border border-[var(--color-navy-subtle)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)] p-3.5 grid grid-cols-[1fr_auto] max-md:grid-cols-1 gap-3.5 items-center"
+                    className="border border-pex-border rounded-card bg-pex-bg-soft p-3.5 grid grid-cols-[1fr_auto] max-md:grid-cols-1 gap-3.5 items-center"
                     key={item.id}
                   >
-                    <label className="min-w-0 flex items-start gap-[var(--space-3)] cursor-pointer">
+                    <label className="min-w-0 flex items-start gap-3 cursor-pointer">
                       <input
                         id={`custom-pack-item-${item.id}`}
                         name={`customPackItem-${item.id}`}
@@ -446,21 +446,21 @@ export function GradePackActions({
                         onChange={(event) =>
                           setItemSelected(item.id, event.target.checked)
                         }
-                        className="w-[22px] h-[22px] mt-0.5 accent-[var(--pex-coral)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-2"
+                        className="w-[22px] h-[22px] mt-0.5 accent-pex-coral focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral"
                       />
                       <span>
-                        <span className="block text-[var(--pex-keppel)] text-xs font-extrabold uppercase tracking-[0.3px] mb-0.5">
+                        <span className="block text-pex-keppel text-xs font-extrabold uppercase tracking-[0.3px] mb-0.5">
                           {item.category}
                         </span>
-                        <span className="block text-[var(--pex-primary)] font-extrabold text-[var(--text-base)] leading-[1.2]">
+                        <span className="block text-pex-navy font-extrabold text-base leading-[1.2]">
                           {item.name}
                         </span>
                         {item.description ? (
-                          <span className="block mt-[3px] text-[var(--pex-text-muted)] text-[var(--text-2xs)] leading-[1.4]">
+                          <span className="block mt-[3px] text-pex-muted text-xs leading-[1.4]">
                             {item.description}
                           </span>
                         ) : null}
-                        <span className="block mt-1 text-[var(--pex-text-muted)] text-[var(--text-2xs)]">
+                        <span className="block mt-1 text-pex-muted text-xs">
                           School requires:{" "}
                           {String(item.requiredQuantity).padStart(2, "0")}
                         </span>
@@ -469,7 +469,7 @@ export function GradePackActions({
                     <div className="inline-flex gap-1 items-center">
                       <button
                         type="button"
-                        className="w-7 h-7 border border-[var(--pex-border)] rounded-[6px] bg-[var(--pex-bg)] text-[var(--pex-text)] text-sm font-bold cursor-pointer transition-colors duration-140 hover:bg-[var(--pex-bg-subtle)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-2"
+                        className="w-7 h-7 border border-pex-border rounded-md bg-white text-pex-navy text-sm font-bold cursor-pointer transition-colors hover:bg-pex-bg-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
                         onClick={() =>
                           setItemQuantity(item.id, item.selectedQuantity - 1)
                         }
@@ -477,12 +477,12 @@ export function GradePackActions({
                       >
                         -
                       </button>
-                      <span className="mx-2 text-[var(--text-base)] font-semibold text-[var(--pex-primary)]">
+                      <span className="mx-2 text-base font-semibold text-pex-navy">
                         {item.selectedQuantity}
                       </span>
                       <button
                         type="button"
-                        className="w-7 h-7 border border-[var(--pex-border)] rounded-[6px] bg-[var(--pex-bg)] text-[var(--pex-text)] text-sm font-bold cursor-pointer transition-colors duration-140 hover:bg-[var(--pex-bg-subtle)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-2"
+                        className="w-7 h-7 border border-pex-border rounded-md bg-white text-pex-navy text-sm font-bold cursor-pointer transition-colors hover:bg-pex-bg-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel"
                         onClick={() =>
                           setItemQuantity(item.id, item.selectedQuantity + 1)
                         }
@@ -496,7 +496,7 @@ export function GradePackActions({
               })}
             </div>
           ) : (
-            <div className="p-6 text-center text-[var(--pex-text-muted)] border border-dashed border-[var(--pex-border)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)] flex flex-col gap-2 items-center">
+            <div className="p-6 text-center text-pex-muted border border-dashed border-pex-border rounded-card bg-pex-bg-soft flex flex-col gap-2 items-center">
               <p>Pack details are being finalised.</p>
               <strong>
                 Request this pack and we will confirm the list with you.
@@ -505,20 +505,20 @@ export function GradePackActions({
           )}
         </div>
 
-        <div className="sticky bottom-0 z-[4] mt-auto p-[var(--space-4)_clamp(16px,3vw,24px)] pb-[calc(var(--space-4)+env(safe-area-inset-bottom,0px))] border-t border-[var(--pex-border)] bg-white/96 [box-shadow:0_-16px_34px_rgba(15,37,55,0.08)] backdrop-blur-md grid gap-[var(--space-3)]">
+        <div className="sticky bottom-0 z-[4] mt-auto p-4 sm:p-6 pb-[calc(16px+env(safe-area-inset-bottom,0px))] border-t border-pex-border bg-white/95 shadow-2xl backdrop-blur-md grid gap-3">
           <div className="grid gap-[3px]" aria-live="polite">
-            <strong className="text-[var(--pex-primary)] text-[var(--text-xl)] font-bold">
+            <strong className="text-pex-navy text-xl font-bold">
               Estimated total: {displayedTotal}
             </strong>
             {selectedCount === 0 ? (
-              <span className="text-[var(--pex-text-muted)] text-[var(--text-sm)] font-bold">
+              <span className="text-pex-muted text-sm font-bold">
                 Select at least one item to continue.
               </span>
             ) : null}
           </div>
           <button
             type="button"
-            className="w-full min-h-[52px] border-0 rounded-[var(--radius-pill)] px-5 bg-pex-coral !text-white text-[17px] font-extrabold flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:brightness-110 hover:[transform:var(--button-hover-transform)] hover:[box-shadow:var(--button-hover-shadow)] active:brightness-100 active:[transform:var(--button-active-transform)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:filter-none disabled:shadow-none focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none motion-reduce:hover:transform-none motion-reduce:hover:filter-none motion-reduce:hover:shadow-none"
+            className="w-full min-h-[52px] border-0 rounded-full px-5 bg-pex-coral !text-white text-[17px] font-extrabold flex items-center justify-center gap-2 transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-lg active:brightness-100 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:filter-none disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral focus-visible:ring-offset-2 motion-reduce:transition-none"
             onClick={handleSaveCustomPack}
             disabled={selectedCount === 0 || isPricingTotal}
           >
@@ -526,7 +526,7 @@ export function GradePackActions({
           </button>
           <button
             type="button"
-            className="w-full min-h-[48px] border border-[var(--pex-border)] rounded-[var(--radius-pill)] px-5 bg-white !text-pex-navy text-[15px] font-bold flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] hover:[transform:var(--button-hover-transform)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px] motion-reduce:transition-none motion-reduce:hover:transform-none"
+            className="w-full min-h-[48px] border border-pex-border rounded-full px-5 bg-white !text-pex-navy text-[15px] font-bold flex items-center justify-center gap-2 transition-all hover:border-pex-keppel hover:text-pex-keppel hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:transition-none"
             onClick={resetToFullPack}
           >
             Reset to Full Pack
@@ -538,9 +538,9 @@ export function GradePackActions({
 
   if (layout === "detail") {
     return (
-      <div className="bg-[var(--pex-bg)] border border-[var(--color-navy-subtle)] rounded-[28px] [box-shadow:0_10px_30px_rgba(26,42,64,0.04)] p-[var(--space-6)] max-[480px]:p-[var(--space-5)] flex flex-col gap-[var(--space-5)] max-[480px]:gap-5">
-        <div className="flex items-baseline justify-between gap-[var(--space-4)] border-b border-dashed border-[var(--color-navy-subtle)] pb-5 max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-2.5">
-          <strong className="text-[38px] max-[480px]:text-[32px] font-extrabold text-[var(--pex-primary)] leading-none">
+      <div className="bg-white border border-pex-border rounded-2xl shadow-card p-6 max-[480px]:p-5 flex flex-col gap-5">
+        <div className="flex items-baseline justify-between gap-4 border-b border-dashed border-pex-border pb-5 max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-2.5">
+          <strong className="text-[38px] max-[480px]:text-[32px] font-extrabold text-pex-navy leading-none">
             {formatCurrency(pack.fullPackPrice ?? 0)}
           </strong>
         </div>
@@ -549,7 +549,7 @@ export function GradePackActions({
           <Button
             type="button"
             size="lg"
-            className="w-full min-h-[54px] relative justify-center text-[var(--text-lg)] px-[var(--space-5)]"
+            className="w-full min-h-[54px] relative justify-center text-lg px-5"
             onClick={handleAddFullPack}
           >
             Add Full Pack
@@ -559,7 +559,7 @@ export function GradePackActions({
             type="button"
             variant="outline"
             size="lg"
-            className="w-full min-h-[54px] relative justify-center text-[var(--text-lg)] px-[var(--space-5)]"
+            className="w-full min-h-[54px] relative justify-center text-lg px-5"
             onClick={(event) => {
               triggerButtonRef.current = event.currentTarget;
               trackCustomiserOpened({
@@ -583,7 +583,7 @@ export function GradePackActions({
                 estimatedPrice: formatCurrency(pack.fullPackPrice ?? 0),
                 fileName: `${pack.schoolSlug}-${pack.gradeSlug}`,
               }}
-              className="text-[var(--pex-text-muted)] text-xs font-medium underline underline-offset-4 inline-flex items-center gap-2 transition-colors hover:text-[var(--pex-keppel)]"
+              className="text-pex-muted text-xs font-medium underline underline-offset-4 inline-flex items-center gap-2 transition-colors hover:text-pex-keppel"
             >
               {downloadLabel}
             </DownloadListLink>
@@ -600,7 +600,7 @@ export function GradePackActions({
   return (
     <div className="grid gap-2.5">
       {showMicrocopy ? (
-        <p className="m-0 text-[var(--pex-text-muted)] text-[15px] leading-[1.45]">
+        <p className="m-0 text-pex-muted text-[15px] leading-[1.45]">
           Buy the full pack for convenience, or customise it and only order what
           your child still needs.
         </p>

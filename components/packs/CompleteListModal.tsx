@@ -18,10 +18,10 @@ function safeId(value: string) {
 
 // Shared button class strings
 const addToOrderCls =
-  "w-full min-h-[52px] border-0 rounded-full bg-[var(--pex-coral)] text-[var(--pex-bg)] font-inherit text-[17px] font-extrabold cursor-pointer flex items-center justify-center gap-[var(--space-2)] no-underline transition-[var(--button-transition)] hover:brightness-110 hover:[transform:var(--button-hover-transform)] hover:[box-shadow:var(--button-hover-shadow)] active:brightness-100 active:[transform:var(--button-active-transform)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:brightness-100 disabled:shadow-none focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px]";
+  "w-full min-h-[52px] border-0 rounded-full bg-pex-coral text-white font-inherit text-[17px] font-extrabold cursor-pointer flex items-center justify-center gap-2 no-underline transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-lg active:brightness-100 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:brightness-100 disabled:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-coral focus-visible:ring-offset-2";
 
 const customiseCls =
-  "w-full min-h-[48px] border border-[var(--pex-border)] rounded-full bg-[var(--pex-bg)] text-[var(--pex-primary)] font-inherit text-[15px] font-bold cursor-pointer flex items-center justify-center gap-[var(--space-2)] transition-[var(--button-transition)] hover:border-[var(--pex-keppel)] hover:text-[var(--pex-keppel)] hover:[transform:var(--button-hover-transform)] focus-visible:outline-[var(--focus-ring)] focus-visible:outline-offset-[3px]";
+  "w-full min-h-[48px] border border-pex-border rounded-full bg-white text-pex-navy font-inherit text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2 transition-all hover:border-pex-keppel hover:text-pex-keppel hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2";
 
 export function CompleteListModal({
   pack,
@@ -56,13 +56,13 @@ export function CompleteListModal({
       title={pack.modalTitle}
       titleId={titleId}
       subtitle={
-        <span className="block mt-[6px] text-[var(--pex-keppel)] text-[14px] font-bold tracking-[-0.01em]">
+        <span className="block mt-[6px] text-pex-keppel text-[14px] font-bold tracking-[-0.01em]">
           {subtitleText}
         </span>
       }
       footer={
         <>
-          <p className="m-0 mb-[4px] text-[var(--pex-primary)] text-[26px] font-black font-[var(--font-heading)] leading-[1.2]">
+          <p className="m-0 mb-1 text-pex-navy text-[26px] font-black font-heading leading-tight">
             {pack.priceLabel}
           </p>
           {onAddToOrder ? (
