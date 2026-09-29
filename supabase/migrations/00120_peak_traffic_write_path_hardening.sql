@@ -9,18 +9,14 @@ DROP FUNCTION IF EXISTS public.recalculate_dashboard_summaries();
 
 -- Capture the previously remote-only schedule for newly provisioned environments.
 DO $$
+DECLARE
+  v_exists boolean;
 BEGIN
-  IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron')
-     AND NOT EXISTS (
-       SELECT 1
-       FROM cron.job
-       WHERE jobname = 'refresh-dashboard-summaries'
-     ) THEN
-    PERFORM cron.schedule(
-      'refresh-dashboard-summaries',
-      '*/5 * * * *',
-      'SELECT public.refresh_all_dashboard_summaries()'
-    );
+  IF to_regclass('cron.job') IS NOT NULL THEN
+    EXECUTE 'SELECT EXISTS (SELECT 1 FROM cron.job WHERE jobname = ''refresh-dashboard-summaries'')' INTO v_exists;
+    IF NOT v_exists THEN
+      EXECUTE 'SELECT cron.schedule(''refresh-dashboard-summaries'', ''*/5 * * * *'', ''SELECT public.refresh_all_dashboard_summaries()'')';
+    END IF;
   END IF;
 END;
 $$;

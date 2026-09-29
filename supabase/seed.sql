@@ -158,13 +158,13 @@ INSERT INTO public.school_packs (
   0,
   50,
   true,
-  true,
+  false,
   '2027',
   'school_collection',
   1,
   1,
-  'ready',
-  'published',
+  'draft',
+  'draft',
   now(),
   1
 ) ON CONFLICT (id) DO UPDATE SET
@@ -220,6 +220,14 @@ ON CONFLICT (pack_id, product_id, school_wording) DO UPDATE SET
   updated_at = now();
 
 SELECT public.recalculate_all_grade_pack_prices();
+
+UPDATE public.school_packs
+SET
+  pricing_status = 'ready',
+  publication_status = 'published',
+  visible = true,
+  published_at = now()
+WHERE id = '22222222-2222-4222-8222-222222222222';
 
 UPDATE public.schools s
 SET
