@@ -166,13 +166,13 @@ export function OrderForm() {
 
   if (isSuccess) {
     return (
-      <div className="bg-[var(--pex-card-bg)] rounded-[var(--radius-md)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[0_4px_20px_rgba(26,42,64,0.06)] text-center flex flex-col items-center justify-center py-12">
-        <div className="w-14 h-14 rounded-full bg-[rgba(33,158,154,0.1)] text-[var(--pex-keppel)] grid place-items-center text-2xl font-bold mb-4"><Check className="size-7" strokeWidth={2.5} aria-hidden="true" /></div>
-        <h2 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-2">List Received!</h2>
-        <p className="text-[var(--pex-muted)] text-sm leading-relaxed max-w-md mb-6">
+      <div className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card text-center flex flex-col items-center justify-center py-12">
+        <div className="w-14 h-14 rounded-full bg-pex-keppel-subtle text-pex-keppel grid place-items-center text-2xl font-bold mb-4"><Check className="size-7" strokeWidth={2.5} aria-hidden="true" /></div>
+        <h2 className="text-2xl font-bold text-pex-navy font-heading mb-2">List Received!</h2>
+        <p className="text-pex-muted text-sm leading-relaxed max-w-md mb-6">
           Thanks {name.split(" ")[0]}! We have received your stationery list.
           <br /><br />
-          Our packing team is reviewing it now and will send your custom quote to <strong className="text-[var(--pex-navy)] font-semibold">{phone}</strong> via WhatsApp within 2 hours.
+          Our packing team is reviewing it now and will send your custom quote to <strong className="text-pex-navy font-semibold">{phone}</strong> via WhatsApp within 2 hours.
         </p>
         <Button 
           variant="outline" 
@@ -197,7 +197,7 @@ export function OrderForm() {
   }
 
   return (
-    <div className="bg-[var(--pex-card-bg)] rounded-[var(--radius-md)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[0_4px_20px_rgba(26,42,64,0.06)]">
+    <div className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card">
       {/* Progress Indicator */}
       <div
         className="flex gap-2 mb-8"
@@ -207,16 +207,16 @@ export function OrderForm() {
         aria-valuemax={3}
         aria-valuenow={step}
       >
-        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 1 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
-        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 2 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
-        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 3 ? "bg-[var(--pex-keppel)]" : "bg-[var(--pex-border)]")}></div>
+        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 1 ? "bg-pex-keppel" : "bg-pex-border")}></div>
+        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 2 ? "bg-pex-keppel" : "bg-pex-border")}></div>
+        <div className={cn("h-1.5 flex-1 rounded-full transition-colors duration-200", step >= 3 ? "bg-pex-keppel" : "bg-pex-border")}></div>
       </div>
 
       <div className="flex flex-col gap-6">
         {/* FORM STEP 1: Who is this for? */}
         {step === 1 && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Who are we packing for?</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-pex-navy font-heading mb-4">Who are we packing for?</h2>
             <div className="flex flex-col gap-3">
               {(["Primary School Learner", "High School Learner"] as OrderCategory[]).map((cat) => (
                 <button
@@ -244,24 +244,24 @@ export function OrderForm() {
               ))}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-[var(--pex-border)] text-sm">
-              <Link href="/add-your-school" className="group inline-flex items-center gap-2 text-[var(--pex-keppel)] hover:text-[var(--pex-primary)] font-medium transition-colors">
+            <div className="mt-6 pt-4 border-t border-pex-border text-sm">
+              <Link href="/add-your-school" className="group inline-flex items-center gap-2 text-pex-keppel hover:text-pex-navy font-medium transition-colors">
                 <span>Would you like to add your school?</span>
                 <ArrowRight className="size-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
               </Link>
             </div>
 
-            {errors.category && <span className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.category}</span>}
+            {errors.category && <span className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.category}</span>}
           </div>
         )}
 
         {/* FORM STEP 2: File Upload */}
         {step === 2 && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Share your stationery list</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-pex-navy font-heading mb-4">Share your stationery list</h2>
             <div className="flex h-12 rounded-xl bg-slate-50 p-1 mb-6 border border-slate-200">
               <button 
-                type="button"
+                type="button" 
                 aria-pressed={inputMethod === "upload"}
                 className={cn("flex-1 h-10 px-4 text-sm font-semibold rounded-lg transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-1", inputMethod === "upload" ? "bg-white !text-pex-navy shadow-sm" : "text-slate-600 hover:text-pex-navy")}
                 onClick={() => setInputMethod("upload")}
@@ -269,7 +269,7 @@ export function OrderForm() {
                 Upload Photo/PDF
               </button>
               <button 
-                type="button"
+                type="button" 
                 aria-pressed={inputMethod === "type"}
                 className={cn("flex-1 h-10 px-4 text-sm font-semibold rounded-lg transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-1", inputMethod === "type" ? "bg-white !text-pex-navy shadow-sm" : "text-slate-600 hover:text-pex-navy")}
                 onClick={() => setInputMethod("type")}
@@ -280,11 +280,11 @@ export function OrderForm() {
 
             {inputMethod === "upload" ? (
               fileName ? (
-                <div className="flex flex-col items-center gap-3 p-6 rounded-[var(--radius-sm)] border-2 border-dashed border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.05)] text-center">
+                <div className="flex flex-col items-center gap-3 p-6 rounded-sm border-2 border-dashed border-pex-keppel bg-pex-keppel-subtle text-center">
                   <div className="text-3xl"><Paperclip className="size-8" strokeWidth={1.8} aria-hidden="true" /></div>
                   <div>
-                    <strong className="text-sm font-semibold text-[var(--pex-navy)] block max-w-xs truncate">{fileName}</strong>
-                    <span className="text-xs text-[var(--pex-muted)]">File attached successfully</span>
+                    <strong className="text-sm font-semibold text-pex-navy block max-w-xs truncate">{fileName}</strong>
+                    <span className="text-xs text-pex-muted">File attached successfully</span>
                   </div>
                   <button 
                     type="button" 
@@ -292,7 +292,7 @@ export function OrderForm() {
                       setFile(null);
                       setFileName(null);
                     }}
-                    className="text-xs text-[var(--pex-coral)] hover:underline font-medium"
+                    className="text-xs text-pex-coral hover:underline font-medium"
                   >
                     Remove file
                   </button>
@@ -300,10 +300,10 @@ export function OrderForm() {
               ) : (
                 <div 
                   className={cn(
-                    "flex flex-col items-center justify-center p-8 rounded-[var(--radius-sm)] border-2 border-dashed cursor-pointer text-center relative transition-all min-h-[180px]",
+                    "flex flex-col items-center justify-center p-8 rounded-sm border-2 border-dashed cursor-pointer text-center relative transition-all min-h-[180px]",
                     isDragging
-                      ? "border-[var(--pex-keppel)] bg-[rgba(33,158,154,0.08)]"
-                      : "border-[var(--pex-border)] hover:border-[var(--pex-keppel)] bg-[var(--pex-bg)] hover:bg-[rgba(33,158,154,0.02)]"
+                      ? "border-pex-keppel bg-pex-keppel/10"
+                      : "border-pex-border hover:border-pex-keppel bg-pex-bg hover:bg-pex-keppel/[0.04]"
                   )}
                   onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                   onDragLeave={() => setIsDragging(false)}
@@ -319,8 +319,8 @@ export function OrderForm() {
                   }}
                 >
                   <div className="text-3xl mb-2"><FileText className="size-8" strokeWidth={1.8} aria-hidden="true" /></div>
-                  <strong className="text-sm text-[var(--pex-navy)] mb-1">Click to upload or drag and drop</strong>
-                  <span className="text-xs text-[var(--pex-muted)] max-w-xs">All file types supported (PNG, JPG, PDF, Word, Excel, etc. Max 10MB)</span>
+                  <strong className="text-sm text-pex-navy mb-1">Click to upload or drag and drop</strong>
+                  <span className="text-xs text-pex-muted max-w-xs">All file types supported (PNG, JPG, PDF, Word, Excel, etc. Max 10MB)</span>
                   <input 
                     id="stationery-list-file"
                     name="stationeryListFile"
@@ -335,8 +335,8 @@ export function OrderForm() {
                 id="stationery-list-text"
                 name="stationeryListText"
                 className={cn(
-                  "w-full min-h-[120px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
-                  errors.list ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                  "w-full min-h-[120px] px-4 py-2.5 rounded-sm border bg-white text-pex-navy text-sm outline-none focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/20 transition-all",
+                  errors.list ? "border-pex-coral focus:border-pex-coral" : "border-pex-border"
                 )}
                 placeholder="Paste your items here (e.g. 5x HB Pencils, 2x Pritt 43g...)"
                 rows={4}
@@ -347,14 +347,14 @@ export function OrderForm() {
                 }}
               />
             )}
-            {errors.list && <span className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.list}</span>}
+            {errors.list && <span className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.list}</span>}
 
-            <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-[var(--pex-border)]">
-              <button type="button" onClick={prevStep} className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3"><ArrowLeft className="size-4" strokeWidth={2} aria-hidden="true" /> Back</button>
+            <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-pex-border">
+              <button type="button" onClick={prevStep} className="inline-flex items-center gap-1.5 text-sm font-medium text-pex-muted hover:text-pex-navy transition-colors py-2 px-3"><ArrowLeft className="size-4" strokeWidth={2} aria-hidden="true" /> Back</button>
               <Button 
                 onClick={nextStep} 
                 disabled={inputMethod === "upload" ? !fileName : !listText.trim()}
-                variant="primary"
+                variant="primary" 
                 size="md"
               >
                 Continue
@@ -366,24 +366,24 @@ export function OrderForm() {
         {/* FORM STEP 3: Contact Details */}
         {step === 3 && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-xl sm:text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-4">Where should we send your quote?</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-pex-navy font-heading mb-4">Where should we send your quote?</h2>
             
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               {errors.submit && (
-                <div role="alert" className="p-3 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.1)] border border-[rgba(235,94,85,0.3)] text-[var(--pex-coral)] text-sm font-medium">
+                <div role="alert" className="p-3 rounded-sm bg-pex-coral-soft border border-pex-coral-border text-pex-coral text-sm font-medium">
                   {errors.submit}
                 </div>
               )}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="quote-name" className="text-xs font-semibold text-[var(--pex-navy)]">Your Name</label>
+                <label htmlFor="quote-name" className="text-xs font-semibold text-pex-navy">Your Name</label>
                 <input
                   id="quote-name"
                   type="text"
                   autoComplete="name"
                   required
                   className={cn(
-                    "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
-                    errors.name ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                    "w-full min-h-[46px] px-4 py-2.5 rounded-sm border bg-white text-pex-navy text-sm outline-none focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/20 transition-all",
+                    errors.name ? "border-pex-coral focus:border-pex-coral" : "border-pex-border"
                   )}
                   value={name}
                   onChange={(e) => {
@@ -393,19 +393,19 @@ export function OrderForm() {
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "quote-name-error" : undefined}
                 />
-                {errors.name && <span id="quote-name-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.name}</span>}
+                {errors.name && <span id="quote-name-error" className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.name}</span>}
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="quote-phone" className="text-xs font-semibold text-[var(--pex-navy)]">WhatsApp Number</label>
+                <label htmlFor="quote-phone" className="text-xs font-semibold text-pex-navy">WhatsApp Number</label>
                 <input
                   id="quote-phone"
                   type="tel"
                   autoComplete="tel"
                   required
                   className={cn(
-                    "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
-                    errors.phone ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                    "w-full min-h-[46px] px-4 py-2.5 rounded-sm border bg-white text-pex-navy text-sm outline-none focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/20 transition-all",
+                    errors.phone ? "border-pex-coral focus:border-pex-coral" : "border-pex-border"
                   )}
                   placeholder="e.g. 078 123 4567"
                   value={phone}
@@ -413,18 +413,18 @@ export function OrderForm() {
                   aria-invalid={!!errors.phone}
                   aria-describedby={errors.phone ? "quote-phone-error" : undefined}
                 />
-                {errors.phone && <span id="quote-phone-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.phone}</span>}
+                {errors.phone && <span id="quote-phone-error" className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.phone}</span>}
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="quote-email" className="text-xs font-semibold text-[var(--pex-navy)]">Email Address (Optional)</label>
+                <label htmlFor="quote-email" className="text-xs font-semibold text-pex-navy">Email Address (Optional)</label>
                 <input
                   id="quote-email"
                   type="email"
                   autoComplete="email"
                   className={cn(
-                    "w-full min-h-[46px] px-4 py-2.5 rounded-[var(--radius-sm)] border bg-white text-[var(--pex-navy)] text-sm outline-none focus:border-[var(--pex-keppel)] focus:ring-2 focus:ring-[rgba(33,158,154,0.2)] transition-all",
-                    errors.email ? "border-[var(--pex-coral)] focus:border-[var(--pex-coral)]" : "border-[var(--pex-border)]"
+                    "w-full min-h-[46px] px-4 py-2.5 rounded-sm border bg-white text-pex-navy text-sm outline-none focus:border-pex-keppel focus:ring-2 focus:ring-pex-keppel/20 transition-all",
+                    errors.email ? "border-pex-coral focus:border-pex-coral" : "border-pex-border"
                   )}
                   value={email}
                   onChange={(e) => {
@@ -434,7 +434,7 @@ export function OrderForm() {
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "quote-email-error" : undefined}
                 />
-                {errors.email && <span id="quote-email-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.email}</span>}
+                {errors.email && <span id="quote-email-error" className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.email}</span>}
               </div>
 
               <div className="flex items-start gap-2.5 mt-2">
@@ -450,14 +450,14 @@ export function OrderForm() {
                   aria-describedby={errors.consent ? "quote-consent-error" : undefined}
                   className="mt-1"
                 />
-                <label htmlFor="quote-consent" className="text-xs text-[var(--pex-muted)] leading-relaxed cursor-pointer select-none">
+                <label htmlFor="quote-consent" className="text-xs text-pex-muted leading-relaxed cursor-pointer select-none">
                   I consent to Pexpacks processing my information to handle this request under POPIA guidelines.
                 </label>
               </div>
-              {errors.consent && <span id="quote-consent-error" className="text-xs font-semibold text-[var(--pex-coral)] mt-1 ml-6 block">{errors.consent}</span>}
+              {errors.consent && <span id="quote-consent-error" className="text-xs font-semibold text-pex-coral mt-1 ml-6 block">{errors.consent}</span>}
 
-              <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-[var(--pex-border)]">
-                <button type="button" onClick={prevStep} className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--pex-muted)] hover:text-[var(--pex-navy)] transition-colors py-2 px-3"><ArrowLeft className="size-4" strokeWidth={2} aria-hidden="true" /> Back</button>
+              <div className="flex items-center justify-between gap-4 mt-8 pt-4 border-t border-pex-border">
+                <button type="button" onClick={prevStep} className="inline-flex items-center gap-1.5 text-sm font-medium text-pex-muted hover:text-pex-navy transition-colors py-2 px-3"><ArrowLeft className="size-4" strokeWidth={2} aria-hidden="true" /> Back</button>
                 <Button 
                   type="submit" 
                   variant="primary" 
