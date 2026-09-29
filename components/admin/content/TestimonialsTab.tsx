@@ -248,11 +248,11 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
             <form onSubmit={handleSubmit}>
               <div className={styles.modalBody}>
                 {errorMsg && (
-                  <div style={{ color: "#ef4444", fontSize: 13, background: "rgba(239, 68, 68, 0.1)", padding: 10, borderRadius: 8 }}>
+                  <div className="rounded-lg border border-red-500/25 bg-red-500/10 px-3.5 py-2.5 text-xs font-medium text-red-400">
                     {errorMsg}
                   </div>
                 )}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className={styles.inputGroup}>
                     <label className={styles.inputLabel}>Author Name *</label>
                     <input
@@ -277,7 +277,7 @@ export function TestimonialsTab({ initialTestimonials }: TestimonialsTabProps) {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className={styles.inputGroup}>
                     <label className={styles.inputLabel}>Star Rating (1–5)</label>
                     <select

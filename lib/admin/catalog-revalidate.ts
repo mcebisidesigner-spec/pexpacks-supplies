@@ -63,7 +63,7 @@ export function revalidateCatalog(options?: {
 
     const paths = ["/schools", "/"];
     if (options?.schoolSlug) paths.push(`/schools/${options.schoolSlug}`);
-    if (options?.packSlug) paths.push(`/schools/packs/${options.packSlug}`);
+    // The public catalogue has no /schools/packs route; school pages are canonical.
     if (typeof nextCache.revalidatePath === "function") {
       for (const path of paths) {
         try {

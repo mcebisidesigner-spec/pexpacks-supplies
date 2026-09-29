@@ -259,7 +259,7 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
             <form onSubmit={handleSubmit}>
               <div className={styles.modalBody}>
                 {errorMsg && (
-                  <div style={{ color: "#ef4444", fontSize: 13, background: "rgba(239, 68, 68, 0.1)", padding: 10, borderRadius: 8 }}>
+                  <div className="rounded-lg border border-red-500/25 bg-red-500/10 px-3.5 py-2.5 text-xs font-medium text-red-400">
                     {errorMsg}
                   </div>
                 )}
@@ -284,7 +284,7 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
                     className={styles.textareaInput}
                   />
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className={styles.inputGroup}>
                     <label className={styles.inputLabel}>Link URL (Optional)</label>
                     <input
@@ -306,7 +306,7 @@ export function AnnouncementsTab({ initialAnnouncements }: AnnouncementsTabProps
                     />
                   </div>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className={styles.inputGroup}>
                     <label className={styles.inputLabel}>Display Slot</label>
                     <select
