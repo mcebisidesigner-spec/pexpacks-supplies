@@ -2,8 +2,11 @@ export function formatCurrency(
   value: number,
   options?: { allowQuote?: boolean; maximumFractionDigits?: number },
 ) {
-  if (value === 0 && options?.allowQuote !== false) {
+  if (options?.allowQuote === true && value === 0) {
     return "Quote";
+  }
+  if (!value || value === 0 || Number.isNaN(value)) {
+    return "R00.00";
   }
 
   const rounded = Math.round((value + Number.EPSILON) * 100) / 100;

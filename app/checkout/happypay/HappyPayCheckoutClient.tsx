@@ -272,11 +272,11 @@ export function HappyPayCheckoutClient() {
 
   if (packs.length === 0) {
     return (
-      <div className="w-full min-h-screen py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] flex items-center justify-center font-[family-name:var(--font-body)]">
-        <div className="max-w-md w-full mx-auto text-center bg-white p-6 sm:p-8 rounded-[var(--radius-card)] border border-[var(--pex-border)] shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Happy Pay</p>
-          <h1 className="text-2xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] mb-3">No packs in your order.</h1>
-          <p className="text-sm text-[var(--pex-muted)] leading-relaxed mb-6">
+      <div className="w-full min-h-screen py-12 px-4 md:px-8 bg-pex-bg-soft flex items-center justify-center font-sans">
+        <div className="max-w-md w-full mx-auto text-center bg-white p-6 sm:p-8 rounded-card border border-pex-border shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wider text-pex-keppel mb-2">Happy Pay</p>
+          <h1 className="text-2xl font-bold text-pex-navy font-heading mb-3">No packs in your order.</h1>
+          <p className="text-sm text-pex-muted leading-relaxed mb-6">
             Choose a school pack before splitting your payment with Happy Pay.
           </p>
           <Button href="/schools" variant="primary" size="lg" className="w-full sm:w-auto">
@@ -288,11 +288,11 @@ export function HappyPayCheckoutClient() {
   }
 
   return (
-    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-[var(--pex-bg-soft)] font-[family-name:var(--font-body)] text-[var(--pex-navy)] pb-24 lg:pb-12">
-      <header className="flex justify-between items-center max-w-[var(--layout-max-width)] mx-auto mb-8">
+    <div className="w-full min-h-screen py-8 md:py-12 px-4 md:px-8 bg-pex-bg-soft font-sans text-pex-navy pb-24 lg:pb-12">
+      <header className="flex justify-between items-center max-w-layout mx-auto mb-8">
         <button
           type="button"
-          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pex-keppel)] hover:text-[var(--pex-navy)] transition-colors cursor-pointer bg-transparent border-0 p-0"
+          className="inline-flex items-center gap-2 text-sm font-bold text-pex-keppel hover:text-pex-navy transition-colors cursor-pointer bg-transparent border-0 p-0"
           onClick={handleBackToOrder}
         >
           ← Back to order
@@ -303,41 +303,41 @@ export function HappyPayCheckoutClient() {
           )}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--pex-muted)] hover:text-[var(--pex-keppel)] transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-pex-muted hover:text-pex-keppel transition-colors"
         >
           Need help?
         </a>
       </header>
 
-      <div className="max-w-[var(--layout-max-width)] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
-        <section className="col-span-1 lg:col-span-2 bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
+      <div className="max-w-layout mx-auto grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
+        <section className="col-span-1 lg:col-span-2 bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card">
           <div className="flex items-center justify-between gap-4 mb-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-0">Buy Now Pay Later</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-pex-keppel mb-0">Buy Now Pay Later</p>
             <HappyPayLogo tone="dark" className="h-6 w-auto" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-2 leading-tight max-w-2xl">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-pex-navy font-heading m-0 mb-2 leading-tight max-w-2xl">
             Split in 2 with Happy Pay &mdash; Pay {formatInstalment(instalment)}{" "}
             Today
           </h1>
-          <p className="text-sm sm:text-base text-[var(--pex-muted)] m-0 max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-pex-muted m-0 max-w-xl leading-relaxed">
             Pay 50% now and the rest in 30 days. Interest-free, no hidden fees.
             Happy Pay settles your full order with Pexpacks today so your packs
             are dispatched right away.
           </p>
 
           <ol className="list-none m-0 p-0 grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-xl mt-6">
-            <li className="grid gap-1.5 p-3.5 sm:p-4 border border-[var(--pex-border)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)]">
-              <span className="w-fit px-2.5 py-1 rounded-full bg-[rgba(33,158,154,0.12)] text-[var(--pex-keppel)] text-[11px] font-extrabold tracking-wider uppercase">Payment 1</span>
+            <li className="grid gap-1.5 p-3.5 sm:p-4 border border-pex-border rounded-card bg-pex-bg-soft">
+              <span className="w-fit px-2.5 py-1 rounded-full bg-pex-keppel-subtle text-pex-keppel text-[11px] font-extrabold tracking-wider uppercase">Payment 1</span>
               <span className="grid gap-0.5">
-                <strong className="text-[var(--pex-navy)] text-sm font-semibold">Today</strong>
-                <span className="text-[var(--pex-coral)] font-[family-name:var(--font-heading)] text-lg sm:text-xl font-black">{formatInstalment(instalment)}</span>
+                <strong className="text-pex-navy text-sm font-semibold">Today</strong>
+                <span className="text-pex-coral font-heading text-lg sm:text-xl font-black">{formatInstalment(instalment)}</span>
               </span>
             </li>
-            <li className="grid gap-1.5 p-3.5 sm:p-4 border border-[var(--pex-border)] rounded-[var(--radius-card)] bg-[var(--pex-bg-soft)]">
-              <span className="w-fit px-2.5 py-1 rounded-full bg-[rgba(235,94,85,0.12)] text-[var(--pex-coral)] text-[11px] font-extrabold tracking-wider uppercase">Payment 2</span>
+            <li className="grid gap-1.5 p-3.5 sm:p-4 border border-pex-border rounded-card bg-pex-bg-soft">
+              <span className="w-fit px-2.5 py-1 rounded-full bg-pex-coral-subtle text-pex-coral text-[11px] font-extrabold tracking-wider uppercase">Payment 2</span>
               <span className="grid gap-0.5">
-                <strong className="text-[var(--pex-navy)] text-sm font-semibold">In 30 days</strong>
-                <span className="text-[var(--pex-coral)] font-[family-name:var(--font-heading)] text-lg sm:text-xl font-black">{formatInstalment(instalment)}</span>
+                <strong className="text-pex-navy text-sm font-semibold">In 30 days</strong>
+                <span className="text-pex-coral font-heading text-lg sm:text-xl font-black">{formatInstalment(instalment)}</span>
               </span>
             </li>
           </ol>
@@ -349,14 +349,14 @@ export function HappyPayCheckoutClient() {
           onSubmit={(e) => e.preventDefault()}
         >
           <section
-            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
+            className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card outline-none"
             aria-labelledby="hp-details-heading"
           >
             <div className="flex items-start gap-4 mb-6">
-              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
+              <span className="w-8 h-8 rounded-full bg-pex-navy text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
               <div>
-                <h2 id="hp-details-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Your details</h2>
-                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
+                <h2 id="hp-details-heading" className="text-xl font-bold text-pex-navy font-heading m-0 mb-1">Your details</h2>
+                <p className="text-xs sm:text-sm text-pex-muted m-0">
                   Happy Pay needs these details to set up your split payment.
                   Your pack is only reserved after you approve the first
                   payment.
@@ -412,14 +412,14 @@ export function HappyPayCheckoutClient() {
 
           {/* ── Learner details ─────────────────────────────────────── */}
           <section
-            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
+            className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card outline-none"
             aria-labelledby="hp-learners-heading"
           >
             <div className="flex items-start gap-4 mb-6">
-              <span className="w-8 h-8 rounded-full bg-[var(--pex-navy)] text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
+              <span className="w-8 h-8 rounded-full bg-pex-navy text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
               <div>
-                <h2 id="hp-learners-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0 mb-1">Learner details</h2>
-                <p className="text-xs sm:text-sm text-[var(--pex-muted)] m-0">
+                <h2 id="hp-learners-heading" className="text-xl font-bold text-pex-navy font-heading m-0 mb-1">Learner details</h2>
+                <p className="text-xs sm:text-sm text-pex-muted m-0">
                   Add a name for each learner so we know which pack belongs to
                   whom.
                 </p>
@@ -457,10 +457,10 @@ export function HappyPayCheckoutClient() {
           </section>
 
           <section
-            className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)] outline-none"
+            className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card outline-none"
             aria-label="Happy Pay consent"
           >
-            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[var(--pex-muted)] leading-relaxed">
+            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-pex-muted leading-relaxed">
               <input
                 type="checkbox"
                 id="hp-consent"
@@ -470,7 +470,7 @@ export function HappyPayCheckoutClient() {
                   clearFieldError("consent");
                 }}
                 aria-invalid={!!errors.consent}
-                className="mt-1 w-4 h-4 accent-[var(--pex-keppel)] rounded shrink-0 cursor-pointer"
+                className="mt-1 w-4 h-4 accent-pex-keppel rounded shrink-0 cursor-pointer"
               />
               <span>
                 I understand that by paying with Happy Pay, I will be
@@ -478,27 +478,27 @@ export function HappyPayCheckoutClient() {
                 in 30 days) charged to the payment method I approve with Happy
                 Pay. Happy Pay is an independent company and Pexpacks acts only
                 as a referral consultant. I have read and agree to the{" "}
-                <a href="/happy-pay-terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/happy-pay-terms" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   happy pay terms
                 </a>
                 ,{" "}
-                <a href="/privacy-policy" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/privacy-policy" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   privacy policy
                 </a>
                 , and{" "}
-                <a href="/terms" target="_blank" className="relative inline-block font-medium text-[var(--pex-keppel)] no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-[var(--pex-keppel-dark)] hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--pex-keppel)] focus-visible:ring-offset-2 motion-reduce:after:transition-none">
+                <a href="/terms" target="_blank" className="relative inline-block font-medium text-pex-keppel no-underline after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:w-0 after:bg-current after:transition-[width] after:duration-200 after:ease-out hover:text-pex-keppel-dark hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pex-keppel focus-visible:ring-offset-2 motion-reduce:after:transition-none">
                   terms of use
                 </a>
                 .
               </span>
             </label>
             {errors.consent ? (
-              <p className="text-xs font-semibold text-[var(--pex-coral)] mt-1.5 block">{errors.consent}</p>
+              <p className="text-xs font-semibold text-pex-coral mt-1.5 block">{errors.consent}</p>
             ) : null}
           </section>
 
           {submitError ? (
-            <p className="p-4 rounded-[var(--radius-sm)] bg-[rgba(235,94,85,0.08)] border border-[rgba(235,94,85,0.25)] text-xs sm:text-sm text-[var(--pex-coral)] font-semibold leading-relaxed" role="alert">
+            <p className="p-4 rounded-sm bg-pex-coral-soft border border-pex-coral-border text-xs sm:text-sm text-pex-coral font-semibold leading-relaxed" role="alert">
               {submitError}
             </p>
           ) : null}
@@ -508,18 +508,18 @@ export function HappyPayCheckoutClient() {
           className="w-full lg:sticky lg:top-24"
           aria-labelledby="hp-summary-heading"
         >
-          <div className="bg-white rounded-[var(--radius-card)] p-6 sm:p-8 border border-[var(--pex-border)] shadow-[var(--shadow-card)]">
-            <div className="flex justify-between items-start pb-4 border-b border-[var(--pex-border)] mb-5">
+          <div className="bg-white rounded-card p-6 sm:p-8 border border-pex-border shadow-card">
+            <div className="flex justify-between items-start pb-4 border-b border-pex-border mb-5">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-[var(--pex-keppel)] mb-2">Happy Pay plan</p>
-                <h2 id="hp-summary-heading" className="text-xl font-bold text-[var(--pex-navy)] font-[family-name:var(--font-heading)] m-0">Your split</h2>
+                <p className="text-xs font-bold uppercase tracking-wider text-pex-keppel mb-2">Happy Pay plan</p>
+                <h2 id="hp-summary-heading" className="text-xl font-bold text-pex-navy font-heading m-0">Your split</h2>
               </div>
               <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#0B5C50] text-white shadow-sm">
                 {packs.length} {packs.length === 1 ? "pack" : "packs"}
               </span>
             </div>
 
-            <div className="flex flex-col gap-3 mb-6 divide-y divide-[var(--pex-border)]">
+            <div className="flex flex-col gap-3 mb-6 divide-y divide-pex-border">
               {packs.map((pack, index) => {
                 const lName = learnerInputs[index]?.trim();
                 const learnerLabel = lName
@@ -551,9 +551,9 @@ export function HappyPayCheckoutClient() {
                           <button
                             type="button"
                             className={cn(
-                              "text-xs font-bold text-[var(--pex-keppel)] hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
+                              "text-xs font-bold text-pex-keppel hover:underline cursor-pointer bg-transparent border-0 p-0 text-left",
                               errors[`learner_${index}`] &&
-                                "text-[var(--pex-coral)] underline",
+                                "text-pex-coral underline",
                             )}
                             onClick={() => setEditNameIndex(index)}
                             aria-label={`Edit learner ${index + 1} name`}
@@ -562,9 +562,9 @@ export function HappyPayCheckoutClient() {
                           </button>
                         )}
                       </div>
-                      <span className="text-sm font-bold text-[var(--pex-navy)] shrink-0">{formatCurrency(getPackTotal(pack))}</span>
+                      <span className="text-sm font-bold text-pex-navy shrink-0">{formatCurrency(getPackTotal(pack))}</span>
                     </div>
-                    <p className="text-xs text-[var(--pex-muted)] m-0">
+                    <p className="text-xs text-pex-muted m-0">
                       {pack.schoolName || "School pack"}
                       {pack.grade ? ` · ${pack.grade}` : ""}
                     </p>
@@ -573,20 +573,20 @@ export function HappyPayCheckoutClient() {
               })}
             </div>
 
-            <div className="space-y-2.5 py-4 border-t border-b border-[var(--pex-border)] mb-6 text-xs sm:text-sm text-[var(--pex-muted)] [&>div]:flex [&>div]:justify-between [&>div]:items-center [&>div>strong]:text-[var(--pex-navy)] [&>div>strong]:font-semibold">
+            <div className="space-y-2.5 py-4 border-t border-b border-pex-border mb-6 text-xs sm:text-sm text-pex-muted [&>div]:flex [&>div]:justify-between [&>div]:items-center [&>div>strong]:text-pex-navy [&>div>strong]:font-semibold">
               <div>
                 <span>Total order</span>
                 <strong>{formatCurrency(total)}</strong>
               </div>
               <div>
                 <span>Today (50%)</span>
-                <strong className="text-[var(--pex-coral)] font-bold">{formatInstalment(instalment)}</strong>
+                <strong className="text-pex-coral font-bold">{formatInstalment(instalment)}</strong>
               </div>
               <div>
                 <span>In 30 days (50%)</span>
-                <strong className="text-[var(--pex-coral)] font-bold">{formatInstalment(instalment)}</strong>
+                <strong className="text-pex-coral font-bold">{formatInstalment(instalment)}</strong>
               </div>
-              <div className="!text-[11px] !text-[var(--pex-keppel)] !font-semibold pt-1">
+              <div className="!text-[11px] !text-pex-keppel !font-semibold pt-1">
                 0% interest. No application fees.
               </div>
             </div>
@@ -614,7 +614,7 @@ export function HappyPayCheckoutClient() {
               Edit order
             </Button>
 
-            <p className="text-[11px] text-[var(--pex-muted)] text-center mt-3 leading-relaxed">
+            <p className="text-[11px] text-pex-muted text-center mt-3 leading-relaxed">
               Your details are secure. Happy Pay handles the payment on behalf
               of Pexpacks.
             </p>
@@ -622,7 +622,7 @@ export function HappyPayCheckoutClient() {
         </aside>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[var(--pex-border)] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-pex-border shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-40 lg:hidden">
         <Button
           type="button"
           variant="primary"
