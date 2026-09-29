@@ -168,10 +168,17 @@ function effectiveItemPrice(item, productsById) {
   const packSlugs = packs
     .map((pack) => String(pack.slug || "").trim().toLowerCase())
     .filter(Boolean);
-  const gradeKeys = packs.map(gradeKey).filter(Boolean);
-  const duplicateGradeValues = [...countBy(gradeKeys).entries()]
+  // Duplicate draft copies are allowed in the admin catalogue. Only duplicate
+  // public grade keys are a release-level integrity problem.
+  const allGradeKeys = packs.map(gradeKey).filter(Boolean);
+  const publicGradeKeys = publicPacks.map(gradeKey).filter(Boolean);
+  const duplicateGradeValues = [...countBy(publicGradeKeys).entries()]
     .filter(([, count]) => count > 1)
     .map(([key]) => key);
+  const draftDuplicateGradeValues = [...countBy(allGradeKeys).entries()]
+    .filter(([, count]) => count > 1)
+    .map(([key]) => key)
+    .filter((key) => !duplicateGradeValues.includes(key));
 
   console.log(
     JSON.stringify(

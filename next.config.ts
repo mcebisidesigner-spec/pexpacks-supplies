@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   // Keep the default .next output for deployments; local verification can opt
   // into an isolated directory while a development server is running.
   distDir: process.env.NEXT_DIST_DIR || ".next",
+  outputFileTracingRoot: process.cwd(),
   output: "standalone",
   compress: true,
   poweredByHeader: false,

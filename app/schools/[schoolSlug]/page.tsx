@@ -15,6 +15,7 @@ import { getActivePublicSeason } from "@/lib/public-data/seasons";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { buildWhatsAppHref } from "@/data/contact";
 import { SchoolVisitTrackerEffect } from "@/components/schools/SchoolVisitTrackerEffect";
+import { PublicSchoolCatalogueRefresh } from "@/components/schools/PublicSchoolCatalogueRefresh";
 
 export const revalidate = 300;
 
@@ -138,6 +139,7 @@ export default async function SchoolDetailPage({
         image={school.logo}
         city={school.city}
       />
+      <PublicSchoolCatalogueRefresh schoolId={school.id} />
 
       <PageHero
         variant="navy"

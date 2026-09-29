@@ -138,7 +138,7 @@ A 1,000-user load test was not executed locally because a staging environment an
 - npm run db:lint passed with no schema errors.
 - npm run db:publication:preflight passed against the local database.
 - npm run check:all passed all 6 quality gates locally.
-- The production Webpack build timed out during a separate run.
+- The isolated production Webpack build passed with exit code 0 after compiling, generating 121 pages, and collecting traces.
 ## Recommended rollout order
 
 1. Confirm which packs are intentionally public for the active school year.
